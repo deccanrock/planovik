@@ -1,0 +1,55 @@
+STATIC WELLS
+
+Registration Well
+Registration IP 
+Country of Registration 
+Date of Registration (UTC +-)
+
+
+Activity Well
+Last Updated (UTC +-)
+Verfication Request Count
+Verification Processed CountAlert Pending Count
+Message Unread Count
+
+Account Well
+Account Balance 
+Payout Balance
+Last Payout Date
+Payout History
+
+
+DYNAMIC WELLS
+
+Name Well
+Name
+Shortname
+External Registration Code
+External Registration Code Issuing Authority
+Company Logo - logosealloc (Change Seal)
+Type of Institution
+Sub Type if Institution
+
+
+
+Address Well
+Street Address 1
+Street Address 2
+Address City/Town
+Address District
+Address State/Province/Region
+Address Postal Code
+Address Home URL
+
+Contact Well
+Contact Name
+Contact Phone office
+Contact Phone mobile
+Contact Email
+Contact Designation
+Contact IP
+
+Status Well
+Status
+
+

@@ -1,0 +1,9 @@
+LOcation of DB:
+C:\Program Files\MySQL\MySQL Server 5.6\data
+
+Backup
+..\bin\mysqldump --routines --triggers --single-transaction -u root -p verifyed_01_001 > verifyed_01_001.121214
+
+
+Restore
+mysql -u [uname] -p[pass] [db_to_restore] < [backupfile.sql]

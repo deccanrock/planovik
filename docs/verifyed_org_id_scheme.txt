@@ -1,0 +1,37 @@
+http://howtodoinjava.com/2013/04/16/login-form-based-spring-3-security-example/
+
+Org ID
+
+DB ID - Zone ID - Unique Org ID
+ (3)  -  (2)    - (7)
+
+DB Bank Replication
+
+Master_Bank_ID 	Slave1_Bank_ID	Slave2_Bank_ID
+	1				2				3
+	2				1				3
+	3				1				2
+	4				5				6
+	5				4				6
+	6				4				5
+
+Each Bank Master to hold no more than 1 million unique ID's	
+001-01-000001
+and 20 Million additional(10 million each from 2 other banks) for which it serves as a slave
+
+Example:
+0100100000001
+Zone 01, DB Bank 001, User ID 00000001
+
+DB Name:
+verifyed_<zone no>_<DB Bank No>
+verifyed_1_1
+
+Zone1 = South Asia
+Zone2 = EMEA (Europe, Middle East, Africa)
+Zone3 = AustralAsia (Australia, Japan, New Zealand)
+Zone4 = North America  (East + Mid West)
+Zone5 = North America (Pacific, Hawaii, Alaska)
+Zone7 = South America
+
+North America includes Canada, USA, Mexico
