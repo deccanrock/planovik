@@ -32,6 +32,10 @@
 	
 	<beans:bean id="admintasksconsts" class="com.deccanrock.planovik.constants.AdminTasksConsts"></beans:bean>
 	
-	<context:component-scan base-package="com.deccanrock.verifyed" />
+	<mvc:interceptors>
+		<beans:bean class="com.deccanrock.planovik.controller.RequestInterceptor" />
+	</mvc:interceptors>	
+	
+	<context:component-scan base-package="com.deccanrock.planovik" />
 	
 </beans:beans>

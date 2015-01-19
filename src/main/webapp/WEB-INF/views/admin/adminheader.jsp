@@ -24,7 +24,7 @@
     <meta name="description" content="">
 
     <!-- Fav Icon -->
-    <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.png'/>" type="image/x-icon" />
+    <link rel="shortcut icon" href="<c:url value='/resources/images/planovik_fav.png'/>" type="image/x-icon" />
 
     <!--Application CSS Files-->
     <!-- bootstrap & fontawesome -->
@@ -155,7 +155,7 @@
 	        <div class="navbar-header pull-left">
 	            <a href="#">
 	                <div class="img_logo">
-	                    <img src="<c:url value='/resources/images/verifyed_logo_small.png'/>" />
+	                    <img src="<c:url value='/resources/images/planovik_logo_small.png'/>" />
 	                </div>
 	            </a>
 	        </div>

@@ -49,7 +49,7 @@ public class SignupController {
 		
 		final String userIPAddress = request.getRemoteAddr();
 		
-		request.setAttribute("title", "Verifyed Signup - Welcome");
+		request.setAttribute("title", "Planovik Signup - Welcome");
 		
 		// For Testing
 		MaxLocation location = locationBO.getLocation("66.249.69.52");
@@ -73,7 +73,7 @@ public class SignupController {
 		logger.info("Organization Signup Post received");
 		final String userIPAddress = request.getRemoteAddr();
 		
-		request.setAttribute("title", "Verifyed Signup - Confirmation");		
+		request.setAttribute("title", "Planovik Signup - Confirmation");		
 		
 		org.setContactip(userIPAddress);
 		org.setIsocountrycode("IN");

@@ -2,14 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6cf51b37-def1-45e3-b2b9-eb3b3a986f45" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/deccanrock/verifyed/service/IOrgEntityDAO.class" afterPath="$PROJECT_DIR$/target/classes/com/deccanrock/verifyed/service/IOrgEntityDAO.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/deccanrock/verifyed/service/IOrgEntityDAO.java" afterPath="$PROJECT_DIR$/src/main/java/com/deccanrock/verifyed/service/IOrgEntityDAO.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/deccanrock/verifyed/service/OrgEntityDAO.class" afterPath="$PROJECT_DIR$/target/classes/com/deccanrock/verifyed/service/OrgEntityDAO.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/deccanrock/verifyed/service/OrgEntityDAO.java" afterPath="$PROJECT_DIR$/src/main/java/com/deccanrock/verifyed/service/OrgEntityDAO.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/deccanrock/verifyed/controller/SignupController.class" afterPath="$PROJECT_DIR$/target/classes/com/deccanrock/verifyed/controller/SignupController.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/deccanrock/verifyed/controller/SignupController.java" afterPath="$PROJECT_DIR$/src/main/java/com/deccanrock/verifyed/controller/SignupController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/deccanrock/planovik/service/IOrgEntityDAO.class" afterPath="$PROJECT_DIR$/target/classes/com/deccanrock/planovik/service/IOrgEntityDAO.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/deccanrock/planovik/service/IOrgEntityDAO.java" afterPath="$PROJECT_DIR$/src/main/java/com/deccanrock/planovik/service/IOrgEntityDAO.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/deccanrock/planovik/service/OrgEntityDAO.class" afterPath="$PROJECT_DIR$/target/classes/com/deccanrock/planovik/service/OrgEntityDAO.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/deccanrock/planovik/service/OrgEntityDAO.java" afterPath="$PROJECT_DIR$/src/main/java/com/deccanrock/planovik/service/OrgEntityDAO.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/deccanrock/planovik/controller/SignupController.class" afterPath="$PROJECT_DIR$/target/classes/com/deccanrock/planovik/controller/SignupController.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/deccanrock/planovik/controller/SignupController.java" afterPath="$PROJECT_DIR$/src/main/java/com/deccanrock/planovik/controller/SignupController.java" />
     </list>
-    <ignored path="verifyed.iws" />
+    <ignored path="planovik.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -26,7 +26,7 @@
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FavoritesManager">
-    <favorites_list name="verifyed" />
+    <favorites_list name="planovik" />
   </component>
   <component name="FileEditorManager">
     <leaf>
@@ -89,27 +89,27 @@
         <subPane>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="verifyed" />
+              <option name="myItemId" value="planovik" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="verifyed" />
+              <option name="myItemId" value="planovik" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="verifyed" />
+              <option name="myItemId" value="planovik" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="verifyed" />
+              <option name="myItemId" value="planovik" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="verifyed" />
+              <option name="myItemId" value="planovik" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -119,11 +119,11 @@
           </PATH>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="verifyed" />
+              <option name="myItemId" value="planovik" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="verifyed" />
+              <option name="myItemId" value="planovik" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -145,11 +145,11 @@
           </PATH>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="verifyed" />
+              <option name="myItemId" value="planovik" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="verifyed" />
+              <option name="myItemId" value="planovik" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -175,11 +175,11 @@
           </PATH>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="verifyed" />
+              <option name="myItemId" value="planovik" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="verifyed" />
+              <option name="myItemId" value="planovik" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -197,11 +197,11 @@
           </PATH>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="verifyed" />
+              <option name="myItemId" value="planovik" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="verifyed" />
+              <option name="myItemId" value="planovik" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>

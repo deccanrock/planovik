@@ -24,7 +24,7 @@
     <meta name="description" content="">
 
     <!-- Fav Icon -->
-    <link rel="shortcut icon" href="<c:url value='/resources/images/favicon.png'/>" type="image/x-icon" />
+    <link rel="shortcut icon" href="<c:url value='/resources/images/planovik_fav.png'/>" type="image/x-icon" />
 
     <!--Application CSS Files-->
     <!-- bootstrap & fontawesome -->
@@ -129,12 +129,12 @@
 </head>
 
 <body class="no-skin">
-<div class="navbar_signup navbar-inverse1 navbar-fixed-top">
+<div class="navbar_signup navbar-inverse1 navbar-fixed-top" style="min-height:68px;">
     <div class="loggedout_menubar">
         <div class="navbar-header pull-left">
             <a href="#">
                 <div class="img_logo">
-                    <img src="<c:url value='/resources/images/verifyed_logo_main.png'/>" />
+                    <img src="<c:url value='/resources/images/planovik_logo_main.png'/>" />
                 </div>
             </a>
         </div>
@@ -179,7 +179,7 @@
                             <input type="hidden" name="default_persistent" value="1"></input>
                         </td>
                         <td class="login_form_label_field">
-                            <a rel="nofollow" href="https://www.verifyed.com/pass/recover">
+                            <a rel="nofollow" href="https://www.planovik.com/pass/recover">
                                 Forgot your password?
                             </a>
                         </td>

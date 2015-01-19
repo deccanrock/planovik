@@ -1,21 +1,23 @@
 package com.deccanrock.planovik.service.dao;
  
-import java.sql.ResultSet;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
+import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
+import org.springframework.jdbc.core.support.JdbcDaoSupport;
+import org.springframework.jdbc.datasource.DriverManagerDataSource; 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.ResultSetExtractor;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
@@ -28,28 +30,24 @@ import com.deccanrock.planovik.service.AdminEntityMapper;
  
 @Component
 @Transactional
-public class AdminEntityDAO implements
+public class AdminEntityDAO extends JdbcDaoSupport implements
 		IAdminEntityDAO {
 
 	@Autowired
-	private JdbcTemplate dbtemplate;
-	@Autowired
+    @Qualifier("mainDataSource")
 	private DataSource dataSource;
 
-	public void setDataSource(DataSource dataSource) {
-		this.dataSource = dataSource;
+	@PostConstruct
+	private void initialize() {
+		setDataSource(dataSource);
 	}
 
-	public void setTemplate(JdbcTemplate template) {
-		this.dbtemplate = template;
-	}	
 
     @Override
     public boolean Login(String username, String inpass) {
 
-        
-    	dbtemplate = new JdbcTemplate(dataSource);    	
- 		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(dbtemplate)
+    	// JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	
+    	SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(getJdbcTemplate())
  		.withProcedureName("sp_admin_getpasssalt");
 
 		Map<String, Object> inParamMap = new HashMap<String, Object>();		
@@ -74,10 +72,13 @@ public class AdminEntityDAO implements
 
     @Override	
 	public List<AdminTasksEntity> GetAllTasks() {
+    	
+    	
+    	
         String SQL = "Call sp_get_admin_tasks;";
-    	dbtemplate = new JdbcTemplate(dataSource);    	
-
- 		List <AdminTasksEntity> admintasks = dbtemplate.query(SQL, 
+    	// JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	 	
+    	        
+ 		List <AdminTasksEntity> admintasks = getJdbcTemplate().query(SQL, 
                   new AdminEntityMapper());
  		
  		return admintasks; 	
@@ -87,9 +88,9 @@ public class AdminEntityDAO implements
     @Override	
 	public List<String> GetOrgList(String query) {
 
-        dbtemplate = new JdbcTemplate(dataSource);    	
-
-		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(dbtemplate)
+    	// JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);    	
+    	    	
+		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(getJdbcTemplate())
 		.withProcedureName("sp_getidnamelist");
 
 		Map<String, Object> inParamMap = new HashMap<String, Object>();

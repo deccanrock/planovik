@@ -6,32 +6,51 @@
     http://www.springframework.org/schema/context
     http://www.springframework.org/schema/context/spring-context-3.0.xsd">
   	
-  	<context:annotation-config />
-  	   
-   
-  	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName"  value="com.mysql.jdbc.Driver"></property>
-		<property name="url" value="jdbc:mysql://localhost:3306/verifyed_01_001"></property>
-		<property name="username" value="root"></property>
-		<property name="password" value="root"></property>
+  	<context:annotation-config />	
+	
+	<bean id="parentDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" abstract="true">
+	   <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+	</bean>	
+	
+	<bean id="mainDataSource" parent="parentDataSource">
+	   <property name="url" value="${db.url.main}"/>
+	   <property name="username" value="${db.username.main}"/>
+	   <property name="password" value="${db.password.main}"/>	   
 	</bean>
-    
- 	<bean id="jdbctemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-     <constructor-arg>
-        <ref bean="dataSource"/>
-     </constructor-arg>    
-     </bean>
-     
-    <bean id="OrgEntityDAO" class="com.deccanrock.planovik.service.dao.OrgEntityDAO">
-       	<property name="template">
-       		<ref bean="jdbctemplate"/>
-       	</property>
-	</bean>     
+	
+    <bean id="OrgEntityDAO" class="com.deccanrock.planovik.service.dao.OrgEntityDAO" />
+    <bean id="AdminEntityDAO" class="com.deccanrock.planovik.service.dao.AdminEntityDAO" />
+	
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	   <property name="location" value="classpath:/com/deccanrock/planovik/datasource/db.properties"/>
+	</bean>
+	
+	
+	<bean id="dataSourceRegistry" class="com.deccanrock.planovik.Tenant.TenantTargetRegistry"></bean>
+	
+	<bean id="dataSourceTargetSource"
+		class="com.deccanrock.planovik.Tenant.ContextSwappableTargetSource">
+		<constructor-arg type="java.lang.Class">
+			<value>javax.sql.DataSource</value>
+		</constructor-arg>
+		<property name="targetRegistry" ref="dataSourceRegistry"></property>
+	</bean>
+	
+	<bean id="proxyDataSource" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<list>
+				<value>javax.sql.DataSource</value>
+			</list>
+		</property>
+		<property name="targetSource">
+			<ref bean="dataSourceTargetSource" />
+		</property>
+	</bean>
+		
+	<bean id="TenantEntityDAO" class="com.deccanrock.planovik.service.dao.TenantEntityDAO" />
 
-    <bean id="AdminEntityDAO" class="com.deccanrock.planovik.service.dao.AdminEntityDAO">
-       	<property name="template">
-       		<ref bean="jdbctemplate"/>
-       	</property>
-	</bean>     
-	              
+	<bean id="TenantImplDAO" class="com.deccanrock.planovik.service.dao.TenantImplDAO">
+		<property name="dataSource" ref="proxyDataSource"></property>
+	</bean>
+				           
 </beans>

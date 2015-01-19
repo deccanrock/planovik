@@ -22,6 +22,48 @@ public class UriHandler {
         }
         
         return params;
-   }
+	}
 	
+	/**
+	 * Extracts the domain name from {@code url}
+	 * by means of String manipulation
+	 * rather than using the {@link URI} or {@link URL} class.
+	 *
+	 * @param url is non-null.
+	 * @return the domain name within {@code url}.
+	 */
+	public static String getUrlDomainName(String url) {
+		String domainName = new String(url);
+		
+		int index = domainName.indexOf("://");
+		
+		if (index != -1) {
+		  // keep everything after the "://"
+		  domainName = domainName.substring(index + 3);
+		}
+		
+		index = domainName.indexOf('/');
+		
+		if (index != -1) {
+		  // keep everything before the '/'
+		  domainName = domainName.substring(0, index);
+		}
+		
+		// check for and remove a preceding 'www'
+		// followed by any sequence of characters (non-greedy)
+		// followed by a '.'
+		// from the beginning of the string
+		domainName = domainName.replaceFirst("^www.*?\\.", "");
+		
+		// Look for first '.' or ':' and get the string until that position which is real domain name we are looking
+		int pos = domainName.indexOf('.');
+		if (pos == -1) {
+			pos = domainName.indexOf(':');			
+		}
+		
+		if (pos == -1)
+			return domainName.substring(0, domainName.length()-1);
+		else
+			return domainName.substring(0, pos);
+	}
 }

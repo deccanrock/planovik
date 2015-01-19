@@ -23,11 +23,11 @@
     <div class="col-xs-9" style="margin-left:100px;margin-top:30px;">
 
         <div class="col-xs-6">
-            <span style="font-size:24px;font-weight:bold">Be part of a vibrant community to help combat fraud while you earn.</span>
-            <span style="display:block;font-size:18px;margin-top:20px;"><b>Receive verification requests</b>  from other organizations.</span>
+            <span style="font-size:24px;font-weight:bold">Your travel planning was never so hassle free.</span>
+            <span style="display:block;font-size:18px;margin-top:20px;"><b>Receive requests</b>  from global travellers.</span>
             <span style="display:block;font-size:18px;margin-top:20px;"><b>See detailed activity</b>  inside your account.</span>
-            <span style="display:block;font-size:18px;margin-top:20px;"><b>Discover</b>  how to leverage your  idle data .</span>
-            <img src="<c:url value='/resources/images/demo-logo-large.png'/>" alt="Verifyed Demo" height="200" width="320" style="margin-top:30px;" />
+            <span style="display:block;font-size:18px;margin-top:20px;"><b>Discover</b>  how to look good and manage better.</span>
+            <img src="<c:url value='/resources/images/demo-logo-large.png'/>" alt="Planovik Demo" height="200" width="320" style="margin-top:30px;" />
         </div>
 
 
@@ -35,7 +35,7 @@
             <div class="widget-box" style="border:none;">
                 <div class="widget-body">
 
-                    <h3 class="block green">Signup and start earning!</h3>
+                    <h3 class="block green">Signup and start planning!</h3>
 
                     <form:form id="signup-form" method="post" action="signup" modelAttribute="organization" name="organization">
 
@@ -93,7 +93,7 @@
 
                         <div class="form-group">
                             <form:label path="useragreement">
-                                <span class="lbl"> By clicking Sign Up, you agree to Verifyed's User Agreement, Privacy Policy and Cookie Policy. </span>
+                                <span class="lbl"> By clicking Sign Up, you agree to Planovik's User Agreement, Privacy Policy and Cookie Policy. </span>
                             </form:label>
                         </div>
 
@@ -105,7 +105,7 @@
             </div><!-- /.widget-body -->
         </div>
     </div>
-
+</div><!-- row -->
 </div><!-- /.page-content-area -->
 </div><!-- /.page-content -->
 </div><!-- /.main-content -->
