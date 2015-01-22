@@ -270,10 +270,10 @@
 					<!-- #section:basics/navbar.user_menu -->
 					<li class="light-blue">
 						<a data-toggle="dropdown" href="#" class="dropdown-toggle">
-							<img class="nav-user-photo" src=<%= request.getAttribute("adminphoto")%> />
+							<img class="nav-user-photo" src=<%= request.getAttribute("userphoto")%> />
 							<span class="user-info">
 								<small>Welcome,</small>
-								<%= request.getAttribute("adminname")%>
+								<%= request.getAttribute("username")%>
 							</span>
 
 							<i class="ace-icon fa fa-caret-down"></i>

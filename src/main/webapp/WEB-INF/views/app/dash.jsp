@@ -1,5 +1,5 @@
-<%@ include file="adminheader.jsp" %>
-	<%@ include file="adminnav.jsp" %>
+<%@ include file="header.jsp" %>
+	<%@ include file="nav.jsp" %>
 
 	<!-- /section:basics/navbar.layout -->
 	<div class="main-container" id="main-container">
@@ -48,7 +48,7 @@
 
 			<ul class="nav nav-list">
 				<li class="active">
-					<a id="dash" href="/admin/dash">
+					<a id="dash" href="/app/dash">
 						<i class="menu-icon fa fa-tachometer"></i>
 						<span class="menu-text"> Dashboard </span>
 					</a>
@@ -58,22 +58,22 @@
 
 
 				<li class="">
-					<a id="tasks" href="/admin/tasks" onclick= class="dropdown-toggle">
+					<a id="tasks" href="/app/tasks" onclick= class="dropdown-toggle">
 						<i class="menu-icon fa fa-list"></i>
-						<span class="menu-text"> Tasks </span>
+						<span class="menu-text"> Itineraries </span>
 					</a>
 				</li>
 				
 				<li class="">
-					<a id="manage" href="/admin/manage" class="dropdown-toggle">
-						<i class="menu-icon fa fa-desktop"></i>
-						<span class="menu-text"> Manage </span>
+					<a id="manage" href="/app/manage" class="dropdown-toggle">
+						<i class="menu-icon fa fa-pencil-square-o"></i>
+						<span class="menu-text"> Create </span>
 					</a>
 				</li>				
 
 				<li class="">
-					<a id="support" href="/admin/support" class="dropdown-toggle">
-						<i class="menu-icon fa fa-pencil-square-o"></i>
+					<a id="support" href="/app/support" class="dropdown-toggle">
+						<i class="menu-icon fa fa-desktop"></i>
 						<span class="menu-text"> Support </span>
 					</a>
 				</li>
@@ -291,19 +291,19 @@
 	<script type="text/javascript">
 	
 		$("#tasks").click(function(e){
-		    window.location = "/admin/tasks";
+		    window.location = "/app/tasks";
 		});	
 
 		$("#dash").click(function(e){
-		    window.location = "/admin/dash";
+		    window.location = "/app/dash";
 		});	
 		
 		$("#support").click(function(e){
-		    window.location = "/admin/support";
+		    window.location = "/app/support";
 		});	
 		
 		$("#manage").click(function(e){
-		    window.location = "/admin/manage";
+		    window.location = "/app/manage";
 		});	
 			
 			

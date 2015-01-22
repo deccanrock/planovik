@@ -2034,13 +2034,13 @@ pre.prettyprint{
 	margin:5px 0 4px 6px
 }
 
-.adminloginblock {
+.loginblock {
     width: 320px;
     padding: 114px 0px 0px;
     margin: auto;
 }
 
-.adminloginform {
+.loginform {
 	margin-left: -60px;
 	padding: 36px 54px 46px;
 	font-weight: normal;

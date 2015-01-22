@@ -81,4 +81,10 @@ public class BeanFactoryTargetRegistry<T> extends AbstractTargetRegistry<T> impl
         this.beanFactory = beanFactory;
     }
 
+	@Override
+	public Boolean IsTenantInMap(String domainname) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -1,5 +1,5 @@
-<%@ include file="adminheader.jsp" %>
-	<%@ include file="adminnav.jsp" %>
+<%@ include file="header.jsp" %>
+	<%@ include file="nav.jsp" %>
 
 	<!-- /section:basics/navbar.layout -->
 	<div class="main-container" id="main-container">
@@ -51,7 +51,7 @@
 
 			<ul class="nav nav-list">
 				<li class="">
-					<a id="dash" href="/admin/dash">
+					<a id="dash" href="/app/dash">
 						<i class="menu-icon fa fa-tachometer"></i>
 						<span class="menu-text"> Dashboard </span>
 					</a>
@@ -61,22 +61,22 @@
 
 
 				<li>
-					<a id="tasks" href="/admin/tasks" class="dropdown-toggle">
+					<a id="tasks" href="/app/tasks" class="dropdown-toggle">
 						<i class="menu-icon fa fa-list"></i>
-						<span class="menu-text"> Tasks </span>
+						<span class="menu-text"> Itineraries </span>
 					</a>
 				</li>
 				
 				<li  class="active">
-					<a id="manage" href="/admin/manage" class="dropdown-toggle">
-						<i class="menu-icon fa fa-desktop"></i>
-						<span class="menu-text"> Manage </span>
+					<a id="manage" href="/app/manage" class="dropdown-toggle">
+						<i class="menu-icon fa fa-pencil-square-o"></i>
+						<span class="menu-text"> Create </span>
 					</a>
 				</li>				
 
 				<li class="">
-					<a id="support" href="/admin/support" class="dropdown-toggle">
-						<i class="menu-icon fa fa-pencil-square-o"></i>
+					<a id="support" href="/app/support" class="dropdown-toggle">
+						<i class="menu-icon fa fa-desktop"></i>
 						<span class="menu-text"> Support </span>
 					</a>
 				</li>
@@ -133,7 +133,7 @@
 									</div>																		
 									<div class="widget-body">
 										<div class="widget-main no-padding">
-											<form action="/admin/tasks/manage" method="POST" onsubmit="Manage()">
+											<form action="/app/tasks/manage" method="POST" onsubmit="Manage()">
 											<input type="hidden" name="_csrf" value="token" /> 
 											<input type="hidden" name="ispost" value="true" />
 												<fieldset>
@@ -335,7 +335,7 @@
 	
 													<div class="widget-body">
 														<div class="widget-main">
-															<form action="/admin/tasks/save" method="POST" onsubmit="Manage()">
+															<form action="/app/tasks/save" method="POST" onsubmit="Manage()">
 																<input type="hidden" name="_csrf" value="token" /> 
 																<input type="hidden" name="group" value="contact" /> 
 																<div class="form-group">
@@ -467,15 +467,15 @@
 	<script type="text/javascript">
 			
 		$("#tasks").click(function(e){
-		    window.location = "/admin/tasks";
+		    window.location = "/app/tasks";
 		});	
 
 		$("#dash").click(function(e){
-		    window.location = "/admin/dash";
+		    window.location = "/app/dash";
 		});	
 		
 		$("#support").click(function(e){
-		    window.location = "/admin/support";
+		    window.location = "/app/support";
 		});
 		
 		function toggle_edit (element) {
@@ -520,7 +520,7 @@
 			datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
 			queryTokenizer: Bloodhound.tokenizers.whitespace,
 		   	remote: {
-		        url: '/admin/getOrgList?query=%QUERY',
+		        url: '/app/getOrgList?query=%QUERY',
 		        filter: function (parsedResponse) {
 		            // $.map converts the JSON array into a JavaScript array
 		            return $.map(parsedResponse, function (list) {

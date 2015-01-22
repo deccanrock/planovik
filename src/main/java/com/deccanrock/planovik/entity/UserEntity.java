@@ -6,12 +6,11 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.Table;
 import org.springframework.security.core.GrantedAuthority;
 
 @Entity
-@Table(name="vrf_admin_users") // DB=verifyed_admin
-public class AdminEntity
+
+public class UserEntity
 {
 	// Columns
     @Column(name="id")    

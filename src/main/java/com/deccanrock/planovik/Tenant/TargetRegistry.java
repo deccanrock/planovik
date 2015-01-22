@@ -22,9 +22,11 @@ public interface TargetRegistry<T> {
     /**
      * Returns the Target object for the given context, or null when none can be found.
      * 
-     * @param context
+     * @param contextName
      * @return
      */
-    public T getTarget(final TenantEntity context);
+    public T getTarget(final TenantEntity contextName);
+
+	public Boolean IsTenantInMap(final String domainname);
 
 }

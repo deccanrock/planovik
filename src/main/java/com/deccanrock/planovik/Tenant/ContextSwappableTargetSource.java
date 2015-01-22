@@ -101,12 +101,12 @@ public class ContextSwappableTargetSource implements TargetSource, InitializingB
 
         if (target == null) {
             this.logger.error("Cannot locate a target of type '{}' for context '{}'", this.targetClass.getName(),
-            		String.valueOf(contextName.getId()));
-            throw new TargetLookupFailureException("Cannot locate a target for context '" + String.valueOf(contextName.getId()) + "'");
+            		String.valueOf(contextName.getDomainname()));
+            throw new TargetLookupFailureException("Cannot locate a target for context '" + String.valueOf(contextName.getDomainname()) + "'");
         }
 
         if (!this.targetClass.isAssignableFrom(target.getClass())) {
-            throw new TargetLookupFailureException("The target for '" + String.valueOf(contextName.getId()) + "' is not of the required type."
+            throw new TargetLookupFailureException("The target for '" + String.valueOf(contextName.getDomainname()) + "' is not of the required type."
                     + "Expected '" + this.targetClass.getName() + "' and got '" + target.getClass().getName() + "'");
         }
 

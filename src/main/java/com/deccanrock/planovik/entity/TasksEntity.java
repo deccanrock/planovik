@@ -5,11 +5,9 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.Table;
 
 @Entity
-@Table(name="vrf_admin_tasks") // DB=verifyed_admin
-public class AdminTasksEntity {
+public class TasksEntity {
 	
 	@Column(name="id")
 	@GeneratedValue	

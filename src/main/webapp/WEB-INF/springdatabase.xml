@@ -19,7 +19,7 @@
 	</bean>
 	
     <bean id="OrgEntityDAO" class="com.deccanrock.planovik.service.dao.OrgEntityDAO" />
-    <bean id="AdminEntityDAO" class="com.deccanrock.planovik.service.dao.AdminEntityDAO" />
+    <bean id="UserEntityDAO" class="com.deccanrock.planovik.service.dao.UserEntityDAO" />
 	
 	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 	   <property name="location" value="classpath:/com/deccanrock/planovik/datasource/db.properties"/>

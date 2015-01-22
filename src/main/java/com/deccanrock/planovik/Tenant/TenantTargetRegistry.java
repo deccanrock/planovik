@@ -4,8 +4,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.sql.DataSource;
+
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.util.Assert;
+
 import com.deccanrock.planovik.entity.TenantEntity;
 
 public class TenantTargetRegistry implements TargetRegistry<DataSource> {
@@ -17,7 +19,7 @@ public class TenantTargetRegistry implements TargetRegistry<DataSource> {
 		//TenantEntity tenant = ContextHolder.getTenant();
 
 		Assert.notNull(intenant, "Tenant was not set.");
-		String key = String.valueOf(intenant.getId());
+		String key = String.valueOf(intenant.getDomainname());
 		DataSource dataSource = null;
 		
 		// Check if intenant is different from current tenant, if yes then get new data source and set in map
@@ -43,6 +45,13 @@ public class TenantTargetRegistry implements TargetRegistry<DataSource> {
 		dataSource.setPassword(password);
 		dataSource.setUrl(url);
 		return dataSource;
+	}
+
+	@Override
+	public Boolean IsTenantInMap(String domainname) {
+		if (map.containsKey(domainname))
+			return true;
+		return false;
 	}
 
 }

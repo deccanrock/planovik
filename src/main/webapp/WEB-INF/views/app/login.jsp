@@ -1,8 +1,8 @@
-<%@ include file="adminheader.jsp" %>
+<%@ include file="header.jsp" %>
 
 
-<div  class="adminloginblock">
-	<div class="adminloginform">
+<div  class="loginblock">
+	<div class="loginform">
 		<c:if test="${not empty error}">
 			<div class="error">${error}</div>
 		</c:if>
@@ -31,10 +31,10 @@
 		</form>
 	</div>
 	<div style="margin-top:20px;font-size:14px;">
-		<a href="http://localhost:8080/admin/recoverpassword">
+		<a href="http://localhost:8080/app/recoverpassword">
 	    	Lost your password?
 		</a>
 	</div>
 </div>
 
-<%@ include file="adminfooter.jsp" %>
+<%@ include file="footer.jsp" %>

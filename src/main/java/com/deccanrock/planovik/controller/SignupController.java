@@ -21,8 +21,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.validation.BindingResult;
 
-import com.deccanrock.planovik.entity.AdminTasksEntity;
 import com.deccanrock.planovik.entity.OrgEntity;
+import com.deccanrock.planovik.entity.TasksEntity;
 import com.deccanrock.planovik.location.MaxLocation;
 import com.deccanrock.planovik.location.MaxLocationBO;
 import com.deccanrock.planovik.service.dao.OrgEntityDAO;
@@ -96,9 +96,9 @@ public class SignupController {
 	}	
 
     @RequestMapping(value = "/signup/edit", method = RequestMethod.POST, consumes = "application/json; charset=utf-8")    
-    public String update(@RequestBody AdminTasksEntity admintask) {
+    public String update(@RequestBody TasksEntity task) {
     	// This is ajax support function for JQGrid
-    	logger.info("Edit Admin Tasks");    	
+    	logger.info("Edit User Tasks");    	
 		return "OK";	
     }
     	

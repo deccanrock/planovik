@@ -1,5 +1,5 @@
-<%@ include file="adminheader.jsp" %>
-	<%@ include file="adminnav.jsp" %>
+<%@ include file="header.jsp" %>
+	<%@ include file="nav.jsp" %>
 
 	<!-- /section:basics/navbar.layout -->
 	<div class="main-container" id="main-container">
@@ -48,7 +48,7 @@
 
 			<ul class="nav nav-list">
 				<li class="">
-					<a id="dash" href="/admin/dash">
+					<a id="dash" href="/app/dash">
 						<i class="menu-icon fa fa-tachometer"></i>
 						<span class="menu-text"> Dashboard </span>
 					</a>
@@ -58,22 +58,22 @@
 
 
 				<li class="active">
-					<a id="tasks" href="/admin/tasks" class="dropdown-toggle">
+					<a id="tasks" href="/app/tasks" class="dropdown-toggle">
 						<i class="menu-icon fa fa-list"></i>
-						<span class="menu-text"> Tasks </span>
+						<span class="menu-text"> Itineraries </span>
 					</a>
 				</li>
 				
 				<li class="">
-					<a id="manage" href="/admin/manage" class="dropdown-toggle">
-						<i class="menu-icon fa fa-desktop"></i>
-						<span class="menu-text"> Manage </span>
+					<a id="manage" href="/app/manage" class="dropdown-toggle">
+						<i class="menu-icon fa fa-pencil-square-o"></i>
+						<span class="menu-text"> Create </span>
 					</a>
 				</li>				
 
 				<li class="">
-					<a id="support" href="/admin/support" class="dropdown-toggle">
-						<i class="menu-icon fa fa-pencil-square-o"></i>
+					<a id="support" href="/app/support" class="dropdown-toggle">
+						<i class="menu-icon fa fa-desktop"></i>
 						<span class="menu-text"> Support </span>
 					</a>
 				</li>
@@ -108,7 +108,7 @@
 							Organization
 							<small>
 								<i class="ace-icon fa fa-angle-double-right"></i>
-								task management
+								itinerary management
 							</small>
 						</h1>
 					</div><!-- /.page-header -->
@@ -116,7 +116,7 @@
 					<input type="hidden" id="csrfToken" value="${_csrf.token}"/>
 					<input type="hidden" id="csrfHeader" value="${_csrf.headerName}"/>
 					
-					<form style="display: hidden" action="/admin/tasks/manage" method="POST" id="managepost">
+					<form style="display: hidden" action="/app/tasks/manage" method="POST" id="managepost">
 					  <input type="hidden" id="id" name="id" value=""/>
 					  <input type="hidden" id="subid" name="subid" value=""/>
 					  <input type="hidden" id="lastupdate" name="lastupdate" value=""/>
@@ -224,19 +224,19 @@
 		var token = $('#csrfToken').val();
 		var header = $('#csrfHeader').val();
 		var grid_data;
-		var URL = "/admin/tasks";
+		var URL = "/app/tasks";
 		var selectedrow;
 		
 		$("#tasks").click(function(e){
-		    window.location = "/admin/tasks";
+		    window.location = "/app/tasks";
 		});	
 
 		$("#dash").click(function(e){
-		    window.location = "/admin/dash";
+		    window.location = "/app/dash";
 		});	
 
 		$("#manage").click(function(e){
-		    window.location = "/admin/manage";
+		    window.location = "/app/manage";
 		});	
 	
     			
@@ -505,14 +505,14 @@
 				
 				var a=$('#managepost').serialize();
 		         $.ajax({
-		                url: '/admin/tasks/manage',
+		                url: '/app/tasks/manage',
 		                type: 'post',
 					    data:a,
 					    beforeSend:function (jqXHR, settings) {
 			           		jqXHR.setRequestHeader(header, token);            
 	  					},
 	  					success: function(data) {
-				       		window.location.href = '/admin/manage';
+				       		window.location.href = '/app/manage';
 				       }  
 		         });			    
 			}
