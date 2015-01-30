@@ -49,19 +49,17 @@
     <script src="http://code.jquery.com/jquery-migrate-1.0.0.js"></script>
     <script src="https://www.gstatic.com/freebase/suggest/4_2/suggest.min.js"></script>
     <script type="text/javascript">
-
-        $(function() {
-            $("#orgname").suggest({
-                key: "AIzaSyBBJoStIWMWfWkgHIoRtLCCAg8B4ay2Vk8"
-            })
-			.bind("fb-select", function(e, data) {
-  				checkname(data.name);
-			});            
-
-        });
         
-        function checkname(orgname) {
-       		var target = document.getElementById('spinner');
+        function checkname(username, type, fieldname) {
+        
+        	var target;
+        	
+        	if (fieldname == '#username')
+       			target = document.getElementById('spinnerusername');
+       		
+       		if (fieldname == '#reportstoemail')
+       			target = document.getElementById('spinnerreportingmanager');
+       		
 	    	var opts = {
     	        lines:8, length:5, width:3, radius:3, corners:1,
             	rotate:0, color:'#000', speed:1, trail:60, shadow:false,
@@ -69,30 +67,74 @@
         	};
        		var spinner = new Spinner(opts).spin(target);	
         	
-        	var request = $.ajax({url: "/checkorgname", type: "GET", data: "orgname=" + orgname});
+        	var request = $.ajax({url: "/app/checkusername", type: "GET", data: "username=" + username});
+
         	request.done(function( msg ) {
 				spinner.stop();
-				if (msg == 'exists') {
+				if (msg == 'exists' && type == 'checkexists') {
 					$.gritter.add({
-						title: 'Organization details already on file!',
-						text: 'Required details for your Organization are already on file. We have sent email to your official id with further instructions.',
+						title: 'User already exists!',
+						text: 'Specified user already exists, try edit instead of insert to change user data.',
 						image: '',
 						sticky: true,
 						time: '',
 						// (function | optional) function called after it closes
 						after_close: function(e, manual_close){
-							var orgname = document.getElementById('orgname');
-							$('#orgname').val('');
-							$('#orgname').focus();
+							var username = document.getElementById('username');
+							$('#username').val('');
+							$('#username').focus();
 						},						
-						class_name: 'gritter-error gritter-center' + (!$('#spinner').get(0).checked ? ' gritter-dark' : '')
+						class_name: 'gritter-error gritter-center' + (!$('#spinnerusername').get(0).checked ? ' gritter-light' : '')
 					});
 				}
+
+				if (msg == 'none' && type == 'checknotexists') {
+					$.gritter.add({
+						title: 'User with email not found!',
+						text: 'No user exists with specified email, please provide correct email id.',
+						image: '',
+						sticky: true,
+						time: '',
+						// (function | optional) function called after it closes
+						after_close: function(e, manual_close){
+							var username = document.getElementById('username');
+							$(fieldname).val('');
+							$(fieldname).focus();
+						},						
+						class_name: 'gritter-error gritter-center' + (!$('#spinnerreportingmanager').get(0).checked ? ' gritter-light' : '')
+					});
+				}
+				
+				if (msg == 'none' && type == 'checkexistsedit') {
+					$.gritter.add({
+						title: 'User with email not found!',
+						text: 'No user exists with specified email, please provide correct email id.',
+						image: '',
+						sticky: true,
+						time: '',
+						// (function | optional) function called after it closes
+						after_close: function(e, manual_close){
+							var username = document.getElementById('usernameedit');
+							$(fieldname).val('');
+							$(fieldname).focus();
+						},						
+						class_name: 'gritter-error gritter-center' + (!$('#spinneredituser').get(0).checked ? ' gritter-light' : '')
+					});
+					$('#manageusersedit').attr("disabled", true);		    	
+					$('#manageusersdelete').attr("disabled", true);		
+				}
+				
+				if (msg == 'exists' && type == 'checkexistsedit') {
+					$('#manageusersedit').removeAttr("disabled");		    	
+					$('#manageusersdelete').removeAttr("disabled");		
+				}
+
+
 			}); 
 	        request.fail(function( jqXHR, textStatus ) {
-				$('spinner').data('spinner').stop();;
-			});		
-			
+				spinner.stop();
+			});
+						
         }
     </script>
     <!--[if lte IE 9]>

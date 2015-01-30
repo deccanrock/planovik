@@ -3,6 +3,7 @@ package com.deccanrock.planovik.controller;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -135,30 +136,6 @@ public class AppController {
 		// Get Task records from database
 		
 		return "app/tasks";
-    }
-    
-    @RequestMapping(value = "/app/tasks", method = RequestMethod.GET,  produces = "application/json")
-    public @ResponseBody String GetAdminTasks(ModelMap map, ServletResponse response) throws IOException {
-		
-    	// This is ajax support function for JQGrid
-    	logger.info("Get Admin Tasks");    	
-			
-		// Get Task records from database
-		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
-		UserEntityDAO AED = (UserEntityDAO)context.getBean("UserEntityDAO");	
-		List<TasksEntity> admintasks = AED.GetAllTasks();
-		((ClassPathXmlApplicationContext) context).close();
-
-		// Build Json Reader map for jqgrid		
-		ObjectMapper mapper = new ObjectMapper();
-		adminTasksGridData atgd = new adminTasksGridData();
-		atgd.totalpages = (admintasks.size() % 10);
-		atgd.totalrecords = admintasks.size();
-		atgd.rows = admintasks;
-		String jsonOut = mapper.writeValueAsString(atgd); 
-		response.setContentType("application/json");	
-				
-		return jsonOut;
     }
     
     // Hook for jqGrid (Edit's and Delete's)
@@ -315,6 +292,25 @@ public class AppController {
 		response.setContentType("application/json");	
 				
 		return jsonOut;
+	}
+	
+	/**
+	 * Check if email exists
+	 * All lookahead code should be refactored into a caching layer
+	 * @throws URISyntaxException 
+	 */
+	@RequestMapping(value = "/app/checkusername", method = RequestMethod.GET)
+	public @ResponseBody String checkUserName(@RequestParam(value = "username") String userName) {
+		logger.info("Check User Name");
+
+		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
+		UserEntityDAO UED = (UserEntityDAO)context.getBean("UserEntityDAO");
+		((ClassPathXmlApplicationContext) context).close();
+		// This should be changed to memcached
+		if (UED.UserExists(userName))
+			return "exists";
+		else
+			return "none";
 	}	
     
     private boolean IsUserLoggedIn(ModelMap map) {

@@ -11,7 +11,7 @@ import org.springframework.security.core.AuthenticationException;
 import com.deccanrock.planovik.entity.UserLoginAttempts;
 import com.deccanrock.planovik.service.dao.UserDetailsDao;
 
-public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider {
+public class AuthenticationProvider extends DaoAuthenticationProvider {
 
 	UserDetailsDao userDetailsDao;
 

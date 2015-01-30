@@ -6,6 +6,7 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+
 import org.springframework.security.core.GrantedAuthority;
 
 @Entity
@@ -27,9 +28,6 @@ public class UserEntity
     @Column(name="pass")    
 	private String pass;
     
-    @Column(name="email")    
-	private String email;
-    
     @Column(name="phone")    
 	private String phone;
     
@@ -45,7 +43,7 @@ public class UserEntity
     
     // L1, L2, ...
     @Column(name="level")    
-	private String level;
+	private int level;
     
     // Active, pending approval, suspended, left company, deleted
     @Column(name="status")    
@@ -59,6 +57,11 @@ public class UserEntity
 
     @Column(name="dateupdated")    
 	private Date dateupdated;
+    
+    private String mode;
+    
+    private String reportstoemail;
+    private String createdbyemail;
     
 	/* Spring Security fields*/
 	private Collection<? extends GrantedAuthority> authorities;
@@ -100,15 +103,7 @@ public class UserEntity
 	public void setPass(String pass) {
 		this.pass = pass;
 	}
-	
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	
+		
 	public String getPhone() {
 		return phone;
 	}
@@ -141,11 +136,11 @@ public class UserEntity
 		this.createdby = createdby;
 	}
 
-	public String getLevel() {
+	public int getLevel() {
 		return level;
 	}
 	
-	public void setLevel(String level) {
+	public void setLevel(int level) {
 		this.level = level;
 	}
 		
@@ -221,4 +216,29 @@ public class UserEntity
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}		
+	
+	public String getMode() {
+		return this.mode;
+	}
+	
+	public void setMode(String mode) {
+		this.mode = mode;
+	}
+	
+	public String getReportstoemail() {
+		return this.reportstoemail;
+	}
+	
+	public void setReportstoemail(String email) {
+		this.reportstoemail = email;
+	}
+	public String getCreatedbyemail() {
+		return this.createdbyemail;
+	}
+	
+	public void setCreatedbyemail(String email) {
+		this.createdbyemail = email;
+	}
+
+
 }

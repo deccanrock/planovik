@@ -20,14 +20,14 @@ import com.deccanrock.planovik.entity.UserLoginAttempts;
 @Repository
 public class UserDetailsDao extends JdbcDaoSupport implements IUserDetailsDao {
 
-	private static final String SQL_USERS_UPDATE_LOCKED = "UPDATE plnvk_admin_users SET accountNonLocked = ? WHERE username = ?";
-	private static final String SQL_USERS_COUNT = "SELECT count(*) FROM plnvk_admin_users WHERE username = ?";
+	private static final String SQL_USERS_UPDATE_LOCKED = "UPDATE users SET accountNonLocked = ? WHERE username = ?";
+	private static final String SQL_USERS_COUNT = "SELECT count(*) FROM users WHERE username = ?";
 
-	private static final String SQL_USER_ATTEMPTS_GET = "SELECT * FROM plnvk_admin_login_attempts WHERE username = ?";
-	private static final String SQL_USER_ATTEMPTS_INSERT = "INSERT INTO plnvk_admin_login_attempts (USERNAME, ATTEMPTS, LASTMODIFIED) VALUES(?,?,?)";
+	private static final String SQL_USER_ATTEMPTS_GET = "SELECT * FROM user_login_attempts WHERE username = ?";
+	private static final String SQL_USER_ATTEMPTS_INSERT = "INSERT INTO user_login_attempts (USERNAME, ATTEMPTS, LASTMODIFIED) VALUES(?,?,?)";
 
-	private static final String SQL_USER_ATTEMPTS_UPDATE_ATTEMPTS = "UPDATE plnvk_admin_login_attempts SET attempts = attempts + 1, lastmodified = ? WHERE username = ?";
-	private static final String SQL_USER_ATTEMPTS_RESET_ATTEMPTS = "UPDATE plnvk_admin_login_attempts SET attempts = 0 WHERE username = ?";
+	private static final String SQL_USER_ATTEMPTS_UPDATE_ATTEMPTS = "UPDATE user_login_attempts SET attempts = attempts + 1, lastmodified = ? WHERE username = ?";
+	private static final String SQL_USER_ATTEMPTS_RESET_ATTEMPTS = "UPDATE user_login_attempts SET attempts = 0 WHERE username = ?";
 
 	private static final int MAX_ATTEMPTS = 3;
 
