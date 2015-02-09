@@ -18,7 +18,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,9 +31,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.codehaus.jackson.map.ObjectMapper;
 
+import com.deccanrock.planovik.entity.ItineraryEntity;
 import com.deccanrock.planovik.entity.TasksEntity;
 import com.deccanrock.planovik.entity.OrgEntity;
+import com.deccanrock.planovik.entity.UserEntity;
 import com.deccanrock.planovik.location.MaxLocationBO;
+import com.deccanrock.planovik.service.dao.ItineraryEntityDAO;
 import com.deccanrock.planovik.service.dao.UserEntityDAO;
 import com.deccanrock.planovik.service.dao.OrgEntityDAO;
 import com.deccanrock.planovik.service.utils.UriHandler;
@@ -64,7 +69,7 @@ public class AppController {
 	// TODO - Beef up logger details to catch more admin user info
 	
     @RequestMapping(value = "/app/**", method = RequestMethod.GET)
-    public String adminDash(ModelMap map) {
+    public String adminDash(ModelMap map, HttpServletRequest request) {
 		logger.info(" Zone");
 
 		if (!IsUserLoggedIn(map))
@@ -163,7 +168,7 @@ public class AppController {
     public String manageOrgGet(ModelMap map, HttpSession session) throws IOException {
 
     	// This is ajax support function for JQGrid
-    	logger.info("Manage Admin Tasks - GET");
+    	logger.info("Manage Tasks - GET");
     	
 
 		if (!IsUserLoggedIn(map))
@@ -177,54 +182,113 @@ public class AppController {
 		String adminphoto = "/resources/avatars/" + adminname + ".jpg";
 		map.addAttribute("adminphoto", adminphoto); 
 		
-		String params = null;
-		if (session.getAttribute("manageparams") != null) { // manage request from tasks pane
-			params = session.getAttribute("manageparams").toString();
-			Map<String, String> modelMap = null;
-	    	try {
-				modelMap = UriHandler.Decode(params);
-				
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	    	// Set session value to null as required information is available
-	    	session.setAttribute("manageparams", null);
-	    	if (modelMap != null) {
-	    		map.addAttribute("orgidname", modelMap.get("orgidname"));
-	    		// Get all org related data to be displayed on page
-				// Get Task records from database
-				ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
-				OrgEntityDAO OED = (OrgEntityDAO)context.getBean("OrgEntityDAO");	
-				OrgEntity org = OED.GetOrgDetails(modelMap.get("orgidname"));    				
-	    		map.addAttribute("orgdetails", org);    					    	
-				((ClassPathXmlApplicationContext) context).close();	
-	    	}
-		}
+		ItineraryEntity itinerary = new ItineraryEntity();
+        map.addAttribute("itinerary", itinerary);	
 		    	    	    	
 		return "app/manage";	
     }
     
 	
     // Hook for jqGrid ('Manage'), Set Session variables and manage tab
-    @RequestMapping(value = "/app/tasks/manage", method = RequestMethod.POST,
-    		consumes = {"application/x-www-form-urlencoded; charset=utf-8"})    
-    public String managePost(@RequestBody String inString, HttpSession session, HttpServletRequest request) {
-
+    @RequestMapping(value = "/app/manage", method = RequestMethod.POST)    
+    public String manageItinerary(@ModelAttribute(value="itinerary") ItineraryEntity itinerary, Model map, HttpServletRequest request) {
+   
     	// This is ajax support function for JQGrid
-    	logger.info("Manage Admin Tasks - POST");
+    	logger.info("Itinerary Manage - POST");
     			
-		session.setAttribute("manageparams", inString);
+		request.setAttribute("title", "Planovik Manage Itinerary");
+		if (itinerary.getMode().equals("Create"))
+			request.setAttribute("header", "Manage Itinerary - Create");
+		else
+			request.setAttribute("header", "Manage Itinerary - Edit");
+			
+		map.addAttribute("phonecode", "+91");	
 		
-		if (inString.contains("ispost")) {
-			// Safe to assume request for regular form post, redirect
-			String targetURL = request.getContextPath() + "/app/manage";
-			return "redirect:" + targetURL;
+		// Save model to database
+		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
+		ItineraryEntityDAO IED = (ItineraryEntityDAO)context.getBean("ItineraryEntityDAO");
+		
+		// Record admin who created/edited/modifyed
+		User loggeduser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		itinerary.setLastupdatedbyemail(loggeduser.getUsername());
+		
+		ItineraryEntity itinerarydb = null;
+		if ( itinerary.getMode().equals("Create")) {
+			// Create new itinerary and display form
+			itinerary.setCreatedbyemail(loggeduser.getUsername());
+			itinerarydb = IED.CreateItinerary(itinerary);
+			map.addAttribute("itinerary", itinerarydb);
+
+			if (itinerarydb.getError().equals("Duplicate") == true) {
+				String errDup = "Itinerary: " + "\'" + itinerarydb.getName() + "\'" + " already exists! Edit that itinerary instead."; 
+				map.addAttribute("error", errDup);				
+				((ClassPathXmlApplicationContext) context).close();		
+				return "app/manage";
+			}
+			
+			// Have to find a better way to do this
+			itinerarydb.setArrivalcity("");
+			itinerarydb.setDepcity("");
+			itinerarydb.setConvcode("");
+			itinerarydb.setEnddatestr("");
+			itinerarydb.setStartdatestr("");
+			itinerarydb.setGrouphead("");
+			itinerarydb.setQuotecurrency("");
+			itinerarydb.setConvcode("");			
+
+			if (itinerarydb.getError().equals("Success") == false)
+				map.addAttribute("error", itinerarydb.getError());				
 		}
+		else {	// assume edit
+			// Check if lookahead or edit request from itineraries tab or search
+			if (itinerary.getId() == 0) {
+				// Assume manual edit lookahead
+				int itinnum = Integer.parseInt(itinerary.getName().substring(0, itinerary.getName().indexOf('-')-1));
+				itinerarydb = IED.GetItinerary(itinnum);
+			}
+			else
+				itinerarydb = IED.GetItinerary(itinerary.getId());
+			
+			map.addAttribute("itinerary", itinerarydb);
+		}
+
+		((ClassPathXmlApplicationContext) context).close();		
+		return "app/itinerarymanage";
     	    	    	    	
-		return "app/manage";	
     }
     
+    
+    // Hook for jqGrid ('Manage'), Set Session variables and manage tab
+    @RequestMapping(value = "/app/manage/save", method = RequestMethod.POST)    
+    public String manageSaveItinerary(@ModelAttribute(value="itinerary") ItineraryEntity itinerary, Model map, HttpServletRequest request) {
+   
+    	// This is ajax support function for JQGrid
+    	logger.info("Itinerary Manage Save - POST");
+    			
+		request.setAttribute("title", "Planovik Save Itinerary");
+		if (itinerary.getMode().equals("Create"))
+			request.setAttribute("header", "Manage Itinerary - Create");
+		else
+			request.setAttribute("header", "Manage Itinerary - Edit");
+			
+		map.addAttribute("phonecode", "+91");	
+		
+		// Save model to database
+		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
+		ItineraryEntityDAO IED = (ItineraryEntityDAO)context.getBean("ItineraryEntityDAO");
+		
+		// Record admin who created/edited/modifyed
+		User loggeduser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		itinerary.setLastupdatedbyemail(loggeduser.getUsername());
+		
+		ItineraryEntity itinerarydb = null;
+		itinerarydb = IED.SaveItinerary(itinerary);
+		map.addAttribute("itinerary", itinerarydb);
+
+		((ClassPathXmlApplicationContext) context).close();		
+		return "app/itinerarymanagesave";
+    	    	    	    	
+    }    
     
     @RequestMapping(value = "/app/login", method = RequestMethod.GET)
     public String login(ModelMap map,
@@ -272,23 +336,23 @@ public class AppController {
 	/**
 	 * Typeahead support
 	 */
-	@RequestMapping(value = "/app/getOrgList", method = RequestMethod.GET, produces = "application/json")
-	public @ResponseBody String getOrgList(ServletResponse response, @RequestParam(value = "query") String query) 
+	@RequestMapping(value = "/app/getItinList", method = RequestMethod.GET, produces = "application/json")
+	public @ResponseBody String getItinList(ServletResponse response, @RequestParam(value = "query") String query) 
 			throws IOException {
-		logger.info("Admin Get Org List");
+		logger.info("Get Itinerary List");
 
 		if (query.isEmpty())
 			return "";
 		
 		// Get Org List from database, should be changed to get from cache
 		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
-		UserEntityDAO AED = (UserEntityDAO)context.getBean("UserEntityDAO");	
-		List<String> orgList = AED.GetOrgList(query);
+		ItineraryEntityDAO IED = (ItineraryEntityDAO)context.getBean("ItineraryEntityDAO");	
+		List<String> itinList = IED.GetItinList(query);
 		((ClassPathXmlApplicationContext) context).close();
 
 		// Build Json Reader map for jqgrid		
 		ObjectMapper mapper = new ObjectMapper();
-		String jsonOut = mapper.writeValueAsString(orgList); 
+		String jsonOut = mapper.writeValueAsString(itinList); 
 		response.setContentType("application/json");	
 				
 		return jsonOut;

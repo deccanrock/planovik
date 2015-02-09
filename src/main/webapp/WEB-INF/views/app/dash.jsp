@@ -58,7 +58,7 @@
 
 
 				<li class="">
-					<a id="tasks" href="/app/tasks" onclick= class="dropdown-toggle">
+					<a id="itineraries" href="/app/itineraries" onclick= class="dropdown-toggle">
 						<i class="menu-icon fa fa-list"></i>
 						<span class="menu-text"> Itineraries </span>
 					</a>
@@ -67,7 +67,7 @@
 				<li class="">
 					<a id="manage" href="/app/manage" class="dropdown-toggle">
 						<i class="menu-icon fa fa-pencil-square-o"></i>
-						<span class="menu-text"> Create </span>
+						<span class="menu-text"> Manage </span>
 					</a>
 				</li>				
 
@@ -290,8 +290,8 @@
 	<!-- inline scripts related to this page -->
 	<script type="text/javascript">
 	
-		$("#tasks").click(function(e){
-		    window.location = "/app/tasks";
+		$("#itineraries").click(function(e){
+		    window.location = "/app/itineraries";
 		});	
 
 		$("#dash").click(function(e){

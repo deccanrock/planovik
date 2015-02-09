@@ -61,7 +61,7 @@
 
 
 				<li>
-					<a id="tasks" href="/app/tasks" class="dropdown-toggle">
+					<a id="tasks" href="/app/itineraries" class="dropdown-toggle">
 						<i class="menu-icon fa fa-list"></i>
 						<span class="menu-text"> Itineraries </span>
 					</a>
@@ -70,7 +70,7 @@
 				<li  class="active">
 					<a id="manage" href="/app/manage" class="dropdown-toggle">
 						<i class="menu-icon fa fa-pencil-square-o"></i>
-						<span class="menu-text"> Create </span>
+						<span class="menu-text"> Manage </span>
 					</a>
 				</li>				
 
@@ -108,287 +108,77 @@
 				<div class="page-content-area">
 					<div class="page-header">
 						<h1 style="display:inline-block;margin-right:10px; width:350px;">
-							Organization
+							Itinerary
 							<small>
 								<i class="ace-icon fa fa-angle-double-right"></i>
-								management
+								manage
 							</small>
 						</h1>
 						
 						<input type="hidden" id="csrfToken" value="${_csrf.token}"/>
 						<input type="hidden" id="csrfHeader" value="${_csrf.headerName}"/>
 						
-						<c:if test="${pageContext.request.getAttribute('orgidname') != null}">
-							<h6 style="display:inline-block; width:400px;font-weight:bold;">
-										<c:out value="${pageContext.request.getAttribute('orgidname')}" />
-							</h6>
-						</c:if>
 					</div><!-- /.page-header -->
+					<c:if test="${not empty error}">
+						<div class="alert alert-danger">
+							<button type="button" class="close" data-dismiss="alert">
+							<i class="ace-icon fa fa-times"></i>
+							</button>
+							<strong><i class="ace-icon fa fa-times"></i></strong>
+							${error}
+						</div>										
+					</c:if>			
 
-					<c:if test="${pageContext.request.getAttribute('orgidname') == null}">
-						<div class="row" style="width:35%;margin-left:30px;margin-top:30px;" \>
-							<div class="widget-box"> 
-									<div class="widget-header">
-										<h4 class="widget-title">Enter Organization Name:</h4>
-									</div>																		
-									<div class="widget-body">
-										<div class="widget-main no-padding">
-											<form action="/app/tasks/manage" method="POST" onsubmit="Manage()">
-											<input type="hidden" name="_csrf" value="token" /> 
-											<input type="hidden" name="ispost" value="true" />
-												<fieldset>
-													<div id="remote">
-														<input type="text" name="orgidname" class="typeahead scrollable" style="width:100%" />
-													</div>			
-												</fieldset>
-													<div style="margin-left:80%;margin-bottom:2%;">
-														<button type="submit" name="submit" class="btn btn-sm btn-success">
-															Submit
-														</button>
-													</div>
-											</form>
-										</div>
-									 </div>
-							</div>
-						</div>					
-					</c:if>	
-
-					<!--  Work area for admins-->										 
-					 <c:if test="${pageContext.request.getAttribute('orgidname') != null}">
-					 	<c:set var="orgdetails" value="${pageContext.request.getAttribute('orgdetails')}" />
-						<div class="col-xs-12" style="width:100%;">
-						
-							<div class="widget-box">
-							
-								<!-- #section:custom/widget-box.options -->
+					<div class="row" style="width:35%;margin-left:30px;margin-top:30px;" \>
+						<div class="widget-box"> 
 								<div class="widget-header">
-									<h4 class="widget-title">Details</h4>
-
-									<!-- #section:custom/widget-box.toolbar -->
-									<div class="widget-toolbar">
-										<a href="#" data-action="reload">
-											<i class="ace-icon fa fa-refresh"></i>
-										</a>	
-									</div>								
-								</div>
-	
-								<!-- /section:custom/widget-box.options -->
+									<h4 class="widget-title">Create itinerary, Enter name:</h4>
+									<span style="font-size:small;">(15 characters or less)</span>
+								</div>																		
 								<div class="widget-body">
-									<div class="widget-main">
-									
-										<div class="row">
-											
-											<div class="col-xs-12 col-sm-3">
-												
-												<div class="widget-box">
-													<div class="widget-header">
-														<h5 class="widget-title">Registration</h5>
-	
-														<div class="widget-toolbar">
-															<a href="#" data-action="collapse">
-																<i class="ace-icon fa fa-chevron-up"></i>
-															</a>
-	
-															<a href="#" data-action="close">
-																<i class="ace-icon fa fa-times"></i>
-															</a>
-														</div>
-													</div>
-	
-													<div class="widget-body">
-														<div class="widget-main">
-															<div>
-																<span style="width:90px;display:inline-block;">IP</span>
-																<span style="color:#669FC7;"><c:out value="${orgdetails.ip}" /></span>
-															</div>
-	
-															<div>
-																<span style="width:90px;display:inline-block;">Country</span>
-																<span style="color:#669FC7;"><c:out value="${orgdetails.countryname}" /></span>
-															</div>
-															
-															<div>
-																<span style="width:90px;display:inline-block;">Date</span>
-																<span style="color:#669FC7;"><fmt:formatDate type="both" value="${orgdetails.datecreatedlocal}" pattern="yyyy-MM-dd HH:mm" /></span>
-															</div>
-															<div>
-																<span style="width:90px;display:inline-block;">UTC Offset</span>
-																<span style="color:#669FC7;"><c:out value="${orgdetails.localtoutcoff}" /></span>
-															</div>
-															
-														</div>
-													</div>
+									<div class="widget-main no-padding">
+										<form:form id="manageitin-form" action="/app/manage" method="POST" modelAttribute="itinerary" name="itinerary" onsubmit="Manage()">
+										<input type="hidden" name="_csrf" value="token" /> 
+											<fieldset>
+												<div id="remote">
+													<form:input path="name" type="text" name="name" style="width:100%" />
 												</div>
-											</div><!-- /.span -->																	
-				
-									
-											<div class="col-xs-12 col-sm-3">
-												<div class="widget-box">
-													<div class="widget-header">
-														<h5 class="widget-title">Activity</h5>
-	
-														<div class="widget-toolbar">
-															<a href="#" data-action="collapse">
-																<i class="ace-icon fa fa-chevron-up"></i>
-															</a>
-	
-															<a href="#" data-action="close">
-																<i class="ace-icon fa fa-times"></i>
-															</a>
-														</div>
-													</div>
-	
-													<div class="widget-body">
-														<div class="widget-main">
-															<div>
-																<span style="width:155px;display:inline-block;">Last Updated</span>
-																<span style="color:#669FC7;"><fmt:formatDate type="both" value="${orgdetails.dateupdatedlocal}" pattern="yyyy-MM-dd HH:mm" /></span>
-															</div>
-	
-															<div>
-																<span style="width:155px;display:inline-block;">Vrf Request Count</span>
-																<span style="color:#669FC7;"><c:out value="${orgdetails.vrfreqcnt}" /></span>
-															</div>
-															
-															<div>
-																<span style="width:155px;display:inline-block;">Vrf Processed Count</span>
-																<span style="color:#669FC7;"><c:out value="${orgdetails.vrfproccnt}" /></span>
-															</div>
-															<div>
-																<span style="width:155px;display:inline-block;">Alerts Pending Count</span>
-																<span style="color:#669FC7;"><c:out value="${orgdetails.alrtpendingcnt}" /></span>
-															</div>
-															<div>
-																<span style="width:155px;display:inline-block;">Message Unread Count</span>
-																<span style="color:#669FC7;"><c:out value="${orgdetails.msgsunrdcnt}" /></span>
-															</div>
-															
-														</div>
-													</div>
+												<form:input type="hidden" id="mode" path="mode" />
+												<form:input type="hidden" id="tzoffset" path="tzoffset"/>			
+											</fieldset>
+												<div style="margin-left:60%;margin-bottom:2%;">
+													<input type="submit" id="itincreate" path="itincreate" name="submit" value="Create" class="btn btn-sm btn-success" />
 												</div>
-											</div><!-- /.span -->									
+										</form:form>
+									</div>
+								 </div>
+						</div>
+						
+						<div class="space-12"></div>
 
-
-											<div class="col-xs-12 col-sm-3">
-												<div class="widget-box">
-													<div class="widget-header">
-														<h5 class="widget-title">Account</h5>
-	
-														<div class="widget-toolbar">
-															<a href="#" data-action="collapse">
-																<i class="ace-icon fa fa-chevron-up"></i>
-															</a>
-	
-															<a href="#" data-action="close">
-																<i class="ace-icon fa fa-times"></i>
-															</a>
-														</div>
-													</div>
-	
-													<div class="widget-body">
-														<div class="widget-main">
-															<div>
-																<span style="width:140px;display:inline-block;">Account Balance</span>
-																<span style="color:#669FC7;"><c:out value="${orgdetails.accntbal}" /></span>
-															</div>
-	
-															<div>
-																<span style="width:140px;display:inline-block;">Payout Balance</span>
-																<span style="color:#669FC7;"><c:out value="${orgdetails.payoutbal}" /></span>
-															</div>
-															
-															<div>
-																<span style="width:140px;display:inline-block;">Vrf Processed Count</span>
-																<span style="color:#669FC7;"><c:out value="${orgdetails.vrfproccnt}" /></span>
-															</div>
-															
-															<div>
-																<span style="width:140px;display:inline-block;">Last Payout Date</span>
-																<span style="color:#669FC7;"><fmt:formatDate type="both" value="${orgdetails.payoutdatelocal}" pattern="yyyy-MM-dd HH:mm"/></span>
-															</div>
-															
-															<div>
-																<span style="width:140px;display:inline-block;">Payout History</span>
-																<span style="color:#669FC7;"><i>NA</i></span>
-															</div>
-															
-														</div>
-													</div>
+						<div class="widget-box"> 
+								<div class="widget-header">
+									<h4 class="widget-title">Edit itinerary, Enter name or number:</h4>
+								</div>																		
+								<div class="widget-body">
+									<div class="widget-main no-padding">
+										<form:form id="manageitin-form" action="/app/manage" method="POST" modelAttribute="itinerary" name="itinerary" onsubmit="Manage()">
+										<input type="hidden" name="_csrf" value="token" /> 
+											<fieldset>
+												<div id="remote">
+													<form:input path="name" class="typeahead scrollable" type="text" id="name" name="name" style="width:100%" />
+												</div>			
+												<form:input type="hidden" id="mode" path="mode" />
+											</fieldset>
+												<div style="margin-left:60%;margin-bottom:2%;">
+													<input type="submit" id="itinedit" path="itinedit" name="submit" value="Edit" class="btn btn-sm btn-success" />
 												</div>
-											</div><!-- /.span -->
-										
-											<div class="col-xs-12 col-sm-3">
-												<div class="widget-box">
-													<div class="widget-header">
-														<h5 class="widget-title">Contact</h5>
-	
-														<div class="widget-toolbar">
-															<a href="#" data-action="collapse">
-																<i class="ace-icon fa fa-chevron-up"></i>
-															</a>
-	
-															<a href="#" data-action="close">
-																<i class="ace-icon fa fa-times"></i>
-															</a>
-														</div>
-													</div>
-	
-													<div class="widget-body">
-														<div class="widget-main">
-															<form action="/app/tasks/save" method="POST" onsubmit="Manage()">
-																<input type="hidden" name="_csrf" value="token" /> 
-																<input type="hidden" name="group" value="contact" /> 
-																<div class="form-group">
-																<div class="form-group">
-																	<span style="width:85px;display:inline-block;">Title</span>
-																	<input id="contacttitle" name="contactitle" type="text" style="padding:1px 1px 2px;font-size:13px;" value='<c:out value="${orgdetails.contacttitle}" />' disabled />
-																	<a href="#" id="contactnamelnk" class="ui-icon ace-icon fa fa-pencil blue" onclick="toggle_edit(document.getElementById('contactname'))" style="display:inline-block;"></a>
-																</div>																
-																	<span style="width:85px;display:inline-block;">Full Name</span>
-																	<input id="contactname" name="contactname" type="text" style="padding:1px 1px 2px;font-size:13px;" value='<c:out value="${orgdetails.contactname}" />' disabled />
-																	<a href="#" id="contactnamelnk" class="ui-icon ace-icon fa fa-pencil blue" onclick="toggle_edit(document.getElementById('contactname'))" style="display:inline-block;"></a>
-																</div>
-																<div class="form-group">
-																	<span style="width:85px;display:inline-block;">Phone Office</span>
-																	<input id="contactphoneoffice" name="contactphoneoffice" type="text" style="padding:1px 1px 2px;font-size:13px;" value='<c:out value="${orgdetails.contactphoneoffice}" />' disabled />
-																	<a href="#" id="contactphoneofficelnk" class="ui-icon ace-icon fa fa-pencil blue" onclick="toggle_edit(document.getElementById('contactphoneoffice'))" style="display:inline-block;"></a>
-																</div>
-																<div class="form-group">
-																	<span style="width:85px;display:inline-block;">Phone Mobile</span>
-																	<input id="contactphonemobile" name="contactphonemobile" type="text" style="padding:1px 1px 2px;font-size:13px;" value='<c:out value="${orgdetails.contactphonemobile}" />' disabled />
-																	<a href="#" id="contactphonemobilelnk" class="ui-icon ace-icon fa fa-pencil blue" onclick="toggle_edit(document.getElementById('contactphonemobile'))" style="display:inline-block;"></a>
-																</div>
-																<div class="form-group">
-																	<span style="width:85px;display:inline-block;">Email</span>
-																	<input id="contactemail" name="contactemail" type="text" style="padding:1px 1px 2px;font-size:13px;" value='<c:out value="${orgdetails.contactemail}" />' disabled />
-																	<a href="#" id="contactemail" class="ui-icon ace-icon fa fa-pencil blue" onclick="toggle_edit(document.getElementById('contactemail'))" style="display:inline-block;"></a>
-																</div>
-																<div class="form-group">
-																	<span style="width:85px;display:inline-block;">Designation</span>
-																	<input id="contactdesignation" name="contactdesignation" type="text" style="padding:1px 1px 2px;font-size:13px;" value='<c:out value="${orgdetails.contactdesignation}" />' disabled />
-																	<a href="#" id="contactdesignation" class="ui-icon ace-icon fa fa-pencil blue" onclick="toggle_edit(document.getElementById('contactdesignation'))" style="display:inline-block;"></a>
-																</div>
-																<div>
-																	<label style="width:85px;display:inline-block;">IP</label>
-																	<span style="color:#669FC7;"><c:out value="${orgdetails.contactip}" /></span>
-																</div>
+										</form:form>
+									</div>
+								 </div>
+						</div>
 
-																<button type="button" id="contactsave" class="btn btn-sm btn-success" style="margin-left:150px;">Save Changes</button>
-																	
-															</form>															
-														</div>
-													</div>
-												</div>
-											</div><!-- /.span -->
-
-										</div> <!-- row -->									
-									</div> <!-- widget main --> 
-								</div> <!-- widget body -->
-							</div> <!-- widget box -->
-						</div><!-- /.span -->					
-					</c:if>											
-					
-					
+						</div>					
 				</div><!-- /.page-content-area -->
 			</div><!-- /.page-content -->
 		</div><!-- /.main-content -->
@@ -465,9 +255,15 @@
 
 	<!-- inline scripts related to this page -->
 	<script type="text/javascript">
+	        	
+		$(":submit").live('click', function() {
+		    $('#mode').val($(this).val());
+            var d = new Date();
+            $('#tzoffset').val(d.getTimezoneOffset());  
+		}); 
 			
-		$("#tasks").click(function(e){
-		    window.location = "/app/tasks";
+		$("#itineraries").click(function(e){
+		    window.location = "/app/itineraries";
 		});	
 
 		$("#dash").click(function(e){
@@ -516,11 +312,11 @@
 		}
 					
 		// Instantiate the Bloodhound suggestion engine		
-		var orglist = new Bloodhound({
+		var itinlist = new Bloodhound({
 			datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
 			queryTokenizer: Bloodhound.tokenizers.whitespace,
 		   	remote: {
-		        url: '/app/getOrgList?query=%QUERY',
+		        url: '/app/getItinList?query=%QUERY',
 		        filter: function (parsedResponse) {
 		            // $.map converts the JSON array into a JavaScript array
 		            return $.map(parsedResponse, function (list) {
@@ -533,11 +329,11 @@
 		    }										
 		}); 		
 		
-		orglist.initialize();			
+		itinlist.initialize();			
 						
 		$('#remote .typeahead').typeahead(null, {
 		    displayKey: 'value',
-		    source: orglist.ttAdapter()
+		    source: itinlist.ttAdapter()
 		});		 
 				
 				
@@ -605,14 +401,14 @@
 			//so disable dragging when clicking on label
 			var agent = navigator.userAgent.toLowerCase();
 			if("ontouchstart" in document && /applewebkit/.test(agent) && /android/.test(agent))
-			  $('#tasks').on('touchstart', function(e){
+			  $('#itineraries').on('touchstart', function(e){
 				var li = $(e.target).closest('#tasks li');
 				if(li.length == 0)return;
 				var label = li.find('label.inline').get(0);
 				if(label == e.target || $.contains(label, e.target)) e.stopImmediatePropagation() ;
 			});
 		
-			$('#tasks').sortable({
+			$('#itineraries').sortable({
 				opacity:0.8,
 				revert:true,
 				forceHelperSize:true,
@@ -625,15 +421,15 @@
 				}
 				}
 			);
-			$('#tasks').disableSelection();
-			$('#tasks input:checkbox').removeAttr('checked').on('click', function(){
+			$('#itineraries').disableSelection();
+			$('#itineraries input:checkbox').removeAttr('checked').on('click', function(){
 				if(this.checked) $(this).closest('li').addClass('selected');
 				else $(this).closest('li').removeClass('selected');
 			});
 		
 		
 			//show the dropdowns on top or bottom depending on window height and menu position
-			$('#task-tab .dropdown-hover').on('mouseenter', function(e) {
+			$('#itineraries-tab .dropdown-hover').on('mouseenter', function(e) {
 				var offset = $(this).offset();
 		
 				var $w = $(window)

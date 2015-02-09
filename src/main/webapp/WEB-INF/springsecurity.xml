@@ -33,9 +33,11 @@ logout-success-url="/app/login?logout" delete-cookies="JSESSIONID" />
 <beans:bean id="authenticationProvider" class="com.deccanrock.planovik.security.AuthenticationProvider">
 <beans:property name="userDetailsService" ref="customUserDetailsService" />
 <beans:property name="userDetailsDao" ref="userDetailsDao" />
+<beans:property name="passwordEncoder" ref="encoder" />
 </beans:bean>
-<beans:bean class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" id="passwordEncoder" />
+<beans:bean class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" id="encoder" />
 <authentication-manager>
-<authentication-provider ref="authenticationProvider" />
+<authentication-provider ref="authenticationProvider">
+</authentication-provider>
 </authentication-manager>
 </beans:beans>

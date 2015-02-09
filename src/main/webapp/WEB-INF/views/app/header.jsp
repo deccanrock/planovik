@@ -33,7 +33,11 @@
 
     <!-- page specific plugin styles -->
 	<link rel="stylesheet" href="<c:url value='/resources/css/jquery-ui.min.css'/>" />
-	<link rel="stylesheet" href="<c:url value='/resources/css/datepicker.css'/>" />    
+	<link rel="stylesheet" href="<c:url value='/resources/css/datepicker.css'/>" />
+	<link rel="stylesheet" href="<c:url value='/resources/css/bootstrap-timepicker.css'/>" />
+	<link rel="stylesheet" href="<c:url value='/resources/css/daterangepicker.css'/>" />
+	<link rel="stylesheet" href="<c:url value='/resources/css/bootstrap-datetimepicker.css'/>" />
+		
     <link rel="stylesheet" href="<c:url value='/resources/css/ui.jqgrid.css'/>" />    
     <link rel="stylesheet" href="<c:url value='/resources/css/select2.css'/>" />
 
@@ -202,11 +206,11 @@
 	            </a>
 	        </div>
 	        <div class="navbar-header navbar-toggle-admin-header">
-					<H2>
+					<H3>
 						<div class="light-red">
 							<%= request.getAttribute("header")%>
 						</div>
-					</H2>
+					</H3>
 	        </div>
 	    </div>
 	</div>

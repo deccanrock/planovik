@@ -11,7 +11,6 @@ import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
@@ -19,11 +18,8 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.deccanrock.planovik.entity.OrgEntity;
 import com.deccanrock.planovik.entity.UserEntity;
-import com.deccanrock.planovik.entity.TasksEntity;
 import com.deccanrock.planovik.security.HashCode;
-import com.deccanrock.planovik.service.OrgDetailsMapper;
 import com.deccanrock.planovik.service.UserEntityMapper;
  
 @Component
