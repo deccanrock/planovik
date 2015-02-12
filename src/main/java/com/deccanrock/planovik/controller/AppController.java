@@ -7,18 +7,15 @@ import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,16 +27,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.codehaus.jackson.map.ObjectMapper;
-
 import com.deccanrock.planovik.entity.ItineraryEntity;
 import com.deccanrock.planovik.entity.TasksEntity;
-import com.deccanrock.planovik.entity.OrgEntity;
-import com.deccanrock.planovik.entity.UserEntity;
 import com.deccanrock.planovik.location.MaxLocationBO;
 import com.deccanrock.planovik.service.dao.ItineraryEntityDAO;
 import com.deccanrock.planovik.service.dao.UserEntityDAO;
-import com.deccanrock.planovik.service.dao.OrgEntityDAO;
 import com.deccanrock.planovik.service.utils.UriHandler;
+
 
 /**
  * Handles all requests for Organization Admin Users and functions
@@ -64,7 +58,7 @@ public class AppController {
     }		
 		
 	private static final Logger logger = LoggerFactory.getLogger(AppController.class);
-	private String adminname;
+	private String username;
 	
 	// TODO - Beef up logger details to catch more admin user info
 	
@@ -78,8 +72,8 @@ public class AppController {
         // map.addAttribute("admin", new AdminEntity());
 		map.addAttribute("title", "Verifyed Admin Home");
 		map.addAttribute("header", "Admin Zone");
-		map.addAttribute("adminname", adminname);
-		String adminphoto = "/resources/avatars/" + adminname + ".jpg";
+		map.addAttribute("adminname", username);
+		String adminphoto = "/resources/avatars/" + username + ".jpg";
 		map.addAttribute("adminphoto", adminphoto);
 		// map.addAttribute("admintaskList", adminManager.getAllPending());
  
@@ -94,9 +88,9 @@ public class AppController {
 		if (!IsUserLoggedIn(map)) {
 			map.addAttribute("msg", "You do not have permission to access this page!");	
 		} else {
-			UserName(map);		
-			map.addAttribute("adminname", adminname);
-			map.addAttribute("msg", "Hi " + adminname 
+			UserName();		
+			map.addAttribute("adminname", username);
+			map.addAttribute("msg", "Hi " + username 
 			+ ", you do not have permission to access this page!");
 
 		}
@@ -115,9 +109,9 @@ public class AppController {
 		map.addAttribute("title", "Verifyed Admin Home");
 		map.addAttribute("header", "Admin Zone");
 		
-        UserName(map);		
-		map.addAttribute("adminname", adminname);
-		String adminphoto = "/resources/avatars/" + adminname + ".jpg";
+        UserName();		
+		map.addAttribute("adminname", username);
+		String adminphoto = "/resources/avatars/" + username + ".jpg";
 		map.addAttribute("adminphoto", adminphoto);
 		
 		return "app/dash";
@@ -133,9 +127,9 @@ public class AppController {
 		map.addAttribute("title", "Verifyed Admin Home");
 		map.addAttribute("header", "Admin Zone");
 
-        UserName(map);		
-		map.addAttribute("adminname", adminname);
-		String adminphoto = "/resources/avatars/" + adminname + ".jpg";
+        UserName();		
+		map.addAttribute("adminname", username);
+		String adminphoto = "/resources/avatars/" + username + ".jpg";
 		map.addAttribute("adminphoto", adminphoto);
 		
 		// Get Task records from database
@@ -177,9 +171,9 @@ public class AppController {
 		map.addAttribute("title", "Verifyed Admin Home");
 		map.addAttribute("header", "Admin Zone");
 		
-        UserName(map);		
-		map.addAttribute("adminname", adminname);
-		String adminphoto = "/resources/avatars/" + adminname + ".jpg";
+        UserName();		
+		map.addAttribute("adminname", username);
+		String adminphoto = "/resources/avatars/" + username + ".jpg";
 		map.addAttribute("adminphoto", adminphoto); 
 		
 		ItineraryEntity itinerary = new ItineraryEntity();
@@ -191,11 +185,14 @@ public class AppController {
 	
     // Hook for jqGrid ('Manage'), Set Session variables and manage tab
     @RequestMapping(value = "/app/manage", method = RequestMethod.POST)    
-    public String manageItinerary(@ModelAttribute(value="itinerary") ItineraryEntity itinerary, Model map, HttpServletRequest request) {
+    public String manageItinerary(@ModelAttribute(value="itinerary") ItineraryEntity itinerary, ModelMap map, HttpServletRequest request) {
    
     	// This is ajax support function for JQGrid
     	logger.info("Itinerary Manage - POST");
-    			
+
+		if (!IsUserLoggedIn(map))
+    		return "app/login";
+		
 		request.setAttribute("title", "Planovik Manage Itinerary");
 		if (itinerary.getMode().equals("Create"))
 			request.setAttribute("header", "Manage Itinerary - Create");
@@ -209,13 +206,12 @@ public class AppController {
 		ItineraryEntityDAO IED = (ItineraryEntityDAO)context.getBean("ItineraryEntityDAO");
 		
 		// Record admin who created/edited/modifyed
-		User loggeduser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		itinerary.setLastupdatedbyemail(loggeduser.getUsername());
+		itinerary.setLastupdatedbyemail(username);
 		
 		ItineraryEntity itinerarydb = null;
 		if ( itinerary.getMode().equals("Create")) {
 			// Create new itinerary and display form
-			itinerary.setCreatedbyemail(loggeduser.getUsername());
+			itinerary.setCreatedbyemail(username);
 			itinerarydb = IED.CreateItinerary(itinerary);
 			map.addAttribute("itinerary", itinerarydb);
 
@@ -229,12 +225,13 @@ public class AppController {
 			// Have to find a better way to do this
 			itinerarydb.setArrivalcity("");
 			itinerarydb.setDepcity("");
-			itinerarydb.setConvcode("");
+			itinerarydb.setConvcode(1);
+			itinerarydb.setConvcodestr("");
 			itinerarydb.setEnddatestr("");
 			itinerarydb.setStartdatestr("");
 			itinerarydb.setGrouphead("");
+			itinerarydb.setQuotecurrencystr("");
 			itinerarydb.setQuotecurrency("");
-			itinerarydb.setConvcode("");			
 
 			if (itinerarydb.getError().equals("Success") == false)
 				map.addAttribute("error", itinerarydb.getError());				
@@ -242,9 +239,12 @@ public class AppController {
 		else {	// assume edit
 			// Check if lookahead or edit request from itineraries tab or search
 			if (itinerary.getId() == 0) {
-				// Assume manual edit lookahead
-				int itinnum = Integer.parseInt(itinerary.getName().substring(0, itinerary.getName().indexOf('-')-1));
-				itinerarydb = IED.GetItinerary(itinnum);
+				// Assume manual edit/lookahead
+				int index = itinerary.getName().indexOf('-')-1;
+				if (index != 0) {// lookahead type contains id string
+					int itinnum = Integer.parseInt(itinerary.getName().substring(0, index));
+					itinerarydb = IED.GetItinerary(itinnum);
+				}
 			}
 			else
 				itinerarydb = IED.GetItinerary(itinerary.getId());
@@ -260,33 +260,47 @@ public class AppController {
     
     // Hook for jqGrid ('Manage'), Set Session variables and manage tab
     @RequestMapping(value = "/app/manage/save", method = RequestMethod.POST)    
-    public String manageSaveItinerary(@ModelAttribute(value="itinerary") ItineraryEntity itinerary, Model map, HttpServletRequest request) {
+    public String manageSaveItinerary(@ModelAttribute(value="itinerary") ItineraryEntity itinerary, ModelMap map, HttpServletRequest request) {
    
     	// This is ajax support function for JQGrid
     	logger.info("Itinerary Manage Save - POST");
-    			
+		if (!IsUserLoggedIn(map))
+    		return "app/login";
+    	
 		request.setAttribute("title", "Planovik Save Itinerary");
 		if (itinerary.getMode().equals("Create"))
 			request.setAttribute("header", "Manage Itinerary - Create");
 		else
 			request.setAttribute("header", "Manage Itinerary - Edit");
 			
-		map.addAttribute("phonecode", "+91");	
 		
 		// Save model to database
 		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
 		ItineraryEntityDAO IED = (ItineraryEntityDAO)context.getBean("ItineraryEntityDAO");
+		
+		// Check for Currency code and conversion code
+		if (itinerary.getQuotecurrencystr().contains(" - ")) {
+			String quotecurr = itinerary.getQuotecurrencystr().substring(0, itinerary.getQuotecurrencystr().indexOf('-')-1);
+			itinerary.setQuotecurrency(quotecurr);
+		}
+		
+		if (itinerary.getConvcodestr().contains(" - ")) {
+			// Value is from typeahead
+			int convcode = Integer.parseInt(itinerary.getConvcodestr().substring(0, itinerary.getConvcodestr().indexOf('-')-1));
+			itinerary.setConvcode(convcode);
+		}
 		
 		// Record admin who created/edited/modifyed
 		User loggeduser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		itinerary.setLastupdatedbyemail(loggeduser.getUsername());
 		
 		ItineraryEntity itinerarydb = null;
+		
 		itinerarydb = IED.SaveItinerary(itinerary);
 		map.addAttribute("itinerary", itinerarydb);
 
 		((ClassPathXmlApplicationContext) context).close();		
-		return "app/itinerarymanagesave";
+		return "app/manage";
     	    	    	    	
     }    
     
@@ -359,6 +373,58 @@ public class AppController {
 	}
 	
 	/**
+	 * Typeahead support
+	 */
+	@RequestMapping(value = "/app/getISOCurrList", method = RequestMethod.GET, produces = "application/json")
+	public @ResponseBody String getCurrList(ServletResponse response, @RequestParam(value = "query") String query) 
+			throws IOException {
+		logger.info("Get Currency List");
+
+		if (query.isEmpty())
+			return "";
+		
+		// Get Org List from database, should be changed to get from cache
+		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
+		ItineraryEntityDAO IED = (ItineraryEntityDAO)context.getBean("ItineraryEntityDAO");	
+		List<String> isocurrlist = IED.GetISOCurrList(query);
+		((ClassPathXmlApplicationContext) context).close();
+
+		// Build Json Reader map for jqgrid		
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonOut = mapper.writeValueAsString(isocurrlist); 
+		response.setContentType("application/json");	
+				
+		return jsonOut;
+	}
+	
+
+	/**
+	 * Typeahead support
+	 */
+	@RequestMapping(value = "/app/getCurrConvCodes", method = RequestMethod.GET, produces = "application/json")
+	public @ResponseBody String getCurrConvCodes(ServletResponse response, @RequestParam(value = "query") String query) 
+			throws IOException {
+		logger.info("Get Currency List");
+
+		if (query.isEmpty())
+			return "";
+		
+		// Get Org List from database, should be changed to get from cache
+		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
+		ItineraryEntityDAO IED = (ItineraryEntityDAO)context.getBean("ItineraryEntityDAO");	
+		List<String> isocurrlist = IED.GetCurrConvCodes(query);
+		((ClassPathXmlApplicationContext) context).close();
+
+		// Build Json Reader map for jqgrid		
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonOut = mapper.writeValueAsString(isocurrlist); 
+		response.setContentType("application/json");	
+				
+		return jsonOut;
+	}
+	
+	
+	/**
 	 * Check if email exists
 	 * All lookahead code should be refactored into a caching layer
 	 * @throws URISyntaxException 
@@ -379,26 +445,33 @@ public class AppController {
     
     private boolean IsUserLoggedIn(ModelMap map) {
     
-        UserName(map);
-        if (adminname == null || adminname == "anonymousUser") {
+        UserName();
+        if (username == null || username == "anonymousUser") {
         	// User not logged in, redirect to login
-    		map.addAttribute("title", "Verifyed Admin - Login Required!");
-    		map.addAttribute("header", "Admin Login");
+    		map.addAttribute("title", "Planovik - Login Required!");
+    		map.addAttribute("header", "User Login");
     		return false;
         }
         
         return true;
     }
     
-    private void UserName (ModelMap map) {
+    private void UserName () {
     	User activeUser;
-    	Object userObj =  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    	if (userObj.toString() == "anonymousUser")
+    	
+    	Object userObj = null;
+		try {
+	    	userObj =  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		}
+		catch (Exception ex) {
+			userObj = null;
+		}
+		    	
+    	
+    	if (userObj==null || userObj.toString() == "anonymousUser")
     		return;
     	
-    	if (userObj != null) {
             activeUser = (User) userObj;
-            adminname = activeUser.getUsername();    		
-    	}
+            username = activeUser.getUsername();    		
     }
 }

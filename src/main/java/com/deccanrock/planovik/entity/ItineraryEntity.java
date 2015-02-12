@@ -54,7 +54,7 @@ public class ItineraryEntity
 	private String quotecurrency;
     
     @Column(name="convcode")    
-	private String convcode;
+	private int convcode;
     
     @Column(name="tzoffset")    
 	private Short tzoffset;
@@ -81,8 +81,13 @@ public class ItineraryEntity
     
     private String startdatestr;
     private String enddatestr;
+    private String fromcurr;
+    private String tocurr;
+    private String convcodestr;
+    private String quotecurrencystr;
+    private long startdatelong;
+    private long enddatelong;
     
-
     // Getter-Setters
 	public int getId() {
 		return id;
@@ -253,11 +258,11 @@ public class ItineraryEntity
 		this.lastupdatedbyemail = lastupdatedbyemail;
 	}
 	
-	public String getConvcode() {
+	public int getConvcode() {
 		return this.convcode;
 	}
 	
-	public void setConvcode(String convcode) {
+	public void setConvcode(int convcode) {
 		this.convcode = convcode;
 	}
 
@@ -285,5 +290,52 @@ public class ItineraryEntity
 		this.enddatestr = datestr;		
 	}
 
+	public String getFromcurr() {
+		return this.fromcurr;		
+	}
+	
+	public void setFromcurr(String currency) {
+		this.fromcurr = currency;		
+	}
 
+	public String getTocurr() {
+		return this.tocurr;		
+	}
+	
+	public void setTocurr(String currency) {
+		this.tocurr = currency;		
+	}
+	
+	public String getQuotecurrencystr() {
+		return this.quotecurrencystr;		
+	}
+	
+	public void setQuotecurrencystr(String currencystr) {
+		this.quotecurrencystr = currencystr;		
+	}
+	
+	public String getConvcodestr() {
+		return this.convcodestr;		
+	}
+	
+	public void setConvcodestr(String convcodestr) {
+		this.convcodestr = convcodestr;		
+	}
+		
+	public long getStartdatelong() {
+		return this.startdatelong;		
+	}
+	
+	public void setStartdatelong(long timelong) {
+		this.startdatelong = timelong;		
+	}
+
+	public long getEnddatelong() {
+		return this.enddatelong;		
+	}
+	
+	public void setEnddatelong(long timelong) {
+		this.enddatelong = timelong;		
+	}
+	
 }

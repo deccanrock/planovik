@@ -1,6 +1,5 @@
 package com.deccanrock.planovik.service.utils;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -46,6 +45,35 @@ public class TimeFormatter {
 	   
 	}
 	
+	public static long LocalToUTC (long localtime, short tzoffsetmin ) {
+		
+		if (tzoffsetmin < 0) // GMT is behind local time
+			return localtime - (Math.abs(tzoffsetmin*60*1000));
+		else
+			return localtime + tzoffsetmin*60*1000;
+	   
+	}
+	
+	public static String FormatTimeMS (long timeval) {
+		
+		// Will be modified to accept various formats 
+		// For now, MM/DD/YYYY hh:mm AM|PM 
+		Date localDate=new Date(timeval);
+		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy h:mm a");
+		String localDateStr = formatter.format(localDate);
+		
+		return localDateStr;
+	}
+	
+	public static long UTCToLocal (long utctime, short tzoffsetmin ) {
+		
+		if (tzoffsetmin < 0) // GMT is behind local time
+			return utctime + (Math.abs(tzoffsetmin*60*1000));
+		else
+			return utctime - tzoffsetmin*60*1000;
+	   
+	}
+
 	public static boolean IsNullDate (Date inDate) {
 		
 		Calendar cal = Calendar.getInstance();

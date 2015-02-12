@@ -17710,9 +17710,8 @@ th[aria-selected=true] .ui-jqgrid-sortable{
 }
 
 input.tt-hint,input.tt-query,input.typeahead{
-	min-width:245%;
+	min-width:237%;
 	font-size:14px;
-	line-height:24px;
 	border:1px solid #CCC;
 	border-radius:0;
 	outline:0

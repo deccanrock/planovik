@@ -1,218 +1,334 @@
 <%@ include file="header.jsp" %>
+	<%@ include file="nav.jsp" %>
+	
+	<!-- /section:basics/navbar.layout -->
+	<div class="main-container" id="main-container">
+		<script type="text/javascript">
+			try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+		</script>
+		<script src="/resources/js/bootstrap-tag.min.js"></script>
+		<script src="/resources/js/typeahead.bundle.min.js"></script>		
 
-<!-- /section:basics/navbar.layout -->
-<div class="main-container" id="main-container">
-<script type="text/javascript">
-    try{ace.settings.check('main-container' , 'fixed')}catch(e){}
-</script>
+		
+		<!-- #section:basics/sidebar -->
+		<div id="sidebar" class="sidebar                  responsive">
+			<script type="text/javascript">
+				try{ace.settings.check('sidebar' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="sidebar-shortcuts" id="sidebar-shortcuts">
+				<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
+					<button class="btn btn-success">
+						<i class="ace-icon fa fa-signal"></i>
+					</button>
+
+					<button class="btn btn-info">
+						<i class="ace-icon fa fa-pencil"></i>
+					</button>
+
+					<!-- #section:basics/sidebar.layout.shortcuts -->
+					<button class="btn btn-warning">
+						<i class="ace-icon fa fa-users"></i>
+					</button>
+
+					<button class="btn btn-danger">
+						<i class="ace-icon fa fa-cogs"></i>
+					</button>
+
+					<!-- /section:basics/sidebar.layout.shortcuts -->
+				</div>
+
+				<div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
+					<span class="btn btn-success"></span>
+
+					<span class="btn btn-info"></span>
+
+					<span class="btn btn-warning"></span>
+
+					<span class="btn btn-danger"></span>
+				</div>
+			</div><!-- /.sidebar-shortcuts -->
+
+			<ul class="nav nav-list">
+				<li class="">
+					<a id="dash" href="/app/dash">
+						<i class="menu-icon fa fa-tachometer"></i>
+						<span class="menu-text"> Dashboard </span>
+					</a>
+
+					<b class="arrow"></b>
+				</li>
 
 
-<!-- /section:basics/sidebar -->
-<div class="main-content">
-<!-- #section:basics/content.breadcrumbs -->
-<!-- /section:basics/content.breadcrumbs -->
-<div class="page-content">
+				<li>
+					<a id="tasks" href="/app/itineraries" class="dropdown-toggle">
+						<i class="menu-icon fa fa-list"></i>
+						<span class="menu-text"> Itineraries </span>
+					</a>
+				</li>
+				
+				<li  class="active">
+					<a id="manage" href="/app/manage" class="dropdown-toggle">
+						<i class="menu-icon fa fa-pencil-square-o"></i>
+						<span class="menu-text"> Manage </span>
+					</a>
+				</li>				
 
-<!-- /section:settings.box -->
-<div class="page-content-area">
+				<li class="">
+					<a id="support" href="/app/support" class="dropdown-toggle">
+						<i class="menu-icon fa fa-desktop"></i>
+						<span class="menu-text"> Support </span>
+					</a>
+				</li>
 
 
-<!-- PAGE CONTENT BEGINS -->
-<div class="row">
+			</ul><!-- /.nav-list -->
 
-    <div class="col-xs-8" style="margin-left:120px;">
+			<!-- #section:basics/sidebar.layout.minimize -->
+			<div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
+				<i class="ace-icon fa fa-angle-double-left" data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
+			</div>
 
-	<c:if test="${not empty error}">
-		<div class="error">${error}</div>
-	</c:if>
-	<c:if test="${not empty msg}">
-		<div class="msg">${msg}</div>
-	</c:if>
+			<!-- /section:basics/sidebar.layout.minimize -->
+			<script type="text/javascript">
+				try{ace.settings.check('sidebar' , 'collapsed')}catch(e){}
+			</script>
+		</div>
 
-	<div class="widget-box">          
-		<div class="widget-header">          		
-			<span style="font-size:14px;">Number: <i>${itinerary.id}</i></span>&nbsp;&nbsp;
-			<span style="font-size:14px;">Version: <i>${itinerary.version}</i></span>&nbsp;&nbsp;
-			<span style="font-size:14px;">Status: <i>${itinerary.status}</i></span>&nbsp;&nbsp;
-			<span style="font-size:14px;">Currency: <i>${itinerary.currency}</i></span>				
-        </div>
-                            
-	    <div class="widget-body">
-	    	<div class="widget-main">
-	            <form:form id="manageitinerarysave-form" method="post" action="manageitinerary" modelAttribute="itinerary" name="itinerary">
-		        <div class="row">
-					<div class='col-md-6'>
-	                    <div class="form-group">
-	                        <div class="clearfix">
-	                            <label for="name">Name (less than 50 chars)</label>
-	                    		<form:input type="text" path="name" id="name" class="col-sm-12" value="${itinerary.name}" />
-	                        </div>
+		<!-- /section:basics/sidebar -->
+
+
+	<!-- /section:basics/sidebar -->
+	<div class="main-content">
+	<!-- #section:basics/content.breadcrumbs -->
+	<!-- /section:basics/content.breadcrumbs -->
+	<div class="page-content">
+	
+	<!-- /section:settings.box -->
+	<div class="page-content-area">
+	
+	
+	<!-- PAGE CONTENT BEGINS -->
+	<div class="row">
+	
+	    <div class="col-xs-8" style="margin-left:20px;">
+	
+		<c:if test="${not empty error}">
+			<div class="error">${error}</div>
+		</c:if>
+		<c:if test="${not empty msg}">
+			<div class="msg">${msg}</div>
+		</c:if>
+	
+		<div class="widget-box">          
+			<div class="widget-header">          		
+				<span style="font-size:14px;">Number: <i>${itinerary.id}</i></span>&nbsp;&nbsp;
+				<span style="font-size:14px;">Version: <i>${itinerary.version}</i></span>&nbsp;&nbsp;
+				<span style="font-size:14px;">Status: <i>${itinerary.status}</i></span>&nbsp;&nbsp;
+				<span style="font-size:14px;">Currency: <i>${itinerary.currency}</i></span>				
+	        </div>
+	                            
+		    <div class="widget-body">
+		    	<div class="widget-main">
+		            <form:form id="manageitinerarysave-form" method="post" action="/app/manage/save" modelAttribute="itinerary" name="itinerary">
+			        <div class="row">
+						<div class='col-md-6'>
+		                    <div class="form-group">
+		                        <div class="clearfix">
+		                            <label for="name">Name (less than 50 chars)</label>
+		                    		<form:input type="text" path="name" id="name" class="col-sm-12" value="${itinerary.name}" />
+		                        </div>
+		                    </div>
 	                    </div>
-                    </div>
-                    
-                    <div class='col-md-6'>
-	                    <div class="form-group">
-	                        <div class="clearfix">
-	                            <label for="touroperator">Tour Operator (Direct or referral company)</label>
-	                    		<form:input type="text" path="touroperator" id="touroperator" name="touroperator" class="col-sm-12" value="${itinerary.touroperator}" />
-	                        </div>
+	                    
+	                    <div class='col-md-6'>
+		                    <div class="form-group">
+		                        <div class="clearfix">
+		                            <label for="touroperator">Tour Operator (Direct or referral company)</label>
+		                    		<form:input type="text" path="touroperator" id="touroperator" name="touroperator" class="col-sm-12" value="${itinerary.touroperator}" />
+		                        </div>
+		                    </div>
 	                    </div>
-                    </div>
-				</div>                    
-                <div class="space-2"></div>	                    		                    
-
-		        <div class="row">
-					<div class='col-md-6'>
-	                    <div class="form-group">
-	                        <div class="clearfix">
-	                        	<label for="grouphead">Group Head</label>
-	                    		<c:choose>
-	                    			<c:when test="${itinerary.mode == 'Create'}">
-										<form:input type="text" path="grouphead" name="grouphead" id="grouphead" class="col-sm-12" />                                		
-	                        	    </c:when>
-									<c:otherwise>
+					</div>                    
+	                <div class="space-2"></div>	                    		                    
+	
+			        <div class="row">
+						<div class='col-md-6'>
+		                    <div class="form-group">
+		                        <div class="clearfix">
+		                        	<label for="grouphead">Group Head</label>
 										<form:input type="text" path="grouphead" name="grouphead" id="grouphead" class="col-sm-12" 
-	                            			value="${itinerary.grouphead}" />                                		
-									</c:otherwise>
-	                    		</c:choose>
-	                        </div>
+		                            			value="${itinerary.grouphead}" />                                		
+		                        </div>
+		                    </div>
 	                    </div>
-                    </div>
-                    
-                    <div class='col-md-6'>
-	                    <div class="form-group">
-	                        <div class="clearfix">
-	                        	<label for="numtravellers">PAX Count (including group head)</label>
-	                    		<c:choose>
-	                    			<c:when test="${itinerary.mode == 'Create'}">
-										<form:input type="text" path="numtravellers" name="numtravellers" id="numtravellers" class="col-sm-12" />                                		
-	                        	    </c:when>
-									<c:otherwise>
+	                    
+	                    <div class='col-md-6'>
+		                    <div class="form-group">
+		                        <div class="clearfix">
+		                        	<label for="numtravellers">PAX Count (including group head)</label>
 										<form:input type="text" path="numtravellers" name="numtravellers" id="numtravellers" class="col-sm-12" 
-	                            			value="${itinerary.numtravellers}" />                                		
-									</c:otherwise>
-	                    		</c:choose>
-	                        </div>
-	                    </div>
-	            	</div>
-				</div>                    
-                <div class="space-2"></div>	
-	                    	                    	                                                            
-		        <div class="row">
-				    <div class='col-md-6'>
-				        <div class="form-group">
-	                        <div class="clearfix">
-	                    		<label for ="startdate">Arrival Date and Time</label>
-					            <div class='input-group'>
-									<span class="input-group-addon">
-										<i class="fa fa-calendar bigger-110"></i>
-									</span>					            
-					                <form:input type='text' id="startdatetimepicker" name="startdatetimepicker" path="startdatestr" class="form-control" />
-					            </div>
-							</div>
-				        </div>
-				    </div>
-                    
-				    <div class='col-md-6'>
-				        <div class="form-group">
-	                        <div class="clearfix">
-	                    		<label for ="enddate">Departure Date and Time</label>
-					            <div class='input-group'>
-									<span class="input-group-addon">
-										<i class="fa fa-calendar bigger-110"></i>
-									</span>					            
-					                <form:input type='text' id="enddatetimepicker" name="enddatetimepicker" path="enddatestr" class="form-control" />
-					            </div>
-							</div>
-				        </div>
-				    </div>
-				</div>                    
-                <div class="space-2"></div>	
-	                
-		        <div class="row">
-				    <div class='col-md-6'>
-				        <div class="form-group">
-	                        <div class="clearfix">
-                        		<label for="arrivalcity">Arrival City</label>
-				                <form:input type='text' path="arrivalcity" id="arrivalcity" name="arrivalcity" class="col-sm-12" />
-							</div>
-				        </div>
-				    </div>
-                    
-				    <div class='col-md-6'>
-				        <div class="form-group">
-	                        <div class="clearfix">
-                        		<label for="depcity">Departure City</label>
-				                <form:input type='text' path="depcity" id="depcity" name="depcity" class="col-sm-12" />
-							</div>
-				        </div>
-				    </div>
-				</div>                    
-                <div class="space-2"></div>	                       
-	                                        
-		        <div class="row">
-				    <div class='col-md-6'>
-				        <div class="form-group">
-	                        <div class="clearfix">
-                        		<label for="quotecurrency">Client Quote Currency</label>
-		                		<c:choose>
-		                			<c:when test="${itinerary.mode == 'Create'}">
-										<form:input type="text" path="quotecurrency" id="quotecurrency" name="quotecurrency" class="col-sm-12" />                                		
-		                    	    </c:when>
-									<c:otherwise>
-										<form:input type="text" path="quotecurrency" id="quotecurrency" name="quotecurrency" class="col-sm-12" 
-		                        			value="${itinerary.quotecurrency}" />                                		
-									</c:otherwise>
-		                		</c:choose>
-							</div>
-				        </div>
-				    </div>
-                    
-				    <div class='col-md-6'>
-				        <div class="form-group">
-	                        <div class="clearfix">
-                        		<label for="convcode">Currency Conversion Code</label>
-		                		<c:choose>
-		                			<c:when test="${itinerary.mode == 'Create'}">
-										<form:input type="text" path="convcode" id="convcode" name="convcode" class="col-sm-12" />                                		
-		                    	    </c:when>
-									<c:otherwise>
-										<form:input type="text" path="convcode" id="convcode" name="convcode" class="col-sm-12" 
-		                        			value="${itinerary.convcode}" />                                		
-									</c:otherwise>
-		                		</c:choose>
-							</div>
-				        </div>
-				    </div>
-				    <div class="space-2"></div>
-				</div>                    
-                       
-	                                        
-                <div class="space-2"></div>
-                    <form:input type="hidden" id="tzoffset" path="tzoffset"/>
-                    <form:input type="hidden" id="mode" path="mode" value="${itinerary.mode}"/>
+		                            			value="${itinerary.numtravellers}" />                                		
+		                        </div>
+		                    </div>
+		            	</div>
+					</div>                    
+	                <div class="space-2"></div>	
+		                    	                
+			        <div class="row">
+					    <div class='col-md-6'>
+					        <div class="form-group">
+		                        <div class="clearfix">
+	                        		<label for="arrivalcity">Arrival City</label>
+					                <form:input type='text' path="arrivalcity" id="arrivalcity" name="arrivalcity" class="col-sm-12" 
+					                	value="${itinerary.arrivalcity}" />
+								</div>
+					        </div>
+					    </div>
+	                    
+					    <div class='col-md-6'>
+					        <div class="form-group">
+		                        <div class="clearfix">
+	                        		<label for="depcity">Departure City</label>
+					                <form:input type='text' path="depcity" id="depcity" name="depcity" class="col-sm-12" 
+					                	value="${itinerary.depcity}" />
+								</div>
+					        </div>
+					    </div>
+					</div>                    
+	                <div class="space-2"></div>	  
+		                    	                    	                                                            
+			        <div class="row">
+					    <div class='col-md-6'>
+					        <div class="form-group">
+		                        <div class="clearfix">
+		                    		<label for ="startdate">Arrival Date and Time</label>
+						            <div class='input-group'>
+										<span class="input-group-addon">
+											<i class="fa fa-calendar bigger-110"></i>
+										</span>					            
+						                <input type='text' id="startdatetimepicker" name="startdatetimepicker" class="form-control" 
+						                	value="${itinerary.startdatestr}" style="z-index:0;" />
+						                <form:input type='hidden' id="startdatestr" path="startdatestr" name="startdatestr" value="${itinerary.startdatestr}" />
+						                <form:input type='hidden' id="startdatelong" name="startdatelong" path="startdatelong" />
+						            </div>
+								</div>
+					        </div>
+					    </div>
+	                    
+					    <div class='col-md-6'>
+					        <div class="form-group">
+		                        <div class="clearfix">
+		                    		<label for ="enddate">Departure Date and Time</label>
+						            <div class='input-group'>
+										<span class="input-group-addon">
+											<i class="fa fa-calendar bigger-110"></i>
+										</span>					            
+						                <input type='text' id="enddatetimepicker" name="enddatetimepicker" class="form-control"
+						                	value="${itinerary.enddatestr}" style="z-index:0;" />
+						                <form:input type='hidden' id="enddatestr" path="enddatestr" name="enddatestr" value="${itinerary.enddatestr}" />
+						                <form:input type='hidden' id="enddatelong" name="enddatelong" path="enddatelong" />
+						            </div>
+								</div>
+					        </div>
+					    </div>
+					</div>                    
+	                <div class="space-2"></div>	                     
+	
+			        <div class="row">	                                        
+					    <div class='col-md-6'>
+					        <div class="form-group">
+		                        <div class="clearfix">
+		                    		<label for="quotecurrency">Client Quote Currency</label>
+		                    		<div id="remote">
+										<form:input type="text" class="typeahead scrollable" path="quotecurrencystr" id="quotecurrency" name="quotecurrency"  
+				                        			value="${itinerary.quotecurrencystr}"  style="width:95%;" />                                		
+									</div>
+								</div>
+					        </div>
+					    </div>	                    
+	
+					    <div class='col-md-6'>
+					        <div class="form-group">
+			                    <div class="clearfix">
+			                		<label for="convcode">Currency Conversion Code</label> <label style="font-size:small;"> (Enter 3 char currency code)</label>
+					        		<div class="form-group">
+					        			<div id="remote">
+											<form:input type="text" class="typeahead scrollable" path="convcodestr" id="convcode" name="convcode"  
+					                        			value="${itinerary.convcodestr}" style="width:95%;" />                                		
+										</div>
+									</div>
+								</div>
+					        </div>
+					    </div>
+					</div>                    
+		    		<div class="space-2"></div>
+	                       
+		                                        
+	                <div class="space-2"></div>
+	                    <form:input type="hidden" id="tzoffset" path="tzoffset"/>
+	                    <form:input type="hidden" id="id" path="id" value="${itinerary.id}"/>
+	                    <form:input type="hidden" id="mode" path="mode" value="${itinerary.mode}"/>
+	                    <form:input type="hidden" id="version" path="version" value="${itinerary.version}"/>
+	                    <form:input type="hidden" id="status" path="status" value="${itinerary.status}"/>
+	
+	                    <!-- #section:plugins/fuelux.wizard.buttons -->						
+						<div class="alert alert-danger" id="changeerror" style="display:none;">
+							<button class="close" data-dismiss="alert" type="button">							
+							    <i class="ace-icon fa fa-times"></i>
+							</button>	    					
+	    					<strong></strong>No Changes detected!
+						</div>
+	            		<c:choose>
+	            			<c:when test="${itinerary.mode == 'Create'}">
+	                        	<input type="submit" id="manageitinerarycreate" class="btn btn-large btn-primary" value="Save" style="margin-left:43%" />
+	                    	</c:when>
+							<c:otherwise>
+		                        <input type="submit" id="manageitineraryedit" class="btn btn-large btn-primary" value="Save" style="margin-left:43%;" />
+							</c:otherwise>
+	            		</c:choose>
+	                    
+	                    </form:form>
+		        	</div>
+				</div><!-- /.widget-main -->
+	        </div><!-- /.widget-body -->
+	    </div><!-- /.widget-box -->
+	</div><!-- row -->
+	</div><!-- /.page-content-area -->
+	</div><!-- /.page-content -->
+	</div><!-- /.main-content -->
+	<div class="footer">
+		<div class="footer-inner">
+			<!-- #section:basics/footer -->
+			<div class="footer-content">
+                <span class="bigger-120">
+                    <span class="blue bolder">DeccanRock Pvt Ltd.</span>
+                    &copy; 2013-2014
+                </span>
 
-                    <!-- #section:plugins/fuelux.wizard.buttons -->
-            		<c:choose>
-            			<c:when test="${itinerary.mode == 'Create'}">
-                        	<input type="submit" id="manageitinerarycreate" class="btn btn-large btn-primary" value="Save" style="margin-left:43%" />
-                    	</c:when>
-						<c:otherwise>
-	                        <input type="submit" id="manageitineraryedit" class="btn btn-large btn-primary" value="Save" style="margin-left:43%;" />
-						</c:otherwise>
-            		</c:choose>
-                    
-                    </form:form>
-	        	</div>
-			</div><!-- /.widget-main -->
-        </div><!-- /.widget-body -->
-    </div><!-- /.widget-box -->
-</div><!-- row -->
-</div><!-- /.page-content-area -->
-</div><!-- /.page-content -->
-</div><!-- /.main-content -->
+				&nbsp; &nbsp;
+				<span class="action-buttons">
+					<a href="#">
+						<i class="ace-icon fa fa-twitter-square light-blue bigger-150"></i>
+					</a>
 
-<%@ include file="../footer.jsp" %>
+					<a href="#">
+						<i class="ace-icon fa fa-facebook-square text-primary bigger-150"></i>
+					</a>
+
+					<a href="#">
+						<i class="ace-icon fa fa-rss-square orange bigger-150"></i>
+					</a>
+				</span>
+			</div>
+
+			<!-- /section:basics/footer -->
+		</div>
+	</div>
+
+	<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+		<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+	</a>
 
 </div><!-- /.main-container -->
 
@@ -260,9 +376,52 @@
 <!-- inline scripts related to this page -->
 <script type="text/javascript">
 
+	$(document).ready(function() {
+		$('#startdatetimepicker').val($('#startdatestr').val());
+	    $('#enddatetimepicker').val($('#enddatestr').val());	
+	})
+
+	var formchanged=false;
+
+	var isocurrlist = new Bloodhound({
+		datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+		queryTokenizer: Bloodhound.tokenizers.whitespace,
+	   	remote: {
+	        url: '/app/getISOCurrList?query=%QUERY',
+	        replace: function(url, query) {
+
+	        	if (document.activeElement.id == 'quotecurrency')
+	        		url = "/app/getISOCurrList?";
+	        	else if (document.activeElement.id == 'convcode')
+	        		url = "/app/getCurrConvCodes?";
+				
+				url = url + "query="  + document.activeElement.value;
+	            return url;
+	        },		        		        
+	        filter: function (parsedResponse) {
+	            // $.map converts the JSON array into a JavaScript array
+	            return $.map(parsedResponse, function (list) {
+	                return {
+	                    // NB : replace original_title below with your JSON film key
+	                    value: list.valueOf()
+	                };
+	            });
+	        }
+	    }										
+	}); 		
+	
+	isocurrlist.initialize();			
+					
+	$('#remote .typeahead').typeahead(null, {
+	    displayKey: 'value',
+	    source: isocurrlist.ttAdapter()
+	});		 
+	
+
+	
     $(function () {
 		$('#startdatetimepicker').datetimepicker().next().on(ace.click_event, function(){
-		$(this).prev().focus();
+			$(this).prev().focus();
 		});
 
 		$('#enddatetimepicker').datetimepicker().next().on(ace.click_event, function(){
@@ -271,7 +430,21 @@
 	});
 	
     jQuery(function($) {
-        
+            
+		$.fn.extend({
+			 trackChanges: function() {
+			   $(":input",this).change(function() {
+			      $(this.form).data("changed", true);
+			   });
+			 }
+			 ,
+			 isChanged: function() { 
+			   return this.data("changed"); 
+			 }
+		});
+		
+		$("#manageitinerarysave-form").trackChanges();        
+
 		jQuery.validator.addMethod("greaterThanZero", function(value, element) {
 		return this.optional(element) || (parseInt(value) > 0);
 		}, "Pax count must be greater than zero.");
@@ -281,6 +454,14 @@
            var enddate = GetDate(value);
             return startdate <= enddate;
      	}, 'Departure date/time should be greater than equal to arrival date/time.');   
+
+		jQuery.validator.addMethod("matchingquotecurrconvcode", function(value, element){
+           var currstr =  $('#quotecurrency').val();
+           var currency = currstr.substring(0, currstr.search(" -"));
+           var convcodestr = $('#convcode').val();
+           var convode = convcodestr.substring(currstr.search("- "), currstr.search("- ")+3);
+            return currency == convcode;
+     	}, 'Conversion Code curency should match quote currency!');   
         
         //documentation : http://docs.jquery.com/Plugins/Validation/validate
         $('#manageitinerarysave-form').validate({
@@ -301,10 +482,10 @@
                     required: true,
                     greaterThanZero: 'required'
                 },
-                startdatestr: {
+                startdatetimepicker: {
                     required: true
                 },
-                enddatestr: {
+                enddatetimepicker: {
                     required: true,
                     enddategtstartdate: 'required'
                 },
@@ -315,11 +496,12 @@
                     required: true
                 },
                 quotecurrency: {
-                    required: true
+                	required: true                
                 },
                 convcode: {
-                    required: true
-                },
+                	required: true,
+                	matchingquotecurrconvcode: 'required'
+                }
             },
             messages: {
 
@@ -327,7 +509,7 @@
                     required: "Please specify a relevant itinerary name."
                 },
                 touroperator: {
-                    required: "Please provide tour operator information - \'Direct Query\' or operator name."
+                    required: "Please provide tour operator details - \'Direct Query\' or operator name."
                 },
                 grouphead: {
                     required: "Please provide name of the group head."
@@ -346,13 +528,14 @@
                 },
                 depcity: {
                     required: "Please provide travel end city."
-                },                
+                },
                 quotecurrency: {
-                    required: "Please provide the currency to raise final invoice for customer."
+                    required: "Please provide currency code for customer billing."
                 },
                 convcode: {
-                    required: "Please select a currency conversion code to help provide custom conversion rates to customer."
+                    required: "Please provide currency conversion code."
                 }
+                                
             },
 
 
@@ -382,6 +565,7 @@
 
             invalidHandler: function (form) {
             }
+           });
         });
         
 		function GetDate(datestr) {
@@ -405,11 +589,41 @@
 		};         
 
 		$(":submit").live('click', function() {
+		    	
 		    $('#mode').val($(this).val());
+           
+            var startdate = GetDate($('#startdatetimepicker').val());
+            var enddate = GetDate($('#enddatetimepicker').val());
+            
+            $('#startdatelong').val(startdate.getTime());
+            $('#enddatelong').val(enddate.getTime());
+            
+			if ($("#manageitinerarysave-form").isChanged())
+			   return true;
+			else
+				return false;
+		});
+		
+		$(function() {
+		
+            $("#depcity").suggest({
+                key: "AIzaSyDG_gsufq_KCjQYGf4SeZ44znuHsA61_10",
+                filter:'(any type:/location/citytown)'
+            })
+			.bind("fb-select", function(e, data) {
+  				checkname(data.name);
+			});  
+					
+            $("#arrivalcity").suggest({
+                key: "AIzaSyDG_gsufq_KCjQYGf4SeZ44znuHsA61_10",
+                filter:'(any type:/location/citytown)'
+            })
+			.bind("fb-select", function(e, data) {
+  				checkname(data.name);
+			});                      
 
-		});       
+        }); 
        
-    })
 </script>
 
 </body>

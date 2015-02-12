@@ -55,7 +55,7 @@
     <script type="text/javascript">
         
         function checkname(username, type, fieldname) {
-        
+                
         	var target;
         	
         	if (fieldname == '#username')

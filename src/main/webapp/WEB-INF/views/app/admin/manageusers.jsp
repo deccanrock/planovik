@@ -156,7 +156,7 @@
 		$(":submit").live('click', function() {
 
 		    $('#mode').val($(this).val());
-		});       
+		});       		       
        
     })
 </script>

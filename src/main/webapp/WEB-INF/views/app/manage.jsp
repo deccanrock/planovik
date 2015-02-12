@@ -6,9 +6,9 @@
 		<script type="text/javascript">
 			try{ace.settings.check('main-container' , 'fixed')}catch(e){}
 		</script>
-		
 		<script src="/resources/js/bootstrap-tag.min.js"></script>
-		<script src="/resources/js/typeahead.bundle.min.js"></script>
+		<script src="/resources/js/typeahead.bundle.min.js"></script>		
+
 		
 		<!-- #section:basics/sidebar -->
 		<div id="sidebar" class="sidebar                  responsive">
