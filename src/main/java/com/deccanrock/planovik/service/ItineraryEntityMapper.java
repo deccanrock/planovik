@@ -2,7 +2,9 @@ package com.deccanrock.planovik.service;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import org.springframework.jdbc.core.RowMapper;
+
 import com.deccanrock.planovik.entity.ItineraryEntity;
 import com.deccanrock.planovik.service.utils.TimeFormatter;
 
@@ -12,7 +14,7 @@ public class ItineraryEntityMapper implements RowMapper<ItineraryEntity> {
 	   
 	   itinerary.setId(rs.getInt("id"));
 	   itinerary.setName(rs.getString("name"));
-	   itinerary.setStatus(rs.getString("status"));
+	   itinerary.setStatus(rs.getInt("status"));
 	   itinerary.setVersion(rs.getInt("version"));
 	   itinerary.setTouroperator(rs.getString("touroperator"));	   
 	   itinerary.setGrouphead(rs.getString("grouphead"));

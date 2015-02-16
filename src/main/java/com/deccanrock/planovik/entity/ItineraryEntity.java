@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 
+
 @Entity
 
 public class ItineraryEntity
@@ -23,7 +24,7 @@ public class ItineraryEntity
 
     // '0=draft', '1=final'
     @Column(name="status")    
-	private String status;
+	private int status;
     
     @Column(name="touroperator")    
 	private String touroperator;
@@ -87,6 +88,8 @@ public class ItineraryEntity
     private String quotecurrencystr;
     private long startdatelong;
     private long enddatelong;
+    private String startdatetimepicker;
+    private String enddatetimepicker;
     
     // Getter-Setters
 	public int getId() {
@@ -113,11 +116,11 @@ public class ItineraryEntity
 		this.version = version;
 	}
 	
-	public String getStatus() {
+	public int getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(int status) {
 		this.status = status;
 	}
 	
@@ -338,4 +341,20 @@ public class ItineraryEntity
 		this.enddatelong = timelong;		
 	}
 	
+	public String getStartdatetimepicker() {
+		return this.startdatetimepicker;		
+	}
+	
+	public void setStartdatetimepicker(String startdatetimepicker) {
+		this.startdatetimepicker = startdatetimepicker;		
+	}
+	
+	public String getEnddatetimepicker() {
+		return this.enddatetimepicker;		
+	}
+	
+	public void setEnddatetimepicker(String enddatetimepicker) {
+		this.enddatetimepicker = enddatetimepicker;		
+	}
+
 }

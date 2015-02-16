@@ -35,6 +35,7 @@ import com.deccanrock.planovik.service.dao.UserEntityDAO;
 import com.deccanrock.planovik.service.utils.UriHandler;
 
 
+
 /**
  * Handles all requests for Organization Admin Users and functions
  */
@@ -300,9 +301,36 @@ public class AppController {
 		map.addAttribute("itinerary", itinerarydb);
 
 		((ClassPathXmlApplicationContext) context).close();		
-		return "app/manage";
+		return "app/activitymanage";
     	    	    	    	
-    }    
+    }
+    
+    
+    @RequestMapping(value = "/app/createcurrconvcode", method = RequestMethod.GET)    
+    public @ResponseBody String createCurrConvCode(ServletResponse response, @RequestParam(value = "fromcurr") String fromcurr, @RequestParam(value = "tocurr") String tocurr,
+    		@RequestParam(value = "unitrate") String unitrate) 	throws IOException {
+   
+    	// This is ajax support function for JQGrid
+    	logger.info("Create Currency Conversion Code");
+    	
+		// Check for Currency code and conversion code
+		if (fromcurr.contains(" - ")) {
+			fromcurr = fromcurr.substring(0, fromcurr.indexOf('-')-1);
+		}
+		    	
+		if (tocurr.contains(" - ")) {
+			tocurr = tocurr.substring(0, tocurr.indexOf('-')-1);
+		}
+    	
+		// Get Org List from database, should be changed to get from cache
+		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
+		ItineraryEntityDAO IED = (ItineraryEntityDAO)context.getBean("ItineraryEntityDAO");	
+		String convcode = IED.CreateCurrConvCode(fromcurr, tocurr, Float.parseFloat(unitrate));
+		((ClassPathXmlApplicationContext) context).close();	
+				
+		return convcode;
+    }
+
     
     @RequestMapping(value = "/app/login", method = RequestMethod.GET)
     public String login(ModelMap map,

@@ -8,7 +8,7 @@
 		</script>
 		<script src="/resources/js/bootstrap-tag.min.js"></script>
 		<script src="/resources/js/typeahead.bundle.min.js"></script>		
-
+		<script src="/resources/js/typeahead.bootbox.min.js"></script>	
 		
 		<!-- #section:basics/sidebar -->
 		<div id="sidebar" class="sidebar                  responsive">
@@ -124,7 +124,14 @@
 			<div class="widget-header">          		
 				<span style="font-size:14px;">Number: <i>${itinerary.id}</i></span>&nbsp;&nbsp;
 				<span style="font-size:14px;">Version: <i>${itinerary.version}</i></span>&nbsp;&nbsp;
-				<span style="font-size:14px;">Status: <i>${itinerary.status}</i></span>&nbsp;&nbsp;
+			    <span style="font-size:14px;">Status: <i>
+			    <c:choose>
+			        <c:when test="${itinerary.status == 0}">Initial</c:when>
+			        <c:when test="${itinerary.status == 1}">Draft</c:when>
+			        <c:when test="${itinerary.status == 2}">Final</c:when>
+			        <c:when test="${itinerary.status == 3}">Closed</c:when>
+			    </c:choose>
+			    </i></span>&nbsp;&nbsp;	
 				<span style="font-size:14px;">Currency: <i>${itinerary.currency}</i></span>				
 	        </div>
 	                            
@@ -241,8 +248,10 @@
 		                        <div class="clearfix">
 		                    		<label for="quotecurrency">Client Quote Currency</label>
 		                    		<div id="remote">
-										<form:input type="text" class="typeahead scrollable" path="quotecurrencystr" id="quotecurrency" name="quotecurrency"  
-				                        			value="${itinerary.quotecurrencystr}"  style="width:95%;" />                                		
+										<input type="text" class="typeahead scrollable" id="quotecurrency" name="quotecurrency"  
+				                        			style="width:234%;" />                                		
+						                <form:input type='hidden' id="quotecurrencystr" path="quotecurrencystr" name="quotecurrencystr" 
+						                	value="${itinerary.quotecurrencystr}" />
 									</div>
 								</div>
 					        </div>
@@ -251,45 +260,32 @@
 					    <div class='col-md-6'>
 					        <div class="form-group">
 			                    <div class="clearfix">
-			                		<label for="convcode">Currency Conversion Code</label> <label style="font-size:small;"> (Enter 3 char currency code)</label>
+			                		<label for="convcodes">Currency Conversion Code</label> <label style="font-size:small;"> (Enter 3 char currency code)</label>
 					        		<div class="form-group">
 					        			<div id="remote">
-											<form:input type="text" class="typeahead scrollable" path="convcodestr" id="convcode" name="convcode"  
-					                        			value="${itinerary.convcodestr}" style="width:95%;" />                                		
+											<input type="text" class="typeahead scrollable" id="convcodes" name="convcodes"  
+					                        		style="width:234%;" />                                		
+											<form:input type="hidden" id="convcodestr" path="convcodestr" name="convcodestr"  
+					                        	value="${itinerary.convcodestr}" />                                		
 										</div>
+										<a class="btn btn-minier btn-purple" style="float:right; margin-top:2px;" id="btnnewconvcode">New</a>
 									</div>
 								</div>
 					        </div>
 					    </div>
 					</div>                    
-		    		<div class="space-2"></div>
-	                       
-		                                        
-	                <div class="space-2"></div>
+
 	                    <form:input type="hidden" id="tzoffset" path="tzoffset"/>
 	                    <form:input type="hidden" id="id" path="id" value="${itinerary.id}"/>
 	                    <form:input type="hidden" id="mode" path="mode" value="${itinerary.mode}"/>
 	                    <form:input type="hidden" id="version" path="version" value="${itinerary.version}"/>
 	                    <form:input type="hidden" id="status" path="status" value="${itinerary.status}"/>
 	
-	                    <!-- #section:plugins/fuelux.wizard.buttons -->						
-						<div class="alert alert-danger" id="changeerror" style="display:none;">
-							<button class="close" data-dismiss="alert" type="button">							
-							    <i class="ace-icon fa fa-times"></i>
-							</button>	    					
-	    					<strong></strong>No Changes detected!
-						</div>
-	            		<c:choose>
-	            			<c:when test="${itinerary.mode == 'Create'}">
-	                        	<input type="submit" id="manageitinerarycreate" class="btn btn-large btn-primary" value="Save" style="margin-left:43%" />
-	                    	</c:when>
-							<c:otherwise>
-		                        <input type="submit" id="manageitineraryedit" class="btn btn-large btn-primary" value="Save" style="margin-left:43%;" />
-							</c:otherwise>
-	            		</c:choose>
-	                    
+						<button class="btn btn-large btn-primary" style="margin-left:43%;" id="manageitinerarybtn">Save</button>
+                    
 	                    </form:form>
 		        	</div>
+		        	
 				</div><!-- /.widget-main -->
 	        </div><!-- /.widget-body -->
 	    </div><!-- /.widget-box -->
@@ -325,10 +321,39 @@
 			<!-- /section:basics/footer -->
 		</div>
 	</div>
+	
+	<form id="newconvcodeform" method="post" class="form-horizontal" style="display: none;">
+	    <div class="form-group">
+	        <label class="col-xs-3 control-label">From</label>
+	        <div class="col-xs-6">
+	        	<div id="remote">
+	            	<input type="text" class="typeahead scrollable form-control" id="fromcurr" name="fromcurr" style="min-width:188%;" />
+				</div>
+	        </div>
+	    </div>
+	
+	    <div class="form-group">
+	        <label class="col-xs-3 control-label">To</label>
+	        <div class="col-xs-6">
+	        	<div id="remote">
+	            	<input type="text" class="typeahead scrollable form-control" id="tocurr" name="tocurr" style="min-width:188%;" />
+				</div>
+	        </div>
+	    </div>
+	
+	    <div class="form-group">
+	        <label class="col-xs-3 control-label">Unit Rate</label>
+	        <div class="col-xs-7">
+	            <input type="text" class="form-control" name="unitrate" id="unitrate" />
+	        </div>
+	    </div>
 
-	<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
-		<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
-	</a>
+	    <div class="form-group">
+	        <div class="col-xs-5 col-xs-offset-3">
+	            <button type="submit" id="newconvcodeformsubmit" class="btn btn-purple">Create new</button>
+	        </div>
+	    </div>
+	</form>
 
 </div><!-- /.main-container -->
 
@@ -377,12 +402,217 @@
 <script type="text/javascript">
 
 	$(document).ready(function() {
+	      			
+		$( "#btnnewconvcode" ).click(function() {
+	        bootbox
+	            .dialog({
+	                title: 'Create new conversion code',
+	                message: $('#newconvcodeform'),
+	                show: false
+	            })
+	            .on('shown.bs.modal', function() {
+	                $('#newconvcodeform')
+	                    .show()
+	            })
+	            .on('hide.bs.modal', function(e) {
+	                $('#newconvcodeform').hide().appendTo('body');
+	            })          
+	            .modal('show');	
+	    });
+	    
+	    $('#newconvcodeform').on('success.form.bv', function(e) {
+	        // Prevent form submission
+	        e.preventDefault();
+	
+	        var $form     = $(e.target);
+	
+	        // Hide the modal containing the form
+	        $form.parents('.bootbox').modal('hide');
+	
+	        // Show the welcome dialog
+	        bootbox.alert('Welcome back, ' + fromcurr);
+	    });	    
+	    		
 		$('#startdatetimepicker').val($('#startdatestr').val());
 	    $('#enddatetimepicker').val($('#enddatestr').val());	
+	    $('#quotecurrency').val($('#quotecurrencystr').val());	
+	    $('#convcodes').val($('#convcodestr').val());
+	   
+    	$.validator.setDefaults({	    
+            errorElement: 'div',
+            errorClass: 'help-block',
+            focusInvalid: false,
+            highlight: function (e) {
+                $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+            },
+            success: function (e) {
+                $(e).closest('.form-group').removeClass('has-error');//.addClass('has-info');
+                $(e).remove();
+            },
+            errorPlacement: function (error, element) {
+                if(element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+                    var controls = element.closest('div[class*="col-"]');
+                    if(controls.find(':checkbox,:radio').length > 1) controls.append(error);
+                    else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+                }
+                else if(element.is('.select2')) {
+                    error.insertAfter(element.siblings('[class*="select2-container"]:eq(0)'));
+                }
+                else if(element.is('.chosen-select')) {
+                    error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+                }
+                else error.insertAfter(element.parent());
+            },
+            invalidHandler: function (form) {
+            }	    
+	    });
+
+		jQuery.validator.addMethod("greaterThanZero", function(value, element) {
+		return this.optional(element) || (parseInt(value) > 0);
+		}, "Pax count must be greater than zero.");
+		
+		jQuery.validator.addMethod("enddategtstartdate", function(value, element){
+           var startdate = GetDate($('#startdatetimepicker').val());
+           var enddate = GetDate(value);
+            return startdate <= enddate;
+     	}, 'Departure date/time should be greater than equal to arrival date/time.');   
+
+		jQuery.validator.addMethod("matchingquotecurrconvcode", function(value, element){
+           var currstr =  $('#quotecurrency').val();
+           // USD - United States Dollar
+           var currency = currstr.substring(0, currstr.search(" -"));
+           var convcodestr = $('#convcodes').val();
+
+           // 2 - USD to INR  Rate: 62.5
+           var start = convcodestr.search("- ")+2;
+		   var end = convcodestr.search("- ")+5;
+           var convcode = convcodestr.substring(start, end);
+            return currency == convcode;
+     	}, 'Conversion Code curency should match quote currency!');   
+        
+        //documentation : http://docs.jquery.com/Plugins/Validation/validate
+        $('#manageitinerarysave-form').validate({
+            rules: {
+                name: {
+                    required: true
+                },
+                touroperator: {
+                    required: true
+                },
+                grouphead: {
+                    required: true
+                },
+                numtravellers: {
+                    required: true,
+                    greaterThanZero: 'required'
+                },
+                startdatetimepicker: {
+                    required: true
+                },
+                enddatetimepicker: {
+                    required: true,
+                    enddategtstartdate: 'required'
+                },
+                arrivalcity: {
+                    required: true
+                },
+                depcity: {
+                    required: true
+                },
+                convcodes: {
+                	matchingquotecurrconvcode: 'required'
+                }
+            },
+            messages: {
+                name: {
+                    required: "Please specify a relevant itinerary name."
+                },
+                touroperator: {
+                    required: "Please provide tour operator details - \'Direct Query\' or operator name."
+                },
+                grouphead: {
+                    required: "Please provide name of the group head."
+                },
+                numtravellers: {
+                    required: "Please provide PAX count."
+                },
+                startdatestr: {
+                    required: "Please provide travel start date and time."
+                },
+                enddatestr: {
+                    required: "Please provide travel end date and time."
+                },
+                arrivalcity: {
+                    required: "Please provide travel start city."
+                },
+                depcity: {
+                    required: "Please provide travel end city."
+                },
+                quotecurrency: {
+                    required: "Please provide currency code for customer billing."
+                },
+                convcodes: {
+                    required: "Please provide currency conversion code."
+                }
+            }
+        });        
+
+		jQuery.validator.addMethod("samecurrconvcodes", function(value, element){
+            return ($('#fromcurr').val() != $('#tocurr').val());
+     	}, 'Conversion Code currencies should be different!');   
+
+		jQuery.validator.addMethod("numbersdecimal", function(value, element){
+            return ($('#unitrate').val().match(/^\d+\.\d{0,2}$/));
+     	}, 'Unit rate should contain digits and a single decimal only!');   
+     	
+        $('#newconvcodeform').validate({
+            rules: {
+                fromcurr: {
+                    required: true
+                },
+                tocurr: {
+                    required: true,
+                    samecurrconvcodes: 'required'
+                },
+                unitrate: {
+                    required: true,
+                    numbersdecimal: 'required'
+                }
+            },
+            messages: {
+
+                fromcurr: {
+                    required: "Conversion currency code is required."
+                },
+                tocurr: {
+                    required: "Conversion currency code is required."
+                },
+                unitrate: {
+                    required: "Conversion unit rate is required."
+                }
+            }
+        });	
+	
 	})
+	
+	$( "#newconvcodeformsubmit" ).click(function() {
+		var request = 
+				$.ajax({type: 'GET',
+						url: "/app/createcurrconvcode?" + "fromcurr=" + $('#fromcurr').val() + "&tocurr=" + $('#tocurr').val()
+							 + "&unitrate=" + $('#unitrate').val()
+					});
+		request.done(function( msg ) {
+			$('.bootbox-close-button')[0].click();
+			$('#convcodes').val(msg);
 
-	var formchanged=false;
+		}); 
+	    request.fail(function( jqXHR, textStatus ) {
+		});
+		
+		return false;		
 
+	});
+	
 	var isocurrlist = new Bloodhound({
 		datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
 		queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -390,9 +620,10 @@
 	        url: '/app/getISOCurrList?query=%QUERY',
 	        replace: function(url, query) {
 
-	        	if (document.activeElement.id == 'quotecurrency')
+	        	if (document.activeElement.id == 'quotecurrency' || document.activeElement.id == 'fromcurr' 
+	        		|| document.activeElement.id == 'tocurr')
 	        		url = "/app/getISOCurrList?";
-	        	else if (document.activeElement.id == 'convcode')
+	        	else if (document.activeElement.id == 'convcodes')
 	        		url = "/app/getCurrConvCodes?";
 				
 				url = url + "query="  + document.activeElement.value;
@@ -445,129 +676,7 @@
 		
 		$("#manageitinerarysave-form").trackChanges();        
 
-		jQuery.validator.addMethod("greaterThanZero", function(value, element) {
-		return this.optional(element) || (parseInt(value) > 0);
-		}, "Pax count must be greater than zero.");
-		
-		jQuery.validator.addMethod("enddategtstartdate", function(value, element){
-           var startdate = GetDate($('#startdatetimepicker').val());
-           var enddate = GetDate(value);
-            return startdate <= enddate;
-     	}, 'Departure date/time should be greater than equal to arrival date/time.');   
 
-		jQuery.validator.addMethod("matchingquotecurrconvcode", function(value, element){
-           var currstr =  $('#quotecurrency').val();
-           var currency = currstr.substring(0, currstr.search(" -"));
-           var convcodestr = $('#convcode').val();
-           var convode = convcodestr.substring(currstr.search("- "), currstr.search("- ")+3);
-            return currency == convcode;
-     	}, 'Conversion Code curency should match quote currency!');   
-        
-        //documentation : http://docs.jquery.com/Plugins/Validation/validate
-        $('#manageitinerarysave-form').validate({
-            errorElement: 'div',
-            errorClass: 'help-block',
-            focusInvalid: false,
-            rules: {
-                name: {
-                    required: true
-                },
-                touroperator: {
-                    required: true
-                },
-                grouphead: {
-                    required: true
-                },
-                numtravellers: {
-                    required: true,
-                    greaterThanZero: 'required'
-                },
-                startdatetimepicker: {
-                    required: true
-                },
-                enddatetimepicker: {
-                    required: true,
-                    enddategtstartdate: 'required'
-                },
-                arrivalcity: {
-                    required: true
-                },
-                depcity: {
-                    required: true
-                },
-                quotecurrency: {
-                	required: true                
-                },
-                convcode: {
-                	required: true,
-                	matchingquotecurrconvcode: 'required'
-                }
-            },
-            messages: {
-
-                name: {
-                    required: "Please specify a relevant itinerary name."
-                },
-                touroperator: {
-                    required: "Please provide tour operator details - \'Direct Query\' or operator name."
-                },
-                grouphead: {
-                    required: "Please provide name of the group head."
-                },
-                numtravellers: {
-                    required: "Please provide PAX count."
-                },
-                startdatestr: {
-                    required: "Please provide travel start date and time."
-                },
-                enddatestr: {
-                    required: "Please provide travel end date and time."
-                },
-                arrivalcity: {
-                    required: "Please provide travel start city."
-                },
-                depcity: {
-                    required: "Please provide travel end city."
-                },
-                quotecurrency: {
-                    required: "Please provide currency code for customer billing."
-                },
-                convcode: {
-                    required: "Please provide currency conversion code."
-                }
-                                
-            },
-
-
-            highlight: function (e) {
-                $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
-            },
-
-            success: function (e) {
-                $(e).closest('.form-group').removeClass('has-error');//.addClass('has-info');
-                $(e).remove();
-            },
-
-            errorPlacement: function (error, element) {
-                if(element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
-                    var controls = element.closest('div[class*="col-"]');
-                    if(controls.find(':checkbox,:radio').length > 1) controls.append(error);
-                    else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
-                }
-                else if(element.is('.select2')) {
-                    error.insertAfter(element.siblings('[class*="select2-container"]:eq(0)'));
-                }
-                else if(element.is('.chosen-select')) {
-                    error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
-                }
-                else error.insertAfter(element.parent());
-            },
-
-            invalidHandler: function (form) {
-            }
-           });
-        });
-        
 		function GetDate(datestr) {
 			var arrdate = datestr.split(/\/|\s|:/);
 			var date; 
@@ -588,8 +697,8 @@
 		    return date;
 		};         
 
-		$(":submit").live('click', function() {
-		    	
+		$("#manageitinerarybtn").click(function() {
+		    		
 		    $('#mode').val($(this).val());
            
             var startdate = GetDate($('#startdatetimepicker').val());
@@ -597,6 +706,9 @@
             
             $('#startdatelong').val(startdate.getTime());
             $('#enddatelong').val(enddate.getTime());
+
+            $('#quotecurrencystr').val($('#quotecurrency').val());            
+            $('#convcodestr').val($('#convcodes').val());                        
             
 			if ($("#manageitinerarysave-form").isChanged())
 			   return true;
@@ -622,7 +734,8 @@
   				checkname(data.name);
 			});                      
 
-        }); 
+        });
+	}); 
        
 </script>
 

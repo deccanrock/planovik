@@ -195,7 +195,7 @@
 
 </head>
 
-<body class="no-skin" style="background-color:#fff;">
+<body class="no-skin" style="background-color: #E9EAED;">
 	<div class="navbar_signup navbar-inverse1 navbar-fixed-top">
 	    <div class="loggedout_menubar">
 	        <div class="navbar-header pull-left">

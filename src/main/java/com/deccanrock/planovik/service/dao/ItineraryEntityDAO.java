@@ -18,13 +18,13 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
-
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.deccanrock.planovik.entity.ItineraryEntity;
 import com.deccanrock.planovik.service.ItineraryEntityMapper;
 import com.deccanrock.planovik.service.utils.TimeFormatter;
+import com.deccanrock.planovik.constants.Constants;
  
 @Component
 @Transactional
@@ -94,7 +94,7 @@ public class ItineraryEntityDAO extends JdbcDaoSupport implements IItneraryEntit
 		inParamMap.put("tzoffset", itinerary.getTzoffset());
 		inParamMap.put("createdbyemail", itinerary.getCreatedbyemail());
 		inParamMap.put("version", 0);		
-		inParamMap.put("status", "Initial");
+		inParamMap.put("status", Constants.Itinstatus.valueOf("Initial").getValue());
 		inParamMap.put("currency", "INR");
 		inParamMap.put("quotecurrency", "INR");
 		
@@ -104,7 +104,7 @@ public class ItineraryEntityDAO extends JdbcDaoSupport implements IItneraryEntit
     	try {    	
     		simpleJdbcCallResult = simpleJdbcCall.execute(in);
 			// No exception means insert/update/delete happened
-    		itinerary.setStatus("Initial");
+    		itinerary.setStatus(Constants.Itinstatus.valueOf("Initial").getValue());
     		itinerary.setVersion(0);
     		itinerary.setCurrency("INR - Indian Rupee"); // Change to company locale
 		    itinerary.setError("Success");
@@ -190,7 +190,7 @@ public class ItineraryEntityDAO extends JdbcDaoSupport implements IItneraryEntit
 			inParamMap.put("name", itinerary.getName());		
 			
 			if (itinerary.getVersion() == 0) {// safe to assume if version = 0 then status will be initial
-				itinerary.setStatus("Draft");
+				itinerary.setStatus(Constants.Itinstatus.valueOf("Draft").getValue());
 				itinerary.setVersion(itinerary.getVersion()+1);
 			}
 			
@@ -279,6 +279,8 @@ public class ItineraryEntityDAO extends JdbcDaoSupport implements IItneraryEntit
 		Map<String, Object> inParamMap = new HashMap<String, Object>();
 			
 		inParamMap.put("query", query);
+		// for now only Active, can be changed for any codes
+		inParamMap.put("instatus", Constants.Itincurrconv.valueOf("Active").getValue());
 		SqlParameterSource in = new MapSqlParameterSource(inParamMap);
 
 		Map<String, Object> dbconvcodes = simpleJdbcCall.execute(in);
@@ -299,6 +301,29 @@ public class ItineraryEntityDAO extends JdbcDaoSupport implements IItneraryEntit
 				
     	
  		return convcodenames;
+	}
+
+
+	@Override		
+	public String CreateCurrConvCode(String fromcurr, String tocurr, float unitrate) {
+    	JdbcTemplate dbtemplate = new JdbcTemplate(dataSource);    	
+
+		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(dbtemplate)
+		.withProcedureName("sp_createcurrconvcode");
+
+		Map<String, Object> inParamMap = new HashMap<String, Object>();
+			
+		inParamMap.put("intocurr", tocurr);
+		inParamMap.put("infromcurr", fromcurr);
+		inParamMap.put("inunitrate", unitrate);
+		inParamMap.put("instatus", Constants.Itincurrconv.valueOf("Active").getValue());
+		
+		SqlParameterSource in = new MapSqlParameterSource(inParamMap);
+
+		Map<String, Object> simpleJdbcCallResult = simpleJdbcCall.execute(in);
+    	String result = (String) simpleJdbcCallResult.get("result");	
+    	
+ 		return result;
 	}    
  	
 }

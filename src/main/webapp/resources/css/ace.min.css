@@ -56,7 +56,7 @@ body{
 }
 
 .page-content{
-	background-color:#fff;
+	background-color:#F2F2F2;
 	position:relative;
 	margin:0;
 	padding:8px 10px 0
@@ -4992,12 +4992,14 @@ body.mob-safari .sidebar.sidebar-fixed{
 }
 
 .footer{
+	background-color:#E9EAED;
 	padding-top:15px;
 	height:0;
 	width:0
 }
 
 .footer .footer-inner{
+	background-color:#F5F5F5;
 	text-align:center;
 	position:absolute;
 	z-index:auto;
@@ -5158,13 +5160,13 @@ body.mob-safari .sidebar.sidebar-fixed{
 }
 
 .footer .footer-inner .footer-content{
-	position:absolute;
+	background-color:#F5F5F5;
 	left:12px;
 	right:12px;
 	bottom:4px;
 	padding:8px;
 	line-height:36px;
-	border-top:3px double #E5E5E5
+	border-top:1px solid #E5E5E5
 }
 
 .signup_footer{
@@ -17710,7 +17712,7 @@ th[aria-selected=true] .ui-jqgrid-sortable{
 }
 
 input.tt-hint,input.tt-query,input.typeahead{
-	min-width:237%;
+	min-width:200%;
 	font-size:14px;
 	border:1px solid #CCC;
 	border-radius:0;

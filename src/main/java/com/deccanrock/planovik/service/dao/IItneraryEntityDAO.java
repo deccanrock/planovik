@@ -13,4 +13,5 @@ public interface IItneraryEntityDAO {
 	ItineraryEntity SaveItinerary(ItineraryEntity itinerary) throws IOException, SQLException;
 	List<String> GetISOCurrList(String query) throws IOException, SQLException;
 	List<String> GetCurrConvCodes(String query) throws IOException, SQLException;
+	String CreateCurrConvCode(String fromcurr, String tocurr, float unitrate) throws IOException, SQLException;
 }

@@ -30,7 +30,6 @@
 </beans:bean>
 
 	
-	<beans:bean id="admintasksconsts" class="com.deccanrock.planovik.constants.AdminTasksConsts"></beans:bean>
 	
 	<mvc:interceptors>
 		<beans:bean class="com.deccanrock.planovik.controller.RequestInterceptor" />
