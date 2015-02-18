@@ -220,6 +220,13 @@ h6.block{
 .login_block #email{direction:ltr}.login_form_standalone_labels .inputtext,.login_form_standalone_labels .inputpassword{border-color:#96a6c5;font-size:14px;padding:6px;width:250px}.login_form_standalone_labels label{color:#1d2a5b;font-size:12px;font-weight:normal;line-height:1.5}.login_form_standalone_labels .login_form_label_field a{color:#3b5998;font-size:12px}.login_form_standalone_labels td.blk_misc{text-align:right}.login_form_standalone_labels .uiButton input{font-size:13px;padding:3px 25px 5px}table.login_form_standalone_labels tr td{height:30px;padding:0;vertical-align:middle}
 
 
+.arrowdown {
+    -webkit-transform: rotate(90deg); /* Safari and Chrome */
+    -moz-transform: rotate(90deg);   /* Firefox */
+    -ms-transform: rotate(90deg);   /* IE 9 */
+    -o-transform: rotate(90deg);   /* Opera */
+    transform: rotate(90deg);
+}
 
 .signup-col-phone {
     width:90.666%

@@ -21,6 +21,7 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.deccanrock.planovik.entity.ActivitymasterEntity;
 import com.deccanrock.planovik.entity.ItineraryEntity;
 import com.deccanrock.planovik.service.ItineraryEntityMapper;
 import com.deccanrock.planovik.service.utils.TimeFormatter;
@@ -324,6 +325,94 @@ public class ItineraryEntityDAO extends JdbcDaoSupport implements IItneraryEntit
     	String result = (String) simpleJdbcCallResult.get("result");	
     	
  		return result;
+	}
+
+
+	public ActivitymasterEntity GetActivityMaster(ItineraryEntity itinerarydb) {
+		// Get number of days for the itinerary
+		ActivitymasterEntity ame = new ActivitymasterEntity();
+		Date endate = new Date (itinerarydb.getEnddatelong());
+		Date startdate = new Date (itinerarydb.getStartdatelong());
+
+		int numtourdays = (int)(endate.getTime() - startdate.getTime())/(24 * 60 * 60 * 1000)+1; // include both start and end dates
+		ame.setNumtourdays(numtourdays);
+    	JdbcTemplate dbtemplate = new JdbcTemplate(dataSource);    	
+
+		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(dbtemplate)
+		.withProcedureName("sp_getitinactivitymasterdet");
+
+		Map<String, Object> inParamMap = new HashMap<String, Object>();
+			
+		inParamMap.put("initinnum", itinerarydb.getId());
+		inParamMap.put("inversion", itinerarydb.getVersion());
+		
+		SqlParameterSource in = new MapSqlParameterSource(inParamMap);
+
+		Map<String, Object> simpleJdbcCallResult = simpleJdbcCall.execute(in);
+		
+		// Null check for no entry
+		if (simpleJdbcCallResult.get("status") != null)
+			ame.setStatus((Integer) simpleJdbcCallResult.get("status"));
+
+		if (simpleJdbcCallResult.get("isactivityhotel") != null) {
+			int isActivityHotel = (Integer) simpleJdbcCallResult.get("isactivityhotel");
+	    	if (isActivityHotel == 0)
+	    		ame.setIsactivityhotel(false);
+	    	else
+	    		ame.setIsactivityhotel(true);
+		}
+		
+		if (simpleJdbcCallResult.get("isActivitysightseeing") != null) {
+		    int isActivitysightseeing = (Integer) simpleJdbcCallResult.get("isactivitysightseeing");
+	    	if (isActivitysightseeing == 0)
+	    		ame.setIsactivitysightseeing(false);
+	    	else
+	    		ame.setIsactivitysightseeing(true);
+		}
+		
+		if (simpleJdbcCallResult.get("isactivitytravel") != null) {		
+	    	int isActivityTravel = (Integer) simpleJdbcCallResult.get("isactivitytravel");
+	    	if (isActivityTravel == 0)
+	    		ame.setIsactivitytravel(false);
+	    	else
+	    		ame.setIsactivitytravel(true);
+		}
+		
+		if (simpleJdbcCallResult.get("isactivityother") != null) {				
+		    int isActivityOther = (Integer) simpleJdbcCallResult.get("isactivityother");
+	    	if (isActivityOther == 0)
+	    		ame.setIsActivityother(false);
+	    	else
+	    		ame.setIsActivityother(true);
+		}
+
+		simpleJdbcCall = new SimpleJdbcCall(dbtemplate)
+		.withProcedureName("sp_getitinactivitycount");
+
+		inParamMap = new HashMap<String, Object>();
+			
+		inParamMap.put("initinnum", itinerarydb.getId());
+		inParamMap.put("inversion", itinerarydb.getVersion());
+
+		Map<String, Object> daywiseactivity = simpleJdbcCall.execute(in);
+
+		// Safe to assume result is in result set 1
+		ArrayList <HashMap<Integer, Object>> daywiseactivitycount = (ArrayList<HashMap<Integer, Object>>) daywiseactivity.get("#result-set-1");
+		if (daywiseactivitycount.size() == 0) {
+			ame.setDaywiseactivitycnt(null);
+			return ame;
+		}
+		
+    	ArrayList<Integer> daywiseactivitycountlist = new ArrayList<Integer>(daywiseactivitycount.size());
+    	    	
+    	for (HashMap<Integer, Object> map : daywiseactivitycount) {
+    	     for (Entry<Integer, Object> mapEntry : map.entrySet())
+    	    	 daywiseactivitycountlist.add((Integer) mapEntry.getValue());
+    	}    	
+    	
+    	ame.setDaywiseactivitycnt(daywiseactivitycountlist);
+    	
+    	return ame;
 	}    
  	
 }

@@ -7,10 +7,12 @@ import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,6 +29,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.codehaus.jackson.map.ObjectMapper;
+
+import com.deccanrock.planovik.entity.ActivitymasterEntity;
+import com.deccanrock.planovik.entity.TravelActivityEntity;
+import com.deccanrock.planovik.entity.RentalActivityEntity;
+
 import com.deccanrock.planovik.entity.ItineraryEntity;
 import com.deccanrock.planovik.entity.TasksEntity;
 import com.deccanrock.planovik.location.MaxLocationBO;
@@ -300,6 +307,19 @@ public class AppController {
 		itinerarydb = IED.SaveItinerary(itinerary);
 		map.addAttribute("itinerary", itinerarydb);
 
+		// Get master activity for the itinerary
+		ActivitymasterEntity ame = IED.GetActivityMaster(itinerarydb);
+		ame.setItinnum(itinerarydb.getId());
+		ame.setStatus(itinerarydb.getStatus());
+		ame.setVersion(itinerarydb.getVersion());
+		map.addAttribute("activitymaster", ame);
+		
+		TravelActivityEntity TAE = new TravelActivityEntity();
+		RentalActivityEntity RAE = new RentalActivityEntity();
+
+		map.addAttribute("travelactivity", TAE);
+		map.addAttribute("rentalactivity", RAE);
+		
 		((ClassPathXmlApplicationContext) context).close();		
 		return "app/activitymanage";
     	    	    	    	

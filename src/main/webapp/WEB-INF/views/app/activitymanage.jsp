@@ -7,7 +7,9 @@
 			try{ace.settings.check('main-container' , 'fixed')}catch(e){}
 		</script>
 		<script src="/resources/js/bootstrap-tag.min.js"></script>
-		<script src="/resources/js/typeahead.bundle.min.js"></script>		
+		<script src="/resources/js/typeahead.bundle.min.js"></script>
+		<script src="/resources/js/chosen.jquery.min.js"></script>	
+		<link rel="stylesheet" href="<c:url value='/resources/css/chosen.css'/>" />	
 
 		
 		<!-- #section:basics/sidebar -->
@@ -121,71 +123,312 @@
 					<div class="row">
     					<div class="col-xs-12" style="margin-top:-200px;">
 
-							<div class="col-sm-6">    					
-								<div id="dayactivity" class="accordion-style2 panel-group">
-									<div class="panel panel-default">
-										<div class="panel-heading">
-											<h4 class="panel-title">
-												<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-													<i class="ace-icon fa fa-angle-down bigger-110" data-icon-hide="ace-icon fa fa-angle-down" data-icon-show="ace-icon fa fa-angle-right"></i>
-													&nbsp;Day 1
-												</a>
-											</h4>
-										</div>
-
-										<div class="panel-collapse collapse in" id="collapseOne">
-											<div class="panel-body">
-												Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
-											</div>
-										</div>
-									</div>
-
-									<div class="panel panel-default">
-										<div class="panel-heading">
-											<h4 class="panel-title">
-												<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
-													<i class="ace-icon fa fa-angle-right bigger-110" data-icon-hide="ace-icon fa fa-angle-down" data-icon-show="ace-icon fa fa-angle-right"></i>
-													&nbsp;Day 2
-												</a>
-											</h4>
-										</div>
-
-										<div class="panel-collapse collapse" id="collapseTwo">
-											<div class="panel-body">
-												Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
-											</div>
-										</div>
-									</div>
-
-									<div class="panel panel-default">
-										<div class="panel-heading">
-											<h4 class="panel-title">
-												<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
-													<i class="ace-icon fa fa-angle-right bigger-110" data-icon-hide="ace-icon fa fa-angle-down" data-icon-show="ace-icon fa fa-angle-right"></i>
-													&nbsp;Day 3
-												</a>
-											</h4>
-										</div>
-
-										<div class="panel-collapse collapse" id="collapseThree">
-											<div class="panel-body">
-												Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et.
-											</div>
-										</div>
-									</div>
+							<div class="col-sm-6">
+							
+								<div>
+									<label for="form-field-select-3"><H4>Pick a day</H4></label>	
+									<br />
+									<select class="chosen-select" id="form-field-select-3" data-placeholder="Pick a day...">
+										<option value="">  </option>
+										<c:forEach var="i" begin="1" end="${activitymaster.numtourdays}">								
+										<option value="${i}">Day ${i}</option>								
+		          						</c:forEach>								
+									</select>
 								</div>
+								<div class="col-sm-2" style="margin-top:10px;margin-left:5px;">
+									<button id="hotelbtn" class="btn btn-white btn-pink btn-round" style="width:130%;">Add Hotel</button>																	
+									<span id="arrowhotel" class="ace-icon glyphicon glyphicon-play arrowdown" 
+											style="color:#AF6F87;margin-left:55px;margin-top:-3px;display:none;"></span>
+								</div>			
+								<div class="col-sm-2" style="margin-top:10px;margin-left:5px;">
+									<button id="travelbtn" class="btn btn-white btn-success btn-round" style="margin-left:10px;width:130%;">Add Travel</button>
+									<span id="arrowtravel" class="ace-icon glyphicon glyphicon-play arrowdown" 
+											style="margin-left:55px;margin-top:-3px;color:#ABBAC3;display:none;"></span>
+								</div>			
+								<div class="col-sm-2" style="margin-top:10px;margin-left:15px;">
+									<button id="rentalbtn" class="btn btn-white btn-default btn-round" style="margin-left:10px;width:130%;">Add Rental</button>
+									<span id="arrowrental" class="ace-icon glyphicon glyphicon-play arrowdown" 
+											style="margin-left:55px;margin-top:-3px;color:#ABBAC3;display:none;"></span>
+								</div>			
+								<div class="col-sm-2" style="margin-top:10px;margin-left:10px;">
+									<button id="visitbtn" class="btn btn-white btn-warning btn-round" style="margin-left:15px;width:130%;">Add Visit</button>
+									<span id="arrowvisit" class="ace-icon glyphicon glyphicon-play arrowdown" 
+											style="margin-left:55px;margin-top:-3px;color:#E7B979;display:none;"></span>
+								</div>			
+								<div class="col-sm-2" style="margin-top:10px;margin-left:20px;">
+									<button id="otherbtn" class="btn btn-white btn-info btn-round" style="margin-left:10px;width:130%;">Add Other</button>
+									<span id="arrowother" class="ace-icon glyphicon glyphicon-play arrowdown" 
+											style="margin-left:55px;margin-top:-3px;color:#8FBCD9;display:none;"></span>
+								</div>			
+								
+								<form:form id="travelactivityform" method="post" action="/app/travelactivity/save" modelAttribute="travelactivity" 
+									name="travelactivity" class="form-horizontal" style="display:none;">
+								    					
+									<c:if test="${not empty travelactivity.activityid}">
+								        <label class="col-xs-3 control-label">Activityid: ${travelactivity.activityid}</label>
+									</c:if>
+									<c:if test="${empty travelactivity.activityid}">
+								        <label class="col-xs-3 control-label">Activityid: <i>new</i></label>
+									</c:if>
+														    
+								    <div class="form-group">
+								        <label class="col-xs-3 control-label">Travel Code</label>
+											<form:select class="form-control" path="codes" id="codes">
+												<option value="">  </option>
+												<c:forEach var="code" items="${travelactivity.codes}">							
+													<option value="${code}">${code}</option>								
+				          						</c:forEach>
+											</form:select>							        
+								    </div>
+								   	
+								   	<form:input id="day" type="hidden" path="day" />
 
-								<!-- /section:elements.accordion -->
+									<div class="form-group">
+										<label for="vesselconame">Transport Company</label>
+					    				<form:input id="vesselconame" path="vesselconame" type="text" />												
+					    			</div>
+									
+									<div class="form-group">
+										<label for="vesselno">Flight/Train/Bus Number</label>
+					    				<form:input id="vesselno" path="vesselno" type="text" />												
+									</div>
+									
+									<div class="form-group">
+										<label for="class">Class</label>
+					    				<form:input id="class" path="class" type="text" />												
+									</div>
+									
+									<div class="form-group">
+										<label for="bookingno">Booking Details</label>
+					    				<form:input id="bookingno" path="bookingno" type="text" />												
+									</div>
+
+							        <div class="form-group">
+			                    		<label for ="depdatetime">Departure Date and Time</label>
+							            <div class='input-group'>
+											<span class="input-group-addon">
+												<i class="fa fa-calendar bigger-110"></i>
+											</span>					            
+							                <input type='text' id="depdatetimepicker" name="depdatetimepicker" class="form-control"
+							                	value="${travelactivity.depdatetime}" style="z-index:0;" />
+							                <form:input type='hidden' id="depdatetimestr" path="depdatetimestr" name="depdatetimestr" value="${travelactivity.depdatetimestr}" />
+							                <form:input type='hidden' id="depdatetimelong" name="depdatetimelong" path="depdatetimelong" />
+							            </div>
+							        </div>
+
+							        <div class="form-group">
+			                    		<label for ="arrdatetime">Arrival Date and Time</label>
+							            <div class='input-group'>
+											<span class="input-group-addon">
+												<i class="fa fa-calendar bigger-110"></i>
+											</span>					            
+							                <input type='text' id="arrdatetimepicker" name="arrdatetimepicker" class="form-control"
+							                	value="${travelactivity.arrdatetime}" style="z-index:0;" />
+							                <form:input type='hidden' id="arrdatetimestr" path="arrdatetimestr" name="arrdatetimestr" value="${travelactivity.arrdatetimestr}" />
+							                <form:input type='hidden' id="arrdatetimelong" name="arrdatetimelong" path="arrdatetimelong" />
+							            </div>
+							        </div>
+							        
+							        <div class="form-group">
+				                        <div class="clearfix">
+			                        		<label for="depstation">Departure Station</label>
+							                <form:input type='text' path="depstation" id="depstation" name="depstation" class="col-sm-12" 
+							                	value="${travelactivity.depstation}" />
+										</div>
+							        </div>
+							        
+							        <div class="form-group">
+				                        <div class="clearfix">
+			                        		<label for="arrstation">Arrival Station</label>
+							                <form:input type='text' path="arrstation" id="arrstation" name="arrstation" class="col-sm-12" 
+							                	value="${travelactivity.arrstation}" />
+										</div>
+							        </div>
+
+									<div class="form-group">
+										<label for="cost">Cost</label>
+					    				<form:input id="cost" path="cost" type="text" />												
+									</div>
+
+									<div class="form-group">
+										<label for="costmarkup">Cost Markup (Example: 125=1.25 X Cost)</label>
+					    				<form:input id="costmarkup" path="cost" type="text" />												
+									</div>
+									
+									<div class="control-group">
+										<label class="control-label bolder blue">Assistance Required></label>
+										<div class="radio" id="asstreq">
+											<label>
+												<input name="form-field-radio" id="asstreq" path="asstreq" type="radio" class="ace" />
+												<span class="lbl"> Yes</span>
+											</label>
+										</div>
+
+										<div class="radio">
+											<label>
+												<input name="form-field-radio"  id="asstreq" path="asstreq" type="radio" class="ace" />
+												<span class="lbl"> No</span>
+											</label>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label for="asstcost">Fees for providing assistance</label>
+					    				<form:input id="asstcost" path="asstcost" type="text" />												
+									</div>
+
+									<div class="form-group">
+										<label for="asstcostmarkup">Fee Markup for assistance (Example: 125=1.25 X Cost)</label>
+					    				<form:input id="asstcostmarkup" path="cost" type="text" />												
+									</div>
+								
+									<div class="control-group">
+										<label class="control-label bolder blue">Arrival Pickup></label>
+										<div class="radio" id="arrvlpikup">
+											<label>
+												<input name="form-field-radio" id="arrvlpikup" path="arrvlpikup" type="radio" class="ace" />
+												<span class="lbl"> Yes</span>
+											</label>
+										</div>
+
+										<div class="radio">
+											<label>
+												<input name="form-field-radio" type="radio" id="arrvlpikup" path="arrvlpikup" class="ace" />
+												<span class="lbl"> No</span>
+											</label>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label for="pikupveh">Specify vehicle for Arrival pickup</label>
+					    				<form:input id="pikupveh" path="pikupveh" type="text" />												
+									</div>
+									
+									<div class="form-group">
+										<label for="pikupcost">Fees for Arrival pickup</label>
+					    				<form:input id="pikupcost" path="pikupcost" type="text" />												
+									</div>
+
+									<div class="form-group">
+										<label for="pikupcostmarkup">Fee Markup for Arrival pickup</label>
+					    				<form:input id="pikupcostmarkup" path="pikupcostmarkup" type="text" />												
+									</div>
+
+									<div class="form-group">
+										<label for="comment">Comments</label>
+										<form:textarea class="form-control limited" id="comment" path="comment" maxlength="100" />
+									</div>
+
+								    <div class="form-group">
+								        <div class="col-xs-5 col-xs-offset-3">
+								            <button type="submit" id="newtravelactivitysubmit" class="btn btn-purple">Create new</button>
+								        </div>
+								    </div>
+
+								</form:form>	
+
+								<form:form id="travelrentalform" method="post" action="/app/travelrental/save" modelAttribute="rentalactivity" 
+									name="rentalactivity" class="form-horizontal" style="display:none;">
+
+									<c:if test="${not empty rentalactivity.activityid}">
+								        <label class="col-xs-3 control-label">Activityid: ${rentalactivity.activityid}</label>
+									</c:if>
+									<c:if test="${empty rentalactivity.activityid}">
+								        <label class="col-xs-3 control-label">Activityid: <i>new</i></label>
+									</c:if>
+
+								    <div class="form-group">
+								        <label class="col-xs-3 control-label">Travel Code</label>
+											<form:select class="form-control" path="codes" id="codes">
+												<option value="">  </option>
+												<c:forEach var="code" items="${rentalactivity.codes}">							
+													<option value="${code}">${code}</option>								
+				          						</c:forEach>
+											</form:select>							        
+								    </div>
+								   	
+								   	<form:input id="day" type="hidden" path="day" />
+									
+									<div class="form-group">
+										<label for="vehrentco">Vehicle Rental Company</label>
+					    				<form:input id="vehrentco" path="vehrentco" type="text" />												
+					    			</div>
+					    			
+									<div class="form-group">
+										<label for="vehrentco">Rental Company Contact</label>
+					    				<form:input id="vehrentcontact" path="vehrentcontact" type="text" />												
+									</div>
+									
+									<div class="form-group">
+										<label for="vehrenttype">Rental Type</label>
+					    				<form:input id="vehrenttype" path="vehrenttype" type="text" />												
+									</div>
+							        <div class="form-group">
+			                    		<label for ="vehrentfromdatetime">Rental Start date and time</label>
+							            <div class='input-group'>
+											<span class="input-group-addon">
+												<i class="fa fa-calendar bigger-110"></i>
+											</span>					            
+							                <input type='text' id="vehrentfrmdatetimepicker" name="vehrentfrmdatetimepicker" class="form-control"
+							                	value="${rentalactivity.vehrentfromdatetime}" style="z-index:0;" />
+							                <form:input type='hidden' id="vehrentfromdatetimestr" path="vehrentfromdatetimestr" name="vehrentfromdatetimestr" value="${rentalactivity.vehrentfromdatetimestr}" />
+							                <form:input type='hidden' id="vehrentfromdatetimelong" name="vehrentfromdatetimelong" path="vehrentfromdatetimelong" />
+							            </div>
+							        </div>
+
+							        <div class="form-group">
+			                    		<label for ="vehrenttodatetime">Rental End date and time</label>
+							            <div class='input-group'>
+											<span class="input-group-addon">
+												<i class="fa fa-calendar bigger-110"></i>
+											</span>					            
+							                <input type='text' id="vehrenttodatetimepicker" name="vehrenttodatetimepicker" class="form-control"
+							                	value="${rentalactivity.vehrentfromdatetime}" style="z-index:0;" />
+							                <form:input type='hidden' id="vehrenttodatetimestr" path="vehrenttodatetimestr" name="vehrenttodatetimestr" value="${rentalactivity.vehrenttodatetimestr}" />
+							                <form:input type='hidden' id="vehrenttodatetimelong" name="vehrenttodatetimelong" path="vehrenttodatetimelong" />
+							            </div>
+							        </div>
+							        
+							        <div class="form-group">
+				                        <div class="clearfix">
+			                        		<label for="vehrentloc">Rental Location</label>
+							                <form:input type='text' path="vehrentloc" id="vehrentloc" name="vehrentloc" class="col-sm-12" 
+							                	value="${rentalactivity.vehrentloc}" />
+										</div>
+							        </div>
+							        
+									<div class="form-group">
+										<label for="vehrentcost">Rental Cost</label>
+					    				<form:input id="vehrentcost" path="vehrentcost" type="text" />												
+									</div>
+
+									<div class="form-group">
+										<label for="vehrentcostmarkup">Rental Cost Markup (Example: 125=1.25 X Cost)</label>
+					    				<form:input id="vehrentcostmarkup" path="vehrentcostmarkup" type="text" />												
+									</div>
+									
+									<div class="form-group">
+										<label for="comment">Comments</label>
+										<form:textarea class="form-control limited" id="comment" path="comment" maxlength="100" />
+									</div>
+
+								    <div class="form-group">
+								        <div class="col-xs-5 col-xs-offset-3">
+								            <button type="submit" id="newrentalactivitysubmit" class="btn btn-purple">Create new</button>
+								        </div>
+								    </div>
+
+								</form:form>
 							</div><!-- col-sm-6 -->
 
 							<div class="col-sm-6">    					
-								<div id="activitypreview" class="accordion-style1 panel-group">
+								<div id="activitydisplay" class="accordion-style1 panel-group">
 									<div class="panel panel-default">
 										<div class="panel-heading">
 											<h4 class="panel-title">
 												<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
 													<i class="ace-icon fa fa-angle-down bigger-110" data-icon-hide="ace-icon fa fa-angle-down" data-icon-show="ace-icon fa fa-angle-right"></i>
-													&nbsp;Activity day wise preview
+													&nbsp;Activity preview
 												</a>
 											</h4>
 										</div>
@@ -280,12 +523,47 @@
 
 	<!-- inline scripts related to this page -->
 	<script type="text/javascript">
+	
+		$('.chosen-select').chosen({allow_single_deselect:true}); 
+		//resize the chosen on window resize
+	
+		$(window)
+		.off('resize.chosen')
+		.on('resize.chosen', function() {
+			$('.chosen-select').each(function() {
+				 var $this = $(this);
+				 $this.next().css({'width': $this.parent().width()});
+			})
+		}).trigger('resize.chosen');	
 	        	
-		$(":submit").live('click', function() {
-		    $('#mode').val($(this).val());
-            var d = new Date();
-            $('#tzoffset').val(d.getTimezoneOffset());  
-		}); 
+		$("button").click(function() {
+
+		    var parentId = $(this).closest('div').prop('id');		    
+		    if (this.id == 'hotelbtn') {
+		    	$('#arrowhotel').show();
+		    	LoadHotelActivityForm();
+		    }
+		    if (this.id == 'travelbtn') {
+		    	$('#arrowtravel').show();
+		    	// LoadTravelActivityForm();
+		    	$('#travelactivityform').show();
+		    }
+		    if (this.id == 'rentalbtn') {
+		    	$('#arrowrental').show();
+		    	// LoadTravelActivityForm();
+		    	$('#rentalactivityform').show();
+		    }
+		    if (this.id == 'visitbtn') {
+		    	$('#arrowvisit').show();
+		    	LoadVisitActivityForm();
+		    }
+		    if (this.id == 'otherbtn') {
+		    	$('#arrowother').show();
+		    	LoadOtherActivity();
+		    }
+		    
+		});
+ 
 			
 		$("#itineraries").click(function(e){
 		    window.location = "/app/itineraries";
@@ -395,10 +673,7 @@
 				$('spinner').data('spinner').stop();;
 			});		
 			
-        }
-				
-				
-				
+        }			
 								
 		jQuery(function($) {		
 		
