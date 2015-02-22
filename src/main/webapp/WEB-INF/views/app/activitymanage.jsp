@@ -126,9 +126,9 @@
 							<div class="col-sm-6">
 							
 								<div style="margin-top:-10px;">
-									<label for="form-field-select-3"><H4>Pick a day</H4></label>	
+									<label for="day"><H4>Pick a day</H4></label>	
 									<br />
-									<select class="chosen-select" id="form-field-select-3" data-placeholder="Pick a day...">
+									<select class="chosen-select" id="day" data-placeholder="Pick a day...">
 										<option value="">  </option>
 										<c:forEach var="i" begin="1" end="${activitymaster.numtourdays}">								
 										<option value="${i}">Day ${i}</option>								
@@ -136,27 +136,27 @@
 									</select>
 								</div>
 								<div class="col-sm-2" style="margin-top:15px;margin-left:5px;">
-									<button id="hotelbtn" class="btn btn-white btn-pink btn-round" style="width:130%;">Add Hotel</button>																	
+									<button id="hotel" class="btn btn-white btn-pink btn-round" style="width:130%;">Add Hotel</button>																	
 									<span id="arrowhotel" class="ace-icon glyphicon glyphicon-play arrowdown" 
 											style="color:#AF6F87;margin-left:55px;margin-top:-3px;display:none;"></span>
 								</div>			
 								<div id="traveldiv" class="col-sm-2" style="margin-top:15px;margin-left:5px;">
-									<button id="travelbtn" class="btn btn-white btn-success btn-round" style="margin-left:10px;width:130%;">Add Travel</button>
+									<button id="travel" class="btn btn-white btn-success btn-round" style="margin-left:10px;width:130%;">Add Travel</button>
 									<span id="arrowtravel" class="ace-icon glyphicon glyphicon-play arrowdown" 
 											style="margin-left:55px;margin-top:-3px;color:#A7C9A1;display:none;"></span>
 								</div>			
 								<div class="col-sm-2" style="margin-top:15px;margin-left:15px;">
-									<button id="rentalbtn" class="btn btn-white btn-default btn-round" style="margin-left:10px;width:130%;">Add Rental</button>
+									<button id="rental" class="btn btn-white btn-default btn-round" style="margin-left:10px;width:130%;">Add Rental</button>
 									<span id="arrowrental" class="ace-icon glyphicon glyphicon-play arrowdown" 
 											style="margin-left:55px;margin-top:-3px;color:#ABBAC3;display:none;"></span>
 								</div>			
 								<div class="col-sm-2" style="margin-top:15px;margin-left:10px;">
-									<button id="visitbtn" class="btn btn-white btn-warning btn-round" style="margin-left:15px;width:130%;">Add Visit</button>
+									<button id="visit" class="btn btn-white btn-warning btn-round" style="margin-left:15px;width:130%;">Add Visit</button>
 									<span id="arrowvisit" class="ace-icon glyphicon glyphicon-play arrowdown" 
 											style="margin-left:55px;margin-top:-3px;color:#E7B979;display:none;"></span>
 								</div>			
 								<div class="col-sm-2" style="margin-top:15px;margin-left:20px;">
-									<button id="otherbtn" class="btn btn-white btn-info btn-round" style="margin-left:10px;width:130%;">Add Other</button>
+									<button id="other" class="btn btn-white btn-info btn-round" style="margin-left:10px;width:130%;">Add Other</button>
 									<span id="arrowother" class="ace-icon glyphicon glyphicon-play arrowdown" 
 											style="margin-left:55px;margin-top:-3px;color:#8FBCD9;display:none;"></span>
 								</div>			
@@ -166,10 +166,9 @@
 									<div class="widget-header">
 										<h5 class="widget-title">Activity Id: ${travelacitivity.activityid}</h5>
 										<div class="widget-toolbar">
-											<a href="#" data-action="fullscreen" class="orange2">
-												<i class="ace-icon fa fa-expand"></i>
+											<a href="#" data-action="fullscreen" class="orange2" style="visibility:hidden;">
 											</a>
-											<a href="#" data-action="close">
+											<a href="#" class="red" id="activityclose" onClick="resetactivityform('travelactivityform', 'travelactivitywidget', 'arrowtravel'); return false;">
 												<i class="ace-icon fa fa-times"></i>
 											</a>
 											<!-- /section:custom/widget-box.toolbar -->
@@ -185,11 +184,8 @@
 												    <div class="form-group" style="margin-left:6px;">
 												        <div class="clearfix">
 													        <label for="code">Travel Code</label>
-																<form:select class="form-control col-sm-8" path="codes" id="codes">
+																<form:select class="form-control col-sm-8" path="code" name="travelcodes" id="travelcodes">
 																	<option value="">  </option>
-																	<c:forEach var="code" items="${travelactivity.codes}">							
-																		<option value="${code}">${code}</option>								
-									          						</c:forEach>
 																</form:select>
 														</div>
 													</div>							        
@@ -313,88 +309,51 @@
 													</div>
 												</div>
 											</div>
-											
-											
-									        <div class="row">
-												<div class='col-md-4'>										    																					    
+																				
+									        <div class="row" id="asstreqgroup">		
+												<div class='col-md-6'>										    																					    
 													<div class="form-group" style="margin-left:6px;">
 														<div class="clearfix">
-															<label class="control-label bolder blue" style="margin-top:-6px;">Assistance Required</label>
-															<div class="radio" id="asstreq" style="margin-left:-18px;">
-																<label>
-																	<input name="form-field-radio" id="asstreq" path="asstreq" type="radio" class="ace" />
-																	<span class="lbl"> Yes</span>
-																</label>
-																<label>
-																	<input name="form-field-radio"  id="asstreq" path="asstreq" type="radio" class="ace" />
-																	<span class="lbl"> No</span>
-																</label>
-															</div>																					
+															<label for="asstcost">Assistance Fee</label>
+										    				<form:input id="asstcost" path="asstcost" class="col-sm-11" type="text" />												
 														</div>
 													</div>
 												</div>
 		
-												<div class='col-md-4'>										    																					    
-													<div class="form-group" style="margin-left:6px;">
-														<div class="clearfix">
-															<label for="asstcost">Fee</label>
-										    				<form:input id="asstcost" path="asstcost" type="text" />												
-														</div>
-													</div>
-												</div>
-		
-												<div class='col-md-4'>										    																					    
-													<div class="form-group" style="margin-left:6px;">
+												<div class='col-md-6'>										    																					    
+													<div class="form-group" style="margin-left:5px;">
 														<div class="clearfix">
 															<label for="asstcostmarkup">Fee Markup</label>
-										    				<form:input id="asstcostmarkup" path="asstcostmarkup" type="text" />												
+										    				<form:input id="asstcostmarkup" path="asstcostmarkup" class="col-sm-11" style="width:93%;" type="text" />												
 														</div>
 													</div>
 												</div>
 											</div>
 										
-									        <div class="row">
-												<div class='col-md-3'>										    																					    
-													<div class="form-group" style="margin-left:6px;">
+									        <div class="row" id="pikupgroup">	
+												<div class='col-md-6'>										    																					    
+													<div class="form-group" style="margin-left:6px;">														
 														<div class="clearfix">
-															<label class="control-label bolder blue" style="margin-top:-6px;">Arrival Pickup</label>
-															<div class="radio" id="arrvlpikup" style="margin-left:-18px;">
-																<label>
-																	<input name="form-field-radio" id="arrvlpikup" path="arrvlpikup" type="radio" class="ace" style="margin-left:-3px;"/>
-																	<span class="lbl"> Yes</span>
-																</label>		
-																<label>
-																	<input name="form-field-radio" type="radio" id="arrvlpikup" path="arrvlpikup" class="ace" style="margin-left:-3px;" />
-																	<span class="lbl"> No</span>
-																</label>
-															</div>
-														</div>
-													</div>
-												</div>
-		
-												<div class='col-md-3'>										    																					    
-													<div class="form-group">
-														<div class="clearfix">
-															<label for="pikupveh">Specify Vehicle</label>
-										    				<form:input id="pikupveh" path="pikupveh" type="text" style="width:99%;" />												
+															<label for="pikupveh"> Pickup - Specify Vehicle</label>
+										    				<form:input id="pikupveh" path="pikupveh" type="text" class="col-sm-11" />												
 														</div>
 													</div>
 												</div>
 											
 												<div class='col-md-3'>										    																					    
-													<div class="form-group" style="margin-left:10px;">
+													<div class="form-group" style="margin-left:6px;">
 														<div class="clearfix">
-															<label for="pikupcost">Fee</label>
-										    				<form:input id="pikupcost" path="pikupcost" type="text" style="width:105%;" />												
+															<label for="pikupcost">Pickup Fee</label>
+										    				<form:input id="pikupcost" path="pikupcost" type="text" style="width:120%;" />												
 														</div>
 													</div>
 												</div>
 		
-												<div class='col-md-2'>										    																					    
-													<div class="form-group" style="margin-left:10px;">
+												<div class='col-md-3'>										    																					    
+													<div class="form-group" style="margin-left:28px;">
 														<div class="clearfix">
 															<label for="pikupcostmarkup">Fee Markup</label>
-										    				<form:input id="pikupcostmarkup" path="pikupcostmarkup" type="text" style="width:142%;"/>												
+										    				<form:input id="pikupcostmarkup" path="pikupcostmarkup" type="text" style="width:82%;"/>												
 														</div>
 													</div>
 												</div>
@@ -528,6 +487,26 @@
 	<!-- inline scripts related to this page -->
 	<script type="text/javascript">
 	
+		function loadActivityCodes (activitytype) {
+	
+			var request = $.ajax({type: 'GET', url: "/app/activity/getactivitycodes?" + "query=" + activitytype });
+			request.done(function( data ) {
+				  $('#' + activitytype + 'codes').html('');
+				  var first_entry = "<option value=" +  ""+ ">" +  ""+ "</option>";
+	        	  $(first_entry).appendTo('#' + activitytype + 'codes');			  
+				  $.each(data, function(i, val){
+					var div_data="<option value=" + val + ">" + val + "</option>";
+					// This should be changed to a global var for optimization
+	        		$(div_data).appendTo('#' + activitytype + 'codes'); 					  	
+				  })				
+			}); 
+		    request.fail(function( jqXHR, textStatus ) {
+			});
+			
+			return false;		
+		}
+
+
 		$('.chosen-select').chosen({allow_single_deselect:true}); 
 		//resize the chosen on window resize
 	
@@ -540,37 +519,83 @@
 			})
 		}).trigger('resize.chosen');	
 	        	
+		
+		function resetactivityform(activityformname, widgetname, arrowname)	{
+	    	$('#' + activityformname).trigger('reset');
+	    	$('#' + widgetname).hide();
+	    	$('#' + arrowname).hide();	    	
+		}
+		
+		$('#travelcodes').change(function() {
+		    if ( $(this).val() === 'TADOM0' || $(this).val() === 'TAINTL0' || $(this).val() === '' ) {
+		        // Disable airport pickup and assistance required options
+		        $('#asstreqgroup').find('*').prop('disabled', true);
+		        $('#pikupgroup').find('*').prop('disabled', true);		        
+		    }
+
+		    if ( $(this).val() === 'TADOM1' || $(this).val() === 'TAINTL1' ) {
+		        // Disable airport pickup and enable assistance required options
+		        $('#asstreqgroup').find('*').prop('disabled', false);
+		        $('#pikupgroup').find('*').prop('disabled', true);		        
+		    }
+
+		    if ( $(this).val() === 'TADOM2' || $(this).val() === 'TAINTL2' ) {
+		        // Enable airport pickup and disable assistance required options
+		        $('#asstreqgroup').find('*').prop('disabled', true);
+		        $('#pikupgroup').find('*').prop('disabled', false);		        
+		    }
+
+		    if ( $(this).val() === 'TADOM3' || $(this).val() === 'TAINTL3' ) {
+		        // Enable airport pickup and assistance required options
+		        $('#asstreqgroup').find('*').prop('disabled', false);
+		        $('#pikupgroup').find('*').prop('disabled', false);		        
+		    }
+		});		
+		
 		$("button").click(function() {
 
-		    var parentId = $(this).closest('div').prop('id');		    
-		    if (this.id == 'hotelbtn') {
-		    	$('#arrowhotel').show();
-		    	LoadHotelActivityForm();
-		    }
-		    if (this.id == 'travelbtn') {
-		    	$('#arrowtravel').show();
-		    	$('#travelactivitywidget').css('border-color', '#A7C9A1');
-		    	$('#travelactivitywidget').css('border-width', 'thin');		    	
-		    	$('#travelactivitywidget').show();
-		    }
-		    if (this.id == 'rentalbtn') {
-		    	$('#arrowrental').show();
-		    	$('#rentalactivityform').css('border-color', '#ABBAC3');
-		    	$('#rentalactivityform').css('border-width', 'thin');		    	
-		    	$('#rentalactivityform').show();
-		    }
-		    if (this.id == 'visitbtn') {
-		    	$('#arrowvisit').show();
-		    	LoadVisitActivityForm();
-		    }
-		    if (this.id == 'otherbtn') {
-		    	$('#arrowother').show();
-		    	LoadOtherActivity();
-		    }
-		    
-		});
- 
+			// Check if day was selected
+			if ($('#day').val() == "")
+				return false;
 			
+	    	$('#arrow' + this.id).show();	    	
+	    	var color;
+	    	if (this.id == 'travel')
+	    		color = '#A7C9A1';
+	    	if (this.id == 'rental')
+	    		color = '#ABBAC3';
+	    	if (this.id == 'rental')
+	    		color = '#D299AE';
+	    	if (this.id == 'rental')
+	    		color = '#E7B979';
+	    	if (this.id == 'rental')
+	    		color = '#8FBCD9';
+	    	$('#' + this.id + 'activitywidget').css('border-color', color);
+		    $('#' + this.id + 'activitywidget').css('border-width', 'thin');
+		    loadActivityCodes(this.id);	    	
+		    $('#' + this.id + 'activitywidget').show();				    
+		});
+		
+		$(function() {
+		
+            $("#depstation").suggest({
+                key: "AIzaSyDG_gsufq_KCjQYGf4SeZ44znuHsA61_10",
+                filter:'(any type:/location/citytown)'
+            })
+			.bind("fb-select", function(e, data) {
+  				checkname(data.name);
+			});  
+					
+            $("#arrstation").suggest({
+                key: "AIzaSyDG_gsufq_KCjQYGf4SeZ44znuHsA61_10",
+                filter:'(any type:/location/citytown)'
+            })
+			.bind("fb-select", function(e, data) {
+  				checkname(data.name);
+			});                      
+
+        });
+					
 		$("#itineraries").click(function(e){
 		    window.location = "/app/itineraries";
 		});	

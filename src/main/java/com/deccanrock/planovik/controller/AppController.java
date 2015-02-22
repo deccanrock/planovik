@@ -30,13 +30,13 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.codehaus.jackson.map.ObjectMapper;
 
-import com.deccanrock.planovik.entity.ActivitymasterEntity;
+import com.deccanrock.planovik.entity.ActivityMasterEntity;
 import com.deccanrock.planovik.entity.TravelActivityEntity;
 import com.deccanrock.planovik.entity.RentalActivityEntity;
-
 import com.deccanrock.planovik.entity.ItineraryEntity;
 import com.deccanrock.planovik.entity.TasksEntity;
 import com.deccanrock.planovik.location.MaxLocationBO;
+import com.deccanrock.planovik.service.dao.ActivityMasterDAO;
 import com.deccanrock.planovik.service.dao.ItineraryEntityDAO;
 import com.deccanrock.planovik.service.dao.UserEntityDAO;
 import com.deccanrock.planovik.service.utils.UriHandler;
@@ -308,7 +308,7 @@ public class AppController {
 		map.addAttribute("itinerary", itinerarydb);
 
 		// Get master activity for the itinerary
-		ActivitymasterEntity ame = IED.GetActivityMaster(itinerarydb);
+		ActivityMasterEntity ame = IED.GetActivityMaster(itinerarydb);
 		ame.setItinnum(itinerarydb.getId());
 		ame.setStatus(itinerarydb.getStatus());
 		ame.setVersion(itinerarydb.getVersion());
@@ -452,7 +452,7 @@ public class AppController {
 	@RequestMapping(value = "/app/getCurrConvCodes", method = RequestMethod.GET, produces = "application/json")
 	public @ResponseBody String getCurrConvCodes(ServletResponse response, @RequestParam(value = "query") String query) 
 			throws IOException {
-		logger.info("Get Currency List");
+		logger.info("Get Currency Conversion Codes");
 
 		if (query.isEmpty())
 			return "";
@@ -471,6 +471,29 @@ public class AppController {
 		return jsonOut;
 	}
 	
+	
+	
+	@RequestMapping(value = "/app/activity/getactivitycodes", method = RequestMethod.GET, produces = "application/json")
+	public @ResponseBody String getActivityCodes(ServletResponse response, @RequestParam(value = "query") String query) 
+			throws IOException {
+		logger.info("Get Activity Codes");
+
+		if (query.isEmpty())
+			return "";
+		
+		// Get Org List from database, should be changed to get from cache
+		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
+		ActivityMasterDAO AMD = (ActivityMasterDAO)context.getBean("ActivityMasterDAO");	
+		List<String> activitycodelist = AMD.GetActivityCodes(query);
+		((ClassPathXmlApplicationContext) context).close();
+
+		// Build Json Reader map for jqgrid		
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonOut = mapper.writeValueAsString(activitycodelist); 
+		response.setContentType("application/json");	
+				
+		return jsonOut;
+	}
 	
 	/**
 	 * Check if email exists

@@ -10,7 +10,7 @@ import javax.persistence.GeneratedValue;
 
 @Entity
 
-public class ActivitymasterEntity
+public class ActivityMasterEntity
 {
 	// Columns
     @Column(name="itinnum")    

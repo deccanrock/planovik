@@ -21,7 +21,7 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.deccanrock.planovik.entity.ActivitymasterEntity;
+import com.deccanrock.planovik.entity.ActivityMasterEntity;
 import com.deccanrock.planovik.entity.ItineraryEntity;
 import com.deccanrock.planovik.service.ItineraryEntityMapper;
 import com.deccanrock.planovik.service.utils.TimeFormatter;
@@ -328,9 +328,9 @@ public class ItineraryEntityDAO extends JdbcDaoSupport implements IItneraryEntit
 	}
 
 
-	public ActivitymasterEntity GetActivityMaster(ItineraryEntity itinerarydb) {
+	public ActivityMasterEntity GetActivityMaster(ItineraryEntity itinerarydb) {
 		// Get number of days for the itinerary
-		ActivitymasterEntity ame = new ActivitymasterEntity();
+		ActivityMasterEntity ame = new ActivityMasterEntity();
 		Date endate = new Date (itinerarydb.getEnddatelong());
 		Date startdate = new Date (itinerarydb.getStartdatelong());
 
