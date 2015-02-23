@@ -19,12 +19,15 @@ public class TravelActivityEntity
     @Column(name="pax")    
     private Integer pax;
       
-    @Column(name="group")    
-    private Integer group;
+    @Column(name="groupnum")    
+    private Integer groupnum;
     
     @Column(name="code")    
 	private String code;
 
+    @Column(name="name")    
+	private String name;
+    
     @Column(name="day")    
 	private Integer day;
     
@@ -63,9 +66,6 @@ public class TravelActivityEntity
     // Example 25 (25%), 125 (125%)...
     @Column(name="costmarkup")    
 	private Integer costmarkup;
-
-    @Column(name="arrvlpikup")    
-	private boolean arrvlpikup;
    
     @Column(name="pikupcost")    
 	private Float pikupcost;
@@ -75,10 +75,7 @@ public class TravelActivityEntity
 	private Integer pikupcostmarkup;
 
     @Column(name="pikupveh")    
-	private String pikupveh;
-    
-    @Column(name="asstreq")    
-	private boolean asstreq;    
+	private String pikupveh; 
     
     @Column(name="asstcost")    
 	private Float asstcost;
@@ -87,8 +84,8 @@ public class TravelActivityEntity
     @Column(name="asstcostmarkup")    
 	private Integer asstcostmarkup;
 
-    @Column(name="comment")    
-	private String comment;
+    @Column(name="comments")    
+	private String comments;
 
     @Column(name="status")    
 	private Integer status;
@@ -102,10 +99,22 @@ public class TravelActivityEntity
     // Air/Train/Road/Ship based on travel code
     private String mode;
     
+    private String savemode;
+    
     private String [] codes;
     
-    private int itineraryid;
+    private int version;
+    
+    private int itinnum;
         
+    private String lastupdatedby;
+
+    private String createdby;
+
+    private short tzoffset;
+    
+    private String error;
+    
     // Getter-Setters
 	public Integer getActivityid() {
 		return activityid;
@@ -123,12 +132,12 @@ public class TravelActivityEntity
 		this.pax = pax;
 	}
 
-	public Integer getGroup() {
-		return group;
+	public Integer getGroupnum() {
+		return groupnum;
 	}
 
-	public void setGroup(Integer group) {
-		this.group = group;
+	public void setGroupnum(Integer groupnum) {
+		this.groupnum = groupnum;
 	}
 	
 	public String getCode() {
@@ -139,6 +148,14 @@ public class TravelActivityEntity
 		this.code = code;
 	}
 		
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
 	public Integer getDay() {
 		return day;
 	}
@@ -258,14 +275,6 @@ public class TravelActivityEntity
 	public void setCostmarkup(Integer costmarkup) {
 		this.costmarkup = costmarkup;
 	}
-	
-	public boolean getArrvlpikup() {
-		return arrvlpikup;
-	}
-
-	public void setArrvlpikup(boolean arrvlpikup) {
-		this.arrvlpikup = arrvlpikup;
-	}
 
 	public Float getPikupcost() {
 		return pikupcost;
@@ -291,14 +300,6 @@ public class TravelActivityEntity
 		this.pikupveh = pikupveh;
 	}
 
-	public boolean getAsstreq() {
-		return asstreq;
-	}
-
-	public void setAsstreq(boolean asstreq) {
-		this.asstreq = asstreq;
-	}
-
 	public Float getAsstcost() {
 		return asstcost;
 	}
@@ -315,12 +316,12 @@ public class TravelActivityEntity
 		this.asstcostmarkup = asstcostmarkup;
 	}
 	
-	public String getComment() {
-		return comment;
+	public String getComments() {
+		return comments;
 	}
 	
-	public void setComment(String comment) {
-		this.comment = comment;
+	public void setComments(String comments) {
+		this.comments = comments;
 	}
 	
 	public Date getDatecreated() {
@@ -355,6 +356,15 @@ public class TravelActivityEntity
 		this.mode = mode;
 	}
 
+	public String getSavemode() {
+		return savemode;
+	}
+
+	public void setSavemode(String savemode) {
+		this.savemode = savemode;
+	}
+
+	
 	public String [] getCodes() {
 		return codes;
 	}
@@ -363,11 +373,52 @@ public class TravelActivityEntity
 		this.codes = codes;
 	}	
 
-	public int getItineraryid() {
-		return itineraryid;
+	public int getItinnum() {
+		return itinnum;
 	}
 
-	public void setItineraryid(int itineraryid) {
-		this.itineraryid = itineraryid;
+	public void setItinnum(int itinnum) {
+		this.itinnum = itinnum;
 	}
+	
+    public void setLastupdatedby(String emailid) {
+    	lastupdatedby = emailid;
+    }
+
+    public String getLastupdatedby() {
+    	return lastupdatedby;
+    }	
+    
+    public void setCreatedby(String emailid) {
+    	createdby = emailid;
+    }
+
+    public String getCreatedby() {
+    	return createdby;
+    }    
+
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
+	}
+	
+	public void setTzoffset(short tzoffset) {
+		this.tzoffset = tzoffset;
+	}
+		
+	public short getTzoffset() {
+		return tzoffset;
+	}		
+
+	public void setError(String error) {
+		this.error = error;
+	}
+		
+	public String getError() {
+		return error;
+	}		
+
 }

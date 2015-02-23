@@ -13,42 +13,50 @@ import javax.persistence.GeneratedValue;
 public class ActivityMasterEntity
 {
 	// Columns
-    @Column(name="itinnum")    
-    @GeneratedValue
+	@Column(name="itinnum")    
     private int itinnum;
   
-    @Column(name="version")    
+	@Column(name="day")    
+    private int day;
+	
+	@Column(name="version")    
 	private int version;
-
-    @Column(name="status")    
-	private int status;
-    
-    private int activitycnt;
-    
+        
     private int numtourdays;
     
     private ArrayList<Integer> daywiseactivitycntlist;
     
-    @Column(name="isactivityhotel")    
-	private boolean isactivityhotel;
+    @Column(name="countactivityhotel")    
+	private int countactivityhotel;
     
-    @Column(name="isactivityother")    
-	private boolean isactivityother;
+    @Column(name="countactivityother")    
+	private int countactivityother;
 
-    @Column(name="isactivitysightseeing")    
-	private boolean isactivitysightseeing;
+    @Column(name="countactivityvisit")    
+	private int countactivityvisit;
 
-    @Column(name="isactivitytravel")    
-	private boolean isactivitytravel;
+    @Column(name="countactivitytravel")    
+	private int countactivitytravel;
    
+    @Column(name="countactivityrental")    
+	private int countactivityrental;
+
     @Column(name="datecreated")    
 	private  Date datecreated;
 
     @Column(name="dateupdated")    
 	private Date dateupdated;
+    
+    private String lastupdatedby;
+    
+    private String createdby;
+    
+    private short tzoffset;
+
         
     // Getter-Setters
-	public int getItinnum() {
+    
+    public int getItinnum() {
 		return itinnum;
 	}
 
@@ -63,23 +71,7 @@ public class ActivityMasterEntity
 	public void setVersion(int version) {
 		this.version = version;
 	}
-	
-	public int getStatus() {
-		return status;
-	}
-
-	public void setStatus(int status) {
-		this.status = status;
-	}
-	
-	public int getActivitycnt() {
-		return activitycnt;
-	}
-
-	public void setActivitycnt(int activitycnt) {
-		this.activitycnt = activitycnt;
-	}
-		
+			
 	public ArrayList <Integer> getDaywiseactivitylistcnt() {
 		return daywiseactivitycntlist;
 	}
@@ -88,36 +80,44 @@ public class ActivityMasterEntity
 		this.daywiseactivitycntlist = daywiseactivitycntlist;
 	}
 	
-	public boolean getIsactivityhotel() {
-		return isactivityhotel;
+	public int getCountactivityhotel() {
+		return countactivityhotel;
 	}
 
-	public void setIsactivityhotel(boolean isactivityhotel) {
-		this.isactivityhotel = isactivityhotel;
+	public void setCountactivityhotel(int countactivityhotel) {
+		this.countactivityhotel = countactivityhotel;
 	}
 		
-	public boolean getIsactivitysightseeing() {
-		return isactivitysightseeing;
+	public int getCountactivityvisit() {
+		return countactivityvisit;
 	}
 
-	public void setIsactivitysightseeing(boolean isactivitysightseeing) {
-		this.isactivitysightseeing = isactivitysightseeing;
+	public void setCountactivityvisit(int countactivityvisit) {
+		this.countactivityvisit = countactivityvisit;
 	}
 	
-	public boolean getIsactivitytravel() {
-		return isactivitytravel;
+	public int getCountactivitytravel() {
+		return countactivitytravel;
 	}
 
-	public void setIsactivitytravel(boolean isactivitytravel) {
-		this.isactivitytravel = isactivitytravel;
+	public void setCountactivitytravel(int countactivitytravel) {
+		this.countactivitytravel = countactivitytravel;
 	}
 	
-	public boolean getIsactivityother() {
-		return isactivityother;
+	public int getCountactivityother() {
+		return countactivityother;
 	}
 
-	public void setIsActivityother(boolean isactivityother) {
-		this.isactivityother = isactivityother;
+	public void setCountactivityother(int countactivityother) {
+		this.countactivityother = countactivityother;
+	}	
+	
+	public int getCountactivityrental() {
+		return countactivityrental;
+	}
+
+	public void setCountactivityrental(int countactivityrental) {
+		this.countactivityrental = countactivityrental;
 	}	
 	
 	public Date getDatecreated() {
@@ -144,4 +144,28 @@ public class ActivityMasterEntity
 		return numtourdays;
 	}	
 	
+    public void setLastupdatedby(String emailid) {
+    	lastupdatedby = emailid;
+    }
+
+    public String getLastupdatedby() {
+    	return lastupdatedby;
+    }
+
+    public void setCreatedby(String emailid) {
+    	createdby = emailid;
+    }
+
+    public String getCreatedby() {
+    	return createdby;
+    }
+
+    public void setTzoffset(short tzoffset) {
+		this.tzoffset = tzoffset;
+	}
+		
+	public short getTzoffset() {
+		return tzoffset;
+	}	
+
 }

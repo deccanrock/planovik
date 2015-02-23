@@ -350,42 +350,47 @@ public class ItineraryEntityDAO extends JdbcDaoSupport implements IItneraryEntit
 
 		Map<String, Object> simpleJdbcCallResult = simpleJdbcCall.execute(in);
 		
-		// Null check for no entry
-		if (simpleJdbcCallResult.get("status") != null)
-			ame.setStatus((Integer) simpleJdbcCallResult.get("status"));
-
-		if (simpleJdbcCallResult.get("isactivityhotel") != null) {
-			int isActivityHotel = (Integer) simpleJdbcCallResult.get("isactivityhotel");
-	    	if (isActivityHotel == 0)
-	    		ame.setIsactivityhotel(false);
+		if (simpleJdbcCallResult.get("countactivityhotel") != null) {
+			int countActivityHotel = (Integer) simpleJdbcCallResult.get("countactivityhotel");
+	    	if (countActivityHotel == 0)
+	    		ame.setCountactivityhotel(0);
 	    	else
-	    		ame.setIsactivityhotel(true);
+	    		ame.setCountactivityhotel(countActivityHotel);
 		}
 		
-		if (simpleJdbcCallResult.get("isActivitysightseeing") != null) {
-		    int isActivitysightseeing = (Integer) simpleJdbcCallResult.get("isactivitysightseeing");
-	    	if (isActivitysightseeing == 0)
-	    		ame.setIsactivitysightseeing(false);
+		if (simpleJdbcCallResult.get("countactivityvisit") != null) {
+		    int countActivitysightseeing = (Integer) simpleJdbcCallResult.get("countactivityvisit");
+	    	if (countActivitysightseeing == 0)
+	    		ame.setCountactivityvisit(0);
 	    	else
-	    		ame.setIsactivitysightseeing(true);
+	    		ame.setCountactivityvisit(countActivitysightseeing);
 		}
 		
-		if (simpleJdbcCallResult.get("isactivitytravel") != null) {		
-	    	int isActivityTravel = (Integer) simpleJdbcCallResult.get("isactivitytravel");
-	    	if (isActivityTravel == 0)
-	    		ame.setIsactivitytravel(false);
+		if (simpleJdbcCallResult.get("countactivitytravel") != null) {		
+	    	int countActivityTravel = (Integer) simpleJdbcCallResult.get("countactivitytravel");
+	    	if (countActivityTravel == 0)
+	    		ame.setCountactivitytravel(0);
 	    	else
-	    		ame.setIsactivitytravel(true);
+	    		ame.setCountactivitytravel(countActivityTravel);
 		}
 		
-		if (simpleJdbcCallResult.get("isactivityother") != null) {				
-		    int isActivityOther = (Integer) simpleJdbcCallResult.get("isactivityother");
-	    	if (isActivityOther == 0)
-	    		ame.setIsActivityother(false);
+		if (simpleJdbcCallResult.get("countactivityother") != null) {				
+		    int countActivityOther = (Integer) simpleJdbcCallResult.get("countactivityother");
+	    	if (countActivityOther == 0)
+	    		ame.setCountactivityother(0);
 	    	else
-	    		ame.setIsActivityother(true);
+	    		ame.setCountactivityother(countActivityOther);
 		}
 
+		if (simpleJdbcCallResult.get("countactivityrental") != null) {				
+		    int countActivityRental = (Integer) simpleJdbcCallResult.get("countactivityrental");
+	    	if (countActivityRental == 0)
+	    		ame.setCountactivityrental(0);
+	    	else
+	    		ame.setCountactivityother(countActivityRental);
+		}
+
+		
 		simpleJdbcCall = new SimpleJdbcCall(dbtemplate)
 		.withProcedureName("sp_getitinactivitycount");
 

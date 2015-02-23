@@ -77,14 +77,14 @@ public class Constants {
 	    }		
 	}
 
-	public enum  Itinactivity {
-		Inactive(0),
-		Active(1),
+	public enum  Itinactivitystatus {
+		Draft(0),
+		Final(1),
 		Deleted(2);
 
 		private final int value;
 
-	    private Itinactivity(int value) {
+	    private Itinactivitystatus(int value) {
 	        this.value = value;
 	    }
 

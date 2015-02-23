@@ -187,7 +187,7 @@
 											name="travelactivity" class="form-horizontal">
 									        
 									        <div class="row">									    																					    
-												<div class='col-md-12'>	
+												<div class='col-md-6'>	
 												    <div class="form-group" style="margin-left:6px;">
 												        <div class="clearfix">
 													        <label for="code">Travel Code</label>
@@ -197,9 +197,24 @@
 														</div>
 													</div>							        
 												</div>
+												<div class='col-md-6'>	
+												    <div class="form-group" style="margin-left:5px;">
+												        <div class="clearfix">
+													        <label for="name">Specify a name for activity</label>
+											    				<form:input id="name" class="col-sm-11" path="name" type="text" style="width:93%; "/>												
+														</div>
+													</div>							        
+												</div>
+
 											</div> <!-- row -->
 
 											<form:input id="day" type="hidden" path="day" />
+											<form:input id="savemode" type="hidden" path="savemode" />
+											<form:input id="itinnum" type="hidden" path="itinnum" value= ${activitymaster.itinnum}/>
+											<form:input id="version" type="hidden" path="version" value= ${activitymaster.version}/>
+											<form:input id="status" type="hidden" path="status" value= ${activitymaster.status}/>
+											<form:input id="tzoffset" type="hidden" path="tzoffset" value=${activitymaster.tzoffset} />
+											<form:input id="activityid" type="hidden" path="activityid" value='0' />
 											
 											<div id="formelements" disabled="disabled">
 
@@ -215,8 +230,8 @@
 													<div class='col-md-6'>	
 													    <div class="form-group" style="margin-left:6px;">
 													        <div class="clearfix">
-														        <label for="code">Group No</label>
-												    				<form:input id="group" class="col-sm-11" path="group" type="text" style="width:93%; "/>												
+														        <label for="groupnum">Group No</label>
+												    				<form:input id="groupnum" class="col-sm-11" path="groupnum" type="text" style="width:93%; "/>												
 															</div>
 														</div>							        
 													</div>													
@@ -392,8 +407,8 @@
 													<div class='col-md-10'>	
 													    <div class="form-group" style="margin-left:6px;">
 													        <div class="clearfix">
-																<label for="comment">Comments</label>
-																<form:textarea class="form-control limited" id="comment" path="comment" maxlength="100" />
+																<label for="comments">Comments</label>
+																<form:textarea class="form-control limited" id="comments" path="comments" maxlength="100" />
 															</div>
 														</div>
 													</div>
@@ -401,8 +416,11 @@
 			
 											    <div class="form-group">
 											        <div class="col-xs-5 col-xs-offset-3">
-											            <button type="submit" id="newtravelactivitysubmit" class="btn btn-purple">Create new</button>
+											            <button type="submit" id="travelactivitysavedraft" class="btn btn-purple">Save Draft</button>
 											        </div>
+											        <div class="col-xs-5 col-xs-offset-3">
+											            <button type="submit" id="travelactivitysavefinal" class="btn btn-purple">Save Final</button>
+											        </div>											    
 											    </div>
 											</div> <!-- formelements -->			
 											</form:form>
@@ -596,7 +614,10 @@
 		
 		$("button").click(function() {
 
-	    	if (this.id == 'newtravelactivitysubmit')
+	    	if (this.id == 'travelactivitysavedraft')
+	    		return;
+
+	    	if (this.id == 'travelactivitysavefinal')
 	    		return;
 	    		
 			// Check if day was selected
@@ -626,7 +647,7 @@
 		    $('#' + this.id + 'activitywidget').show();				    
 		});
 		
-		$("#newtravelactivitysubmit").click(function() {
+		$("#travelactivitysavedraft").click(function() {
 		    		
             var startdate = GetDate($('#depdatetimepicker').val());
             var enddate = GetDate($('#arrdatetimepicker').val());
@@ -635,9 +656,22 @@
             $('#arrdatelong').val(enddate.getTime());
             
 			$('#day').val($('#dayselect').val());            
-            
+			$('#savemode').val('Save Draft');
+			activityid             
 		});
 				
+		$("#travelactivitysavefinal").click(function() {
+		    		
+            var startdate = GetDate($('#depdatetimepicker').val());
+            var enddate = GetDate($('#arrdatetimepicker').val());
+            
+            $('#depdatelong').val(startdate.getTime());
+            $('#arrdatelong').val(enddate.getTime());
+            
+			$('#day').val($('#dayselect').val());            
+			$('#savemode').val('Save Final');                         
+		});
+
 		$(function() {
 		
             $("#depstation").suggest({
@@ -661,65 +695,9 @@
         $('#travelactivityform').validate({
         	ignore: ":disabled",
             rules: {
-				pax: {
+				name: {
 					required: true
-				},
-				group: {
-					required: true
-				},				
-                vesselno: {
-                    required: true
-                },
-                vesselconame: {
-                    required: true
-                },
-                bookingno: {
-                    required: true
-                },
-                bookingclass: {
-                    required: true
-                },
-                depdatetimepicker: {
-                    required: true
-                },
-                arrdatetimepicker: {
-                    required: true,
-                    enddategtstartdate: 'required'
-                },
-                arrstation: {
-                    required: true,
-                    endstationdifferent: 'required'                    
-                },
-                depstation: {
-                    required: true
-                },
-                cost: {
-                    required: true,
-                    costnumbersdecimal: 'required'
-                },
-                costmarkup: {
-                    required: true,
-                    costmarkupnumberlimit: 'required'
-                },
-                asstcost: {
-                    required: true,
-                    costnumbersdecimal: 'required'
-                },
-                asstcostmarkup: {
-                    required: true,
-                    costmarkupnumberlimit: 'required'
-                },
-                pikupveh: {
-                    required: true
-                },
-                pikupcost: {
-                    required: true,
-                    costnumbersdecimal1: 'required'
-                },
-                pikupcostmarkup: {
-                    required: true,
-                    costmarkupnumberlimit1: 'required'
-                }
+				}
             },
             messages: {
 

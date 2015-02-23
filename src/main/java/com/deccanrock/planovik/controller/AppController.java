@@ -36,6 +36,7 @@ import com.deccanrock.planovik.entity.RentalActivityEntity;
 import com.deccanrock.planovik.entity.ItineraryEntity;
 import com.deccanrock.planovik.entity.TasksEntity;
 import com.deccanrock.planovik.location.MaxLocationBO;
+import com.deccanrock.planovik.service.dao.ActivityEntityDAO;
 import com.deccanrock.planovik.service.dao.ActivityMasterDAO;
 import com.deccanrock.planovik.service.dao.ItineraryEntityDAO;
 import com.deccanrock.planovik.service.dao.UserEntityDAO;
@@ -310,8 +311,8 @@ public class AppController {
 		// Get master activity for the itinerary
 		ActivityMasterEntity ame = IED.GetActivityMaster(itinerarydb);
 		ame.setItinnum(itinerarydb.getId());
-		ame.setStatus(itinerarydb.getStatus());
 		ame.setVersion(itinerarydb.getVersion());
+		ame.setTzoffset(itinerarydb.getTzoffset());		
 		map.addAttribute("activitymaster", ame);
 		
 		TravelActivityEntity TAE = new TravelActivityEntity();
@@ -325,6 +326,35 @@ public class AppController {
     	    	    	    	
     }
     
+    
+    // Hook for jqGrid ('Manage'), Set Session variables and manage tab
+    @RequestMapping(value = "/app/travelactivity/save", method = RequestMethod.POST)    
+    public String saveTravelActivity(@ModelAttribute(value="travelactivity") TravelActivityEntity travelactivity, ModelMap map, HttpServletRequest request) {
+   
+    	// This is ajax support function for JQGrid
+    	logger.info("Itinerary Travel Activity Save - POST");
+		if (!IsUserLoggedIn(map))
+    		return "app/login";
+    	
+		request.setAttribute("title", "Planovik Save Travel Activity");
+		request.setAttribute("header", "Save Travel Activity");
+			
+		// Save model to database
+		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
+		ActivityEntityDAO AED = (ActivityEntityDAO)context.getBean("ActivityEntityDAO");
+		
+		// Record admin who created/edited/modifyed
+		User loggeduser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		travelactivity.setLastupdatedby(loggeduser.getUsername());
+				
+		TravelActivityEntity taedb = AED.saveTravelActivity(travelactivity);
+		
+		((ClassPathXmlApplicationContext) context).close();		
+
+		return "app/activitymanage";
+    	    	    	    	
+    }
+
     
     @RequestMapping(value = "/app/createcurrconvcode", method = RequestMethod.GET)    
     public @ResponseBody String createCurrConvCode(ServletResponse response, @RequestParam(value = "fromcurr") String fromcurr, @RequestParam(value = "tocurr") String tocurr,
