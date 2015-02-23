@@ -14,13 +14,19 @@ public class TravelActivityEntity
 	// Columns
     @Column(name="activityid")    
     @GeneratedValue
-    private int activityid;
-  
+    private Integer activityid;
+    
+    @Column(name="pax")    
+    private Integer pax;
+      
+    @Column(name="group")    
+    private Integer group;
+    
     @Column(name="code")    
 	private String code;
 
     @Column(name="day")    
-	private int day;
+	private Integer day;
     
     @Column(name="vesselconame")        
     private String vesselconame;
@@ -52,21 +58,21 @@ public class TravelActivityEntity
 	private String arrstation;
 
     @Column(name="cost")    
-	private float cost;
+	private Float cost;
 
     // Example 25 (25%), 125 (125%)...
     @Column(name="costmarkup")    
-	private int costmarkup;
+	private Integer costmarkup;
 
     @Column(name="arrvlpikup")    
 	private boolean arrvlpikup;
    
     @Column(name="pikupcost")    
-	private float pikupcost;
+	private Float pikupcost;
 
     // Example 25 (25%), 125 (125%)...
     @Column(name="pikupcostmarkup")    
-	private int pikupcostmarkup;
+	private Integer pikupcostmarkup;
 
     @Column(name="pikupveh")    
 	private String pikupveh;
@@ -75,17 +81,17 @@ public class TravelActivityEntity
 	private boolean asstreq;    
     
     @Column(name="asstcost")    
-	private float asstcost;
+	private Float asstcost;
 
     // Example 25 (25%), 125 (125%)...
     @Column(name="asstcostmarkup")    
-	private int asstcostmarkup;
+	private Integer asstcostmarkup;
 
     @Column(name="comment")    
 	private String comment;
 
     @Column(name="status")    
-	private int status;
+	private Integer status;
     
     @Column(name="datecreated")    
 	private  Date datecreated;
@@ -97,14 +103,32 @@ public class TravelActivityEntity
     private String mode;
     
     private String [] codes;
+    
+    private int itineraryid;
         
     // Getter-Setters
-	public int getActivityid() {
+	public Integer getActivityid() {
 		return activityid;
 	}
 
-	public void setActivityid(int activityid) {
+	public void setActivityid(Integer activityid) {
 		this.activityid = activityid;
+	}
+	
+	public Integer getPax() {
+		return pax;
+	}
+
+	public void setPax(Integer pax) {
+		this.pax = pax;
+	}
+
+	public Integer getGroup() {
+		return group;
+	}
+
+	public void setGroup(Integer group) {
+		this.group = group;
 	}
 	
 	public String getCode() {
@@ -115,11 +139,11 @@ public class TravelActivityEntity
 		this.code = code;
 	}
 		
-	public int getDay() {
+	public Integer getDay() {
 		return day;
 	}
 
-	public void setDay(int day) {
+	public void setDay(Integer day) {
 		this.day = day;
 	}
 			
@@ -219,19 +243,19 @@ public class TravelActivityEntity
 		this.arrstation = arrstation;
 	}
 
-	public float getCost() {
+	public Float getCost() {
 		return cost;
 	}
 
-	public void setCost(float cost) {
+	public void setCost(Float cost) {
 		this.cost = cost;
 	}
 
-	public int getCostmarkup() {
+	public Integer getCostmarkup() {
 		return costmarkup;
 	}
 
-	public void setCostmarkup(int costmarkup) {
+	public void setCostmarkup(Integer costmarkup) {
 		this.costmarkup = costmarkup;
 	}
 	
@@ -243,19 +267,19 @@ public class TravelActivityEntity
 		this.arrvlpikup = arrvlpikup;
 	}
 
-	public float getPikupcost() {
+	public Float getPikupcost() {
 		return pikupcost;
 	}
 
-	public void setPikupcost(float pikupcost) {
+	public void setPikupcost(Float pikupcost) {
 		this.pikupcost = pikupcost;
 	}
 
-	public int getPikupcostmarkup() {
+	public Integer getPikupcostmarkup() {
 		return pikupcostmarkup;
 	}
 
-	public void setPikupcostmarkup(int pikupcostmarkup) {
+	public void setPikupcostmarkup(Integer pikupcostmarkup) {
 		this.pikupcostmarkup = pikupcostmarkup;
 	}
 	
@@ -275,19 +299,19 @@ public class TravelActivityEntity
 		this.asstreq = asstreq;
 	}
 
-	public float getAsstcost() {
+	public Float getAsstcost() {
 		return asstcost;
 	}
 
-	public void setAsstcost(float asstcost) {
+	public void setAsstcost(Float asstcost) {
 		this.asstcost = asstcost;
 	}
 
-	public int getAsstcostmarkup() {
+	public Integer getAsstcostmarkup() {
 		return asstcostmarkup;
 	}
 
-	public void setAsstcostmarkup(int asstcostmarkup) {
+	public void setAsstcostmarkup(Integer asstcostmarkup) {
 		this.asstcostmarkup = asstcostmarkup;
 	}
 	
@@ -315,11 +339,11 @@ public class TravelActivityEntity
 		this.dateupdated = dateupdated;
 	}
 	
-	public int getStatus() {
+	public Integer getStatus() {
 		return status;
 	}
 
-	public void setStatus(int status) {
+	public void setStatus(Integer status) {
 		this.status = status;
 	}
 
@@ -339,4 +363,11 @@ public class TravelActivityEntity
 		this.codes = codes;
 	}	
 
+	public int getItineraryid() {
+		return itineraryid;
+	}
+
+	public void setItineraryid(int itineraryid) {
+		this.itineraryid = itineraryid;
+	}
 }

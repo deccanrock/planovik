@@ -6,10 +6,17 @@
 		<script type="text/javascript">
 			try{ace.settings.check('main-container' , 'fixed')}catch(e){}
 		</script>
+		<script src="<c:url value='/resources/js/jquery.validate.min.js'/>" ></script>
 		<script src="/resources/js/bootstrap-tag.min.js"></script>
 		<script src="/resources/js/typeahead.bundle.min.js"></script>
 		<script src="/resources/js/chosen.jquery.min.js"></script>	
 		<link rel="stylesheet" href="<c:url value='/resources/css/chosen.css'/>" />	
+		<script src="<c:url value='/resources/js/date-time/moment.min.js'/>" ></script>
+		<script src="<c:url value='/resources/js/date-time/bootstrap-datepicker.min.js'/>" ></script>
+		<script src="<c:url value='/resources/js/date-time/bootstrap-timepicker.min.js'/>" ></script>
+		<script src="<c:url value='/resources/js/date-time/daterangepicker.min.js'/>" ></script>
+		<script src="<c:url value='/resources/js/date-time/bootstrap-datetimepicker.min.js'/>" ></script>
+		
 
 		
 		<!-- #section:basics/sidebar -->
@@ -128,7 +135,7 @@
 								<div style="margin-top:-10px;">
 									<label for="day"><H4>Pick a day</H4></label>	
 									<br />
-									<select class="chosen-select" id="day" data-placeholder="Pick a day...">
+									<select class="chosen-select" id="dayselect" data-placeholder="Pick a day...">
 										<option value="">  </option>
 										<c:forEach var="i" begin="1" end="${activitymaster.numtourdays}">								
 										<option value="${i}">Day ${i}</option>								
@@ -180,11 +187,11 @@
 											name="travelactivity" class="form-horizontal">
 									        
 									        <div class="row">									    																					    
-												<div class='col-md-10'>	
+												<div class='col-md-12'>	
 												    <div class="form-group" style="margin-left:6px;">
 												        <div class="clearfix">
 													        <label for="code">Travel Code</label>
-																<form:select class="form-control col-sm-8" path="code" name="travelcodes" id="travelcodes">
+																<form:select class="form-control col-sm-11" path="code" name="travelcodes" id="travelcodes" style="width:90%;">
 																	<option value="">  </option>
 																</form:select>
 														</div>
@@ -193,190 +200,211 @@
 											</div> <!-- row -->
 
 											<form:input id="day" type="hidden" path="day" />
+											
+											<div id="formelements" disabled="disabled">
 
-				        					<div class="row">
-												<div class='col-md-6'>										    																					    
-												    <div class="form-group" style="margin-left:6px;">
-												        <div class="clearfix">
-															<label for="vesselno">Flight/Train/Bus Number</label>
-										    				<form:input id="vesselno" class="col-sm-11" path="vesselno" type="text" />												
+										        <div class="row">									    																					    										
+													<div class='col-md-6'>	
+													    <div class="form-group" style="margin-left:6px;">
+													        <div class="clearfix">
+														        <label for="code">PAX</label>
+												    				<form:input id="pax" class="col-sm-11" path="pax" type="text" />												
+															</div>
+														</div>							        
+													</div>
+													<div class='col-md-6'>	
+													    <div class="form-group" style="margin-left:6px;">
+													        <div class="clearfix">
+														        <label for="code">Group No</label>
+												    				<form:input id="group" class="col-sm-11" path="group" type="text" style="width:93%; "/>												
+															</div>
+														</div>							        
+													</div>													
+												</div>											
+
+					        					<div class="row">
+													<div class='col-md-6'>										    																					    
+													    <div class="form-group" style="margin-left:6px;">
+													        <div class="clearfix">
+																<label for="vesselno">Flight/Train/Bus Number</label>
+											    				<form:input id="vesselno" class="col-sm-11" path="vesselno" type="text" />												
+															</div>
 														</div>
 													</div>
-												</div>
-												
-												<div class='col-md-6'>										    																					    
-													<div class="form-group"  style="margin-left:5px;">
-												        <div class="clearfix">
-															<label for="vesselconame">Travel Company</label>
-										    				<form:input id="vesselconame" class="col-sm-11" path="vesselconame" type="text" style="width:93%;"/>												
-														</div>
-									    			</div>
-									    		</div>
-											</div><!-- row -->																						
-
-									        <div class="row">
-												<div class='col-md-6'>										    																					    
-												    <div class="form-group" style="margin-left:6px;">
-												        <div class="clearfix">
-															<label for="bookingno">Booking Details</label>
-										    				<form:input id="bookingno" class="col-sm-11" path="bookingno" type="text" />	
+													
+													<div class='col-md-6'>										    																					    
+														<div class="form-group"  style="margin-left:5px;">
+													        <div class="clearfix">
+																<label for="vesselconame">Travel Company</label>
+											    				<form:input id="vesselconame" class="col-sm-11" path="vesselconame" type="text" style="width:93%;"/>												
+															</div>
 										    			</div>
 										    		</div>
-										    	</div>	
-
-												<div class='col-md-6'>										    																					    
-												    <div class="form-group" style="margin-left:5px;">
-												        <div class="clearfix">
-															<label for="bookingclass">Booking Class</label>
-										    				<form:input id="bookingclass" class="col-sm-11" path="bookingclass" type="text" style="width:93%;" />
-										    			</div>
-										    		</div>												
-												</div>
-											</div>		
-
-									        <div class="row">
-												<div class='col-md-6'>										    																					    
-													<div class="form-group" style="margin-left:6px;">
-														<div class="clearfix">
-								                    		<label for ="depdatetime">Departure Date and Time</label>
+												</div><!-- row -->																						
+	
+										        <div class="row">
+													<div class='col-md-6'>										    																					    
+													    <div class="form-group" style="margin-left:6px;">
+													        <div class="clearfix">
+																<label for="bookingno">Booking Details</label>
+											    				<form:input id="bookingno" class="col-sm-11" path="bookingno" type="text" />	
+											    			</div>
+											    		</div>
+											    	</div>	
+	
+													<div class='col-md-6'>										    																					    
+													    <div class="form-group" style="margin-left:5px;">
+													        <div class="clearfix">
+																<label for="bookingclass">Booking Class</label>
+											    				<form:input id="bookingclass" class="col-sm-11" path="bookingclass" type="text" style="width:93%;" />
+											    			</div>
+											    		</div>												
+													</div>
+												</div>		
+	
+										        <div class="row">
+													<div class='col-md-6'>										    																					    
+														<div class="form-group" style="margin-left:6px;">
+															<div class="clearfix">
+									                    		<label for ="depdatetime">Departure Date and Time</label>
+													            <div class='input-group'>
+																	<span class="input-group-addon">
+																		<i class="fa fa-calendar bigger-110"></i>
+																	</span>					            
+													                <input type='text' id="depdatetimepicker" name="depdatetimepicker" class="form-control col-sm-11"
+													                	value="${travelactivity.depdatetime}" style="z-index:0;width:90%;" />
+													                <form:input type='hidden' id="depdatetimestr" path="depdatetimestr" name="depdatetimestr" value="${travelactivity.depdatetimestr}" />
+													                <form:input type='hidden' id="depdatetimelong" name="depdatetimelong" path="depdatetimelong" />
+													       		</div>
+													 		</div>
+											        	</div>
+													</div>
+	
+													<div class='col-md-6'>										    																					    
+												        <div class="form-group" style="margin-left:5px;">
+								                    		<label for ="arrdatetime">Arrival Date and Time</label>
 												            <div class='input-group'>
 																<span class="input-group-addon">
 																	<i class="fa fa-calendar bigger-110"></i>
 																</span>					            
-												                <input type='text' id="depdatetimepicker" name="depdatetimepicker" class="form-control col-sm-11"
-												                	value="${travelactivity.depdatetime}" style="z-index:0;width:90%;" />
-												                <form:input type='hidden' id="depdatetimestr" path="depdatetimestr" name="depdatetimestr" value="${travelactivity.depdatetimestr}" />
-												                <form:input type='hidden' id="depdatetimelong" name="depdatetimelong" path="depdatetimelong" />
-												       		</div>
-												 		</div>
-										        	</div>
-												</div>
-
-												<div class='col-md-6'>										    																					    
-											        <div class="form-group" style="margin-left:5px;">
-							                    		<label for ="arrdatetime">Arrival Date and Time</label>
-											            <div class='input-group'>
-															<span class="input-group-addon">
-																<i class="fa fa-calendar bigger-110"></i>
-															</span>					            
-											                <input type='text' id="arrdatetimepicker" name="arrdatetimepicker" class="form-control col-sm-11"
-											                	value="${travelactivity.arrdatetime}" style="z-index:0;width:93%;" />
-											                <form:input type='hidden' id="arrdatetimestr" path="arrdatetimestr" name="arrdatetimestr" value="${travelactivity.arrdatetimestr}" />
-											                <form:input type='hidden' id="arrdatetimelong" name="arrdatetimelong" path="arrdatetimelong" />
-											            </div>
-											        </div>
-												</div>
-											</div>									        
-											
-									        <div class="row">
-												<div class='col-md-6'>										    																					    
-													<div class="form-group" style="margin-left:6px;">
-														<div class="clearfix">
-							                        		<label for="depstation">Departure Station</label>
-											                <form:input type='text' path="depstation" id="depstation" name="depstation" class="col-sm-11" 
-											                	value="${travelactivity.depstation}" />
+												                <input type='text' id="arrdatetimepicker" name="arrdatetimepicker" class="form-control col-sm-11"
+												                	value="${travelactivity.arrdatetime}" style="z-index:0;width:93%;" />
+												                <form:input type='hidden' id="arrdatetimestr" path="arrdatetimestr" name="arrdatetimestr" value="${travelactivity.arrdatetimestr}" />
+												                <form:input type='hidden' id="arrdatetimelong" name="arrdatetimelong" path="arrdatetimelong" />
+												            </div>
+												        </div>
+													</div>
+												</div>									        
+												
+										        <div class="row">
+													<div class='col-md-6'>										    																					    
+														<div class="form-group" style="margin-left:6px;">
+															<div class="clearfix">
+								                        		<label for="depstation">Departure Station</label>
+												                <form:input type='text' path="depstation" id="depstation" name="depstation" class="col-sm-11" 
+												                	value="${travelactivity.depstation}" />
+															</div>
 														</div>
 													</div>
-												</div>
-												<div class='col-md-6'>										    																					    									        
-											        <div class="form-group" style="margin-left:5px;">
-								                        <div class="clearfix">
-							                        		<label for="arrstation">Arrival Station</label>
-											                <form:input type='text' path="arrstation" id="arrstation" name="arrstation" class="col-sm-11" 
-											                	value="${travelactivity.arrstation}" style="width:93%;" />
-														</div>
-											        </div>
-									        	</div>	
-									        </div>
-									        
-		
-									        <div class="row">
-												<div class='col-md-6'>										    																					    
-													<div class="form-group" style="margin-left:6px;">
-														<div class="clearfix">
-															<label for="cost">Cost</label>
-										    				<form:input id="cost" path="cost" type="text" class="col-sm-11" />												
-														</div>
-													</div>
-												</div>
-														
-												<div class='col-md-6'>										    																					    
-													<div class="form-group" style="margin-left:6px;">
-														<div class="clearfix">
-															<label for="costmarkup">Cost Markup (Example: 125=1.25 X Cost)</label>
-										    				<form:input id="costmarkup" path="cost" type="text" class="col-sm-11" style="width:93%;" />												
-														</div>
-													</div>
-												</div>
-											</div>
-																				
-									        <div class="row" id="asstreqgroup">		
-												<div class='col-md-6'>										    																					    
-													<div class="form-group" style="margin-left:6px;">
-														<div class="clearfix">
-															<label for="asstcost">Assistance Fee</label>
-										    				<form:input id="asstcost" path="asstcost" class="col-sm-11" type="text" />												
-														</div>
-													</div>
-												</div>
-		
-												<div class='col-md-6'>										    																					    
-													<div class="form-group" style="margin-left:5px;">
-														<div class="clearfix">
-															<label for="asstcostmarkup">Fee Markup</label>
-										    				<form:input id="asstcostmarkup" path="asstcostmarkup" class="col-sm-11" style="width:93%;" type="text" />												
-														</div>
-													</div>
-												</div>
-											</div>
-										
-									        <div class="row" id="pikupgroup">	
-												<div class='col-md-6'>										    																					    
-													<div class="form-group" style="margin-left:6px;">														
-														<div class="clearfix">
-															<label for="pikupveh"> Pickup - Specify Vehicle</label>
-										    				<form:input id="pikupveh" path="pikupveh" type="text" class="col-sm-11" />												
-														</div>
-													</div>
-												</div>
-											
-												<div class='col-md-3'>										    																					    
-													<div class="form-group" style="margin-left:6px;">
-														<div class="clearfix">
-															<label for="pikupcost">Pickup Fee</label>
-										    				<form:input id="pikupcost" path="pikupcost" type="text" style="width:120%;" />												
-														</div>
-													</div>
-												</div>
-		
-												<div class='col-md-3'>										    																					    
-													<div class="form-group" style="margin-left:28px;">
-														<div class="clearfix">
-															<label for="pikupcostmarkup">Fee Markup</label>
-										    				<form:input id="pikupcostmarkup" path="pikupcostmarkup" type="text" style="width:82%;"/>												
-														</div>
-													</div>
-												</div>
-											</div>
-														
-		
-									        <div class="row">									    																					    
-												<div class='col-md-10'>	
-												    <div class="form-group" style="margin-left:6px;">
-												        <div class="clearfix">
-															<label for="comment">Comments</label>
-															<form:textarea class="form-control limited" id="comment" path="comment" maxlength="100" />
-														</div>
-													</div>
-												</div>
-											</div>
-		
-										    <div class="form-group">
-										        <div class="col-xs-5 col-xs-offset-3">
-										            <button type="submit" id="newtravelactivitysubmit" class="btn btn-purple">Create new</button>
+													<div class='col-md-6'>										    																					    									        
+												        <div class="form-group" style="margin-left:5px;">
+									                        <div class="clearfix">
+								                        		<label for="arrstation">Arrival Station</label>
+												                <form:input type='text' path="arrstation" id="arrstation" name="arrstation" class="col-sm-11" 
+												                	value="${travelactivity.arrstation}" style="width:93%;" />
+															</div>
+												        </div>
+										        	</div>	
 										        </div>
-										    </div>
-		
+										        
+			
+										        <div class="row">
+													<div class='col-md-6'>										    																					    
+														<div class="form-group" style="margin-left:6px;">
+															<div class="clearfix">
+																<label for="cost">Cost</label>
+											    				<form:input id="cost" path="cost" type="text" class="col-sm-11" />												
+															</div>
+														</div>
+													</div>
+															
+													<div class='col-md-6'>										    																					    
+														<div class="form-group" style="margin-left:6px;">
+															<div class="clearfix">
+																<label for="costmarkup">Cost Markup (as %)</label>
+											    				<form:input id="costmarkup" path="costmarkup" type="text" class="col-sm-11" style="width:93%;" />												
+															</div>
+														</div>
+													</div>
+												</div>
+																					
+										        <div class="row" id="asstreqgroup">		
+													<div class='col-md-6'>										    																					    
+														<div class="form-group" style="margin-left:6px;">
+															<div class="clearfix">
+																<label for="asstcost">Assistance Fee</label>
+											    				<form:input id="asstcost" path="asstcost" class="col-sm-11" type="text" />												
+															</div>
+														</div>
+													</div>
+			
+													<div class='col-md-6'>										    																					    
+														<div class="form-group" style="margin-left:5px;">
+															<div class="clearfix">
+																<label for="asstcostmarkup">Fee Markup</label>
+											    				<form:input id="asstcostmarkup" path="asstcostmarkup" class="col-sm-11" style="width:93%;" type="text" />												
+															</div>
+														</div>
+													</div>
+												</div>
+											
+										        <div class="row" id="pikupgroup">	
+													<div class='col-md-6'>										    																					    
+														<div class="form-group" style="margin-left:6px;">														
+															<div class="clearfix">
+																<label for="pikupveh"> Pickup - Specify Vehicle</label>
+											    				<form:input id="pikupveh" path="pikupveh" type="text" class="col-sm-11" />												
+															</div>
+														</div>
+													</div>
+												
+													<div class='col-md-3'>										    																					    
+														<div class="form-group" style="margin-left:6px;">
+															<div class="clearfix">
+																<label for="pikupcost">Pickup Fee</label>
+											    				<form:input id="pikupcost" path="pikupcost" type="text" style="width:120%;" />												
+															</div>
+														</div>
+													</div>
+			
+													<div class='col-md-3'>										    																					    
+														<div class="form-group" style="margin-left:28px;">
+															<div class="clearfix">
+																<label for="pikupcostmarkup">Fee Markup</label>
+											    				<form:input id="pikupcostmarkup" path="pikupcostmarkup" type="text" style="width:82%;"/>												
+															</div>
+														</div>
+													</div>
+												</div>
+															
+			
+										        <div class="row">									    																					    
+													<div class='col-md-10'>	
+													    <div class="form-group" style="margin-left:6px;">
+													        <div class="clearfix">
+																<label for="comment">Comments</label>
+																<form:textarea class="form-control limited" id="comment" path="comment" maxlength="100" />
+															</div>
+														</div>
+													</div>
+												</div>
+			
+											    <div class="form-group">
+											        <div class="col-xs-5 col-xs-offset-3">
+											            <button type="submit" id="newtravelactivitysubmit" class="btn btn-purple">Create new</button>
+											        </div>
+											    </div>
+											</div> <!-- formelements -->			
 											</form:form>
 										</div> <!-- widget body -->	
 									</div> <!-- widget main -->	
@@ -486,7 +514,7 @@
 
 	<!-- inline scripts related to this page -->
 	<script type="text/javascript">
-	
+
 		function loadActivityCodes (activitytype) {
 	
 			var request = $.ajax({type: 'GET', url: "/app/activity/getactivitycodes?" + "query=" + activitytype });
@@ -521,12 +549,25 @@
 	        	
 		
 		function resetactivityform(activityformname, widgetname, arrowname)	{
+	 		$(".error").html('');
+			$(".error").removeClass("error");
 	    	$('#' + activityformname).trigger('reset');
 	    	$('#' + widgetname).hide();
 	    	$('#' + arrowname).hide();	    	
 		}
 		
+				
 		$('#travelcodes').change(function() {
+
+		    if ( $(this).val() === '' ) {
+		        $('#formelements').find('*').prop('disabled', true);		    
+				return;		    
+		    }
+
+		    if ( $(this).val() != '' ) {
+		        $('#formelements').find('*').prop('disabled', false);		    
+		    }
+
 		    if ( $(this).val() === 'TADOM0' || $(this).val() === 'TAINTL0' || $(this).val() === '' ) {
 		        // Disable airport pickup and assistance required options
 		        $('#asstreqgroup').find('*').prop('disabled', true);
@@ -550,12 +591,16 @@
 		        $('#asstreqgroup').find('*').prop('disabled', false);
 		        $('#pikupgroup').find('*').prop('disabled', false);		        
 		    }
+		    
 		});		
 		
 		$("button").click(function() {
 
+	    	if (this.id == 'newtravelactivitysubmit')
+	    		return;
+	    		
 			// Check if day was selected
-			if ($('#day').val() == "")
+			if ($('#dayselect').val() == "")
 				return false;
 			
 	    	$('#arrow' + this.id).show();	    	
@@ -572,10 +617,27 @@
 	    		color = '#8FBCD9';
 	    	$('#' + this.id + 'activitywidget').css('border-color', color);
 		    $('#' + this.id + 'activitywidget').css('border-width', 'thin');
+
 		    loadActivityCodes(this.id);	    	
+
+		    if ( $('#travelcodes').val() === '' )
+		        $('#formelements').find('*').prop('disabled', true);		    
+
 		    $('#' + this.id + 'activitywidget').show();				    
 		});
 		
+		$("#newtravelactivitysubmit").click(function() {
+		    		
+            var startdate = GetDate($('#depdatetimepicker').val());
+            var enddate = GetDate($('#arrdatetimepicker').val());
+            
+            $('#depdatelong').val(startdate.getTime());
+            $('#arrdatelong').val(enddate.getTime());
+            
+			$('#day').val($('#dayselect').val());            
+            
+		});
+				
 		$(function() {
 		
             $("#depstation").suggest({
@@ -583,7 +645,7 @@
                 filter:'(any type:/location/citytown)'
             })
 			.bind("fb-select", function(e, data) {
-  				checkname(data.name);
+
 			});  
 					
             $("#arrstation").suggest({
@@ -591,11 +653,119 @@
                 filter:'(any type:/location/citytown)'
             })
 			.bind("fb-select", function(e, data) {
-  				checkname(data.name);
+
 			});                      
 
         });
-					
+                
+        $('#travelactivityform').validate({
+        	ignore: ":disabled",
+            rules: {
+				pax: {
+					required: true
+				},
+				group: {
+					required: true
+				},				
+                vesselno: {
+                    required: true
+                },
+                vesselconame: {
+                    required: true
+                },
+                bookingno: {
+                    required: true
+                },
+                bookingclass: {
+                    required: true
+                },
+                depdatetimepicker: {
+                    required: true
+                },
+                arrdatetimepicker: {
+                    required: true,
+                    enddategtstartdate: 'required'
+                },
+                arrstation: {
+                    required: true,
+                    endstationdifferent: 'required'                    
+                },
+                depstation: {
+                    required: true
+                },
+                cost: {
+                    required: true,
+                    costnumbersdecimal: 'required'
+                },
+                costmarkup: {
+                    required: true,
+                    costmarkupnumberlimit: 'required'
+                },
+                asstcost: {
+                    required: true,
+                    costnumbersdecimal: 'required'
+                },
+                asstcostmarkup: {
+                    required: true,
+                    costmarkupnumberlimit: 'required'
+                },
+                pikupveh: {
+                    required: true
+                },
+                pikupcost: {
+                    required: true,
+                    costnumbersdecimal1: 'required'
+                },
+                pikupcostmarkup: {
+                    required: true,
+                    costmarkupnumberlimit1: 'required'
+                }
+            },
+            messages: {
+
+            }            
+        });        
+
+		jQuery.validator.addMethod("costnumbersdecimal", function(value, element){
+            return (value.match(/^\d+\.\d{0,2}$/));
+     	}, 'Cost should contain digits and a single decimal only!');   
+
+		jQuery.validator.addMethod("costmarkupnumberlimit", function(value, element){
+            return (value.match(/^\d{1,3}$/));
+     	}, 'Cost markup should contain upto 3 digits only!');   
+
+		jQuery.validator.addMethod("endstationdifferent", function(value, element){
+            return $('#depstation').val() != value;
+     	}, 'Departure and Arrival stations should be different!');   
+     	
+		jQuery.validator.addMethod("enddategtstartdate", function(value, element){
+           var startdate = GetDate($('#depdatetimepicker').val());
+           var enddate = GetDate(value);
+            return enddate > startdate;
+     	}, 'Arrival date/time should be greater than departure date/time.');   
+
+
+		function GetDate(datestr) {
+			var arrdate = datestr.split(/\/|\s|:/);
+			var date; 
+		    if (datestr.indexOf("PM") > 0) {
+		    		if (arrdate[3] < 12) {
+						date = new Date(arrdate[2], arrdate[0] -1, arrdate[1], parseInt(arrdate[3]) +12, arrdate[4]);
+					}    
+					else
+						date = new Date(arrdate[2], arrdate[0] -1, arrdate[1], arrdate[3], arrdate[4]);
+			}
+		    else {
+		    	if (arrdate[3] == 12)
+					date = new Date(arrdate[2], arrdate[0] -1, arrdate[1], arrdate[3] -12, arrdate[4]);
+		    	else
+					date = new Date(arrdate[2], arrdate[0] -1, arrdate[1], arrdate[3], arrdate[4]);		    
+		    }
+		    
+		    return date;
+		};         
+                       
+			
 		$("#itineraries").click(function(e){
 		    window.location = "/app/itineraries";
 		});	
@@ -669,45 +839,35 @@
 		    displayKey: 'value',
 		    source: itinlist.ttAdapter()
 		});		 
-				
-				
-        function checkandsavedata(orgname) {
-       		var target = document.getElementById('spinner');
-	    	var opts = {
-    	        lines:8, length:5, width:3, radius:3, corners:1,
-            	rotate:0, color:'#000', speed:1, trail:60, shadow:false,
-            	hwaccel:false, className:'spinner', zIndex:2e9
-        	};
-       		var spinner = new Spinner(opts).spin(target);	
-        	
-        	var request = $.ajax({url: "/checkorgname", type: "GET", data: "orgname=" + orgname});
-        	request.done(function( msg ) {
-				spinner.stop();
-				if (msg == 'exists') {
-					$.gritter.add({
-						title: 'Organization details already on file!',
-						text: 'Required details for your Organization are already on file. We have sent email to your official id with further instructions.',
-						image: '',
-						sticky: true,
-						time: '',
-						// (function | optional) function called after it closes
-						after_close: function(e, manual_close){
-							var orgname = document.getElementById('orgname');
-							$('#orgname').val('');
-							$('#orgname').focus();
-						},						
-						class_name: 'gritter-error gritter-center' + (!$('#spinner').get(0).checked ? ' gritter-dark' : '')
-					});
-				}
-			}); 
-	        request.fail(function( jqXHR, textStatus ) {
-				$('spinner').data('spinner').stop();;
-			});		
-			
-        }			
 								
-		jQuery(function($) {		
+								
+		jQuery(function($) {
 		
+			$.fn.extend({
+				 trackChanges: function() {
+				   $(":input",this).change(function() {
+				      $(this.form).data("changed", true);
+				   });
+				 }
+				 ,
+				 isChanged: function() { 
+				   return this.data("changed"); 
+				 }
+			});
+			
+			$("#travelactivityform").trackChanges();        		    
+		    
+		    $(function () {
+				$('#depdatetimepicker').datetimepicker().next().on(ace.click_event, function(){
+					$(this).prev().focus();
+				});
+		
+				$('#arrdatetimepicker').datetimepicker().next().on(ace.click_event, function(){
+					$(this).prev().focus();
+				});
+			});
+			
+									
 			$('#recent-box [data-rel="tooltip"]').tooltip({placement: tooltip_placement});
 			function tooltip_placement(context, source) {
 				var $source = $(source);

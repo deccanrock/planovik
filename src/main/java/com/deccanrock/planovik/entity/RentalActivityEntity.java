@@ -16,6 +16,9 @@ public class RentalActivityEntity
     @GeneratedValue
     private int activityid;
   
+    @Column(name="pax")    
+    private int pax;
+
     @Column(name="code")    
 	private String code;
 
@@ -77,6 +80,14 @@ public class RentalActivityEntity
 		this.activityid = activityid;
 	}
 	
+	public int getPax() {
+		return pax;
+	}
+
+	public void setPax(int pax) {
+		this.pax = pax;
+	}
+
 	public String getCode() {
 		return code;
 	}
