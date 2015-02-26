@@ -390,7 +390,7 @@ public class ItineraryEntityDAO extends JdbcDaoSupport implements IItneraryEntit
 	    		ame.setCountactivityother(countActivityRental);
 		}
 
-		
+		/*		
 		simpleJdbcCall = new SimpleJdbcCall(dbtemplate)
 		.withProcedureName("sp_getitinactivitycount");
 
@@ -416,7 +416,8 @@ public class ItineraryEntityDAO extends JdbcDaoSupport implements IItneraryEntit
     	}    	
     	
     	ame.setDaywiseactivitycnt(daywiseactivitycountlist);
-    	
+    	*/
+		
     	return ame;
 	}    
  	

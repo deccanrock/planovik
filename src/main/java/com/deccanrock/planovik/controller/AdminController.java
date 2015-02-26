@@ -26,7 +26,7 @@ import com.deccanrock.planovik.location.MaxLocation;
 import com.deccanrock.planovik.location.MaxLocationBO;
 import com.deccanrock.planovik.service.dao.OrgEntityDAO;
 import com.deccanrock.planovik.service.dao.UserEntityDAO;
-
+import com.deccanrock.planovik.constants.Constants;
 
 /**
  * Handles all requests for Organization and User level signup's
@@ -82,25 +82,28 @@ public class AdminController {
 		UserEntityDAO UED = (UserEntityDAO)context.getBean("UserEntityDAO");
 		
 		UserEntity dbUser = UED.GetUser(user.getUsername());
+		Constants constants = new Constants();
 		
 		if ( dbUser!=null && user.getMode().equals("Create")) {
-			String error = "User with email: " + user.getUsername() + " already exists!";
+			String error = "User: " + user.getUsername() + " already exists!";
 			map.addAttribute("error", error);
 		}
 		
 		if ( dbUser==null && user.getMode().equals("Create")) {
+			user.setRolelist(constants.getUserRoles());
 			map.addAttribute("user", user);
 			((ClassPathXmlApplicationContext) context).close();		
 			return "app/admin/manageusersform";
 		}
 		
 		if ( dbUser==null && (user.getMode().equals("Edit") || user.getMode().equals("Disable"))) {
-			String error = "User with email: " + user.getUsername() + " not found!";
+			String error = "User: " + user.getUsername() + " not found!";
 			map.addAttribute("error", error);
 		}
 
 		if ( dbUser!=null && (user.getMode().equals("Edit"))) {
 			dbUser.setMode("Edit");
+			dbUser.setRolelist(constants.getUserRoles());
 			map.addAttribute("user", dbUser);
 			((ClassPathXmlApplicationContext) context).close();		
 			return "app/admin/manageusersform";
@@ -108,7 +111,7 @@ public class AdminController {
 
 		if ( dbUser!=null && (user.getMode().equals("Disable"))) {
 			UED.DeleteUser(user.getUsername());
-			String msg = "User with email: " + user.getUsername() + " was successfully disabled.";
+			String msg = "User: " + user.getUsername() + " was successfully disabled.";
 			map.addAttribute("msg", msg);
 		}
 
@@ -128,18 +131,18 @@ public class AdminController {
 		
 		request.setAttribute("title", "Planovik Signup - Confirmation");		
 		
-		user.setFullname(user.getFullname());
-		user.setUsername(user.getUsername());
-		user.setPass(user.getPass());
-		user.setPhone(user.getPhone());
-		user.setDesignation(user.getDesignation());
-		user.setLevel(user.getLevel());
-		user.setMode(user.getMode());
-		user.setTzoffset(user.getTzoffset());
+		//user.setFullname(user.getFullname());
+		//user.setUsername(user.getUsername());
+		//user.setPass(user.getPass());
+		//user.setPhone(user.getPhone());
+		//user.setDesignation(user.getDesignation());
+		//user.setRole(user.getLevel());
+		//user.setMode(user.getMode());
+		//user.setTzoffset(user.getTzoffset());
 		// Record admin who created/edited/modifyed
 		User loggeduser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		user.setCreatedbyemail(loggeduser.getUsername());
-		user.setReportstoemail(user.getReportstoemail());
+		user.setCreatedbyusername(loggeduser.getUsername());
+		//user.setReportstousername(loggeduser.getUsername());
 		
 		// Save model to database
 		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");

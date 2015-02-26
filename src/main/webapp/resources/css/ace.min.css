@@ -81,6 +81,16 @@ body{
 	color:#8089a0
 }
 
+
+.chosen-container {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 13px;
+    -moz-user-select: none;
+    max-width: 58%;
+}
+
 .ace-icon{
 	text-align:center
 }
@@ -5001,7 +5011,8 @@ body.mob-safari .sidebar.sidebar-fixed{
 	background-color:#E9EAED;
 	padding-top:15px;
 	height:0;
-	width:0
+	width:0;
+	padding-top:40px;
 }
 
 .footer .footer-inner{
@@ -5171,7 +5182,6 @@ body.mob-safari .sidebar.sidebar-fixed{
 	right:12px;
 	bottom:4px;
 	padding:8px;
-	line-height:36px;
 	border-top:1px solid #E5E5E5
 }
 
@@ -10325,6 +10335,13 @@ td .lbl:only-child,th .lbl:only-child{
 	border-color:#e8b10d;
 	background:#ffc657
 }
+
+.widget-color-lgreen>.widget-header{
+	color:#855d10!important;
+	border-color:#81A87B;
+	background:#fff
+}
+
 
 .widget-color-dark{
 	border-color:#5a5a5a

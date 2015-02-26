@@ -312,7 +312,8 @@ public class AppController {
 		ActivityMasterEntity ame = IED.GetActivityMaster(itinerarydb);
 		ame.setItinnum(itinerarydb.getId());
 		ame.setVersion(itinerarydb.getVersion());
-		ame.setTzoffset(itinerarydb.getTzoffset());		
+		ame.setTzoffset(itinerarydb.getTzoffset());
+		ame.setPax(itinerarydb.getNumtravellers());
 		map.addAttribute("activitymaster", ame);
 		
 		TravelActivityEntity TAE = new TravelActivityEntity();
@@ -392,7 +393,7 @@ public class AppController {
 		map.addAttribute("header", "Admin Login");
 
 		if (error != null) {
-			map.addAttribute("error", "Invalid username and password!");
+			map.addAttribute("error", error);
 		}
  
 		if (logout != null) {

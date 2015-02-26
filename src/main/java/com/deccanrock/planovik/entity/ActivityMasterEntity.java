@@ -22,7 +22,10 @@ public class ActivityMasterEntity
 	@Column(name="version")    
 	private int version;
         
-    private int numtourdays;
+	@Column(name="pax")    
+	private int pax;
+	
+	private int numtourdays;
     
     private ArrayList<Integer> daywiseactivitycntlist;
     
@@ -72,6 +75,14 @@ public class ActivityMasterEntity
 		this.version = version;
 	}
 			
+	public int getPax() {
+		return pax;
+	}
+
+	public void setPax(int pax) {
+		this.pax = pax;
+	}
+
 	public ArrayList <Integer> getDaywiseactivitylistcnt() {
 		return daywiseactivitycntlist;
 	}

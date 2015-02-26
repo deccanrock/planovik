@@ -7,3 +7,7 @@ Backup
 
 Restore
 mysql -u [uname] -p[pass] [db_to_restore] < [backupfile.sql]
+
+
+C:\Program Files\MySQL\MySQL Server 5.6\bin>mysqldump --routines --triggers --single-transaction -u
+root -p planovik_main > planovik_main_02232015

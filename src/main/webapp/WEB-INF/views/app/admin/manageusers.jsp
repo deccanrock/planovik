@@ -38,7 +38,7 @@
 
                         <div class="form-group">
                             <div class="clearfix">
-                                <form:input type="text" path="username" placeholder="Enter username (email)" id="username" class="col-sm-11" />
+                                <form:input type="text" path="username" placeholder="Enter username" id="username" class="col-sm-11" />
                                 <div class="pull-right center spinner-preview" id="spinnerusername" class="col-sm-1"></div>
                             </div>
                         </div>
@@ -104,8 +104,8 @@
     jQuery(function($) {
 
         jQuery.validator.addMethod("username", function (value, element) {
-            return this.optional(element) || /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/.test(value);
-        }, "Enter a valid email address.");
+            return this.optional(element) || /^[a-zA-Z0-9]*$/.test(value);
+        }, "Enter a valid username, alphanumeric only.");
 
         $('#manageusers-form').validate({
             errorElement: 'div',
@@ -119,8 +119,8 @@
             },
             messages: {
                 username: {
-                    required: "Please specify an email address.",
-                    username: "Please provide a valid email address."
+                    required: "Please specify a username.",
+                    username: "Please provide a username. Alphanumeric characters only!"
                 },
             },
 

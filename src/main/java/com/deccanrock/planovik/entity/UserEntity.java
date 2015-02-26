@@ -2,6 +2,7 @@ package com.deccanrock.planovik.entity;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +18,9 @@ public class UserEntity
     @Column(name="id")    
     @GeneratedValue
     private int id;
+
+    @Column(name="email")    
+	private String email;
     
     @Column(name="fullname")    
 	private String fullname;
@@ -60,16 +64,19 @@ public class UserEntity
     
     private String mode;
     
-    private String reportstoemail;
-    private String createdbyemail;
+    private String reportstousername;
+    private String createdbyusername;
     
 	/* Spring Security fields*/
 	private Collection<? extends GrantedAuthority> authorities;
 	private boolean accountNonExpired = true;
 	private boolean accountNonLocked = true;
 	private boolean credentialsNonExpired = true;
-	private boolean enabled = true;    
-    
+	private boolean enabled = true;
+
+    @Column(name="role")    
+	private String role;
+    private List<String> rolelist;
 
     // Getter-Setters
 	public int getId() {
@@ -79,6 +86,14 @@ public class UserEntity
 	public void setId(int id) {
 		this.id = id;
 	}
+	
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}	
 	
 	public String getFullname() {
 		return fullname;
@@ -225,19 +240,35 @@ public class UserEntity
 		this.mode = mode;
 	}
 	
-	public String getReportstoemail() {
-		return this.reportstoemail;
+	public String getReportstousername() {
+		return this.reportstousername;
 	}
 	
-	public void setReportstoemail(String email) {
-		this.reportstoemail = email;
+	public void setReportstousername(String reportstousername) {
+		this.reportstousername = reportstousername;
 	}
-	public String getCreatedbyemail() {
-		return this.createdbyemail;
+	public String getCreatedbyusername() {
+		return this.createdbyusername;
 	}
 	
-	public void setCreatedbyemail(String email) {
-		this.createdbyemail = email;
+	public void setCreatedbyusername(String createdbyusername) {
+		this.createdbyusername = createdbyusername;
+	}
+
+	public String getRole() {
+		return this.role;
+	}
+	
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	public List<String> getRolelist() {
+		return this.rolelist;
+	}
+	
+	public void setRolelist(List <String> rolelist) {
+		this.rolelist = rolelist;
 	}
 
 

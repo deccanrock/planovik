@@ -28,7 +28,7 @@ import com.deccanrock.planovik.service.utils.TimeFormatter;
  
 @Component
 @Transactional
-public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityMasterDAO {
+public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntityDAO {
 
 	@Autowired
     @Qualifier("mainDataSource")
@@ -71,6 +71,7 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityMaster
 	}
 
 
+    @Override	    
 	public TravelActivityEntity saveTravelActivity(TravelActivityEntity travelactivity) {
 
 		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(getJdbcTemplate())
@@ -85,17 +86,25 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityMaster
 		
 		if (travelactivity.getSavemode().equals("Save Final"))
 			inParamMap.put("instatus", Constants.Itinactivitystatus.valueOf("Final").getValue());		
-		else
-			inParamMap.put("instatus", travelactivity.getStatus().intValue());		
+		else // assume draft which should be the case
+			inParamMap.put("instatus", travelactivity.getStatus().intValue());
 		
 		inParamMap.put("incode", travelactivity.getCode());		
 		inParamMap.put("inversion", travelactivity.getVersion());		
 		inParamMap.put("lastupdatedbyemail", travelactivity.getLastupdatedby());
 		inParamMap.put("createdbyemail", travelactivity.getCreatedby());
 		// Should be 0 for new activity
-		inParamMap.put("inactivityid", travelactivity.getActivityid().intValue());							
-		inParamMap.put("inpax", travelactivity.getPax().intValue());
-		inParamMap.put("ingroupnum", travelactivity.getGroupnum().intValue());
+		inParamMap.put("inactivityid", travelactivity.getActivityid().intValue());
+		if (travelactivity.getPax() == null)
+			inParamMap.put("inpax", 0);
+		else
+			inParamMap.put("inpax", travelactivity.getPax().intValue());
+
+		if (travelactivity.getGroupnum() == null)
+			inParamMap.put("ingroupnum", 1); // default			
+		else
+			inParamMap.put("ingroupnum", travelactivity.getGroupnum().intValue());
+		
 		inParamMap.put("invesselno", travelactivity.getVesselno());
 		inParamMap.put("invesselconame", travelactivity.getVesselconame());
 		inParamMap.put("inbookingno", travelactivity.getBookingno());
@@ -112,13 +121,39 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityMaster
 
 		inParamMap.put("inarrstation", travelactivity.getArrstation());
 		inParamMap.put("indepstation", travelactivity.getDepstation());
-		inParamMap.put("incost", travelactivity.getCost().floatValue());
-		inParamMap.put("incostmarkup", travelactivity.getCostmarkup().intValue());
-		inParamMap.put("inasstcost", travelactivity.getAsstcost().floatValue());
-		inParamMap.put("inasstcostmarkup", travelactivity.getAsstcostmarkup().intValue());
+
+		if (travelactivity.getCost() == null)		
+			inParamMap.put("incost", 0.0);
+		else
+			inParamMap.put("incost", travelactivity.getCost().floatValue());			
+		
+		if (travelactivity.getCostmarkup() == null)
+			inParamMap.put("incostmarkup", 0);
+		else
+			inParamMap.put("incostmarkup", travelactivity.getCostmarkup().intValue());
+		
+		if (travelactivity.getAsstcost() == null)			
+			inParamMap.put("inasstcost", 0.0);
+		else
+			inParamMap.put("inasstcost", travelactivity.getAsstcost().floatValue());			
+
+		if (travelactivity.getAsstcostmarkup() == null)					
+			inParamMap.put("inasstcostmarkup", 0);
+		else
+			inParamMap.put("inasstcostmarkup", travelactivity.getAsstcostmarkup().intValue());
+		
 		inParamMap.put("inpikupveh", travelactivity.getPikupveh());
-		inParamMap.put("inpikupcost", travelactivity.getPikupcost().floatValue());
-		inParamMap.put("inpikcostmarkup", travelactivity.getPikupcostmarkup().intValue());
+
+		if (travelactivity.getPikupcost() == null)					
+			inParamMap.put("inpikupcost", 0.0);
+		else
+			inParamMap.put("inpikupcost", travelactivity.getPikupcost().floatValue());
+			
+		if (travelactivity.getPikupcostmarkup() == null)							
+			inParamMap.put("inpikupcostmarkup", 0);
+		else
+			inParamMap.put("inpikupcostmarkup", travelactivity.getPikupcostmarkup().intValue());
+			
 		inParamMap.put("incomments", travelactivity.getComments());
 		
 		
@@ -129,8 +164,10 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityMaster
     		simpleJdbcCallResult = simpleJdbcCall.execute(in);
 			// No exception means insert/update/delete happened
     		travelactivity.setError("Success");
-    		String idStr = simpleJdbcCallResult.get("activityid").toString();
-    		travelactivity.setActivityid(Integer.parseInt(idStr)); 	    		
+    		if (travelactivity.getActivityid().intValue() == 0) {
+	    		String idStr = simpleJdbcCallResult.get("outactivityid").toString();
+	    		travelactivity.setActivityid(Integer.parseInt(idStr)); 	    		
+    		}
     	} catch (Exception ex) {
     		travelactivity.setError(ex.getMessage());
 		} 					

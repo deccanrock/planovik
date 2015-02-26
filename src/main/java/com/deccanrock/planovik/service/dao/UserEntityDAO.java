@@ -90,22 +90,23 @@ public class UserEntityDAO extends JdbcDaoSupport implements
     	.withProcedureName("sp_manageuser");
     	     	 
     	Map<String, Object> inParamMap = new HashMap<String, Object>();
-
-		inParamMap.put("fullname", user.getFullname());
-		inParamMap.put("level", user.getLevel());
-		inParamMap.put("designation", user.getDesignation());
+		
+    	inParamMap.put("inemail", user.getEmail());
+		inParamMap.put("infullname", user.getFullname());
+		inParamMap.put("inrole", user.getRole());
+		inParamMap.put("indesignation", user.getDesignation());
 		inParamMap.put("inusername", user.getUsername());
 		inParamMap.put("mode", user.getMode());
-		inParamMap.put("reportstoemail", user.getReportstoemail());
-		inParamMap.put("createdbyemail", user.getCreatedbyemail());		
+		inParamMap.put("reportstousername", user.getReportstousername());
+		inParamMap.put("createdbyusername", user.getCreatedbyusername());		
 		// Apply bcrypt encryption, salt is built in, using strength 10
 		if (user.getMode().equals("Create"))
-			inParamMap.put("password", HashCode.getHashPassword(user.getPass()));
+			inParamMap.put("inpassword", HashCode.getHashPassword(user.getPass()));
 		else // this is only for setting IN parameter for SQL stored procedure, no DB change will be made
-			inParamMap.put("password", "no change");
+			inParamMap.put("inpassword", "no change");
 		
-		inParamMap.put("phone", user.getPhone());
-		inParamMap.put("tzoffset", user.getTzoffset());		  	 		
+		inParamMap.put("inphone", user.getPhone());
+		inParamMap.put("intzoffset", user.getTzoffset());		  	 		
 		
     	SqlParameterSource in = new MapSqlParameterSource(inParamMap);
 
@@ -162,9 +163,9 @@ public class UserEntityDAO extends JdbcDaoSupport implements
  		for (Map<String, Object> map : managers) {
  		    for (Map.Entry<String, Object> entry : map.entrySet()) {
  		    	if (i == 0)
- 		    		user.get(0).setReportstoemail(entry.getValue().toString());
+ 		    		user.get(0).setReportstousername(entry.getValue().toString());
  		    	if (i == 1)
- 		    		user.get(0).setCreatedbyemail(entry.getValue().toString());
+ 		    		user.get(0).setCreatedbyusername(entry.getValue().toString());
  		    	i++;
  		    }
  		} 		

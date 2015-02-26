@@ -3,8 +3,8 @@
 
 <div  class="loginblock">
 	<div class="loginform">
-		<c:if test="${not empty error}">
-			<div class="error">${error}</div>
+		<c:if test="${not empty SPRING_SECURITY_LAST_EXCEPTION.message}">
+			<div class="error">${SPRING_SECURITY_LAST_EXCEPTION.message}</div>
 		</c:if>
 		<c:if test="${not empty msg}">
 			<div class="msg">${msg}</div>

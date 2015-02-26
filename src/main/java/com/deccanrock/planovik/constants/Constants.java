@@ -1,7 +1,10 @@
 package com.deccanrock.planovik.constants;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
-* Place all constants relating to Admin Tasks here.
+* Global constants placeholder class.
 *
 */
 
@@ -93,5 +96,8 @@ public class Constants {
 	    }		
 	}
 	
+	// TO_DO - This should be moved to DB
+	private final List <String> roles = Arrays.asList("ROLE_USER", "ROLE_ADMIN");
+	public List<String> getUserRoles() { return roles; }
 	
 }

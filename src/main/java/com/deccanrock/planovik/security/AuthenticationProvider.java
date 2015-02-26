@@ -2,7 +2,9 @@ package com.deccanrock.planovik.security;
 
 import java.util.Date;
 
+import org.springframework.security.authentication.AccountStatusException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
@@ -39,13 +41,17 @@ public class AuthenticationProvider extends DaoAuthenticationProvider {
 			UserLoginAttempts userAttempts = userDetailsDao.getUserAttempts(authentication.getName());
 			if (userAttempts != null) {
 				Date lastAttempts = userAttempts.getLastModified();
-				error = "User account is locked! <br><br>Username : " + authentication.getName()
-						+ "<br>Last Attempts : " + lastAttempts;
+				error = "Your account " + authentication.getName() + " is locked due to unsuccessful login attempts!";
 			} else {
 				error = e.getMessage();
 			}
 
 			throw new LockedException(error);
+		} catch (DisabledException e) {
+			String error = "";
+			error = e.getMessage();
+			error = "Your account " + authentication.getName() + " is disabled.";			
+			throw new DisabledException(error);
 		}
 
 	}

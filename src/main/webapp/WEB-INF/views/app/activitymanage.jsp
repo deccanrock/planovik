@@ -142,34 +142,34 @@
 		          						</c:forEach>								
 									</select>
 								</div>
-								<div class="col-sm-2" style="margin-top:15px;margin-left:5px;">
-									<button id="hotel" class="btn btn-white btn-pink btn-round" style="width:130%;">Add Hotel</button>																	
+								<div class="col-sm-2" style="margin-top:15px;margin-left:10px;">
+									<button id="hotel" class="btn btn-white btn-pink btn-round" style="width:110%;line-height:10px;">Add Hotel</button>																	
 									<span id="arrowhotel" class="ace-icon glyphicon glyphicon-play arrowdown" 
 											style="color:#AF6F87;margin-left:55px;margin-top:-3px;display:none;"></span>
 								</div>			
 								<div id="traveldiv" class="col-sm-2" style="margin-top:15px;margin-left:5px;">
-									<button id="travel" class="btn btn-white btn-success btn-round" style="margin-left:10px;width:130%;">Add Travel</button>
+									<button id="travel" class="btn btn-white btn-success btn-round" style="margin-left:10px;width:110%;line-height:10px;">Add Travel</button>
 									<span id="arrowtravel" class="ace-icon glyphicon glyphicon-play arrowdown" 
 											style="margin-left:55px;margin-top:-3px;color:#A7C9A1;display:none;"></span>
 								</div>			
 								<div class="col-sm-2" style="margin-top:15px;margin-left:15px;">
-									<button id="rental" class="btn btn-white btn-default btn-round" style="margin-left:10px;width:130%;">Add Rental</button>
+									<button id="rental" class="btn btn-white btn-default btn-round" style="margin-left:10px;width:110%;line-height:10px;">Add Rental</button>
 									<span id="arrowrental" class="ace-icon glyphicon glyphicon-play arrowdown" 
 											style="margin-left:55px;margin-top:-3px;color:#ABBAC3;display:none;"></span>
 								</div>			
 								<div class="col-sm-2" style="margin-top:15px;margin-left:10px;">
-									<button id="visit" class="btn btn-white btn-warning btn-round" style="margin-left:15px;width:130%;">Add Visit</button>
+									<button id="visit" class="btn btn-white btn-warning btn-round" style="margin-left:15px;width:110%;line-height:10px;">Add Visit</button>
 									<span id="arrowvisit" class="ace-icon glyphicon glyphicon-play arrowdown" 
 											style="margin-left:55px;margin-top:-3px;color:#E7B979;display:none;"></span>
 								</div>			
 								<div class="col-sm-2" style="margin-top:15px;margin-left:20px;">
-									<button id="other" class="btn btn-white btn-info btn-round" style="margin-left:10px;width:130%;">Add Other</button>
+									<button id="other" class="btn btn-white btn-info btn-round" style="margin-left:10px;width:110%;line-height:10px;">Add Other</button>
 									<span id="arrowother" class="ace-icon glyphicon glyphicon-play arrowdown" 
 											style="margin-left:55px;margin-top:-3px;color:#8FBCD9;display:none;"></span>
 								</div>			
 								
 								
-								<div class="widget-box" id="travelactivitywidget" style="margin-top:60px;border-style:solid;display:none;">          
+								<div class="widget-box" id="travelactivitywidget" style="margin-top:50px;border-style:solid;display:none;">          
 									<div class="widget-header">
 										<h5 class="widget-title">Activity Id: ${travelacitivity.activityid}</h5>
 										<div class="widget-toolbar">
@@ -209,11 +209,11 @@
 											</div> <!-- row -->
 
 											<form:input id="day" type="hidden" path="day" />
+											<form:input id="status" type="hidden" path="status" value="0" />
 											<form:input id="savemode" type="hidden" path="savemode" />
-											<form:input id="itinnum" type="hidden" path="itinnum" value= ${activitymaster.itinnum}/>
-											<form:input id="version" type="hidden" path="version" value= ${activitymaster.version}/>
-											<form:input id="status" type="hidden" path="status" value= ${activitymaster.status}/>
-											<form:input id="tzoffset" type="hidden" path="tzoffset" value=${activitymaster.tzoffset} />
+											<form:input id="itinnum" type="hidden" path="itinnum" value="${activitymaster.itinnum}" />
+											<form:input id="version" type="hidden" path="version" value="${activitymaster.version}" />
+											<form:input id="tzoffset" type="hidden" path="tzoffset" value="${activitymaster.tzoffset}" />
 											<form:input id="activityid" type="hidden" path="activityid" value='0' />
 											
 											<div id="formelements" disabled="disabled">
@@ -223,7 +223,7 @@
 													    <div class="form-group" style="margin-left:6px;">
 													        <div class="clearfix">
 														        <label for="code">PAX</label>
-												    				<form:input id="pax" class="col-sm-11" path="pax" type="text" />												
+												    				<form:input id="pax" class="col-sm-11" path="pax" type="text" value="${activitymaster.pax}" />												
 															</div>
 														</div>							        
 													</div>
@@ -414,14 +414,16 @@
 													</div>
 												</div>
 			
-											    <div class="form-group">
-											        <div class="col-xs-5 col-xs-offset-3">
-											            <button type="submit" id="travelactivitysavedraft" class="btn btn-purple">Save Draft</button>
-											        </div>
-											        <div class="col-xs-5 col-xs-offset-3">
-											            <button type="submit" id="travelactivitysavefinal" class="btn btn-purple">Save Final</button>
-											        </div>											    
-											    </div>
+										        <div class="row">									    																					    
+													<div class='col-md-8' >	
+												        <div class="col-md-3 col-md-offset-4">
+												            <button type="submit" id="travelactivitysavedraft" class="btn btn-purple" >Save Draft</button>
+												        </div>
+												        <div class="col-md-3  col-md-offset-2">
+												            <button type="submit" id="travelactivitysavefinal" class="btn btn-purple">Save Final</button>
+												        </div>											    
+													</div>
+												</div>
 											</div> <!-- formelements -->			
 											</form:form>
 										</div> <!-- widget body -->	
@@ -430,29 +432,78 @@
 `
 							</div><!-- col-sm-6 -->
 
-							<div class="col-sm-6">    					
-								<div id="activitydisplay" class="accordion-style1 panel-group">
-									<div class="panel panel-default">
-										<div class="panel-heading">
-											<h4 class="panel-title">
-												<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-													<i class="ace-icon fa fa-angle-down bigger-110" data-icon-hide="ace-icon fa fa-angle-down" data-icon-show="ace-icon fa fa-angle-right"></i>
-													&nbsp;Activity preview
-												</a>
-											</h4>
-										</div>
-
-										<div class="panel-collapse collapse in" id="collapseOne">
-											<div class="panel-body">
-												Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+							<div class="col-sm-6" style="margin-top:-20px;">    					
+								<h3 class="row header smaller lighter blue">
+									<span class="col-xs-6"> Day wise activity preview </span><!-- /.col -->
+								</h3>
+								<!-- #section:elements.accordion -->
+								<div id="accordion" class="accordion-style1 panel-group">
+									<c:forEach var="i" begin="1" end="${activitymaster.numtourdays}">
+										<div class="panel panel-default">
+											<div class="panel-heading">
+												<h4 class="panel-title">
+													<c:if test="${i == 1}">
+														<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse${i}">
+															<i class="ace-icon fa fa-angle-down bigger-110" data-icon-hide="ace-icon fa fa-angle-down" data-icon-show="ace-icon fa fa-angle-right"></i>
+															&nbsp;Day ${i}
+														</a>
+													</c:if>
+													<c:if test="${i != 1}">
+														<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse${i}">
+															<i class="ace-icon fa fa-angle-down bigger-110" data-icon-hide="ace-icon fa fa-angle-down" data-icon-show="ace-icon fa fa-angle-right"></i>
+															&nbsp;Day ${i}
+														</a>
+													</c:if>
+												</h4>
 											</div>
+											<c:if test="${i == 1}">
+												<div class="panel-collapse collapse in" id="collapse${i}">
+											</c:if>											
+											<c:if test="${i != 1}">
+												<div class="panel-collapse collapse" id="collapse${i}">
+											</c:if>											
+													<div class="panel-body">
+
+
+											<div class="widget-box widget-color-orange collapsed">
+												<!-- #section:custom/widget-box.options.collapsed -->
+												<div class="widget-header widget-header-small">
+													<h6 class="widget-title">
+														<i class="ace-icon fa fa-sort"></i>
+														Travel - Adam family visit to Udaipur
+													</h6>
+	
+													<div class="widget-toolbar">
+														<a href="#" data-action="collapse">
+															<i class="ace-icon fa fa-plus" data-icon-show="fa-plus" data-icon-hide="fa-minus"></i>
+														</a>
+	
+														<a href="#" data-action="settings">
+															<i class="ace-icon fa fa-cog"></i>
+														</a>
+		
+														<a href="#" data-action="close">
+															<i class="ace-icon fa fa-times"></i>
+														</a>
+													</div>
+												</div>
+	
+												<!-- /section:custom/widget-box.options.collapsed -->
+												<div class="widget-body">
+													<div class="widget-main">
+														<p style="background:#A7C9A1;">
+															Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor facilisis.
+														</p>
+													</div>
+												</div>
+											</div>
+
+													</div>
+												</div>
 										</div>
-									</div>
-
-								</div>
-
-								<!-- /section:elements.accordion -->
-							</div><!-- col-sm-6 -->
+	          						</c:forEach>																	
+								</div><!-- /section:elements.accordion -->
+							</div><!-- /.col -->
 
 						</div><!-- /.col-xs-12 -->
 					</div><!-- row -->					
