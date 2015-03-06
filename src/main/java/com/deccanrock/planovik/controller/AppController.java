@@ -1,6 +1,5 @@
 package com.deccanrock.planovik.controller;
 
-
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
@@ -25,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -41,11 +41,11 @@ import com.deccanrock.planovik.service.dao.ActivityMasterDAO;
 import com.deccanrock.planovik.service.dao.ItineraryEntityDAO;
 import com.deccanrock.planovik.service.dao.UserEntityDAO;
 import com.deccanrock.planovik.service.utils.UriHandler;
-
+import com.deccanrock.planovik.service.utils.FileHandler;;
 
 
 /**
- * Handles all requests for Organization Admin Users and functions
+ * Handles all requests for Organization general Users and functions
  */
 @Controller
 public class AppController {
@@ -69,42 +69,40 @@ public class AppController {
 	private static final Logger logger = LoggerFactory.getLogger(AppController.class);
 	private String username;
 	
-	// TODO - Beef up logger details to catch more admin user info
 	
     @RequestMapping(value = "/app/**", method = RequestMethod.GET)
-    public String adminDash(ModelMap map, HttpServletRequest request) {
-		logger.info(" Zone");
+    public String appDash(ModelMap map, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		logger.info("Application Dash");
 
 		if (!IsUserLoggedIn(map))
     		return "app/login";
         
         // map.addAttribute("admin", new AdminEntity());
-		map.addAttribute("title", "Verifyed Admin Home");
-		map.addAttribute("header", "Admin Zone");
-		map.addAttribute("adminname", username);
-		String adminphoto = "/resources/avatars/" + username + ".jpg";
-		map.addAttribute("adminphoto", adminphoto);
+		map.addAttribute("title", "Planovik Home");
+		map.addAttribute("username", username);
+		String userphoto = "/resources/images/avatars/" + username + ".jpg";
+		map.addAttribute("userphoto", userphoto);
 		// map.addAttribute("admintaskList", adminManager.getAllPending());
- 
-        return "app/dash";
+	    
+	    return "app/dash";
+    
     }
     
-    
-	// for 403 access denied page
-	@RequestMapping(value = "/403", method = RequestMethod.GET)
+      
+    // for 403 access denied page
+	@RequestMapping(value = "/app/error403", method = RequestMethod.GET)
 	public String accesssDenied(ModelMap map) {
 
 		if (!IsUserLoggedIn(map)) {
 			map.addAttribute("msg", "You do not have permission to access this page!");	
 		} else {
 			UserName();		
-			map.addAttribute("adminname", username);
-			map.addAttribute("msg", "Hi " + username 
-			+ ", you do not have permission to access this page!");
+			map.addAttribute("msg", "Hello " + username 
+			+ ", you do not have permission to access this restriced page!");
 
 		}
  
-		return "app/admin403";
+		return "app/error403";
  
 	}    
 
@@ -115,13 +113,12 @@ public class AppController {
 		if (!IsUserLoggedIn(map))
     		return "admin/login";
 		
-		map.addAttribute("title", "Verifyed Admin Home");
-		map.addAttribute("header", "Admin Zone");
+		map.addAttribute("title", "Planovik Home");
 		
         UserName();		
-		map.addAttribute("adminname", username);
-		String adminphoto = "/resources/avatars/" + username + ".jpg";
-		map.addAttribute("adminphoto", adminphoto);
+		map.addAttribute("username", username);
+		String userphoto = "/resources/images/avatars/" + username + ".jpg";
+		map.addAttribute("userphoto", userphoto);
 		
 		return "app/dash";
     }
@@ -137,9 +134,9 @@ public class AppController {
 		map.addAttribute("header", "Admin Zone");
 
         UserName();		
-		map.addAttribute("adminname", username);
-		String adminphoto = "/resources/avatars/" + username + ".jpg";
-		map.addAttribute("adminphoto", adminphoto);
+		map.addAttribute("username", username);
+		String userphoto = "/resources/images/avatars/" + username + ".jpg";
+		map.addAttribute("userphoto", userphoto);
 		
 		// Get Task records from database
 		
@@ -181,9 +178,9 @@ public class AppController {
 		map.addAttribute("header", "Admin Zone");
 		
         UserName();		
-		map.addAttribute("adminname", username);
-		String adminphoto = "/resources/avatars/" + username + ".jpg";
-		map.addAttribute("adminphoto", adminphoto); 
+		map.addAttribute("username", username);
+		String userphoto = "/resources/images/avatars/" + username + ".jpg";
+		map.addAttribute("userphoto", userphoto); 
 		
 		ItineraryEntity itinerary = new ItineraryEntity();
         map.addAttribute("itinerary", itinerary);	
@@ -388,9 +385,9 @@ public class AppController {
     		@RequestParam(value = "error", required = false) String error,
     		@RequestParam(value = "logout", required = false) String logout)
     {
-		logger.info("Admin Login");    	
-		map.addAttribute("title", "Verifyed Admin - Login Required!");
-		map.addAttribute("header", "Admin Login");
+		logger.info("User Login");    	
+		map.addAttribute("title", "Planovik - Login Required!");
+		map.addAttribute("header", "User Login");
 
 		if (error != null) {
 			map.addAttribute("error", error);
@@ -405,17 +402,17 @@ public class AppController {
  
     @RequestMapping(value = "/app/denied", method = RequestMethod.GET)
     public String loginerror(ModelMap map) {
-		logger.info("Admin access denied");    	
+		logger.info("User access denied");    	
         map.addAttribute("error", "true");
-		map.addAttribute("title", "Verifyed Admin - Access Denied!");        
-		map.addAttribute("header", "Admin Access Denied!");
+		map.addAttribute("title", "Planovik - Access Denied!");        
+		map.addAttribute("header", "User Access Denied!");
 		return "app/denied";
     }
  
     @RequestMapping(value = "/app/logout", method = RequestMethod.POST)
     public String logout(HttpServletResponse resp, ModelMap map) {
 		logger.info("Admin logout");    	
-    	map.addAttribute("title", "Verifyed Admin - Logged out!");  	
+    	map.addAttribute("title", "Planovik User - Logged out!");  	
 		map.addAttribute("header", "Admin Log Out");
 		
 		
@@ -531,7 +528,7 @@ public class AppController {
 	 * All lookahead code should be refactored into a caching layer
 	 * @throws URISyntaxException 
 	 */
-	@RequestMapping(value = "/app/checkusername", method = RequestMethod.GET)
+	@RequestMapping(value = "/checkusername", method = RequestMethod.GET)
 	public @ResponseBody String checkUserName(@RequestParam(value = "username") String userName) {
 		logger.info("Check User Name");
 
@@ -545,7 +542,24 @@ public class AppController {
 			return "none";
 	}	
     
-    private boolean IsUserLoggedIn(ModelMap map) {
+    
+	@RequestMapping(value = "/app/uploadphoto", method = RequestMethod.POST)    
+	public @ResponseBody String UploadPhoto(HttpServletRequest request, ServletResponse response, @RequestParam("image") MultipartFile image) {
+		logger.info("Upload photo");
+		
+		if (image.isEmpty())
+			return "";
+		
+		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
+		FileHandler FH = (FileHandler)context.getBean("filehandler");
+		String result = FH.fileUpload(image, "image", "setavatar", username);
+		((ClassPathXmlApplicationContext) context).close();
+
+		return result;				
+	}	
+	
+	
+	private boolean IsUserLoggedIn(ModelMap map) {
     
         UserName();
         if (username == null || username == "anonymousUser") {

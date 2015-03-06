@@ -17,22 +17,39 @@ public class UserEntityMapper implements RowMapper<UserEntity> {
 	   user.setPhone(rs.getString("phone"));	   
 	   user.setDesignation(rs.getString("designation"));
 	   user.setLevel(rs.getInt("level"));
-	   if (rs.getInt("enabled") == 0)
+	   if (rs.getInt("enabled") == 0) {
 		   user.setEnabled(false);
-	   else
-		   user.setEnabled(false);
-	   if (rs.getInt("accountNonExpired") == 0)
+		   user.setIsenabled(0);
+	   }
+	   else {
+		   user.setEnabled(true);
+		   user.setIsenabled(1);		   
+	   }
+	   if (rs.getInt("accountNonExpired") == 0) {
 		   user.setAccountNonExpired(false);
-	   else
+		   user.setIscredentialsexpired(1);
+	   }
+	   else {
 		   user.setAccountNonExpired(true);
-	   if (rs.getInt("accountNonLocked") == 0)
+		   user.setIscredentialsexpired(0);
+	   }
+	   if (rs.getInt("accountNonLocked") == 0) {
 		   user.setAccountNonLocked(false);
-	   else
+		   user.setIslocked(1);
+	   }
+	   else {
 		   user.setAccountNonLocked(true);
-	   if (rs.getInt("credentialsNonExpired") == 0)
+		   user.setIslocked(0);
+	   }
+	   if (rs.getInt("credentialsNonExpired") == 0) {
 		   user.setCredentialsNonExpired(false);
-	   else
+		   user.setIscredentialsexpired(1);
+	   }
+	   else {
 		   user.setCredentialsNonExpired(true);
+		   user.setIscredentialsexpired(0);
+	   }
+	   
 	   user.setTzoffset(rs.getShort("tzoffset"));
 	   user.setDatecreated(rs.getTimestamp("date_created"));
 	   user.setDateupdated(rs.getTimestamp("date_updated"));		   

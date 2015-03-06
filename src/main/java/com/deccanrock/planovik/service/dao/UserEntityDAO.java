@@ -106,7 +106,24 @@ public class UserEntityDAO extends JdbcDaoSupport implements
 			inParamMap.put("inpassword", "no change");
 		
 		inParamMap.put("inphone", user.getPhone());
-		inParamMap.put("intzoffset", user.getTzoffset());		  	 		
+		inParamMap.put("intzoffset", user.getTzoffset());
+		
+		
+		// Check flags and alter
+		if (user.getTogglelock() == 1) { // lock was set to yes, determine if account is locked/unlocked and set flag
+			if (user.getIslocked() == 1) // account is locked, unlock it
+				inParamMap.put("inaccountNonLocked", 1);
+			else
+				inParamMap.put("inaccountNonLocked", 0); // account in unlocked, lock it
+		}
+		else
+			inParamMap.put("inaccountNonLocked", user.isAccountNonLocked()); // retain same value
+			
+		
+		if (user.getIscredentialsexpired() == 1) // expire password
+			inParamMap.put("incredentialsNonExpired", 0);
+		else
+			inParamMap.put("incredentialsNonExpired", user.isCredentialsNonExpired()); // retain same value
 		
     	SqlParameterSource in = new MapSqlParameterSource(inParamMap);
 

@@ -1,11 +1,14 @@
 package com.deccanrock.planovik.controller;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
@@ -39,12 +42,13 @@ public class AdminController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
-	@RequestMapping(value = "/app/admin/manageusers", method = RequestMethod.GET)
-	public String signupform(HttpServletRequest request, ModelMap map) {
+	@PreAuthorize("hasRole('ROLE_SUPERADMIN')")	
+    @RequestMapping(value = "/app/admin/", method = RequestMethod.GET)
+    public String appAdmin(ModelMap map, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		final String userIPAddress = request.getRemoteAddr();
 		
-		request.setAttribute("title", "Planovik Admin - Manage Users");
-		request.setAttribute("header", "Manage Users");
+		request.setAttribute("title", "Planovik Admin - Home");
+		request.setAttribute("header", "Admin Home");
 		
 		// For Testing
 		MaxLocation location = locationBO.getLocation("66.249.69.52");
@@ -56,15 +60,17 @@ public class AdminController {
 		
         UserEntity user = new UserEntity();    
         map.addAttribute("user", user);	
-		return "app/admin/manageusers";
-	}
+		return "app/admin/index";
+    
+    }	
 	
 	
 	/**
 	 * Manage users for an org
 	 * @throws URISyntaxException **/
 	 
-	@RequestMapping(value = "/app/admin/manageusersform", method = RequestMethod.POST)
+	@PreAuthorize("hasRole('ROLE_SUPERADMIN')")
+	@RequestMapping(value = "app/admin/manageusersform", method = RequestMethod.POST)
     public String signupupprocess(@ModelAttribute(value="user") UserEntity user, Model map, HttpServletRequest request) {
 
 		logger.info("Manager Users Process Form");
@@ -89,6 +95,15 @@ public class AdminController {
 			map.addAttribute("error", error);
 		}
 		
+		// Error if account is disabled
+		if ( dbUser!=null && user.getMode().equals("Edit") && dbUser.isEnabled()==false) {
+			String error = "User account: " + user.getUsername() + " is permanently disabled!";
+			map.addAttribute("error", error);
+			((ClassPathXmlApplicationContext) context).close();
+			return "app/admin/manageusers";
+		}
+		
+		
 		if ( dbUser==null && user.getMode().equals("Create")) {
 			user.setRolelist(constants.getUserRoles());
 			map.addAttribute("user", user);
@@ -96,7 +111,7 @@ public class AdminController {
 			return "app/admin/manageusersform";
 		}
 		
-		if ( dbUser==null && (user.getMode().equals("Edit") || user.getMode().equals("Disable"))) {
+		if ( dbUser==null && (user.getMode().equals("Edit"))) {
 			String error = "User: " + user.getUsername() + " not found!";
 			map.addAttribute("error", error);
 		}
@@ -124,6 +139,7 @@ public class AdminController {
 	 * Manage users for an org
 	 * @throws URISyntaxException **/
 	 
+	@PreAuthorize("hasRole('ROLE_SUPERADMIN')")	
 	@RequestMapping(value = "/app/admin/manageusers", method = RequestMethod.POST)
     public String signupshowform(@ModelAttribute(value="user") UserEntity user, HttpServletRequest request, BindingResult result, Model map) {
 		

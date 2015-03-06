@@ -29,6 +29,9 @@
 	   <property name="location" value="classpath:/com/deccanrock/planovik/datasource/db.properties"/>
 	</bean>
 	
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+    <property name="maxUploadSize" value="300000"/>
+	</bean>
 	
 	<bean id="dataSourceRegistry" class="com.deccanrock.planovik.Tenant.TenantTargetRegistry"></bean>
 	
@@ -55,6 +58,10 @@
 
 	<bean id="TenantImplDAO" class="com.deccanrock.planovik.service.dao.TenantImplDAO">
 		<property name="dataSource" ref="proxyDataSource"></property>
+	</bean>
+
+	<bean id="filehandler" class="com.deccanrock.planovik.service.utils.FileHandler">
+    	<property name="resourcesfolder" value="c:/planovikpub/resources/" />
 	</bean>
 				           
 </beans>

@@ -206,6 +206,11 @@
 	            </a>
 	        </div>
 	        <div class="navbar-header navbar-toggle-admin-header">
+					<H3>
+						<div class="light-red">
+							<%= request.getAttribute("header")%>
+						</div>
+					</H3>
 	        </div>
 	    </div>
 	</div>

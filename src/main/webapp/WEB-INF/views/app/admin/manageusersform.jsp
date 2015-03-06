@@ -1,11 +1,13 @@
-<%@ include file="../header.jsp" %>
+<%@ include file="header.jsp" %>
 
 <!-- /section:basics/navbar.layout -->
 <div class="main-container" id="main-container">
 <script type="text/javascript">
     try{ace.settings.check('main-container' , 'fixed')}catch(e){}
 </script>
+<script src="/resources/js/jquery.validate.min.js"> ></script>
 <script src="/resources/js/chosen.jquery.min.js"></script>	
+<link rel="stylesheet" href="<c:url value='/resources/css/jquery.gritter.css'/>" />
 <link rel="stylesheet" href="<c:url value='/resources/css/chosen.css'/>" />	
 
 
@@ -146,6 +148,8 @@
 					                    				<form:input type="text" path="reportstousername" id="reportstousername" class="col-xs-9 col-sm-7" />                                	
 													</c:otherwise>
 					                    		</c:choose>
+					                    		<div class="pull-right center spinner-preview" id="spinnerreportsto" class="col-sm-1"></div>
+					                    		
 										</div>
 					                </div>
 					                <div class="space-2"></div>
@@ -170,22 +174,86 @@
 				                    <form:input type="hidden" id="tzoffset" path="tzoffset"/>
 				                    <form:input type="hidden" id="username" path="username" value="${user.username}"/>
 				                    <form:input type="hidden" id="mode" path="mode" value="${user.mode}"/>
+									<form:input type="hidden" id="islocked" path="islocked" value="${user.islocked}" />
+									<form:input type="hidden" id="togglelock" path="togglelock" />
+									<form:input type="hidden" id="iscredentialsexpired" path="iscredentialsexpired" value="${user.iscredentialsexpired}" />		                    		
 				
+		                    		<c:if test="${user.mode == 'Edit'}">
+										<div class="col-xs-10" style="margin-left:30px;">
+											<div class="widget-box collapsed">
+												<!-- #section:custom/widget-box.header.options -->
+												<div class="widget-header widget-header-small">
+													<h5 class="widget-title">Additional User Settings</h5>
+													<div class="widget-toolbar">
+
+														<a href="#" data-action="reload" style="visibility:hidden;">
+															<i class="ace-icon fa fa-refresh"></i>
+														</a>
+	
+														<a href="#" data-action="collapse">
+															<i class="ace-icon fa fa-chevron-down"></i>
+														</a>
+	
+													</div>
+												</div>
+	
+												<!-- /section:custom/widget-box.header.options -->
+												<div class="widget-body">
+													<div class="widget-main">
+														<div class="row" style="margin-left:10px; width:95%;">
+															<div class="col-xs-5">
+		                    									<c:if test="${user.islocked == '0'}">
+																	<label>Lock Account</label>
+																	<label>
+																		<input  name="switch-field-1" id="accountlockunlock" class="ace ace-switch ace-switch-2" type="checkbox" />
+																		<span class="lbl"></span>
+																	</label>
+																</c:if>
+		                    									<c:if test="${user.islocked == '1'}">
+																	<label>Unlock Account</label>
+																	<label>
+																		<input name="switch-field-1" id="accountockunlock" class="ace ace-switch ace-switch-2" type="checkbox" />
+																		<span class="lbl"></span>
+																	</label>
+																</c:if>
+															</div>		
+															<div class="col-xs-5">
+		                    									<c:if test="${user.iscredentialsexpired == '0'}">
+																	<label>Expire Password</label>
+																	<label>
+																		<input name="switch-field-1" id="credentialsexpired" class="ace ace-switch ace-switch-2" type="checkbox" />
+																		<span class="lbl"></span>
+																	</label>
+																</c:if>		
+															</div>		
+														</div><!-- row -->
+														<hr />
+														<div class="row" style="margin-left:10px; width:95%;">
+															<label>Upload new photo <i>(limit size to 300 kb)</i></label>
+															<a href="#" class="btn btn-minier btn-purple" style="margin-left:20px;display:none;" id="uploadfilesubmit">Upload</a>
+															<div class="pull-right center spinner-preview" id="spinnerupload" class="col-sm-1"></div>																																					
+															<input type="file" id="id-input-file-3" />
+														</div>														
+													</div>
+												</div>
+											</div>
+										</div>
+				             		</c:if>
+
 				                    <!-- #section:plugins/fuelux.wizard.buttons -->
 				            		<c:choose>
 				            			<c:when test="${user.mode == 'Create'}">
-				                        	<input type="submit" id="manageuserscreate" class="btn btn-large btn-primary" style="margin-left:200px;" value="Create" />
+				                        	<input type="submit" id="manageuserscreate" name="manageuserscreate" class="btn btn-large btn-primary" style="margin-left:200px;" value="Create" />
 				                    	</c:when>
 										<c:otherwise>
-					                        <input type="submit" id="manageusersedit" class="btn btn-large btn-primary" style="margin-left:200px;" value="Save" />
+					                        <input type="submit" id="manageusersedit" name="manageusersedit" class="btn btn-large btn-primary" style="margin-left:200px;margin-top:20px;" value="Save" />
 										</c:otherwise>
-				            		</c:choose>
-				                    
+				            		</c:choose>				                    
 			                    </form:form>
 								<div class="space-6"></div>								
 											                
 				        	</div>
-			        	</div>
+			        	</div> <!-- widget body -->
 					</div>
 		        </div> <!-- .col-xs-12 -->
 			</div><!-- row -->
@@ -193,7 +261,7 @@
 	</div><!-- /.page-content -->
 </div><!-- /.main-content -->
 
-<%@ include file="../footer.jsp" %>
+<%@ include file="footer.jsp" %>
 
 </div><!-- /.main-container -->
 
@@ -219,7 +287,7 @@
 <script src="<c:url value='/resources/js/bootstrap.min.js'/>" ></script>
 
 <!-- page specific plugin scripts -->
-<script src="<c:url value='/resources/js/jquery.validate.min.js'/>" ></script>
+<script src="<c:url value='/resources/js/jquery-ui.custom.min.js'/>"</script>
 <script src="<c:url value='/resources/js/additional-methods.min.js'/>" ></script>
 <script src="<c:url value='/resources/js/bootbox.min.js'/>" ></script>
 <script src="<c:url value='/resources/js/jquery.maskedinput.min.js'/>" ></script>
@@ -233,7 +301,10 @@
 
 <!-- inline scripts related to this page -->
 <script type="text/javascript">
-    jQuery(function($) {
+
+    jQuery(document).ready(function($) {
+    
+    	var image;
     
     	$('.chosen-select').chosen({allow_single_deselect:true}); 
 		//resize the chosen on window resize
@@ -327,34 +398,180 @@
             invalidHandler: function (form) {
             }
         });
+                
+        $(":submit").live('click', function() {
 
-        $('#manageuserscreate').on('submit', function () {
-            var d = new Date();
-            $('#tzoffset').val(d.getTimezoneOffset());
-            alert(d.getTimezoneOffset());
-            return;
-        });     
-       
-       	$('#username').blur(function() {
-       		if ($('#username').val() != '')
-		    	checkname($('#username').val(), 'checkexists', '#username');
-	   	});
+		    if (this.id === 'manageusersedit') {
+		    
+				if ($("#accountlockunlock").prop("checked")) {
+					$('#togglelock').val(1);
+				}
+				if ($("#credentialsexpired").prop("checked"))
+					$("#iscredentialsexpired").val(1);
+	
+	            return;		    
+		    }
+
+			if (this.id === 'manageuserscreate') {
+	            var d = new Date();
+	            $('#tzoffset').val(d.getTimezoneOffset());
+	            return;			
+			}
+			            
+            return false;					
+		});       		       
+        
 		
-       	$('#usernameedit').blur(function() {
-       		if ($('#usernameedit').val() != '')
-		    	checkname($('#usernameedit').val(), 'checkexistsedit', '#usernameedit');
-	   	});
-	   	
        	$('#reportstousername').blur(function() {
-       		if ($('##reportstousername').val() != '')
-		    	checkname($('##reportstousername').val(), 'checknotexists', '#reportstousername');
+       		if ($('#reportstousername').val() != '') {
+		    	checkname($('#reportstousername').val(), 'none', 'reportstousername');
+		    }
 	   	});
-
-		$(":submit").live('click', function() {
-		    $('#mode').val($(this).val());
-		});       
        
-    })
+
+    	var opts = {
+	        lines:8, length:5, width:3, radius:3, corners:1,
+        	rotate:0, color:'#000', speed:1, trail:60, shadow:false,
+        	hwaccel:false, className:'spinner', zIndex:2e9
+    	};
+
+        function checkname(username, checktype, fieldid) {
+        	
+   			var target = document.getElementById('spinnerreportsto');
+	   		var spinner = new Spinner(opts).spin(target);	
+        	var request = $.ajax({url: "/checkusername", type: "GET", data: "username=" + username});
+        	request.done(function( msg ) {
+				spinner.stop();
+				if (msg == checktype) {
+					$.gritter.add({
+						title: 'User not found!',
+						text: 'Please provide a valid username.',
+						image: '',
+						sticky: true,
+						time: '',
+						// (function | optional) function called after it closes
+						after_close: function(e, manual_close){
+							$('#' + fieldid).val('');
+							$('#' + fieldid).focus();
+						},						
+						class_name: 'gritter-error gritter-center gritter-dark'
+					});
+				}
+			}); 
+	        request.fail(function( jqXHR, textStatus ) {
+				$('spinner').data('spinner').stop();;
+			});		
+			
+    	}
+                  
+		$( "#uploadfilesubmit" ).click(function() {
+			console.log(image);
+			var fd = new FormData();
+			fd.append('image', image); 
+   			var target = document.getElementById('spinnerupload');
+			var spinner = new Spinner(opts).spin(target);	
+			
+           //var fd = new FormData(image);
+            $.ajax({
+              url: "/app/uploadphoto",
+              data: fd,
+              type: "POST",
+			  processData : false,
+			  contentType : false,               
+              enctype: 'multipart/form-data'
+            }).done(function( data ) {
+            	spinner.stop();
+                console.log( data );
+                				
+		        $.gritter.add({
+					title: 'File Upload Status',
+					text: data,
+					image: '',
+					sticky: true,
+					time: '',
+					// (function | optional) function called after it closes
+					after_close: function(e, manual_close) {
+						$('.remove').trigger("click");
+					},						
+					class_name: 'gritter-info gritter-center gritter-light'
+				});
+			});
+		
+		});
+		
+
+		$('#id-input-file-3').ace_file_input({
+			style:'well',			
+			btn_choose:'Drop images here or click to choose',
+			btn_change:null,
+			no_icon:'ace-icon fa fa-picture-o',
+			droppable:true,
+			thumbnail:'small'//large | fit
+			//,icon_remove:null//set null, to hide remove/reset button
+			/**,before_change:function(files, dropped) {
+				//Check an example below
+				//or examples/file-upload.html
+				return true;
+			}*/
+			/**,before_remove : function() {
+				return true;
+			}*/
+			,
+			preview_error : function(filename, error_code) {
+				//name of the file that failed
+				//error_code values
+				//1 = 'FILE_LOAD_FAILED',
+				//2 = 'IMAGE_LOAD_FAILED',
+				//3 = 'THUMBNAIL_FAILED'
+				//alert(error_code);
+			}
+	
+		}).on('change', function(){
+			//alert($(this).data('ace_input_files'));
+			// Upload to server
+			image = $(this).data('ace_input_files')[0];
+			if (CheckFile(image) === false) {
+					var file_input = $('#id-input-file-3');
+					file_input.ace_file_input('reset_input');			 			 	
+					return;
+			}
+			
+			$('#uploadfilesubmit').show();			
+			//console.log($(this).data('ace_input_method'));
+
+		});		
+							
+
+		$('.remove').click(function(){		
+			$('#uploadfilesubmit').hide();
+		});    
+		
+		$('#modal-form input[type=file]').ace_file_input({
+				style:'well',
+				btn_choose:'Drop images here or click to choose',
+				btn_change:null,
+				no_icon:'ace-icon fa fa-cloud-upload',
+				droppable:true,
+				thumbnail:'large'
+		});
+    
+    });
+    
+	function CheckFile(file) {
+		fileTypeVals = ["application/jpeg", "application/jpg", "application/png", "application/bmp", 
+						"application/gif", "jpeg", "jpg", "png", "gif", "bmp",
+						"image/jpg", "image/jpeg", "image/png", "image/gif", "image/bmp"];		
+	
+		if (file.type === "")
+			return false;
+			
+		if ($.inArray(file.type, fileTypeVals) === -1)
+			return false;
+				
+		if (file.size > 300000)
+			return false;
+	}
+
 </script>
 
 </body>

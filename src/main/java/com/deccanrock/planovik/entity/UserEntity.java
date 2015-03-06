@@ -74,6 +74,12 @@ public class UserEntity
 	private boolean credentialsNonExpired = true;
 	private boolean enabled = true;
 
+	// Have to use separate fields for jsp due to type issues
+	private int isenabled;
+	private int islocked;
+	private int iscredentialsexpired;
+	private int togglelock;
+	
     @Column(name="role")    
 	private String role;
     private List<String> rolelist;
@@ -223,7 +229,6 @@ public class UserEntity
 		this.credentialsNonExpired = credentialsNonExpired;
 	}
 	
-
 	public boolean isEnabled() {
 		return this.enabled;
 	}
@@ -271,5 +276,36 @@ public class UserEntity
 		this.rolelist = rolelist;
 	}
 
+	public int getIscredentialsexpired() {
+		return iscredentialsexpired;
+	}
 
+	public void setIscredentialsexpired(int iscredentialsexpired) {
+		this.iscredentialsexpired = iscredentialsexpired;
+	}
+
+	public int getIsenabled() {
+		return isenabled;
+	}
+
+	public void setIsenabled(int isenabled) {
+		this.isenabled = isenabled;
+	}
+
+	public int getIslocked() {
+		return islocked;
+	}
+
+	public void setIslocked(int islocked) {
+		this.islocked = islocked;
+	}
+	
+	public int getTogglelock() {
+		return togglelock;
+	}
+
+	public void setTogglelock(int togglelock) {
+		this.togglelock = togglelock;
+	}
+	
 }

@@ -1,4 +1,4 @@
-<%@ include file="../header.jsp" %>
+<%@ include file="header.jsp" %>
 
 <!-- /section:basics/navbar.layout -->
 <div class="main-container" id="main-container">
@@ -61,7 +61,7 @@
 </div><!-- /.page-content -->
 </div><!-- /.main-content -->
 
-<%@ include file="../footer.jsp" %>
+<%@ include file="footer.jsp" %>
 
 </div><!-- /.main-container -->
 
