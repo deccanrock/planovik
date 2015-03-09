@@ -173,7 +173,7 @@
 								<ul class="dropdown-menu dropdown-navbar">
 									<li>
 										<a href="#">
-											<img src="/resources/avatars/avatar.png" class="msg-photo" alt="Alex's Avatar" />
+											<img src="/resources/images/avatars/avatar.png" class="msg-photo" alt="Alex's Avatar" />
 											<span class="msg-body">
 												<span class="msg-title">
 													<span class="blue">Alex:</span>
@@ -190,7 +190,7 @@
 
 									<li>
 										<a href="#">
-											<img src="/resources/avatars/avatar3.png" class="msg-photo" alt="Susan's Avatar" />
+											<img src="/resources/images/avatars/avatar3.png" class="msg-photo" alt="Susan's Avatar" />
 											<span class="msg-body">
 												<span class="msg-title">
 													<span class="blue">Susan:</span>
@@ -207,7 +207,7 @@
 
 									<li>
 										<a href="#">
-											<img src="/resources/avatars/avatar4.png" class="msg-photo" alt="Bob's Avatar" />
+											<img src="/resources/images/avatars/avatar4.png" class="msg-photo" alt="Bob's Avatar" />
 											<span class="msg-body">
 												<span class="msg-title">
 													<span class="blue">Bob:</span>
@@ -224,7 +224,7 @@
 
 									<li>
 										<a href="#">
-											<img src="/resources/avatars/avatar2.png" class="msg-photo" alt="Kate's Avatar" />
+											<img src="/resources/images/avatars/avatar2.png" class="msg-photo" alt="Kate's Avatar" />
 											<span class="msg-body">
 												<span class="msg-title">
 													<span class="blue">Kate:</span>
@@ -241,7 +241,7 @@
 
 									<li>
 										<a href="#">
-											<img src="/resources/avatars/avatar5.png" class="msg-photo" alt="Fred's Avatar" />
+											<img src="/resources/images/avatars/avatar5.png" class="msg-photo" alt="Fred's Avatar" />
 											<span class="msg-body">
 												<span class="msg-title">
 													<span class="blue">Fred:</span>
@@ -281,14 +281,7 @@
 
 						<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
 							<li>
-								<a href="#">
-									<i class="ace-icon fa fa-cog"></i>
-									Settings
-								</a>
-							</li>
-
-							<li>
-								<a href="profile.html">
+								<a href="/app/userprofile">
 									<i class="ace-icon fa fa-user"></i>
 									Profile
 								</a>

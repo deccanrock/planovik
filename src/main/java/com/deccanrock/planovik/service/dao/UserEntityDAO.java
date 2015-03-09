@@ -163,7 +163,7 @@ public class UserEntityDAO extends JdbcDaoSupport implements
     @Override
 	public UserEntity GetUser(String username) {
 	
-        String SQL = "Call sp_getuserdetails(" + "'" + username + "'" + ");";
+    	String SQL = "Call sp_getuserdetails(" + "'" + username + "'" + ");";
     	// JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 
  		List<UserEntity> user = getJdbcTemplate().query(SQL, new UserEntityMapper());
@@ -200,6 +200,33 @@ public class UserEntityDAO extends JdbcDaoSupport implements
 		inParamMap.put("inusername", username);
 		SqlParameterSource in = new MapSqlParameterSource(inParamMap);
 		Map<String, Object> simpleJdbcCallResult = simpleJdbcCall.execute(in);
-	}    
-    
+	}
+
+	// This method will be extended to allow users to edit more settings on their profile, for now password
+    @Override
+	public String UpdateUserProfile(int id, String pass) {
+		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(getJdbcTemplate())
+		.withProcedureName("sp_updateuser");
+
+		Map<String, Object> inParamMap = new HashMap<String, Object>();
+
+		inParamMap.put("inid", id);
+		// Secure pass
+		inParamMap.put("inpass", HashCode.getHashPassword(pass));
+
+		SqlParameterSource in = new MapSqlParameterSource(inParamMap);
+		
+		
+		String result;
+    	try {    	
+			Map<String, Object> simpleJdbcCallResult = simpleJdbcCall.execute(in);
+			// No exception means insert/update/delete happened
+			result = "Success";
+		} catch (Exception ex) {
+		    result = ex.getMessage();
+		} 					
+						
+		return result;
+	}
+
 }

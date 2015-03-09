@@ -16,4 +16,6 @@ public interface IUserEntityDAO {
 	UserEntity GetUser(String username) throws IOException, SQLException;
 	boolean UserExists(String userName) throws IOException, SQLException;
 	public void DeleteUser(String username) throws IOException, SQLException;
+	public String UpdateUserProfile (int id, String pass) throws IOException, SQLException;	
+	
 }

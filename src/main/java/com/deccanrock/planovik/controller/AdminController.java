@@ -57,10 +57,17 @@ public class AdminController {
 		if (location.getCountryCode().equals("IN"))
 			phonecode = "+91"; // Hard code for now, read off country - phone code table
         map.addAttribute("phonecode", phonecode);	
-		
+        
         UserEntity user = new UserEntity();    
         map.addAttribute("user", user);	
-		return "app/admin/index";
+		
+		User loggeduser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = loggeduser.getUsername();
+		map.addAttribute("username", username);
+		String userphoto = "/resources/images/avatars/" + username + ".jpg";
+		map.addAttribute("userphoto", userphoto);
+		
+        return "app/admin/index";
     
     }	
 	
@@ -171,7 +178,7 @@ public class AdminController {
 			map.addAttribute("error", dbresult);
 			
 		((ClassPathXmlApplicationContext) context).close();
-		return "app/admin/manageusers";
+		return "app/admin/index";
 	}
 		
 }

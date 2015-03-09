@@ -1,69 +1,73 @@
 <%@ include file="header.jsp" %>
+	<%@ include file="../nav.jsp" %>
 
-<!-- /section:basics/navbar.layout -->
-<div class="main-container" id="main-container">
-<script type="text/javascript">
-    try{ace.settings.check('main-container' , 'fixed')}catch(e){}
-</script>
+	<!-- /section:basics/navbar.layout -->
+	<div class="main-container" id="main-container">
+		<script type="text/javascript">
+			try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+		</script>
+		
+		<c:set var="activetab" value="" scope="request"/>
+		<!-- /section:basics/sidebar -->
+		<%@ include file="../sidebar.jsp" %>
 
+		<div class="main-content">
+			<!-- #section:basics/content.breadcrumbs -->
 
-<!-- /section:basics/sidebar -->
-<div class="main-content">
-<!-- #section:basics/content.breadcrumbs -->
-<!-- /section:basics/content.breadcrumbs -->
-<div class="page-content">
+			<!-- /section:basics/content.breadcrumbs -->
+			<div class="page-content">
+				<!-- #section:settings.box -->
 
-<!-- /section:settings.box -->
-<div class="page-content-area">
+				<!-- /section:settings.box -->
+				<div class="page-content-area">
 
+					<!-- PAGE CONTENT BEGINS -->
+					<div class="row">
+					
+					    <div class="col-xs-9" style="margin-left:150px;">
+					
+					       <div class="col-xs-6">
+					            <div class="widget-box" style="border:none;margin-top:20px;">
+					        		<h4 class="block green">Manage user</h4>            
+					                <div class="widget-body">
+					
+										<c:if test="${not empty error}">
+											<div class="error">${error}</div>
+										</c:if>
+										<c:if test="${not empty msg}">
+											<div class="msg">${msg}</div>
+										</c:if>
+					
+					                    <form:form id="manageusers-form" method="post" action="manageusersform" modelAttribute="user" name="user">
+					
+					                        <div class="form-group">
+					                            <div class="clearfix">
+					                                <form:input type="text" path="username" placeholder="Enter username" id="username" class="col-sm-11" />
+					                                <div class="pull-right center spinner-preview" id="spinnerusername" class="col-sm-1"></div>
+					                            </div>
+					                        </div>
+					
+					                        <div class="space-2"></div>
+						                        <form:input type="hidden" id="mode" path="mode" />
+						
+						                        <!-- #section:plugins/fuelux.wizard.buttons -->
+					                        <input type="submit" id="manageuserscreate" path="manageuserscreate" class="btn btn-large btn-primary" value="Create" />	                    
+					                        <input type="submit" id="manageusersedit" path="manageusersedit" class="btn btn-large btn-primary" value="Edit" />
+					                        <input type="submit" id="manageusersdelete" path="manageusersdelete" class="btn btn-large btn-primary" value="Disable" />
+										</form:form>
+					                </div>
+					            </div><!-- /.widget-body -->
+					        </div>
+					            
+					    </div>
+					</div><!-- row -->
+				</div><!-- /.page-content-area -->
+			</div><!-- /.page-content -->
+		</div><!-- /.main-content -->
 
-<!-- PAGE CONTENT BEGINS -->
-<div class="row">
+	<%@ include file="footer.jsp" %>
 
-    <div class="col-xs-9" style="margin-left:150px;">
-
-       <div class="col-xs-6">
-            <div class="widget-box" style="border:none;margin-top:20px;">
-        		<h4 class="block green">Manage user</h4>            
-                <div class="widget-body">
-
-					<c:if test="${not empty error}">
-						<div class="error">${error}</div>
-					</c:if>
-					<c:if test="${not empty msg}">
-						<div class="msg">${msg}</div>
-					</c:if>
-
-                    <form:form id="manageusers-form" method="post" action="manageusersform" modelAttribute="user" name="user">
-
-                        <div class="form-group">
-                            <div class="clearfix">
-                                <form:input type="text" path="username" placeholder="Enter username" id="username" class="col-sm-11" />
-                                <div class="pull-right center spinner-preview" id="spinnerusername" class="col-sm-1"></div>
-                            </div>
-                        </div>
-
-                        <div class="space-2"></div>
-	                        <form:input type="hidden" id="mode" path="mode" />
-	
-	                        <!-- #section:plugins/fuelux.wizard.buttons -->
-                        <input type="submit" id="manageuserscreate" path="manageuserscreate" class="btn btn-large btn-primary" value="Create" />	                    
-                        <input type="submit" id="manageusersedit" path="manageusersedit" class="btn btn-large btn-primary" value="Edit" />
-                        <input type="submit" id="manageusersdelete" path="manageusersdelete" class="btn btn-large btn-primary" value="Disable" />
-					</form:form>
-                </div>
-            </div><!-- /.widget-body -->
-        </div>
-            
-    </div>
-</div><!-- row -->
-</div><!-- /.page-content-area -->
-</div><!-- /.page-content -->
-</div><!-- /.main-content -->
-
-<%@ include file="footer.jsp" %>
-
-</div><!-- /.main-container -->
+	</div><!-- /.main-container -->
 
 <!-- basic scripts -->
 

@@ -32,6 +32,8 @@ public class UserEntity
     @Column(name="pass")    
 	private String pass;
     
+	private String repass; // dummy for retype password verification
+
     @Column(name="phone")    
 	private String phone;
     
@@ -125,6 +127,14 @@ public class UserEntity
 		this.pass = pass;
 	}
 		
+	public String getRepass() {
+		return repass;
+	}
+
+	public void setRepass(String repass) {
+		this.repass = repass;
+	}
+	
 	public String getPhone() {
 		return phone;
 	}

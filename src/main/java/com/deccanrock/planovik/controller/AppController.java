@@ -14,8 +14,10 @@ import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -35,7 +37,9 @@ import com.deccanrock.planovik.entity.TravelActivityEntity;
 import com.deccanrock.planovik.entity.RentalActivityEntity;
 import com.deccanrock.planovik.entity.ItineraryEntity;
 import com.deccanrock.planovik.entity.TasksEntity;
+import com.deccanrock.planovik.entity.UserEntity;
 import com.deccanrock.planovik.location.MaxLocationBO;
+import com.deccanrock.planovik.security.HashCode;
 import com.deccanrock.planovik.service.dao.ActivityEntityDAO;
 import com.deccanrock.planovik.service.dao.ActivityMasterDAO;
 import com.deccanrock.planovik.service.dao.ItineraryEntityDAO;
@@ -82,6 +86,7 @@ public class AppController {
 		map.addAttribute("username", username);
 		String userphoto = "/resources/images/avatars/" + username + ".jpg";
 		map.addAttribute("userphoto", userphoto);
+
 		// map.addAttribute("admintaskList", adminManager.getAllPending());
 	    
 	    return "app/dash";
@@ -89,6 +94,91 @@ public class AppController {
     }
     
       
+    @RequestMapping(value = "/app/userprofile", method = RequestMethod.GET)
+    public String UserProfile(ModelMap map, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		logger.info("User Profile");
+
+		if (!IsUserLoggedIn(map))
+    		return "app/login";
+        
+		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
+		UserEntityDAO UED = (UserEntityDAO)context.getBean("UserEntityDAO");
+		
+		UserEntity user = UED.GetUser(username);
+		
+		map.addAttribute("user", user);
+		map.addAttribute("title", "Planovik User Profile");
+		map.addAttribute("username", username);
+		String userphoto = "/resources/images/avatars/" + username + ".jpg";
+		map.addAttribute("userphoto", userphoto);
+
+		// map.addAttribute("admintaskList", adminManager.getAllPending());
+		((ClassPathXmlApplicationContext) context).close();	
+	    return "app/userprofile";
+    
+    }
+    
+    // For now updates only the password, should be extended to allow any other fields to be updated
+    // by users
+        
+	@RequestMapping(value = "/app/userprofileupdate", method = RequestMethod.POST)    
+	public String UserProfileUpdate(HttpServletRequest request, HttpServletResponse response, ModelMap map, 
+								@RequestParam("id") int id,	@RequestParam("pass") String pass) {
+
+		logger.info("User Profile Update");
+		
+		if (pass.isEmpty())
+			return "";
+		
+		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
+		UserEntityDAO UED = (UserEntityDAO)context.getBean("UserEntityDAO");
+		UserEntity user = UED.GetUser(username);
+		
+		String result;
+
+		if (HashCode.matchPassword(pass, user.getPass())) {
+			map.addAttribute("user", user);
+			map.addAttribute("title", "Planovik User Profile");
+			map.addAttribute("username", username);
+			String userphoto = "/resources/images/avatars/" + username + ".jpg";
+			map.addAttribute("userphoto", userphoto);
+			map.addAttribute("error", "New and current password cannot be same!");	
+			((ClassPathXmlApplicationContext) context).close();
+
+			return "app/userprofile";						
+		}
+		
+		// In future pass in fields and flags to see 
+		result = UED.UpdateUserProfile(id, pass);
+
+		((ClassPathXmlApplicationContext) context).close();
+		if (result.contentEquals("Success")) {
+			
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			SecurityContextLogoutHandler ctxLogOut = new SecurityContextLogoutHandler();
+			ctxLogOut.setInvalidateHttpSession(true);
+			ctxLogOut.logout(request, response, auth);
+
+			map.addAttribute("title", "Planovik - Login Required!");
+			map.addAttribute("header", "User Login");
+			map.addAttribute("msg", "Update successful! Please login with your new password.");	
+			  
+			return "app/login";						
+		}
+		else {
+			map.addAttribute("user", user);
+			map.addAttribute("title", "Planovik User Profile");
+			map.addAttribute("username", username);
+			String userphoto = "/resources/images/avatars/" + username + ".jpg";
+			map.addAttribute("userphoto", userphoto);
+			map.addAttribute("error", "New and current password cannot be same!");	
+			((ClassPathXmlApplicationContext) context).close();
+			return "app/userprofile";						
+		}
+	}	
+	
+    
+    
     // for 403 access denied page
 	@RequestMapping(value = "/app/error403", method = RequestMethod.GET)
 	public String accesssDenied(ModelMap map) {
@@ -111,7 +201,7 @@ public class AppController {
 		logger.info("Dash");    	
 
 		if (!IsUserLoggedIn(map))
-    		return "admin/login";
+    		return "app/login";
 		
 		map.addAttribute("title", "Planovik Home");
 		
@@ -123,7 +213,7 @@ public class AppController {
 		return "app/dash";
     }
      
-    @RequestMapping(value = "/app/tasks", method = RequestMethod.GET)
+    @RequestMapping(value = "/app/itineraries", method = RequestMethod.GET)
     public String Manage(ModelMap map) {
 		logger.info("Tasks");    	
 		
@@ -140,11 +230,11 @@ public class AppController {
 		
 		// Get Task records from database
 		
-		return "app/tasks";
+		return "app/itineraries";
     }
     
     // Hook for jqGrid (Edit's and Delete's)
-    @RequestMapping(value = "/app/tasks/edit", method = RequestMethod.POST, 
+    @RequestMapping(value = "/app/itineraries/edit", method = RequestMethod.POST, 
     		consumes = {"application/x-www-form-urlencoded; charset=utf-8"}, 
     		produces = "application/json")    
     public @ResponseBody String update(@RequestBody String inString) {
@@ -318,7 +408,7 @@ public class AppController {
 
 		map.addAttribute("travelactivity", TAE);
 		map.addAttribute("rentalactivity", RAE);
-		
+
 		((ClassPathXmlApplicationContext) context).close();		
 		return "app/activitymanage";
     	    	    	    	
@@ -381,7 +471,7 @@ public class AppController {
 
     
     @RequestMapping(value = "/app/login", method = RequestMethod.GET)
-    public String login(ModelMap map,
+    public String login(ModelMap map, HttpServletResponse response, HttpServletRequest request,
     		@RequestParam(value = "error", required = false) String error,
     		@RequestParam(value = "logout", required = false) String logout)
     {
@@ -396,6 +486,11 @@ public class AppController {
 		if (logout != null) {
 			map.addAttribute("msg", "You've been logged out successfully.");
 		}
+				
+        HttpSession session =   request.getSession(false);
+        if(session!=null){
+            session.invalidate();//old session invalidated
+        }		
 				
 		return "app/login";
     }
@@ -584,8 +679,10 @@ public class AppController {
 		}
 		    	
     	
-    	if (userObj==null || userObj.toString() == "anonymousUser")
+    	if (userObj==null || userObj.toString() == "anonymousUser") {
+    		username = null;
     		return;
+    	}
     	
             activeUser = (User) userObj;
             username = activeUser.getUsername();    		
