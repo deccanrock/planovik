@@ -49,7 +49,7 @@
 						<div class="widget-box"> 
 								<div class="widget-header">
 									<h4 class="widget-title">Create itinerary, Enter name:</h4>
-									<span style="font-size:small;">(15 characters or less)</span>
+									<span style="font-size:small;">(50 characters or less)</span>
 								</div>																		
 								<div class="widget-body">
 									<div class="widget-main no-padding">
@@ -57,7 +57,7 @@
 										<input type="hidden" name="_csrf" value="token" /> 
 											<fieldset>
 												<div id="remote">
-													<form:input path="name" type="text" name="name" style="width:100%" />
+													<form:input path="name" type="text" maxlength='50' name="name" style="width:100%" />
 												</div>
 												<form:input type="hidden" id="mode" path="mode" />
 												<form:input type="hidden" id="tzoffset" path="tzoffset"/>			

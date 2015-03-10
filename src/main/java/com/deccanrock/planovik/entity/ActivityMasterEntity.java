@@ -55,7 +55,10 @@ public class ActivityMasterEntity
     private String createdby;
     
     private short tzoffset;
+    
+    private String arrdatetimepicker;
 
+    private String depdatetimepicker;
         
     // Getter-Setters
     
@@ -177,6 +180,23 @@ public class ActivityMasterEntity
 		
 	public short getTzoffset() {
 		return tzoffset;
-	}	
+	}
+	
+	public String getArrdatetimepicker() {
+		return this.arrdatetimepicker;		
+	}
+	
+	public void setArrdatetimepicker(String arrdatetimepicker) {
+		this.arrdatetimepicker = arrdatetimepicker;		
+	}
+
+	public String getDepdatetimepicker() {
+		return this.depdatetimepicker;		
+	}
+	
+	public void setStartdatetimepicker(String depdatetimepicker) {
+		this.depdatetimepicker = depdatetimepicker;		
+	}
+
 
 }

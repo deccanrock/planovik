@@ -93,7 +93,7 @@ public class ItineraryEntityDAO extends JdbcDaoSupport implements IItneraryEntit
 
 		inParamMap.put("name", itinerary.getName());		
 		inParamMap.put("tzoffset", itinerary.getTzoffset());
-		inParamMap.put("createdbyemail", itinerary.getCreatedbyemail());
+		inParamMap.put("createdbyusername", itinerary.getCreatedbyusername());
 		inParamMap.put("version", 0);		
 		inParamMap.put("status", Constants.Itinstatus.valueOf("Initial").getValue());
 		inParamMap.put("currency", "INR");
@@ -135,7 +135,7 @@ public class ItineraryEntityDAO extends JdbcDaoSupport implements IItneraryEntit
  		List<ItineraryEntity> dbitinerary = getJdbcTemplate().query(SQL, new ItineraryEntityMapper());
 		// INR should be changed to company locale currency
 		// For INR no conversion or anything extra is required
- 		if (dbitinerary.get(0).getQuotecurrency() == null || dbitinerary.get(0).getQuotecurrency().equals("INR"))
+ 		if (dbitinerary.get(0).getQuotecurrency() == null)
  				dbitinerary.get(0).setQuotecurrencystr(""); // should be locale currency
  		else {  	
  			 SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(getJdbcTemplate())
@@ -150,7 +150,7 @@ public class ItineraryEntityDAO extends JdbcDaoSupport implements IItneraryEntit
  		}
  		
  		// Set Currency Conversion code
- 		if (dbitinerary.get(0).getConvcode() == 1)
+ 		if (dbitinerary.get(0).getConvcode() == 0)
 				dbitinerary.get(0).setConvcodestr("");
  		else {
 	    	 SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(getJdbcTemplate())
@@ -221,7 +221,7 @@ public class ItineraryEntityDAO extends JdbcDaoSupport implements IItneraryEntit
 			inParamMap.put("version", itinerary.getVersion());
 			inParamMap.put("convcode", itinerary.getConvcode());		
 			inParamMap.put("mode", itinerary.getMode());
-			inParamMap.put("lastupdatedbyemail", itinerary.getLastupdatedbyemail());
+			inParamMap.put("lastupdatedbyusername", itinerary.getLastupdatedbyusername());
 			
 			SqlParameterSource in = new MapSqlParameterSource(inParamMap);
 			

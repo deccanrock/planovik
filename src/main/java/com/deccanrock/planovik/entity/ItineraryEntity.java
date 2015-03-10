@@ -63,7 +63,7 @@ public class ItineraryEntity
     @Column(name="createdby")    
 	private  int createdby;
     
-    private String createdbyemail;
+    private String createdbyusername;
     
     @Column(name="datecreated")    
 	private  Date datecreated;
@@ -71,7 +71,7 @@ public class ItineraryEntity
     @Column(name="lastupdatedby")    
 	private  int lastupdatedby;
 
-    private String lastupdatedbyemail;
+    private String lastupdatedbyusername;
 
     @Column(name="dateupdated")    
 	private Date dateupdated;
@@ -90,6 +90,7 @@ public class ItineraryEntity
     private long enddatelong;
     private String startdatetimepicker;
     private String enddatetimepicker;
+    private String postbutton;
     
     // Getter-Setters
 	public int getId() {
@@ -245,20 +246,20 @@ public class ItineraryEntity
 		this.mode = mode;
 	}
 
-	public String getCreatedbyemail() {
-		return this.createdbyemail;
+	public String getCreatedbyusername() {
+		return this.createdbyusername;
 	}
 	
-	public void setCreatedbyemail(String createdbyemail) {
-		this.createdbyemail = createdbyemail;
+	public void setCreatedbyusername(String createdbyusername) {
+		this.createdbyusername = createdbyusername;
 	}
 
-	public String getLastupdatedbyemail() {
-		return this.lastupdatedbyemail;
+	public String getLastupdatedbyusername() {
+		return this.lastupdatedbyusername;
 	}
 	
-	public void setLastupdatedbyemail(String lastupdatedbyemail) {
-		this.lastupdatedbyemail = lastupdatedbyemail;
+	public void setLastupdatedbyemail(String lastupdatedbyusername) {
+		this.lastupdatedbyusername = lastupdatedbyusername;
 	}
 	
 	public int getConvcode() {
@@ -356,5 +357,14 @@ public class ItineraryEntity
 	public void setEnddatetimepicker(String enddatetimepicker) {
 		this.enddatetimepicker = enddatetimepicker;		
 	}
+	
+	public String getPostbutton() {
+		return this.postbutton;		
+	}
+	
+	public void setPostbutton(String postbutton) {
+		this.postbutton = postbutton;		
+	}
+		
 
 }

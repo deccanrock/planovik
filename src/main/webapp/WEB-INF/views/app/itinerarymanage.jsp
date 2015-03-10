@@ -3,99 +3,16 @@
 	
 	<!-- /section:basics/navbar.layout -->
 	<div class="main-container" id="main-container">
-		<script type="text/javascript">
-			try{ace.settings.check('main-container' , 'fixed')}catch(e){}
-		</script>
-		<script src="/resources/js/bootstrap-tag.min.js"></script>
-		<script src="/resources/js/typeahead.bundle.min.js"></script>		
-		<script src="/resources/js/typeahead.bootbox.min.js"></script>	
-		
-		<!-- #section:basics/sidebar -->
-		<div id="sidebar" class="sidebar                  responsive">
-			<script type="text/javascript">
-				try{ace.settings.check('sidebar' , 'fixed')}catch(e){}
-			</script>
-
-			<div class="sidebar-shortcuts" id="sidebar-shortcuts">
-				<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
-					<button class="btn btn-success">
-						<i class="ace-icon fa fa-signal"></i>
-					</button>
-
-					<button class="btn btn-info">
-						<i class="ace-icon fa fa-pencil"></i>
-					</button>
-
-					<!-- #section:basics/sidebar.layout.shortcuts -->
-					<button class="btn btn-warning">
-						<i class="ace-icon fa fa-users"></i>
-					</button>
-
-					<button class="btn btn-danger">
-						<i class="ace-icon fa fa-cogs"></i>
-					</button>
-
-					<!-- /section:basics/sidebar.layout.shortcuts -->
-				</div>
-
-				<div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
-					<span class="btn btn-success"></span>
-
-					<span class="btn btn-info"></span>
-
-					<span class="btn btn-warning"></span>
-
-					<span class="btn btn-danger"></span>
-				</div>
-			</div><!-- /.sidebar-shortcuts -->
-
-			<ul class="nav nav-list">
-				<li class="">
-					<a id="dash" href="/app/dash">
-						<i class="menu-icon fa fa-tachometer"></i>
-						<span class="menu-text"> Dashboard </span>
-					</a>
-
-					<b class="arrow"></b>
-				</li>
-
-
-				<li>
-					<a id="tasks" href="/app/itineraries" class="dropdown-toggle">
-						<i class="menu-icon fa fa-list"></i>
-						<span class="menu-text"> Itineraries </span>
-					</a>
-				</li>
-				
-				<li  class="active">
-					<a id="manage" href="/app/manage" class="dropdown-toggle">
-						<i class="menu-icon fa fa-pencil-square-o"></i>
-						<span class="menu-text"> Manage </span>
-					</a>
-				</li>				
-
-				<li class="">
-					<a id="support" href="/app/support" class="dropdown-toggle">
-						<i class="menu-icon fa fa-desktop"></i>
-						<span class="menu-text"> Support </span>
-					</a>
-				</li>
-
-
-			</ul><!-- /.nav-list -->
-
-			<!-- #section:basics/sidebar.layout.minimize -->
-			<div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
-				<i class="ace-icon fa fa-angle-double-left" data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
-			</div>
-
-			<!-- /section:basics/sidebar.layout.minimize -->
-			<script type="text/javascript">
-				try{ace.settings.check('sidebar' , 'collapsed')}catch(e){}
-			</script>
-		</div>
-
-		<!-- /section:basics/sidebar -->
+	<script type="text/javascript">
+		try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+	</script>
+	<script src="/resources/js/bootstrap-tag.min.js"></script>
+	<script src="/resources/js/typeahead.bundle.min.js"></script>		
+	<script src="/resources/js/bootbox.min.js"></script>	
+	
+	<c:set var="activetab" value='Manage' scope="request"/>
+	<!-- /section:basics/sidebar -->
+	<%@ include file="sidebar.jsp" %>
 
 
 	<!-- /section:basics/sidebar -->
@@ -106,12 +23,36 @@
 	
 	<!-- /section:settings.box -->
 	<div class="page-content-area">
+		<div class="page-header">
+			<h1 style="display:inline-block;margin-right:10px; width:600px;">
+				Itinerary
+				<small>
+					<i class="ace-icon fa fa-angle-double-right"></i>
+					edit &nbsp;&nbsp;&nbsp;
+					<span style="font-size:14px;color:black;">Number: <i>${itinerary.id}</i></span>&nbsp;&nbsp;
+					<span style="font-size:14px;color:black;">Version: <i>${itinerary.version}</i></span>&nbsp;&nbsp;
+				    <span style="font-size:14px;color:black;">Status: <i>
+				    <c:choose>
+				        <c:when test="${itinerary.status == 0}">Initial</c:when>
+				        <c:when test="${itinerary.status == 1}">Draft</c:when>
+				        <c:when test="${itinerary.status == 2}">Final</c:when>
+				        <c:when test="${itinerary.status == 3}">Closed</c:when>
+				    </c:choose>
+				    </i></span>&nbsp;&nbsp;	
+					<span style="font-size:14px;color:black;">Currency: <i>${itinerary.currency}</i></span>						
+					</small>
+			</h1>
+			
+			<input type="hidden" id="csrfToken" value="${_csrf.token}"/>
+			<input type="hidden" id="csrfHeader" value="${_csrf.headerName}"/>
+			
+		</div><!-- /.page-header -->
 	
 	
 	<!-- PAGE CONTENT BEGINS -->
 	<div class="row">
 	
-	    <div class="col-xs-8" style="margin-left:20px;">
+	    <div class="col-xs-9" style="margin-left:20px;">
 	
 		<c:if test="${not empty error}">
 			<div class="error">${error}</div>
@@ -120,26 +61,12 @@
 			<div class="msg">${msg}</div>
 		</c:if>
 	
-		<div class="widget-box">          
-			<div class="widget-header">          		
-				<span style="font-size:14px;">Number: <i>${itinerary.id}</i></span>&nbsp;&nbsp;
-				<span style="font-size:14px;">Version: <i>${itinerary.version}</i></span>&nbsp;&nbsp;
-			    <span style="font-size:14px;">Status: <i>
-			    <c:choose>
-			        <c:when test="${itinerary.status == 0}">Initial</c:when>
-			        <c:when test="${itinerary.status == 1}">Draft</c:when>
-			        <c:when test="${itinerary.status == 2}">Final</c:when>
-			        <c:when test="${itinerary.status == 3}">Closed</c:when>
-			    </c:choose>
-			    </i></span>&nbsp;&nbsp;	
-				<span style="font-size:14px;">Currency: <i>${itinerary.currency}</i></span>				
-	        </div>
-	                            
+		<div class="widget-box">          	                            
 		    <div class="widget-body">
 		    	<div class="widget-main">
 		            <form:form id="manageitinerarysave-form" method="post" action="/app/manage/save" modelAttribute="itinerary" name="itinerary">
 			        <div class="row">
-						<div class='col-md-6'>
+						<div class='col-md-4'>
 		                    <div class="form-group">
 		                        <div class="clearfix">
 		                            <label for="name">Name (less than 50 chars)</label>
@@ -148,19 +75,16 @@
 		                    </div>
 	                    </div>
 	                    
-	                    <div class='col-md-6'>
+	                    <div class='col-md-4'>
 		                    <div class="form-group">
 		                        <div class="clearfix">
-		                            <label for="touroperator">Tour Operator (Direct or referral company)</label>
+		                            <label for="touroperator">Tour Operator</label>
 		                    		<form:input type="text" path="touroperator" id="touroperator" name="touroperator" class="col-sm-12" value="${itinerary.touroperator}" />
 		                        </div>
 		                    </div>
 	                    </div>
-					</div>                    
-	                <div class="space-2"></div>	                    		                    
-	
-			        <div class="row">
-						<div class='col-md-6'>
+
+						<div class='col-md-4'>
 		                    <div class="form-group">
 		                        <div class="clearfix">
 		                        	<label for="grouphead">Group Head</label>
@@ -169,21 +93,55 @@
 		                        </div>
 		                    </div>
 	                    </div>
-	                    
-	                    <div class='col-md-6'>
+
+					</div>                    
+	                <div class="space-6"></div>	                    		                    
+	
+			        <div class="row">
+	                    <div class='col-md-4'>
 		                    <div class="form-group">
 		                        <div class="clearfix">
-		                        	<label for="numtravellers">PAX Count (including group head)</label>
+		                        	<label for="numtravellers">PAX Count (incl group head)</label>
 										<form:input type="text" path="numtravellers" name="numtravellers" id="numtravellers" class="col-sm-12" 
 		                            			value="${itinerary.numtravellers}" />                                		
 		                        </div>
 		                    </div>
 		            	</div>
-					</div>                    
-	                <div class="space-2"></div>	
-		                    	                
+
+					    <div class='col-md-4'>
+					        <div class="form-group">
+		                        <div class="clearfix">
+		                    		<label for="quotecurrency">Client Quote Currency</label>
+		                    		<div id="remote">
+										<input type="text" class="typeahead scrollable" id="quotecurrency" name="quotecurrency" style="width:149px;" />                                		
+						                <form:input type='hidden' id="quotecurrencystr" path="quotecurrencystr" name="quotecurrencystr" 
+						                	value="${itinerary.quotecurrencystr}" />
+									</div>
+								</div>
+					        </div>
+					    </div>	                    					    
+
+					    <div class='col-md-4'>
+					        <div class="form-group">
+			                    <div class="clearfix">
+			                		<label for="convcodes">Currency Conversion Code</label>
+									<a class="btn btn-minier btn-purple" style="float:right; margin-top:2px;" id="btnnewconvcode">New</a>
+					        		<div class="form-group">
+					        			<div id="remote">
+											<input type="text" class="typeahead scrollable" id="convcodes" name="convcodes"  
+					                        		style="width:149px;" />                                		
+											<form:input type="hidden" id="convcodestr" path="convcodestr" name="convcodestr"  
+					                        	value="${itinerary.convcodestr}" />                                		
+										</div>
+									</div>
+								</div>
+					        </div>
+					    </div>
+					</div>
+	                
+	                <div class="space-2"></div>	                     
 			        <div class="row">
-					    <div class='col-md-6'>
+					    <div class='col-md-3'>
 					        <div class="form-group">
 		                        <div class="clearfix">
 	                        		<label for="arrivalcity">Arrival City</label>
@@ -192,8 +150,8 @@
 								</div>
 					        </div>
 					    </div>
-	                    
-					    <div class='col-md-6'>
+
+					    <div class='col-md-3'>
 					        <div class="form-group">
 		                        <div class="clearfix">
 	                        		<label for="depcity">Departure City</label>
@@ -202,11 +160,8 @@
 								</div>
 					        </div>
 					    </div>
-					</div>                    
-	                <div class="space-2"></div>	  
 		                    	                    	                                                            
-			        <div class="row">
-					    <div class='col-md-6'>
+					    <div class='col-md-3'>
 					        <div class="form-group">
 		                        <div class="clearfix">
 		                    		<label for ="startdate">Arrival Date and Time</label>
@@ -223,7 +178,7 @@
 					        </div>
 					    </div>
 	                    
-					    <div class='col-md-6'>
+					    <div class='col-md-3'>
 					        <div class="form-group">
 		                        <div class="clearfix">
 		                    		<label for ="enddate">Departure Date and Time</label>
@@ -239,49 +194,18 @@
 								</div>
 					        </div>
 					    </div>
-					</div>                    
-	                <div class="space-2"></div>	                     
-	
-			        <div class="row">	                                        
-					    <div class='col-md-6'>
-					        <div class="form-group">
-		                        <div class="clearfix">
-		                    		<label for="quotecurrency">Client Quote Currency</label>
-		                    		<div id="remote">
-										<input type="text" class="typeahead scrollable" id="quotecurrency" name="quotecurrency"  
-				                        			style="width:234%;" />                                		
-						                <form:input type='hidden' id="quotecurrencystr" path="quotecurrencystr" name="quotecurrencystr" 
-						                	value="${itinerary.quotecurrencystr}" />
-									</div>
-								</div>
-					        </div>
-					    </div>	                    
-	
-					    <div class='col-md-6'>
-					        <div class="form-group">
-			                    <div class="clearfix">
-			                		<label for="convcodes">Currency Conversion Code</label> <label style="font-size:small;"> (Enter 3 char currency code)</label>
-					        		<div class="form-group">
-					        			<div id="remote">
-											<input type="text" class="typeahead scrollable" id="convcodes" name="convcodes"  
-					                        		style="width:234%;" />                                		
-											<form:input type="hidden" id="convcodestr" path="convcodestr" name="convcodestr"  
-					                        	value="${itinerary.convcodestr}" />                                		
-										</div>
-										<a class="btn btn-minier btn-purple" style="float:right; margin-top:2px;" id="btnnewconvcode">New</a>
-									</div>
-								</div>
-					        </div>
-					    </div>
-					</div>                    
+					</div>
+	                <div class="space-8"></div>	                     
 
 	                    <form:input type="hidden" id="tzoffset" path="tzoffset"/>
 	                    <form:input type="hidden" id="id" path="id" value="${itinerary.id}"/>
 	                    <form:input type="hidden" id="mode" path="mode" value="${itinerary.mode}"/>
 	                    <form:input type="hidden" id="version" path="version" value="${itinerary.version}"/>
 	                    <form:input type="hidden" id="status" path="status" value="${itinerary.status}"/>
+	                    <form:input type="hidden" id="postbutton" path="postbutton" />
 	
-						<button class="btn btn-large btn-primary" style="margin-left:43%;" id="manageitinerarybtn">Save</button>
+						<button class="btn btn-large btn-primary" style="margin-left:33%;" id="manageitinerarybtn">Save</button>
+						<button class="btn btn-large btn-primary" style="margin-left:10%;" id="activitybtn">Activity</button>
                     
 	                    </form:form>
 		        	</div>
@@ -402,6 +326,8 @@
 <script type="text/javascript">
 
 	$(document).ready(function() {
+
+		$("#manageitinerarybtn").attr('disabled','disabled');
 	      			
 		$( "#btnnewconvcode" ).click(function() {
 	        bootbox
@@ -674,31 +600,18 @@
 			 }
 		});
 		
-		$("#manageitinerarysave-form").trackChanges();        
+		$("#manageitinerarysave-form").trackChanges();
+		
+		$("#manageitinerarysave-form :input").change(function() {
+			$("#activitybtn").attr('disabled','disabled');
+			$("#manageitinerarybtn").removeAttr('disabled');
+		})
 
+        $(":submit").live('click', function() {
 
-		function GetDate(datestr) {
-			var arrdate = datestr.split(/\/|\s|:/);
-			var date; 
-		    if (datestr.indexOf("PM") > 0) {
-		    		if (arrdate[3] < 12) {
-						date = new Date(arrdate[2], arrdate[0] -1, arrdate[1], parseInt(arrdate[3]) +12, arrdate[4]);
-					}    
-					else
-						date = new Date(arrdate[2], arrdate[0] -1, arrdate[1], arrdate[3], arrdate[4]);
-			}
-		    else {
-		    	if (arrdate[3] == 12)
-					date = new Date(arrdate[2], arrdate[0] -1, arrdate[1], arrdate[3] -12, arrdate[4]);
-		    	else
-					date = new Date(arrdate[2], arrdate[0] -1, arrdate[1], arrdate[3], arrdate[4]);		    
-		    }
-		    
-		    return date;
-		};         
+		    if (this.id === 'newconvcodeformsubmit')
+		    	return true;
 
-		$("#manageitinerarybtn").click(function() {
-		    		
 		    $('#mode').val($(this).val());
            
             var startdate = GetDate($('#startdatetimepicker').val());
@@ -710,11 +623,21 @@
             $('#quotecurrencystr').val($('#quotecurrency').val());            
             $('#convcodestr').val($('#convcodes').val());                        
             
+		    if (this.id === 'manageitinerarybtn') 
+            	$('#postbutton').val('manageitinerary');
+            	
+            if (this.id === 'activitybtn') {
+            	$('#postbutton').val('activity');
+            	return true;                        
+            }
+            	            
 			if ($("#manageitinerarysave-form").isChanged())
 			   return true;
 			else
-				return false;
-		});
+				return false;									    	
+					
+		});       		       		                
+
 		
 		$(function() {
 		
@@ -736,6 +659,26 @@
 
         });
 	}); 
+
+	function GetDate(datestr) {
+		var arrdate = datestr.split(/\/|\s|:/);
+		var date; 
+	    if (datestr.indexOf("PM") > 0) {
+	    		if (arrdate[3] < 12) {
+					date = new Date(arrdate[2], arrdate[0] -1, arrdate[1], parseInt(arrdate[3]) +12, arrdate[4]);
+				}    
+				else
+					date = new Date(arrdate[2], arrdate[0] -1, arrdate[1], arrdate[3], arrdate[4]);
+		}
+	    else {
+	    	if (arrdate[3] == 12)
+				date = new Date(arrdate[2], arrdate[0] -1, arrdate[1], arrdate[3] -12, arrdate[4]);
+	    	else
+				date = new Date(arrdate[2], arrdate[0] -1, arrdate[1], arrdate[3], arrdate[4]);		    
+	    }
+	    
+	    return date;
+	};        
        
 </script>
 

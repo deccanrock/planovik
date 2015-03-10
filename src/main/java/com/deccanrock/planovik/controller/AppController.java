@@ -307,7 +307,7 @@ public class AppController {
 		ItineraryEntity itinerarydb = null;
 		if ( itinerary.getMode().equals("Create")) {
 			// Create new itinerary and display form
-			itinerary.setCreatedbyemail(username);
+			itinerary.setCreatedbyusername(username);
 			itinerarydb = IED.CreateItinerary(itinerary);
 			map.addAttribute("itinerary", itinerarydb);
 
@@ -387,22 +387,32 @@ public class AppController {
 		}
 		
 		// Record admin who created/edited/modifyed
-		User loggeduser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		itinerary.setLastupdatedbyemail(loggeduser.getUsername());
+		itinerary.setCreatedbyusername(username);
 		
-		ItineraryEntity itinerarydb = null;
+		ActivityMasterEntity ame = null;
+		// Get master activity for the itinerary since information changes on every save
+		if ( itinerary.getPostbutton().contentEquals("manageitinerary")) {
+			ItineraryEntity itinerarydb = null;			
+			itinerarydb = IED.SaveItinerary(itinerary);
+			map.addAttribute("itinerary", itinerarydb);
 		
-		itinerarydb = IED.SaveItinerary(itinerary);
-		map.addAttribute("itinerary", itinerarydb);
+			ame = IED.GetActivityMaster(itinerarydb);
+			ame.setItinnum(itinerarydb.getId());
+			ame.setVersion(itinerarydb.getVersion());
+			ame.setTzoffset(itinerarydb.getTzoffset());
+			ame.setPax(itinerarydb.getNumtravellers());
+		}
+		else if ( itinerary.getPostbutton().contentEquals("activity")) {
+			map.addAttribute("itinerary", itinerary);
 
-		// Get master activity for the itinerary
-		ActivityMasterEntity ame = IED.GetActivityMaster(itinerarydb);
-		ame.setItinnum(itinerarydb.getId());
-		ame.setVersion(itinerarydb.getVersion());
-		ame.setTzoffset(itinerarydb.getTzoffset());
-		ame.setPax(itinerarydb.getNumtravellers());
-		map.addAttribute("activitymaster", ame);
+			ame = IED.GetActivityMaster(itinerary);
+			ame.setItinnum(itinerary.getId());
+			ame.setVersion(itinerary.getVersion());
+			ame.setTzoffset(itinerary.getTzoffset());
+			ame.setPax(itinerary.getNumtravellers());
+		}
 		
+		map.addAttribute("activitymaster", ame);
 		TravelActivityEntity TAE = new TravelActivityEntity();
 		RentalActivityEntity RAE = new RentalActivityEntity();
 
