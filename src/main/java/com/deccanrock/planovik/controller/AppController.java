@@ -278,7 +278,19 @@ public class AppController {
 		return "app/manage";	
     }
     
-	
+
+    // Read session variables and build the page
+    @RequestMapping(value = "/app/manage/travelactivitymanage", method = RequestMethod.GET)    
+    public String travelActivityManage(ModelMap map, HttpSession session) throws IOException {
+
+    	// This is ajax support function for JQGrid
+    	logger.info("Travel Activity Manage");
+
+		TravelActivityEntity TAE = new TravelActivityEntity();
+		map.addAttribute("travelactivity", TAE);
+		return "app/travelactivitymanage";	
+    }
+
     // Hook for jqGrid ('Manage'), Set Session variables and manage tab
     @RequestMapping(value = "/app/manage", method = RequestMethod.POST)    
     public String manageItinerary(@ModelAttribute(value="itinerary") ItineraryEntity itinerary, ModelMap map, HttpServletRequest request) {

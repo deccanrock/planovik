@@ -345,6 +345,7 @@ public class ItineraryEntityDAO extends JdbcDaoSupport implements IItneraryEntit
 			
 		inParamMap.put("initinnum", itinerarydb.getId());
 		inParamMap.put("inversion", itinerarydb.getVersion());
+		inParamMap.put("ingroupnum", 1); // use Group 1 as default
 		
 		SqlParameterSource in = new MapSqlParameterSource(inParamMap);
 
@@ -389,7 +390,10 @@ public class ItineraryEntityDAO extends JdbcDaoSupport implements IItneraryEntit
 	    	else
 	    		ame.setCountactivityother(countActivityRental);
 		}
-
+		
+		// *TO-DO* For now default to Group 1, change to handle multiple groups
+		ame.setGroupnum(1);
+		
 		/*		
 		simpleJdbcCall = new SimpleJdbcCall(dbtemplate)
 		.withProcedureName("sp_getitinactivitycount");
