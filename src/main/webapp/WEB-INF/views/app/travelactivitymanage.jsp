@@ -19,7 +19,7 @@
 	
 				<div class="widget-box" id="travelactivitywidget" style="border-style:1px;border-color:#A7C9A1">          
 					<div class="widget-header">
-						<h5 class="widget-title">Activity Id: ${travelacitivity.activityid}</h5>
+						<h5 class="widget-title" id="headeractivityid">Activity Id: ${travelactivity.activityid}</h5>
 						<div class="widget-toolbar">
 							<a href="#" data-action="fullscreen" class="orange2" style="visibility:hidden;">
 							</a>
@@ -31,8 +31,18 @@
 					</div>									
 				    <div class="widget-body">
 				    	<div class="widget-main">
-							<form:form id="travelactivityform" method="post" action="/app/travelactivity/save" modelAttribute="travelactivity" 
+							<form:form id="travelactivityform" method="post" modelAttribute="travelactivity" 
 							name="travelactivity" class="form-horizontal">
+
+							<c:if test="${not empty error}">
+								<div class="alert alert-danger">
+									<button type="button" class="close" data-dismiss="alert">
+									<i class="ace-icon fa fa-times"></i>
+									</button>
+									<strong><i class="ace-icon fa fa-times"></i></strong>
+									${error}
+								</div>										
+							</c:if>			
 					        
 					        <div class="row">									    																					    
 								<div class='col-xs-6'>	
@@ -49,7 +59,7 @@
 								    <div class="form-group" style="margin-left:5px;">
 								        <div class="clearfix">
 									        <label for="name">Specify a name for activity</label>
-							    				<form:input id="name" class="col-sm-11" path="name" type="text" style="width:93%; "/>												
+							    				<form:input id="name" class="col-sm-11" path="name" type="text" style="width:93%;" maxlength="45" />												
 										</div>
 									</div>							        
 								</div>
@@ -57,21 +67,19 @@
 							</div> <!-- row -->
 			
 							<form:input id="day" type="hidden" path="day" />
-							<form:input id="status" type="hidden" path="status" value="0" />
-							<form:input id="savemode" type="hidden" path="savemode" />
-							<form:input id="itinnum" type="hidden" path="itinnum" value="${activitymaster.itinnum}" />
-							<form:input id="version" type="hidden" path="version" value="${activitymaster.version}" />
-							<form:input id="tzoffset" type="hidden" path="tzoffset" value="${activitymaster.tzoffset}" />
-							<form:input id="activityid" type="hidden" path="activityid" value='0' />
+							<form:input id="itinnum" type="hidden" path="itinnum" />
+							<form:input id="version" type="hidden" path="version" />
+							<form:input id="tzoffset" type="hidden" path="tzoffset" />
+							<form:input id="activityid" type="hidden" path="activityid" />
+							<form:input id="groupnum" type="hidden" path="groupnum" />
 							
-							<div id="formelements" disabled="disabled">
-			
+							<div id="formgroupall">
 						        <div class="row">									    																					    										
 									<div class='col-xs-2'>	
 									    <div class="form-group" style="margin-left:6px;">
 									        <div class="clearfix">
 										        <label for="code">PAX</label>
-								    				<form:input id="pax" class="col-sm-11" path="pax" type="text" style="width:90%" value="${activitymaster.pax}" />												
+								    				<form:input id="pax" class="col-sm-11" path="pax" type="text" style="width:90%" value="${activitymaster.pax}" maxlength="5" />												
 											</div>
 										</div>							        
 									</div>
@@ -80,144 +88,188 @@
 									    <div class="form-group" style="margin-left:6px;">
 									        <div class="clearfix">
 												<label for="vesselno">Flight/Train/Bus Number</label>
-							    				<form:input id="vesselno" class="col-sm-11" style="width:90%" path="vesselno" type="text" />												
+							    				<form:input id="vesselno" class="col-sm-11" style="width:90%" path="vesselno" type="text"  maxlength="15" />												
 											</div>
 										</div>
 									</div>
 									
 									<div class='col-xs-5'>										    																					    
-										<div class="form-group"  style="margin-left:5px;">
+										<div class="form-group"  style="margin-left:-8px;">
 									        <div class="clearfix">
 												<label for="vesselconame">Travel Company</label>
-							    				<form:input id="vesselconame" class="col-sm-11" path="vesselconame" type="text" style="width:93%;"/>												
+							    				<form:input id="vesselconame" class="col-sm-11" path="vesselconame" type="text" style="width:93%;"  maxlength="20" />												
 											</div>
 						    			</div>
 						    		</div>
 								
 								</div>											
-							
-						        <div class="row">
-									<div class='col-xs-6'>										    																					    
-									    <div class="form-group" style="margin-left:6px;">
-									        <div class="clearfix">
-												<label for="bookingno">Booking Details</label>
-							    				<form:input id="bookingno" class="col-sm-11" style="width:90%;" path="bookingno" type="text" />	
-							    			</div>
-							    		</div>
-							    	</div>	
-			
-									<div class='col-xs-6'>										    																					    
-									    <div class="form-group" style="margin-left:5px;">
-									        <div class="clearfix">
-												<label for="bookingclass">Booking Class</label>
-							    				<form:input id="bookingclass" class="col-sm-11" path="bookingclass" type="text" style="width:93%;" />
-							    			</div>
-							    		</div>												
-									</div>
-								</div>		
-			
-						        <div class="row">
-									<div class='col-xs-6'>										    																					    
-										<div class="form-group" style="margin-left:6px;">
-											<div class="clearfix">
-					                    		<label for ="depdatetime">Departure Date and Time</label>
+	
+								<div id="bookinggroup">								
+							        <div class="row">
+										<div class='col-xs-6'>										    																					    
+										    <div class="form-group" style="margin-left:6px;">
+										        <div class="clearfix">
+													<label for="bookingno">Booking Code</label>
+								    				<form:input id="bookingno" class="col-sm-11" style="width:90%;" path="bookingno" type="text"  maxlength="10" />	
+								    			</div>
+								    		</div>
+								    	</div>	
+				
+										<div class='col-xs-6'>										    																					    
+										    <div class="form-group" style="margin-left:5px;">
+										        <div class="clearfix">
+													<label for="bookingclass">Booking Class</label>
+								    				<form:input id="bookingclass" class="col-sm-11" path="bookingclass" type="text" style="width:93%;"  maxlength="10" />
+								    			</div>
+								    		</div>												
+										</div>
+									</div>		
+				
+							        <div class="row">
+										<div class='col-xs-6'>										    																					    
+											<div class="form-group" style="margin-left:6px;">
+												<div class="clearfix">
+						                    		<label for ="depdatetime">Departure Date and Time</label>
+										            <div class='input-group'>
+														<span class="input-group-addon">
+															<i class="fa fa-calendar bigger-110"></i>
+														</span>					            
+										                <input type='text' id="depdatetimepicker" name="depdatetimepicker" class="form-control col-sm-11"
+										                	value="${travelactivity.depdatetime}" style="z-index:0;width:90%;" />
+										                <form:input type='hidden' id="depdatetimestr" path="depdatetimestr" name="depdatetimestr" value="${travelactivity.depdatetimestr}" />
+										                <form:input type='hidden' id="depdatetimelong" name="depdatetimelong" path="depdatetimelong" />
+										       		</div>
+										 		</div>
+								        	</div>
+										</div>
+				
+										<div class='col-xs-6'>										    																					    
+									        <div class="form-group" style="margin-left:5px;">
+					                    		<label for ="arrdatetime">Arrival Date and Time</label>
 									            <div class='input-group'>
 													<span class="input-group-addon">
 														<i class="fa fa-calendar bigger-110"></i>
 													</span>					            
-									                <input type='text' id="depdatetimepicker" name="depdatetimepicker" class="form-control col-sm-11"
-									                	value="${travelactivity.depdatetime}" style="z-index:0;width:90%;" />
-									                <form:input type='hidden' id="depdatetimestr" path="depdatetimestr" name="depdatetimestr" value="${travelactivity.depdatetimestr}" />
-									                <form:input type='hidden' id="depdatetimelong" name="depdatetimelong" path="depdatetimelong" />
-									       		</div>
-									 		</div>
-							        	</div>
+									                <input type='text' id="arrdatetimepicker" name="arrdatetimepicker" class="form-control col-sm-11"
+									                	value="${travelactivity.arrdatetime}" style="z-index:0;width:93%;" />
+									                <form:input type='hidden' id="arrdatetimestr" path="arrdatetimestr" name="arrdatetimestr" value="${travelactivity.arrdatetimestr}" />
+									                <form:input type='hidden' id="arrdatetimelong" name="arrdatetimelong" path="arrdatetimelong" />
+									            </div>
+									        </div>
+										</div>
+									</div>									        
+									
+							        <div class="row">
+										<div class='col-xs-6'>										    																					    
+											<div class="form-group" style="margin-left:6px;">
+												<div class="clearfix">
+					                        		<label for="depstation">Departure Station</label>
+									                <form:input type='text' path="depstation" id="depstation" style="width:90%;" name="depstation" class="col-sm-11" 
+									                	value="${travelactivity.depstation}"  maxlength="15" />
+												</div>
+											</div>
+										</div>
+										<div class='col-xs-6'>										    																					    									        
+									        <div class="form-group" style="margin-left:5px;">
+						                        <div class="clearfix">
+					                        		<label for="arrstation">Arrival Station</label>
+									                <form:input type='text' path="arrstation" id="arrstation" name="arrstation" class="col-sm-11" 
+									                	value="${travelactivity.arrstation}" style="width:93%;"  maxlength="15" />
+												</div>
+									        </div>
+							        	</div>	
+							        </div>    
+				
+							        <div class="row">
+										<div class='col-xs-6'>										    																					    
+											<div class="form-group" style="margin-left:6px;">
+												<div class="clearfix">
+													<label for="cost">Cost</label>
+								    				<form:input id="cost" path="cost" style="width:90%;" type="text" class="col-sm-11"  maxlength="10" />												
+												</div>
+											</div>
+										</div>
+												
+										<div class='col-xs-6'>										    																					    
+											<div class="form-group" style="margin-left:6px;">
+												<div class="clearfix">
+													<label for="costmarkup">Cost Markup (as %)</label>
+								    				<form:input id="costmarkup" path="costmarkup" type="text" class="col-sm-11" style="width:93%;"  maxlength="3"/>												
+												</div>
+											</div>
+										</div>
 									</div>
-			
-									<div class='col-xs-6'>										    																					    
-								        <div class="form-group" style="margin-left:5px;">
-				                    		<label for ="arrdatetime">Arrival Date and Time</label>
-								            <div class='input-group'>
-												<span class="input-group-addon">
-													<i class="fa fa-calendar bigger-110"></i>
-												</span>					            
-								                <input type='text' id="arrdatetimepicker" name="arrdatetimepicker" class="form-control col-sm-11"
-								                	value="${travelactivity.arrdatetime}" style="z-index:0;width:93%;" />
-								                <form:input type='hidden' id="arrdatetimestr" path="arrdatetimestr" name="arrdatetimestr" value="${travelactivity.arrdatetimestr}" />
-								                <form:input type='hidden' id="arrdatetimelong" name="arrdatetimelong" path="arrdatetimelong" />
-								            </div>
-								        </div>
-									</div>
-								</div>									        
+								</div> <!-- bookinggroup -->
+																
+						        <div id="asstreqgroup">		
+
+							        <div class="row">									    																					    										
 								
-						        <div class="row">
-									<div class='col-xs-6'>										    																					    
-										<div class="form-group" style="margin-left:6px;">
-											<div class="clearfix">
-				                        		<label for="depstation">Departure Station</label>
-								                <form:input type='text' path="depstation" id="depstation" style="width:90%;" name="depstation" class="col-sm-11" 
-								                	value="${travelactivity.depstation}" />
+										<div class='col-xs-6'>	
+										    <div class="form-group" style="margin-left:6px;">
+										        <div class="clearfix">
+											        <label for="code">From Location</label>
+									    				<form:input id="pikupdroplocfrom" class="col-sm-11" path="pikupdroplocfrom" type="text" style="width:90%" value="${activitymaster.pikupdroplocfrom}" maxlength="30" />												
+												</div>
+											</div>							        
+										</div>
+	
+										<div class='col-xs-6'>	
+										    <div class="form-group" style="margin-left:6px;">
+										        <div class="clearfix">
+											        <label for="code">To Location</label>
+									    				<form:input id="pikupdroplocto" class="col-sm-11" path="pikupdroplocto" type="text" style="width:93%" value="${activitymaster.pikupdroplocto}" maxlength="30" />												
+												</div>
+											</div>							        
+										</div>
+									
+									</div>											
+	
+							        <div class="row">	
+										<div class='col-xs-6'>										    																					    
+											<div class="form-group" style="margin-left:6px;">
+												<div class="clearfix">
+						                    		<label for ="pickdroptimepicker">Date and Time</label>
+										            <div class='input-group'>
+														<span class="input-group-addon">
+															<i class="fa fa-calendar bigger-110"></i>
+														</span>					            
+										                <input type='text' id="pikupdropdatetimepicker" name="pikupdroptimepicker" class="form-control col-sm-11"
+										                	value="${travelactivity.pikupdropdatetime}" style="z-index:0;width:90%;" />
+										                <form:input type='hidden' id="pikupdropdatetimestr" path="pikupdropdatetimestr" name="pikupdropdatetimestr" value="${travelactivity.pikupdropdatetimestr}" />
+										                <form:input type='hidden' id="pikupdropdatetimelong" name="pikupdropdatetimelong" path="pikupdropdatetimelong" />
+										       		</div>
+										 		</div>
+								        	</div>
+										</div>
+	
+	
+										<div class='col-xs-3'>										    																					    
+											<div class="form-group" style="margin-left:6px;">
+												<div class="clearfix">
+													<label for="asstcost">Assistance Fee</label>
+								    				<form:input id="asstcost" path="asstcost" style="width:120%;" class="col-sm-11" type="text"  maxlength="10" />												
+												</div>
+											</div>
+										</div>
+				
+										<div class='col-xs-3'>										    																					    
+											<div class="form-group" style="margin-left:27px;">
+												<div class="clearfix">
+													<label for="asstcostmarkup">Markup</label>
+								    				<form:input id="asstcostmarkup" path="asstcostmarkup" style="width:82%;" type="text"  maxlength="3" />												
+												</div>
 											</div>
 										</div>
 									</div>
-									<div class='col-xs-6'>										    																					    									        
-								        <div class="form-group" style="margin-left:5px;">
-					                        <div class="clearfix">
-				                        		<label for="arrstation">Arrival Station</label>
-								                <form:input type='text' path="arrstation" id="arrstation" name="arrstation" class="col-sm-11" 
-								                	value="${travelactivity.arrstation}" style="width:93%;" />
-											</div>
-								        </div>
-						        	</div>	
-						        </div>
-						        
-			
-						        <div class="row">
-									<div class='col-xs-6'>										    																					    
-										<div class="form-group" style="margin-left:6px;">
-											<div class="clearfix">
-												<label for="cost">Cost</label>
-							    				<form:input id="cost" path="cost" style="width:90%;" type="text" class="col-sm-11" />												
-											</div>
-										</div>
-									</div>
-											
-									<div class='col-xs-6'>										    																					    
-										<div class="form-group" style="margin-left:6px;">
-											<div class="clearfix">
-												<label for="costmarkup">Cost Markup (as %)</label>
-							    				<form:input id="costmarkup" path="costmarkup" type="text" class="col-sm-11" style="width:93%;" />												
-											</div>
-										</div>
-									</div>
-								</div>
-																	
-						        <div class="row" id="asstreqgroup">		
-									<div class='col-xs-6'>										    																					    
-										<div class="form-group" style="margin-left:6px;">
-											<div class="clearfix">
-												<label for="asstcost">Assistance Fee</label>
-							    				<form:input id="asstcost" path="asstcost" style="width:90%;" class="col-sm-11" type="text" />												
-											</div>
-										</div>
-									</div>
-			
-									<div class='col-xs-6'>										    																					    
-										<div class="form-group" style="margin-left:5px;">
-											<div class="clearfix">
-												<label for="asstcostmarkup">Fee Markup</label>
-							    				<form:input id="asstcostmarkup" path="asstcostmarkup" class="col-sm-11" style="width:93%;" type="text" />												
-											</div>
-										</div>
-									</div>
-								</div>
-							
-						        <div class="row" id="pikupgroup">	
+								</div> <!-- asstreqgroup -->
+									
+						        <div class="row" id="pikupdropgroup">	
 									<div class='col-xs-6'>										    																					    
 										<div class="form-group" style="margin-left:6px;">														
 											<div class="clearfix">
-												<label for="pikupveh"> Pickup - Specify Vehicle</label>
-							    				<form:input id="pikupveh" path="pikupveh" style="width:90%;" type="text" class="col-sm-11" />												
+												<label for="vehdetails">Vehicle Details</label>
+							    				<form:input id="vehdetails" path="vehdetails" style="width:90%;" type="text" class="col-sm-11"  maxlength="45" />												
 											</div>
 										</div>
 									</div>
@@ -225,25 +277,24 @@
 									<div class='col-xs-3'>										    																					    
 										<div class="form-group" style="margin-left:6px;">
 											<div class="clearfix">
-												<label for="pikupcost">Pickup Fee</label>
-							    				<form:input id="pikupcost" path="pikupcost" type="text" style="width:120%;" />												
+												<label for="pikupdropcost">Vehicle Fee</label>
+							    				<form:input id="pikupdropcost" path="pikupdropcost" type="text" style="width:120%;"  maxlength="10" />												
 											</div>
 										</div>
 									</div>
 			
 									<div class='col-xs-3'>										    																					    
-										<div class="form-group" style="margin-left:28px;">
+										<div class="form-group" style="margin-left:27px;">
 											<div class="clearfix">
-												<label for="pikupcostmarkup">Fee Markup</label>
-							    				<form:input id="pikupcostmarkup" path="pikupcostmarkup" type="text" style="width:82%;"/>												
+												<label for="pikupdropcostmarkup">Markup</label>
+							    				<form:input id="pikupdropcostmarkup" path="pikupdropcostmarkup" type="text" style="width:82%;"  maxlength="3" />												
 											</div>
 										</div>
 									</div>
-								</div>
-											
-			
+								</div> <!-- pikupdropgroup -->
+												
 						        <div class="row">									    																					    
-									<div class='col-xs-10'>	
+									<div class='col-xs-11' style="width:96%;">	
 									    <div class="form-group" style="margin-left:6px;">
 									        <div class="clearfix">
 												<label for="comments">Comments</label>
@@ -252,14 +303,14 @@
 										</div>
 									</div>
 								</div>
-			
+					
 						        <div class="row">									    																					    
-									<div class='col-xs-10' >	
-								    	<button type="submit" style="float:right;" id="travelactivitysave" class="btn btn-purple" >Save</button>
+									<div class='col-xs-7' >	
+								    	<button type="submit" style="margin-left=20px;" id="travelactivitysave" class="btn btn-purple" > Save </button>
 									</div>
 								</div>
-							</div> <!-- formelements -->			
-							</form:form>
+								</form:form>
+							</div> <!-- formgroupall -->
 						</div> <!-- widget body -->	
 					</div> <!-- widget main -->	
 				</div> <!-- widget box -->
@@ -323,67 +374,60 @@
 		$('#travelcodes').change(function() {
 
 		    if ( $(this).val() === '' ) {
-		        $('#formelements').find('*').prop('disabled', true);		    
-				return;		    
+				$('#formgroupall').hide();
+				return;
+			}
+						
+			$('#formgroupall').show();
+						
+		    if ( $(this).val() === 'T_BOOK') {
+				$('#bookinggroup').show();
+				$('#asstreqgroup').hide();
+				$('#pikupdropgroup').hide();
+
 		    }
 
-		    if ( $(this).val() != '' ) {
-		        $('#formelements').find('*').prop('disabled', false);		    
-		    }
-
-		    if ( $(this).val() === 'T_PICKUP' ) {
+		    if ( $(this).val() === 'T_PIKUPDRP') {
 		        // Enable airport pickup and assistance required options
-		        $('#asstreqgroup').find('*').prop('disabled', false);
-		        $('#pikupgroup').find('*').prop('disabled', false);		        
+				$('#bookinggroup').hide();
+				$('#asstreqgroup').show();
+				$('#pikupdropgroup').show();
 		    }
 		    
 		});		
-		
-		$("button").click(function() {
+						
+		$(":submit").live('click', function() {
+            var startdate = GetDate($('#depdatetimepicker').val());
+            var enddate = GetDate($('#arrdatetimepicker').val());
+            
+            $('#depdatelong').val(startdate.getTime());
+            $('#arrdatelong').val(enddate.getTime());
+            
 
-	    	if (this.id == 'travelactivitysavedraft')
-	    		return;
-
-	    	if (this.id == 'travelactivitysavefinal')
-	    		return;
-	    		
-			// Check if day was selected
-			if ($('#dayselect').val() == "")
-				return false;
-				
+			var str = $("#travelactivityform").serialize();
 			
-		    if ( $('#travelcodes').val() === '' )
-		        $('#formelements').find('*').prop('disabled', true);		    
-
-		});
-		
-		$("#travelactivitysavedraft").click(function() {
-		    		
-            var startdate = GetDate($('#depdatetimepicker').val());
-            var enddate = GetDate($('#arrdatetimepicker').val());
+			var request = $.ajax({
+			    type:"post",
+			    data: str,
+			    url:"/app/travelactivity/save",
+			    dataType: "json"
+			});
+			request.done(function( msg ) {
+		   		console.log(msg);
+		   		console.log(msg.name);
+			});			
+		    request.fail(function( jqXHR, textStatus ) {
+			});
+			
+			return false;		
             
-            $('#depdatelong').val(startdate.getTime());
-            $('#arrdatelong').val(enddate.getTime());
-            
-			$('#day').val($('#dayselect').val());            
-			$('#savemode').val('Save Draft');
-		});
-				
-		$("#travelactivitysavefinal").click(function() {
-		    		
-            var startdate = GetDate($('#depdatetimepicker').val());
-            var enddate = GetDate($('#arrdatetimepicker').val());
-            
-            $('#depdatelong').val(startdate.getTime());
-            $('#arrdatelong').val(enddate.getTime());
-            
-			$('#day').val($('#dayselect').val());            
-			$('#savemode').val('Save Final');                         
 		});
 
 		$(function() {
 		
 		    loadActivityCodes('travel');	    	
+			$('#formgroupall').hide();
+
 		
             $("#depstation").suggest({
                 key: "AIzaSyDG_gsufq_KCjQYGf4SeZ44znuHsA61_10",
@@ -470,6 +514,13 @@
 													
 		jQuery(function($) {
 		
+			$('#day').val($('#dayselect', window.parent.document).val());
+			$('#itinnum').val($('#itinnum', window.parent.document).val());
+			$('#version').val($('#version', window.parent.document).val());
+			$('#activityid').val($('#activityid', window.parent.document).val());
+			$('#groupnum').val($('#groupnum', window.parent.document).val());
+			$('#tzoffset').val($('#tzoffset', window.parent.document).val());
+						
 			$.fn.extend({
 				 trackChanges: function() {
 				   $(":input",this).change(function() {
@@ -492,6 +543,10 @@
 				$('#arrdatetimepicker').datetimepicker().next().on(ace.click_event, function(){
 					$(this).prev().focus();
 				});
+				
+				$('#pikupdropdatetimepicker').datetimepicker().next().on(ace.click_event, function(){
+					$(this).prev().focus();
+				});				
 			});
 			
 		})

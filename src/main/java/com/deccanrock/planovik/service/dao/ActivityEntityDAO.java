@@ -80,14 +80,8 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntity
 		Map<String, Object> inParamMap = new HashMap<String, Object>();
 
 		inParamMap.put("inday", travelactivity.getDay().intValue());				
-		inParamMap.put("savemode", travelactivity.getSavemode());				
 		inParamMap.put("initinnum", travelactivity.getItinnum());		
 		inParamMap.put("inname", travelactivity.getName());
-		
-		if (travelactivity.getSavemode().equals("Save Final"))
-			inParamMap.put("instatus", Constants.Itinactivitystatus.valueOf("Final").getValue());		
-		else // assume draft which should be the case
-			inParamMap.put("instatus", travelactivity.getStatus().intValue());
 		
 		inParamMap.put("incode", travelactivity.getCode());		
 		inParamMap.put("inversion", travelactivity.getVersion());		
@@ -99,7 +93,13 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntity
 			inParamMap.put("inpax", 0);
 		else
 			inParamMap.put("inpax", travelactivity.getPax().intValue());
-
+		
+		if (travelactivity.getMode() == null)
+			inParamMap.put("inmode", 0);
+		else
+			inParamMap.put("inmode", Integer.toString(travelactivity.getMode()));
+		
+		
 		if (travelactivity.getGroupnum() == null)
 			inParamMap.put("ingroupnum", 1); // default			
 		else
@@ -142,17 +142,25 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntity
 		else
 			inParamMap.put("inasstcostmarkup", travelactivity.getAsstcostmarkup().intValue());
 		
-		inParamMap.put("inpikupveh", travelactivity.getPikupveh());
+		inParamMap.put("inpikupdroplocfrom", travelactivity.getPikupdroplocfrom());
+		
+		inParamMap.put("inpikupdroplocto", travelactivity.getPikupdroplocto());
 
-		if (travelactivity.getPikupcost() == null)					
-			inParamMap.put("inpikupcost", 0.0);
+		inParamMap.put("invehdetails", travelactivity.getVehdetails());
+
+		long utcpdtime = TimeFormatter.LocalToUTC(travelactivity.getPikupdropdatetimelong(), travelactivity.getTzoffset());
+		java.sql.Timestamp pdtimestamp = new java.sql.Timestamp(utcpdtime);									
+		inParamMap.put("inpikupdropdatetime", pdtimestamp);
+		
+		if (travelactivity.getPikupdropcost() == null)					
+			inParamMap.put("inpikupdropcost", 0.0);
 		else
-			inParamMap.put("inpikupcost", travelactivity.getPikupcost().floatValue());
+			inParamMap.put("inpikupdropcost", travelactivity.getPikupdropcost().floatValue());
 			
-		if (travelactivity.getPikupcostmarkup() == null)							
-			inParamMap.put("inpikupcostmarkup", 0);
+		if (travelactivity.getPikupdropcostmarkup() == null)							
+			inParamMap.put("inpikupdropcostmarkup", 0);
 		else
-			inParamMap.put("inpikupcostmarkup", travelactivity.getPikupcostmarkup().intValue());
+			inParamMap.put("inpikupdropcostmarkup", travelactivity.getPikupdropcostmarkup().intValue());
 			
 		inParamMap.put("incomments", travelactivity.getComments());
 		

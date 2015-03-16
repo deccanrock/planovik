@@ -25,7 +25,7 @@ public class ActivityMasterEntity
 	@Column(name="pax")    
 	private int pax;
 	
-	@Column(name="groupnum")    
+	@Column(name="groupnnum")    
 	private int groupnum;
 	
 	private int numtourdays;

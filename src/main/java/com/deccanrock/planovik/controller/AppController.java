@@ -45,8 +45,7 @@ import com.deccanrock.planovik.service.dao.ActivityMasterDAO;
 import com.deccanrock.planovik.service.dao.ItineraryEntityDAO;
 import com.deccanrock.planovik.service.dao.UserEntityDAO;
 import com.deccanrock.planovik.service.utils.UriHandler;
-import com.deccanrock.planovik.service.utils.FileHandler;;
-
+import com.deccanrock.planovik.service.utils.FileHandler;
 
 /**
  * Handles all requests for Organization general Users and functions
@@ -281,12 +280,13 @@ public class AppController {
 
     // Read session variables and build the page
     @RequestMapping(value = "/app/manage/travelactivitymanage", method = RequestMethod.GET)    
-    public String travelActivityManage(ModelMap map, HttpSession session) throws IOException {
+    public String travelActivityManage(ModelMap map, HttpSession session, @RequestParam int activityid) throws IOException {
 
     	// This is ajax support function for JQGrid
     	logger.info("Travel Activity Manage");
 
 		TravelActivityEntity TAE = new TravelActivityEntity();
+		TAE.setActivityid(activityid);
 		map.addAttribute("travelactivity", TAE);
 		return "app/travelactivitymanage";	
     }
@@ -410,6 +410,7 @@ public class AppController {
 		
 			ame = IED.GetActivityMaster(itinerarydb);
 			ame.setItinnum(itinerarydb.getId());
+			ame.setGroupnum(1); // set to 1 for testing
 			ame.setVersion(itinerarydb.getVersion());
 			ame.setTzoffset(itinerarydb.getTzoffset());
 			ame.setPax(itinerarydb.getNumtravellers());
@@ -419,6 +420,7 @@ public class AppController {
 
 			ame = IED.GetActivityMaster(itinerary);
 			ame.setItinnum(itinerary.getId());
+			ame.setGroupnum(1); // set to 1 for testing
 			ame.setVersion(itinerary.getVersion());
 			ame.setTzoffset(itinerary.getTzoffset());
 			ame.setPax(itinerary.getNumtravellers());
@@ -426,6 +428,12 @@ public class AppController {
 		
 		map.addAttribute("activitymaster", ame);
 		TravelActivityEntity TAE = new TravelActivityEntity();
+		TAE.setActivityid(0); // default to 0 should be changed at client side
+		TAE.setItinnum(ame.getItinnum());
+		TAE.setVersion(ame.getVersion());
+		TAE.setTzoffset(ame.getTzoffset());
+		TAE.setPax(ame.getPax());
+
 		RentalActivityEntity RAE = new RentalActivityEntity();
 
 		map.addAttribute("travelactivity", TAE);
@@ -438,31 +446,113 @@ public class AppController {
     
     
     // Hook for jqGrid ('Manage'), Set Session variables and manage tab
-    @RequestMapping(value = "/app/travelactivity/save", method = RequestMethod.POST)    
-    public String saveTravelActivity(@ModelAttribute(value="travelactivity") TravelActivityEntity travelactivity, ModelMap map, HttpServletRequest request) {
-   
+    @RequestMapping(value = "/app/travelactivity/save", method = RequestMethod.POST, produces = "application/json")    
+    public @ResponseBody String saveTravelActivity(HttpServletRequest request, HttpServletResponse response) 
+			throws IOException {
+    	
     	// This is ajax support function for JQGrid
     	logger.info("Itinerary Travel Activity Save - POST");
-		if (!IsUserLoggedIn(map))
-    		return "app/login";
-    	
-		request.setAttribute("title", "Planovik Save Travel Activity");
-		request.setAttribute("header", "Save Travel Activity");
 			
 		// Save model to database
 		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
 		ActivityEntityDAO AED = (ActivityEntityDAO)context.getBean("ActivityEntityDAO");
 		
 		// Record admin who created/edited/modifyed
-		User loggeduser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		travelactivity.setLastupdatedby(loggeduser.getUsername());
+		// User loggeduser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		TravelActivityEntity travelactivity = new TravelActivityEntity();
+		travelactivity.setLastupdatedby(username);
+		// Get all parameters from header
+		// hidden fields
+		travelactivity.setActivityid(Integer.parseInt(request.getParameter("activityid")));
+		travelactivity.setDay(Integer.parseInt(request.getParameter("day")));
+		travelactivity.setVersion(Integer.parseInt(request.getParameter("version")));
+		travelactivity.setTzoffset((short)Integer.parseInt(request.getParameter("tzoffset")));
+		travelactivity.setItinnum(Integer.parseInt(request.getParameter("itinnum")));
+		travelactivity.setGroupnum(Integer.parseInt(request.getParameter("groupnum")));
+		
+		// User filled data
+		travelactivity.setCode(request.getParameter("code"));
+		travelactivity.setName(request.getParameter("name"));		
+		travelactivity.setVesselno(request.getParameter("vesselno"));
+		travelactivity.setVesselconame(request.getParameter("vesselconame"));
+		
+		if (request.getParameter("pax").contentEquals(""))
+			travelactivity.setPax(0);			
+		else
+			travelactivity.setPax(Integer.parseInt(request.getParameter("pax")));
+
+		travelactivity.setBookingno(request.getParameter("bookingno"));
+		travelactivity.setBookingclass(request.getParameter("bookingclass"));
+		
+		if (request.getParameter("depdatetimelong").contentEquals(""))
+			travelactivity.setDepdatetimelong(0);			
+		else
+			travelactivity.setDepdatetimelong((long)Integer.parseInt(request.getParameter("depdatetimelong")));
+		
+		if (request.getParameter("arrdatetimelong").contentEquals(""))
+			travelactivity.setArrdatetimelong(0);			
+		else
+			travelactivity.setArrdatetimelong((long)Integer.parseInt(request.getParameter("arrdatetimelong")));
+
+		travelactivity.setDepstation(request.getParameter("depstation"));
+		travelactivity.setArrstation(request.getParameter("arrstation"));
+
+		if (request.getParameter("cost").contentEquals(""))
+			travelactivity.setCost((float) 0);		
+		else
+			travelactivity.setCost(Float.parseFloat(request.getParameter("cost")));
+
+		if (request.getParameter("costmarkup").contentEquals(""))
+			travelactivity.setCostmarkup(0);			
+		else
+			travelactivity.setCostmarkup(Integer.parseInt(request.getParameter("costmarkup")));
+
+
+		travelactivity.setPikupdroplocfrom(request.getParameter("pikupdroplocfrom"));
+		travelactivity.setPikupdroplocto(request.getParameter("pikupdroplocto"));
+
+		if (request.getParameter("pikupdropdatetimelong").contentEquals(""))
+			travelactivity.setPikupdropdatetimelong(0);			
+		else
+			travelactivity.setPikupdropdatetimelong((long)Integer.parseInt(request.getParameter("pikupdropdatetimelong")));
+
+		if (request.getParameter("asstcost").contentEquals(""))
+			travelactivity.setAsstcost((float)0);			
+		else
+			travelactivity.setAsstcost(Float.parseFloat(request.getParameter("asstcost")));
+
+		if (request.getParameter("asstcostmarkup").contentEquals(""))
+			travelactivity.setAsstcostmarkup(0);			
+		else
+			travelactivity.setAsstcostmarkup(Integer.parseInt(request.getParameter("asstcostmarkup")));
+		
+		travelactivity.setVehdetails(request.getParameter("vehdetails"));
+
+		if (request.getParameter("pikupdropcost").contentEquals(""))
+			travelactivity.setPikupdropcost((float)0);			
+		else
+			travelactivity.setPikupdropcost(Float.parseFloat(request.getParameter("pikupdropcost")));
 				
+		if (request.getParameter("pikupdropcostmarkup").contentEquals(""))
+			travelactivity.setPikupdropcostmarkup(0);			
+		else
+			travelactivity.setPikupdropcostmarkup(Integer.parseInt(request.getParameter("pikupdropcostmarkup")));
+		
+		travelactivity.setComments(request.getParameter("comments"));
+		
+		
 		TravelActivityEntity taedb = AED.saveTravelActivity(travelactivity);
 		
+		// Send information for succcess as json format
+		// GsonBuilder builder = new GsonBuilder();
+        // Gson gson = builder.create();
 		((ClassPathXmlApplicationContext) context).close();		
-
-		return "app/activitymanage";
-    	    	    	    	
+		response.setContentType("application/json");
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonOut = mapper.writeValueAsString(taedb);		
+		
+		// String jsonOutput = gson.toJson(taedb);
+		return jsonOut;
     }
 
     

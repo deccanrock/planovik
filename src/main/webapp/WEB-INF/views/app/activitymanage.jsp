@@ -58,9 +58,9 @@
 
 					<div class="row">
     					<div class="col-xs-12" style="margin-top:-170px;">
-
+    					
+							<form:form id="activitymanageform" method="post" action="" modelAttribute="travelactivity">
 							<div class="col-sm-6">
-
 								<div class="col-sm-2" style="margin-top:15px;margin-left:5px;">
 									<button id="hotel" class="btn btn-white btn-pink btn-round" style="width:110%;line-height:10px;">Add Hotel</button>																	
 									<span id="arrowhotel" class="ace-icon glyphicon glyphicon-play arrowdown" 
@@ -86,11 +86,16 @@
 									<span id="arrowother" class="ace-icon glyphicon glyphicon-play arrowdown" 
 											style="margin-left:55px;margin-top:-3px;color:#8FBCD9;display:none;"></span>
 								</div>			
-								
-                 		                    
+								<form:input id="itinnum" type="hidden" path="itinnum" value="${activitymaster.itinnum}" />
+								<form:input id="version" type="hidden" path="version" value="${activitymaster.version}" />
+								<form:input id="activityid" type="hidden" path="activityid" value="${travelactivity.activityid}" />
+								<form:input id="groupnum" type="hidden" path="groupnum" value="${activitymaster.groupnum}" />
+								<form:input id="tzoffset" type="hidden" path="tzoffset" value="${activitymaster.tzoffset}" />								
+                 		        </form:form>            
 								
 								<iframe id="traveliFrame" data-src="travelactivitymanage" frameborder="0" scrolling="no" seamless src="about:blank" height="900" width="600"></iframe>
-`
+
+
 							</div><!-- col-sm-6 -->
 
 							<div class="col-sm-6" style="margin-top:-10px;">    					
@@ -249,7 +254,8 @@
 				return false;
 				
 			var iframe = $("#traveliFrame");
-    		iframe.attr("src", iframe.data("src")); 				
+						
+    		iframe.attr("src", iframe.data("src") + "?activityid=" + $('#activityid').val()); 				
 			$("#traveliFrame").show();
 			
 	    	$('#arrow' + this.id).show();	    	
@@ -264,6 +270,8 @@
 	    		color = '#E7B979';
 	    	if (this.id == 'rental')
 	    		color = '#8FBCD9';
+	    	
+	    	return false;
 		});
 		
 			

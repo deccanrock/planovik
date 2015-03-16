@@ -19,6 +19,9 @@ public class TravelActivityEntity
     @Column(name="pax")    
     private Integer pax;
       
+    @Column(name="mode")    
+    private Integer mode;
+
     @Column(name="groupnum")    
     private Integer groupnum;
     
@@ -53,7 +56,6 @@ public class TravelActivityEntity
     private String arrdatetimestr;
     private long arrdatetimelong;
 
-
     @Column(name="depstation")    
 	private String depstation;
     
@@ -66,16 +68,27 @@ public class TravelActivityEntity
     // Example 25 (25%), 125 (125%)...
     @Column(name="costmarkup")    
 	private Integer costmarkup;
-   
-    @Column(name="pikupcost")    
-	private Float pikupcost;
+    
+    @Column(name="pikupdroplocfrom")
+    private String pikupdroplocfrom;
+    
+    @Column(name="pikupdroplocto")
+    private String pikupdroplocto;
+
+    @Column(name="pikupdropdatetime")    
+	private  Date pikupdropdatetime;
+    private String pikupdropdatetimestr;
+    private long pikupdropdatetimelong;
+    
+    @Column(name="pikupdropcost")    
+	private Float pikupdropcost;
 
     // Example 25 (25%), 125 (125%)...
-    @Column(name="pikupcostmarkup")    
-	private Integer pikupcostmarkup;
+    @Column(name="pikupdropcostmarkup")    
+	private Integer pikupdropcostmarkup;
 
-    @Column(name="pikupveh")    
-	private String pikupveh; 
+    @Column(name="vehdetails")    
+	private String vehdetails; 
     
     @Column(name="asstcost")    
 	private Float asstcost;
@@ -86,21 +99,13 @@ public class TravelActivityEntity
 
     @Column(name="comments")    
 	private String comments;
-
-    @Column(name="status")    
-	private Integer status;
     
     @Column(name="datecreated")    
 	private  Date datecreated;
 
     @Column(name="dateupdated")    
 	private Date dateupdated;
-    
-    // Air/Train/Road/Ship based on travel code
-    private String mode;
-    
-    private String savemode;
-    
+            
     private String [] codes;
     
     private int version;
@@ -276,28 +281,68 @@ public class TravelActivityEntity
 		this.costmarkup = costmarkup;
 	}
 
-	public Float getPikupcost() {
-		return pikupcost;
+	public String getPikupdroplocfrom() {
+		return pikupdroplocfrom;
 	}
 
-	public void setPikupcost(Float pikupcost) {
-		this.pikupcost = pikupcost;
-	}
-
-	public Integer getPikupcostmarkup() {
-		return pikupcostmarkup;
-	}
-
-	public void setPikupcostmarkup(Integer pikupcostmarkup) {
-		this.pikupcostmarkup = pikupcostmarkup;
+	public void setPikupdroplocfrom(String pikupdroplocfrom) {
+		this.pikupdroplocfrom = pikupdroplocfrom;
 	}
 	
-	public String getPikupveh() {
-		return pikupveh;
+	public String getPikupdroplocto() {
+		return pikupdroplocto;
 	}
 
-	public void setPikupveh(String pikupveh) {
-		this.pikupveh = pikupveh;
+	public void setPikupdroplocto(String pikupdroplocto) {
+		this.pikupdroplocto = pikupdroplocto;
+	}
+	
+	public Date getPikupdropdatetime() {
+		return pikupdropdatetime;
+	}
+
+	public void setPikupdropdatetime(Date pikupdropdatetime) {
+		this.pikupdropdatetime = pikupdropdatetime;
+	}
+
+	public String getPikupdropdatetimestr() {
+		return pikupdropdatetimestr;
+	}
+
+	public void setPikupdropdatetimestr(String pikupdropdatetimestr) {
+		this.pikupdropdatetimestr = pikupdropdatetimestr;
+	}
+
+	public long getPikupdropdatetimelong() {
+		return pikupdropdatetimelong;
+	}
+
+	public void setPikupdropdatetimelong(long pikupdropdatetimelong) {
+		this.pikupdropdatetimelong = pikupdropdatetimelong;
+	}
+		
+	public Float getPikupdropcost() {
+		return pikupdropcost;
+	}
+
+	public void setPikupdropcost(Float pikupdropcost) {
+		this.pikupdropcost = pikupdropcost;
+	}
+
+	public Integer getPikupdropcostmarkup() {
+		return pikupdropcostmarkup;
+	}
+
+	public void setPikupdropcostmarkup(Integer pikupdropcostmarkup) {
+		this.pikupdropcostmarkup = pikupdropcostmarkup;
+	}
+	
+	public String getVehdetails() {
+		return vehdetails;
+	}
+
+	public void setVehdetails(String vehdetails) {
+		this.vehdetails = vehdetails;
 	}
 
 	public Float getAsstcost() {
@@ -339,31 +384,14 @@ public class TravelActivityEntity
 	public void setDateupdated(Date dateupdated) {
 		this.dateupdated = dateupdated;
 	}
-	
-	public Integer getStatus() {
-		return status;
-	}
 
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
-
-	public String getMode() {
+	public Integer getMode() {
 		return mode;
 	}
 
-	public void setMode(String mode) {
+	public void setMode(Integer mode) {
 		this.mode = mode;
 	}
-
-	public String getSavemode() {
-		return savemode;
-	}
-
-	public void setSavemode(String savemode) {
-		this.savemode = savemode;
-	}
-
 	
 	public String [] getCodes() {
 		return codes;
