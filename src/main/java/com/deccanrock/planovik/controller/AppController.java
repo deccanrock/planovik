@@ -46,6 +46,7 @@ import com.deccanrock.planovik.service.dao.ItineraryEntityDAO;
 import com.deccanrock.planovik.service.dao.UserEntityDAO;
 import com.deccanrock.planovik.service.utils.UriHandler;
 import com.deccanrock.planovik.service.utils.FileHandler;
+import com.deccanrock.planovik.service.ActivitiesListForItinerary;
 
 /**
  * Handles all requests for Organization general Users and functions
@@ -427,6 +428,13 @@ public class AppController {
 		}
 		
 		map.addAttribute("activitymaster", ame);
+		
+		// Get all activities sorted day wise, heavy hitter
+		ActivitiesListForItinerary ALE = new ActivitiesListForItinerary(ame.getItinnum(), ame.getVersion(), ame.getTzoffset());
+		Object[] AL = ALE.BuildActivitiesList();
+		
+		map.addAttribute("activitylist", AL);
+		
 		TravelActivityEntity TAE = new TravelActivityEntity();
 		TAE.setActivityid(0); // default to 0 should be changed at client side
 		TAE.setItinnum(ame.getItinnum());

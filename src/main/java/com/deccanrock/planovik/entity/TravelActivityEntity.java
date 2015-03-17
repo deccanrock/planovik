@@ -1,5 +1,6 @@
 package com.deccanrock.planovik.entity;
 
+import java.util.Comparator;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -9,8 +10,7 @@ import javax.persistence.GeneratedValue;
 
 @Entity
 
-public class TravelActivityEntity
-{
+public class TravelActivityEntity extends Object implements Comparable<TravelActivityEntity>  {
 	// Columns
     @Column(name="activityid")    
     @GeneratedValue
@@ -119,6 +119,8 @@ public class TravelActivityEntity
     private short tzoffset;
     
     private String error;
+    
+    private long activitystarttimelong;
     
     // Getter-Setters
 	public Integer getActivityid() {
@@ -448,5 +450,54 @@ public class TravelActivityEntity
 	public String getError() {
 		return error;
 	}		
+
+	public long getActivitystarttimelong() {
+		return activitystarttimelong;
+	}
+
+	public void setActivitystarttimelong(long activitystarttimelong) {
+		this.activitystarttimelong = activitystarttimelong;
+	}
+	
+	// Comparator methods
+	public static Comparator<TravelActivityEntity> ActivityByIdComparator 
+                          = new Comparator<TravelActivityEntity>() {
+ 
+		@Override
+		public int compare(TravelActivityEntity tae1, TravelActivityEntity tae2) {
+  
+			//ascending order
+			return tae1.compareToActivityid(tae2.getActivityid());
+ 	    }
+ 
+	};	
+
+	public int compareToActivityid(int compareActivityid) { 
+		//ascending order
+		return this.activityid - compareActivityid; 
+	}
+	
+	public static Comparator<TravelActivityEntity> ActivityByTimeLongComparator 
+	    = new Comparator<TravelActivityEntity>() {
+	
+		@Override
+		public int compare(TravelActivityEntity tae1, TravelActivityEntity tae2) {
+		
+			//ascending order
+			return tae1.compareToTimeLong(tae2.getActivitystarttimelong());
+		}
+
+	};
+
+	protected int compareToTimeLong(long activitystarttimelong) {
+		// TODO Auto-generated method stub
+		return (int) (this.getActivitystarttimelong() - activitystarttimelong); 
+	}
+
+	@Override
+	public int compareTo(TravelActivityEntity o) {
+		// TODO Auto-generated method stub
+		return 0;
+	}	
 
 }

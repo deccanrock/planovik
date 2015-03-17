@@ -1,6 +1,8 @@
 package com.deccanrock.planovik.service.dao;
  
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,8 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.deccanrock.planovik.constants.Constants;
 import com.deccanrock.planovik.entity.TravelActivityEntity;
+import com.deccanrock.planovik.service.TravelActivityMapper;
 import com.deccanrock.planovik.service.utils.TimeFormatter;
-
 
  
 @Component
@@ -182,6 +184,22 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntity
 							
 		return travelactivity;				
 	}
+
+
+	@Override
+	public List<TravelActivityEntity> getTravelActivities(int itinnum, int version, short tzoffset) 
+				throws IOException, SQLException {
+    
+		String SQL = "Call sp_get_travel_activities(" + itinnum + ',' + version + ");";    	
+		
+		JdbcTemplate dbtemplate = new JdbcTemplate(dataSource);  	
+
+		TravelActivityMapper tam = new TravelActivityMapper();
+		tam.setTzoffset(tzoffset);
+ 		List <TravelActivityEntity> travelentities = dbtemplate.query(SQL, tam);
+ 		
+ 		return travelentities; 		
+ 	}
 
 
 }

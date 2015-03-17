@@ -9,5 +9,5 @@ public interface IActivityEntityDAO {
 	
 	public List<String> GetActivityCodes(String query) throws IOException, SQLException;
 	public TravelActivityEntity saveTravelActivity(TravelActivityEntity travelactivity) throws IOException, SQLException;
-
+	public List<TravelActivityEntity> getTravelActivities (int itinnum, int version, short tzoffset) throws IOException, SQLException;
 }
