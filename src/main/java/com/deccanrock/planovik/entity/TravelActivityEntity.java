@@ -28,8 +28,8 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
     @Column(name="code")    
 	private String code;
 
-    @Column(name="name")    
-	private String name;
+    @Column(name="actname")    
+	private String actname;
     
     @Column(name="day")    
 	private Integer day;
@@ -155,12 +155,12 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
 		this.code = code;
 	}
 		
-	public String getName() {
-		return name;
+	public String getActname() {
+		return actname;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setActname(String actname) {
+		this.actname = actname;
 	}
 	
 	public Integer getDay() {

@@ -83,7 +83,7 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntity
 
 		inParamMap.put("inday", travelactivity.getDay().intValue());				
 		inParamMap.put("initinnum", travelactivity.getItinnum());		
-		inParamMap.put("inname", travelactivity.getName());
+		inParamMap.put("inactname", travelactivity.getActname());
 		
 		inParamMap.put("incode", travelactivity.getCode());		
 		inParamMap.put("inversion", travelactivity.getVersion());		

@@ -26,7 +26,7 @@ public class TravelActivityMapper implements RowMapper<TravelActivityEntity> {
 	   
 		travel.setActivityid(rs.getInt("activityid"));
 		travel.setItinnum(rs.getInt("itinnum"));
-		travel.setName(rs.getString("name"));
+		travel.setActname(rs.getString("actname"));
 		travel.setPax(rs.getInt("pax"));
 		travel.setMode(rs.getInt("mode"));
 		travel.setGroupnum(rs.getInt("groupnum"));

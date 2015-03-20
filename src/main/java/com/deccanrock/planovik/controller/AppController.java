@@ -448,8 +448,8 @@ public class AppController {
 		map.addAttribute("rentalactivity", RAE);
 
 		((ClassPathXmlApplicationContext) context).close();		
-		return "app/activitymanage";
-    	    	    	    	
+		// return "app/activitymanage";
+		return "app/activitymanagecal";    	    	    	    	
     }
     
     
@@ -480,7 +480,7 @@ public class AppController {
 		
 		// User filled data
 		travelactivity.setCode(request.getParameter("code"));
-		travelactivity.setName(request.getParameter("name"));		
+		travelactivity.setActname(request.getParameter("actname"));		
 		travelactivity.setVesselno(request.getParameter("vesselno"));
 		travelactivity.setVesselconame(request.getParameter("vesselconame"));
 		
@@ -552,8 +552,6 @@ public class AppController {
 		TravelActivityEntity taedb = AED.saveTravelActivity(travelactivity);
 		
 		// Send information for succcess as json format
-		// GsonBuilder builder = new GsonBuilder();
-        // Gson gson = builder.create();
 		((ClassPathXmlApplicationContext) context).close();		
 		response.setContentType("application/json");
 		ObjectMapper mapper = new ObjectMapper();
