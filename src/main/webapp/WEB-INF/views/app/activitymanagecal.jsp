@@ -202,204 +202,196 @@
 		</div><!-- /.main-container -->
 
 		<!-- basic scripts -->
-
+		
 		<!--[if !IE]> -->
 		<script type="text/javascript">
 			window.jQuery || document.write("<script src='/resources/js/jquery.min.js'>"+"<"+"/script>");
 		</script>
-
+		
 		<!-- <![endif]-->
-
+		
 		<!--[if IE]>
-<script type="text/javascript">
- window.jQuery || document.write("<script src='../assets/js/jquery1x.min.js'>"+"<"+"/script>");
-</script>
-<![endif]-->
+		<script type="text/javascript">
+		 window.jQuery || document.write("<script src='../assets/js/jquery1x.min.js'>"+"<"+"/script>");
+		</script>
+		<![endif]-->
 		<script type="text/javascript">
 			if('ontouchstart' in document.documentElement) document.write("<script src='/resources/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
 		</script>
 		<script src="/resources/js/bootstrap.min.js"></script>
-
+		
 		<!-- page specific plugin scripts -->
 		<script src="/resources/js/jquery-ui.custom.min.js"></script>
 		<script src="/resources/js/jquery.ui.touch-punch.min.js"></script>
 		<script src="/resources/js/date-time/moment.min.js"></script>
 		<script src="/resources/js/fullcalendar.min.js"></script>
 		<script src="/resources/js/bootbox.min.js"></script>
-
+		
 		<!-- ace scripts -->
 		<script src="/resources/js/ace-elements.min.js"></script>
 		<script src="/resources/js/ace.min.js"></script>
-
+		
 		<!-- inline scripts related to this page -->
 		<script type="text/javascript">
 		
-			var events = [];
-			function populateArray() {
-
-				var i = 0;
-				var date = new Date();
-				var d = date.getDate();
-				var m = date.getMonth();
-				var y = date.getFullYear();				
-				<c:forEach items="${activitylist}" var="event">
-					var title = "${fn:escapeXml(event.actname)}";
-					var start = new Date(y, m, d+i);
-					var event = {
-						"title": title,
-						"start": start 
-					}
-					events.push(event);				
-					i++;
-				</c:forEach>
-				console.log(JSON.stringify(events));			
-			}			
-			
-			window.onload = function(){populateArray();};			
-						
 			$(window).on('scroll', function () {
 			    var scrollPos = $(document).scrollTop();
 			    $('.scroll').css({
 			        top: scrollPos
 			    });
-			}).scroll();		
+			}).scroll();
+					
+		jQuery(function($) {
 		
-			jQuery(function($) {
-
-/* initialize the external events
-	-----------------------------------------------------------------*/
-
-	$('#external-events div.external-event').each(function() {
-
-		// create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
-		// it doesn't need to have a start or end
-		var eventObject = {
-			title: $.trim($(this).text()) // use the element's text as the event title
-		};
-
-		// store the Event Object in the DOM element so we can get to it later
-		$(this).data('eventObject', eventObject);
-
-		// make the event draggable using jQuery UI
-		$(this).draggable({
-			zIndex: 999,
-			revert: true,      // will cause the event to go back to its
-			revertDuration: 0  //  original position after the drag
-		});
+			$('#external-events div.external-event').each(function() {
 		
-	});
-
-
-
-
-	/* initialize the calendar
-	-----------------------------------------------------------------*/
-
-	var date = new Date();
-	var d = date.getDate();
-	var m = date.getMonth();
-	var y = date.getFullYear();
-
-	
-	var calendar = $('#calendar').fullCalendar({
-		//isRTL: true,
-		 buttonHtml: {
-			prev: '<i class="ace-icon fa fa-chevron-left"></i>',
-			next: '<i class="ace-icon fa fa-chevron-right"></i>'
-		},
-	
-		header: {
-			left: 'prev,next today',
-			center: 'title',
-			right: 'month,agendaWeek,agendaDay'		
-		},
-	   events: function(start, end, timezone, callback) {
-
-            start: start.unix();
-            end: end.unix();	 
-			var events = [];
-			var i = 0;
-			var date = new Date();
-			var d = date.getDate();
-			var m = date.getMonth();
-			var y = date.getFullYear();				
-			<c:forEach items="${activitylist}" var="event">
-				var title = "${fn:escapeXml(event.actname)}";
-				var start = new Date(y, m, d+i);
-				var event = {
-					"title": title,
-					"start": start 
-				}
-				events.push(event);				
-				i++;
-			</c:forEach>
-			callback(events);
-			console.log(JSON.stringify(events));			
-		}				   
-	    ,		
-		editable: true,
-		droppable: true, // this allows things to be dropped onto the calendar !!!
-		drop: function(date, allDay) { // this function is called when something is dropped
+				// create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
+				// it doesn't need to have a start or end
+				var eventObject = {
+					title: $.trim($(this).text()) // use the element's text as the event title
+				};
 		
-			// retrieve the dropped element's stored Event Object
-			var originalEventObject = $(this).data('eventObject');
-			var $extraEventClass = $(this).attr('data-class');
-			
-			alert("event");
-			console.log(date);			
-			// we need to copy it, so that multiple events don't have a reference to the same object
-			var copiedEventObject = $.extend({}, originalEventObject);
-			
-			// assign it the date that was reported
-			copiedEventObject.start = date;
-			copiedEventObject.allDay = allDay;
-			if($extraEventClass) copiedEventObject['className'] = [$extraEventClass];
-			
-			// render the event on the calendar
-			// the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
-			$('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
-			
-		},
-		eventReceive: function (event) {
-			alert("event");
-			console.log(event);
-		},
-		selectable: true,
-		selectHelper: true,
-		select: function(start, end, allDay) {
-			
-			bootbox.prompt("New Event Title:", function(title) {
-				if (title !== null) {
-					calendar.fullCalendar('renderEvent',
-						{
-							title: title,
-							start: start,
-							end: end,
-							allDay: allDay
-						},
-						true // make the event "stick"
-					);
-				}
+				// store the Event Object in the DOM element so we can get to it later
+				$(this).data('eventObject', eventObject);
+		
+				// make the event draggable using jQuery UI
+				$(this).draggable({
+					zIndex: 999,
+					revert: true,      // will cause the event to go back to its
+					revertDuration: 0  //  original position after the drag
+				});
+				
 			});
+
+			var calendar = $('#calendar').fullCalendar({
+				//isRTL: true,
+				 buttonHtml: {
+					prev: '<i class="ace-icon fa fa-chevron-left"></i>',
+					next: '<i class="ace-icon fa fa-chevron-right"></i>'
+				},
 			
+				header: {
+					left: 'prev,next today',
+					center: 'title',
+					right: 'month,agendaWeek,agendaDay'		
+				},
+			   events: function(start, end, timezone, callback) {
+			
+					var events = [];
+					var i = 0;
+					<c:forEach items="${activitylist}" var="event">
+						var title = "${fn:escapeXml(event.actname)}";
+				
+						var date = new Date(${event.activitystarttimelong});
+						// var date = new Date();
+						var d = date.getDate();
+						var m = date.getMonth();
+						var y = date.getFullYear();				
+			
+						var start = new Date(y, m, d);
+			            console.log(start);
+						if (${event.type == 0})
+							var color = "#82AF6F";
+						if (${event.type == 1})
+							var color = "#D15B47";
+						if (${event.type == 2})
+							var color = "#9585BF";
+						if (${event.type == 3})
+							var color = "#FEE188";
+						if (${event.type == 4})
+							var color = "#D6487E";
+						
+						var event = {
+							"title": title,
+							"start": start,
+							"color": color,
+							"activityid": ${event.activityid}  
+						}
+						events.push(event);				
+						i++;
+					</c:forEach>
+					callback(events);
+					console.log(JSON.stringify(events));			
+				}				   
+			    ,		
+				editable: true,
+				droppable: true, // this allows things to be dropped onto the calendar !!!
+				drop: function(date, allDay) { // this function is called when something is dropped
+				
+					// retrieve the dropped element's stored Event Object
+					var originalEventObject = $(this).data('eventObject');
+					var $extraEventClass = $(this).attr('data-class');
+					
+					console.log(date);			
+					// we need to copy it, so that multiple events don't have a reference to the same object
+					var copiedEventObject = $.extend({}, originalEventObject);
+					
+					// assign it the date that was reported
+					copiedEventObject.start = date;
+					copiedEventObject.allDay = allDay;
+					if($extraEventClass) copiedEventObject['className'] = [$extraEventClass];
+					
+					// render the event on the calendar
+					// the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+					$('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
+					
+				},
+				eventReceive: function (event) {
+					alert("event");
+					console.log(event);
+				},
+				eventDrop: function(event, delta, revertFunc) {
+			        alert(event.title + " was dropped on " + event.start.format());
+			    },
+				selectable: true,
+				selectHelper: true,
+				select: function(start, end, allDay) {
+					
+					bootbox.prompt("New Event Title:", function(title) {
+						if (title !== null) {
+							calendar.fullCalendar('renderEvent',
+								{
+									title: title,
+									start: start,
+									end: end,
+									allDay: allDay
+								},
+								true // make the event "stick"
+							);
+						}
+					});
+					
+			
+					calendar.fullCalendar('unselect');
+				}
+				,
+				eventClick: function(calEvent, jsEvent, view) {
+			
+					displaymodal(calEvent, jsEvent, view);
+				}		
+			});			
+			
+		})
 
-			calendar.fullCalendar('unselect');
-		}
-		,
-		eventClick: function(calEvent, jsEvent, view) {
+		function displaymodal(calEvent, jsEvent, view) {
+		
+			var framesrc = '"travelactivitymanage?activityid=' +  calEvent.activityid + '"';
 
-			//display a modal
-			var modal = 
-			'<div class="modal fade">\
-			  <div class="modal-dialog">\
+			var modal =
+			'<div class="modal"  id="activitymodal">\
+			   <div class="modal-dialog">\
 			   <div class="modal-content">\
 				 <div class="modal-body">\
-				   <button type="button" class="close" data-dismiss="modal" style="margin-top:-10px;">&times;</button>\
-				   <form class="no-margin">\
-					  <label>Change event name &nbsp;</label>\
-					  <input class="middle" autocomplete="off" type="text" value="' + calEvent.title + '" />\
-					 <button type="submit" class="btn btn-sm btn-success"><i class="ace-icon fa fa-check"></i> Save</button>\
-				   </form>\
+				   	<button type="button" class="close" data-dismiss="modal" style="margin-top:-10px;">&times;</button>\
+				 	<iframe id="activityiFrame" src=';
+				 	
+			
+			modal = modal.concat(framesrc);
+			
+			// T_PIKUPDRP (h - 610), T_BOOK (h - 680)
+			
+			var modalend = 
+			' frameborder="0" scrolling="no" width="700" onload="onLoadHandler();" ></iframe>\
 				 </div>\
 				 <div class="modal-footer">\
 					<button type="button" class="btn btn-sm btn-danger" data-action="delete"><i class="ace-icon fa fa-trash-o"></i> Delete Event</button>\
@@ -407,10 +399,12 @@
 				 </div>\
 			  </div>\
 			 </div>\
-			</div>';
+			</div>';									
 		
-		
-			var modal = $(modal).appendTo('body');
+			modal = modal.concat(modalend);
+			
+			var modal = $(modal).appendTo("body");
+			
 			modal.find('form').on('submit', function(ev){
 				ev.preventDefault();
 
@@ -436,14 +430,19 @@
 
 			// change the border color just for fun
 			//$(this).css('border-color', 'red');
+		
+		}
 
+		function onLoadHandler() {
+				var actIframesHeight = $("#activityiFrame").height() + 10;
+				$("#activityiFrame").height(actIframesHeight);
 		}
 		
-	});
+		function adjustModalHeight(height) {
+				$("#activityiFrame").height(height);
+				$('.modal-body #activitymodal').css({"height":height + "px"} );
+		}			
 
-
-})
 		</script>
-
 	</body>
 </html>

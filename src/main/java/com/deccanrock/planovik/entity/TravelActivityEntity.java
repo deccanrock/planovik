@@ -122,6 +122,9 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
     
     private long activitystarttimelong;
     
+    // To be included in all activity entities to allow client side identification of activity type
+    private int type;
+    
     // Getter-Setters
 	public Integer getActivityid() {
 		return activityid;
@@ -458,6 +461,15 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
 	public void setActivitystarttimelong(long activitystarttimelong) {
 		this.activitystarttimelong = activitystarttimelong;
 	}
+	
+	public void setType(int type) {
+		this.type = type;
+	}
+		
+	public int getType() {
+		return type=0; // always the case
+	}		
+
 	
 	// Comparator methods
 	public static Comparator<TravelActivityEntity> ActivityByIdComparator 

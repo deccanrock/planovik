@@ -115,6 +115,24 @@ public class Constants {
 	    }		
 	}
 	
+	public enum  ActivityType {
+		Travel(0),
+		Hotel(1),
+		Visit(2),
+		Rental(3),
+		Other(4);
+
+		private final int value;
+
+	    private ActivityType(int value) {
+	        this.value = value;
+	    }
+
+	    public int getValue() {
+	        return value;
+	    }		
+	}
+	
 	// TO_DO - This should be moved to DB
 	private final List <String> roles = Arrays.asList("ROLE_USER", "ROLE_ADMIN");
 	public List<String> getUserRoles() { return roles; }

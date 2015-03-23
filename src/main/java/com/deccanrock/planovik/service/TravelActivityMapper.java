@@ -2,6 +2,7 @@ package com.deccanrock.planovik.service;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 
 import org.springframework.jdbc.core.RowMapper;
 
@@ -11,7 +12,8 @@ import com.deccanrock.planovik.service.utils.TimeFormatter;
 public class TravelActivityMapper implements RowMapper<TravelActivityEntity> {
 	
 	private short tzoffset;
-
+	private long startdatelong;
+	
 	public void setTzoffset (short tzoffset) {
 		this.tzoffset = tzoffset;
 	}
@@ -20,6 +22,14 @@ public class TravelActivityMapper implements RowMapper<TravelActivityEntity> {
 		return this.tzoffset;
 	}
 	
+	public void setStartdatelong(long startdatelong) {
+		this.startdatelong = startdatelong;
+	}
+	
+	public long getStartdatelong() {
+		return this.startdatelong;
+	}
+
 	public TravelActivityEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
 		   
 	   	TravelActivityEntity travel = new TravelActivityEntity(); 
@@ -68,13 +78,28 @@ public class TravelActivityMapper implements RowMapper<TravelActivityEntity> {
 		travel.setComments(rs.getString("comments"));
 		
 		// Setup Activity start time based on travel code, this field's consistency will determine performance of building
-		// activities list
-		if (travel.getCode().contentEquals("T_BOOK"))
-			travel.setActivitystarttimelong(travel.getDepdatetimelong());
-	   
-		if (travel.getCode().contentEquals("T_PIKUPDRP"))
-			travel.setActivitystarttimelong(travel.getPikupdropdatetimelong());
+		// activities list. Initally, no value may be set, for zero or null dates compute date from Itinerary start date + day
+		// **Important** At this point time zone conversion is done
+		long itinstartdatelong = this.startdatelong + travel.getDay() - 1 * (24*60*60*1000);
+
+		if (travel.getCode().contentEquals("T_BOOK")) {
+			if (travel.getActivitystarttimelong() == 0)
+				if (travel.getDepdatetimelong() != 0)
+					travel.setActivitystarttimelong(travel.getDepdatetimelong());
+			else
+					travel.setActivitystarttimelong(itinstartdatelong);										
+		}	
+						
+		if (travel.getCode().contentEquals("T_PIKUPDRP")) {
+			if (travel.getActivitystarttimelong() == 0)
+				if (travel.getPikupdropdatetimelong() != 0)
+					travel.setActivitystarttimelong(travel.getPikupdropdatetimelong());
+			else
+				travel.setActivitystarttimelong(itinstartdatelong);					
+		}
 		
 		return travel;
 	}
+
+
 }

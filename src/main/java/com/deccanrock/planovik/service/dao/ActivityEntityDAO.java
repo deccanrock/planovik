@@ -4,6 +4,7 @@ package com.deccanrock.planovik.service.dao;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -187,7 +188,7 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntity
 
 
 	@Override
-	public List<TravelActivityEntity> getTravelActivities(int itinnum, int version, short tzoffset) 
+	public List<TravelActivityEntity> getTravelActivities(int itinnum, int version, short tzoffset, long startdatelong) 
 				throws IOException, SQLException {
     
 		String SQL = "Call sp_get_travel_activities(" + itinnum + ',' + version + ");";    	
@@ -196,6 +197,7 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntity
 
 		TravelActivityMapper tam = new TravelActivityMapper();
 		tam.setTzoffset(tzoffset);
+		tam.setStartdatelong(startdatelong);
  		List <TravelActivityEntity> travelentities = dbtemplate.query(SQL, tam);
  		
  		return travelentities; 		

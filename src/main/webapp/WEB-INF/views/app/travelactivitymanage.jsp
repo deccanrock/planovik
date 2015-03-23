@@ -14,20 +14,12 @@
 		<script src="<c:url value='/resources/js/date-time/daterangepicker.min.js'/>" ></script>
 		<script src="<c:url value='/resources/js/date-time/bootstrap-datetimepicker.min.js'/>" ></script>
 								
-		<div class="main-content" style="margin-top:-15px;">
+		<div class="main-content">
 			<div class="page-content">
 	
-				<div class="widget-box" id="travelactivitywidget" style="border-style:1px;border-color:#A7C9A1">          
+				<div class="widget-box" id="travelactivitywidget" style="border-style:1px;border-color:#A7C9A1;">          
 					<div class="widget-header">
 						<h5 class="widget-title" id="headeractivityid">Activity Id: ${travelactivity.activityid}</h5>
-						<div class="widget-toolbar">
-							<a href="#" data-action="fullscreen" class="orange2" style="visibility:hidden;">
-							</a>
-							<a href="#" class="red" id="activityclose" onClick="parent.resetactivityform('travelactivityform', 'travelactivitywidget', 'arrowtravel'); return false;">
-								<i class="ace-icon fa fa-times"></i>
-							</a>
-							<!-- /section:custom/widget-box.toolbar -->
-						</div>										
 					</div>									
 				    <div class="widget-body">
 				    	<div class="widget-main">
@@ -59,7 +51,7 @@
 								    <div class="form-group" style="margin-left:5px;">
 								        <div class="clearfix">
 									        <label for="name">Specify a name for activity</label>
-							    				<form:input id="name" class="col-sm-11" path="name" type="text" style="width:93%;" maxlength="45" />												
+							    				<form:input id="actname" class="col-sm-11" path="actname" type="text" style="width:93%;" maxlength="45" />												
 										</div>
 									</div>							        
 								</div>
@@ -375,20 +367,22 @@
 
 		    if ( $(this).val() === '' ) {
 				$('#formgroupall').hide();
+				window.parent.adjustModalHeight(170);
 				return;
 			}
 						
 			$('#formgroupall').show();
 						
 		    if ( $(this).val() === 'T_BOOK') {
+				window.parent.adjustModalHeight(690);
 				$('#bookinggroup').show();
 				$('#asstreqgroup').hide();
 				$('#pikupdropgroup').hide();
-
 		    }
 
 		    if ( $(this).val() === 'T_PIKUPDRP') {
 		        // Enable airport pickup and assistance required options
+				window.parent.adjustModalHeight(610);
 				$('#bookinggroup').hide();
 				$('#asstreqgroup').show();
 				$('#pikupdropgroup').show();

@@ -430,7 +430,7 @@ public class AppController {
 		map.addAttribute("activitymaster", ame);
 		
 		// Get all activities sorted day wise, heavy hitter
-		ActivitiesListForItinerary ALE = new ActivitiesListForItinerary(ame.getItinnum(), ame.getVersion(), ame.getTzoffset());
+		ActivitiesListForItinerary ALE = new ActivitiesListForItinerary(ame.getItinnum(), ame.getVersion(), ame.getTzoffset(), itinerary.getStartdatelong());
 		Object[] AL = ALE.BuildActivitiesList();
 		
 		map.addAttribute("activitylist", AL);

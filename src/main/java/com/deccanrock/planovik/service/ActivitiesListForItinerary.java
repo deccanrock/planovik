@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -23,17 +24,21 @@ public class ActivitiesListForItinerary {
 	private List<TravelActivityEntity> travelList = null;
 	private int itinnum, version;
 	private short tzoffset;
+	private Date startdate;
+	private long startdatelong;
 	
     @SuppressWarnings("rawtypes")
 	public static class ActivityCallable implements Callable {
     	
     	private int itinnum, version;
     	private short tzoffset;
+    	private long startdatelong;
 
-    	ActivityCallable(int itinnum, int version, short tzoffset) {
+    	ActivityCallable(int itinnum, int version, short tzoffset, long startdatelong) {
             this.itinnum = itinnum;
             this.version = version;
             this.tzoffset = tzoffset;
+            this.startdatelong = startdatelong;
         }
         
     	public Object call() throws InterruptedException {
@@ -41,7 +46,7 @@ public class ActivitiesListForItinerary {
     		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
     		ActivityEntityDAO AED = (ActivityEntityDAO)context.getBean("ActivityEntityDAO");		
     		try {
-    			travelListthread = AED.getTravelActivities(itinnum, version, tzoffset);
+    			travelListthread = AED.getTravelActivities(itinnum, version, tzoffset, startdatelong);
     			
     		} catch (IOException e) {
     			// TODO Auto-generated catch block
@@ -58,10 +63,11 @@ public class ActivitiesListForItinerary {
     }	
 	
 
-    public ActivitiesListForItinerary(int itinnum, int version, short tzoffset) {
+    public ActivitiesListForItinerary(int itinnum, int version, short tzoffset, long startdatelong) {
 		this.itinnum = itinnum;
 		this.version = version;
 		this.tzoffset = tzoffset;
+		this.startdatelong = startdatelong;
 	}
 	
 
@@ -70,7 +76,7 @@ public class ActivitiesListForItinerary {
 		// Highly optimized function using multi threading
 		ExecutorService pool = Executors.newFixedThreadPool(1);
 		
-        ActivityCallable travelactivity = new ActivityCallable(itinnum, version, tzoffset);
+        ActivityCallable travelactivity = new ActivityCallable(itinnum, version, tzoffset, startdatelong);
         
         Future future1 = pool.submit(travelactivity);
         try {
