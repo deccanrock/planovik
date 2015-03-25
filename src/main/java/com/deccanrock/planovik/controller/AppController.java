@@ -3,6 +3,7 @@ package com.deccanrock.planovik.controller;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -278,20 +279,6 @@ public class AppController {
 		return "app/manage";	
     }
     
-
-    // Read session variables and build the page
-    @RequestMapping(value = "/app/manage/travelactivitymanage", method = RequestMethod.GET)    
-    public String travelActivityManage(ModelMap map, HttpSession session, @RequestParam int activityid) throws IOException {
-
-    	// This is ajax support function for JQGrid
-    	logger.info("Travel Activity Manage");
-
-		TravelActivityEntity TAE = new TravelActivityEntity();
-		TAE.setActivityid(activityid);
-		map.addAttribute("travelactivity", TAE);
-		return "app/travelactivitymanage";	
-    }
-
     // Hook for jqGrid ('Manage'), Set Session variables and manage tab
     @RequestMapping(value = "/app/manage", method = RequestMethod.POST)    
     public String manageItinerary(@ModelAttribute(value="itinerary") ItineraryEntity itinerary, ModelMap map, HttpServletRequest request) {
@@ -450,6 +437,29 @@ public class AppController {
 		((ClassPathXmlApplicationContext) context).close();		
 		// return "app/activitymanage";
 		return "app/activitymanagecal";    	    	    	    	
+    }
+    
+    
+    // Read session variables and build the page
+    @RequestMapping(value = "/app/manage/travelactivitymanage", method = RequestMethod.GET)    
+    public String travelActivityManage(ModelMap map, HttpSession session, @RequestParam int activityid, @RequestParam int type, 
+    		@RequestParam short tzoffset, @RequestParam long startdatelong) throws IOException, SQLException {
+
+    	// This is ajax support function for JQGrid
+    	logger.info("Travel Activity Manage");
+
+		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
+		ActivityEntityDAO AED = (ActivityEntityDAO)context.getBean("ActivityEntityDAO");
+		
+		if (type == 0) {// travel
+			TravelActivityEntity TAE = null;
+			TAE = (TravelActivityEntity)AED.GetActivityDetails(activityid, type, tzoffset, startdatelong);
+			map.addAttribute("travelactivity", TAE);
+		}
+		
+		((ClassPathXmlApplicationContext) context).close();		
+
+		return "app/travelactivitymanage";	
     }
     
     

@@ -30,15 +30,16 @@ public class ActivitiesListForItinerary {
     @SuppressWarnings("rawtypes")
 	public static class ActivityCallable implements Callable {
     	
-    	private int itinnum, version;
+    	private int itinnum, version, type;
     	private short tzoffset;
     	private long startdatelong;
 
-    	ActivityCallable(int itinnum, int version, short tzoffset, long startdatelong) {
+    	ActivityCallable(int itinnum, int version, short tzoffset, long startdatelong, int i) {
             this.itinnum = itinnum;
             this.version = version;
             this.tzoffset = tzoffset;
             this.startdatelong = startdatelong;
+            this.type = type;
         }
         
     	public Object call() throws InterruptedException {
@@ -46,7 +47,9 @@ public class ActivitiesListForItinerary {
     		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
     		ActivityEntityDAO AED = (ActivityEntityDAO)context.getBean("ActivityEntityDAO");		
     		try {
-    			travelListthread = AED.getTravelActivities(itinnum, version, tzoffset, startdatelong);
+    			// travelListthread = AED.getTravelActivities(itinnum, version, tzoffset, startdatelong);
+    			// 0 = travel
+    			travelListthread = AED.getActivitiesDetForType(itinnum, version, tzoffset, startdatelong,0);
     			
     		} catch (IOException e) {
     			// TODO Auto-generated catch block
@@ -76,7 +79,7 @@ public class ActivitiesListForItinerary {
 		// Highly optimized function using multi threading
 		ExecutorService pool = Executors.newFixedThreadPool(1);
 		
-        ActivityCallable travelactivity = new ActivityCallable(itinnum, version, tzoffset, startdatelong);
+        ActivityCallable travelactivity = new ActivityCallable(itinnum, version, tzoffset, startdatelong, 0);
         
         Future future1 = pool.submit(travelactivity);
         try {

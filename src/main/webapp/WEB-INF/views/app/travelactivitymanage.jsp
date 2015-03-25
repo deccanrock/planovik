@@ -19,7 +19,12 @@
 	
 				<div class="widget-box" id="travelactivitywidget" style="border-style:1px;border-color:#A7C9A1;">          
 					<div class="widget-header">
-						<h5 class="widget-title" id="headeractivityid">Activity Id: ${travelactivity.activityid}</h5>
+							<c:if test="${not empty travelactivity.activityid}">
+								<h5 class="widget-title" id="headeractivityid">Edit Activity Id: ${travelactivity.activityid}</h5>
+							</c:if>
+							<c:if test="${empty travelactivity.activityid}">
+								<h5 class="widget-title" id="headeractivityid">Create New Activity </h5>
+							</c:if>
 					</div>									
 				    <div class="widget-body">
 				    	<div class="widget-main">
@@ -41,9 +46,7 @@
 								    <div class="form-group" style="margin-left:6px;">
 								        <div class="clearfix">
 									        <label for="code">Travel Code</label>
-												<form:select class="form-control col-sm-11" path="code" name="travelcodes" id="travelcodes" style="width:90%;">
-													<option value="">  </option>
-												</form:select>
+												<form:select class="form-control col-sm-11" path="code" name="travelcodes" id="travelcodes" style="width:90%;" />
 										</div>
 									</div>							        
 								</div>
@@ -51,7 +54,7 @@
 								    <div class="form-group" style="margin-left:5px;">
 								        <div class="clearfix">
 									        <label for="name">Specify a name for activity</label>
-							    				<form:input id="actname" class="col-sm-11" path="actname" type="text" style="width:93%;" maxlength="45" />												
+							    				<form:input id="actname" class="col-sm-11" path="actname" value= "${travelactivity.actname}" type="text" style="width:93%;" maxlength="45" />												
 										</div>
 									</div>							        
 								</div>
@@ -80,7 +83,7 @@
 									    <div class="form-group" style="margin-left:6px;">
 									        <div class="clearfix">
 												<label for="vesselno">Flight/Train/Bus Number</label>
-							    				<form:input id="vesselno" class="col-sm-11" style="width:90%" path="vesselno" type="text"  maxlength="15" />												
+							    				<form:input id="vesselno" class="col-sm-11" style="width:90%" value="${activitymaster.vesselno}" path="vesselno" type="text"  maxlength="15" />												
 											</div>
 										</div>
 									</div>
@@ -89,7 +92,7 @@
 										<div class="form-group"  style="margin-left:-8px;">
 									        <div class="clearfix">
 												<label for="vesselconame">Travel Company</label>
-							    				<form:input id="vesselconame" class="col-sm-11" path="vesselconame" type="text" style="width:93%;"  maxlength="20" />												
+							    				<form:input id="vesselconame" class="col-sm-11" path="vesselconame" value="${activitymaster.vesselconame}" type="text" style="width:93%;"  maxlength="20" />												
 											</div>
 						    			</div>
 						    		</div>
@@ -102,7 +105,7 @@
 										    <div class="form-group" style="margin-left:6px;">
 										        <div class="clearfix">
 													<label for="bookingno">Booking Code</label>
-								    				<form:input id="bookingno" class="col-sm-11" style="width:90%;" path="bookingno" type="text"  maxlength="10" />	
+								    				<form:input id="bookingno" class="col-sm-11" style="width:90%;" value="${activitymaster.bookingno}" path="bookingno" type="text"  maxlength="10" />	
 								    			</div>
 								    		</div>
 								    	</div>	
@@ -111,7 +114,7 @@
 										    <div class="form-group" style="margin-left:5px;">
 										        <div class="clearfix">
 													<label for="bookingclass">Booking Class</label>
-								    				<form:input id="bookingclass" class="col-sm-11" path="bookingclass" type="text" style="width:93%;"  maxlength="10" />
+								    				<form:input id="bookingclass" class="col-sm-11" path="bookingclass" value="${activitymaster.bookingclass}" type="text" style="width:93%;"  maxlength="10" />
 								    			</div>
 								    		</div>												
 										</div>
@@ -177,7 +180,7 @@
 											<div class="form-group" style="margin-left:6px;">
 												<div class="clearfix">
 													<label for="cost">Cost</label>
-								    				<form:input id="cost" path="cost" style="width:90%;" type="text" class="col-sm-11"  maxlength="10" />												
+								    				<form:input id="cost" path="cost" value="${travelactivity.cost}" style="width:90%;" type="text" class="col-sm-11"  maxlength="10" />												
 												</div>
 											</div>
 										</div>
@@ -186,7 +189,7 @@
 											<div class="form-group" style="margin-left:6px;">
 												<div class="clearfix">
 													<label for="costmarkup">Cost Markup (as %)</label>
-								    				<form:input id="costmarkup" path="costmarkup" type="text" class="col-sm-11" style="width:93%;"  maxlength="3"/>												
+								    				<form:input id="costmarkup" path="costmarkup" value="${travelactivity.costmarkup}" type="text" class="col-sm-11" style="width:93%;"  maxlength="3"/>												
 												</div>
 											</div>
 										</div>
@@ -240,7 +243,7 @@
 											<div class="form-group" style="margin-left:6px;">
 												<div class="clearfix">
 													<label for="asstcost">Assistance Fee</label>
-								    				<form:input id="asstcost" path="asstcost" style="width:120%;" class="col-sm-11" type="text"  maxlength="10" />												
+								    				<form:input id="asstcost" path="asstcost" value="${travelactivity.asstcost}" style="width:120%;" class="col-sm-11" type="text"  maxlength="10" />												
 												</div>
 											</div>
 										</div>
@@ -249,7 +252,7 @@
 											<div class="form-group" style="margin-left:27px;">
 												<div class="clearfix">
 													<label for="asstcostmarkup">Markup</label>
-								    				<form:input id="asstcostmarkup" path="asstcostmarkup" style="width:82%;" type="text"  maxlength="3" />												
+								    				<form:input id="asstcostmarkup" path="asstcostmarkup" value="${travelactivity.asstcostmarkup}" style="width:82%;" type="text"  maxlength="3" />												
 												</div>
 											</div>
 										</div>
@@ -261,7 +264,7 @@
 										<div class="form-group" style="margin-left:6px;">														
 											<div class="clearfix">
 												<label for="vehdetails">Vehicle Details</label>
-							    				<form:input id="vehdetails" path="vehdetails" style="width:90%;" type="text" class="col-sm-11"  maxlength="45" />												
+							    				<form:input id="vehdetails" path="vehdetails" value="${travelactivity.vehdetails}" style="width:90%;" type="text" class="col-sm-11"  maxlength="45" />												
 											</div>
 										</div>
 									</div>
@@ -270,7 +273,7 @@
 										<div class="form-group" style="margin-left:6px;">
 											<div class="clearfix">
 												<label for="pikupdropcost">Vehicle Fee</label>
-							    				<form:input id="pikupdropcost" path="pikupdropcost" type="text" style="width:120%;"  maxlength="10" />												
+							    				<form:input id="pikupdropcost" path="pikupdropcost" value="${travelactivity.pikupdropcost}" type="text" style="width:120%;"  maxlength="10" />												
 											</div>
 										</div>
 									</div>
@@ -279,7 +282,7 @@
 										<div class="form-group" style="margin-left:27px;">
 											<div class="clearfix">
 												<label for="pikupdropcostmarkup">Markup</label>
-							    				<form:input id="pikupdropcostmarkup" path="pikupdropcostmarkup" type="text" style="width:82%;"  maxlength="3" />												
+							    				<form:input id="pikupdropcostmarkup" path="pikupdropcostmarkup" value="${travelactivity.pikupdropcostmarkup}" type="text" style="width:82%;"  maxlength="3" />												
 											</div>
 										</div>
 									</div>
@@ -290,7 +293,7 @@
 									    <div class="form-group" style="margin-left:6px;">
 									        <div class="clearfix">
 												<label for="comments">Comments</label>
-												<form:textarea class="form-control limited" id="comments" path="comments" maxlength="100" />
+												<form:textarea class="form-control limited" id="comments" path="comments" value="${travelactivity.comments}" maxlength="100" />
 											</div>
 										</div>
 									</div>
@@ -345,6 +348,17 @@
 
 		function loadActivityCodes (activitytype) {
 	
+			var code = "${travelactivity.code}";
+			if (code.length > 0) {
+				$('#travelcodes').val(code);
+
+				var code_data="<option value=" + code + ">" + code + "</option>";
+				// This should be changed to a global var for optimization
+        		$(code_data).appendTo('#' + activitytype + 'codes'); 					  	
+				$('#' + activitytype + 'codes').trigger('change');
+				return;
+			}
+			
 			var request = $.ajax({type: 'GET', url: "/app/activity/getactivitycodes?" + "query=" + activitytype });
 			request.done(function( data ) {
 				  $('#' + activitytype + 'codes').html('');
@@ -419,9 +433,8 @@
 
 		$(function() {
 		
-		    loadActivityCodes('travel');	    	
 			$('#formgroupall').hide();
-
+		    loadActivityCodes('travel');	    	
 		
             $("#depstation").suggest({
                 key: "AIzaSyDG_gsufq_KCjQYGf4SeZ44znuHsA61_10",
@@ -507,6 +520,8 @@
 		}
 													
 		jQuery(function($) {
+		
+			
 		
 			$('#day').val($('#dayselect', window.parent.document).val());
 			$('#itinnum').val($('#itinnum', window.parent.document).val());

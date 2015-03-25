@@ -278,7 +278,6 @@
 			   events: function(start, end, timezone, callback) {
 			
 					var events = [];
-					var i = 0;
 					<c:forEach items="${activitylist}" var="event">
 						var title = "${fn:escapeXml(event.actname)}";
 				
@@ -305,11 +304,18 @@
 							"title": title,
 							"start": start,
 							"color": color,
-							"activityid": ${event.activityid}  
+							"activityid": ${event.activityid},
+							"code": "${fn:escapeXml(event.code)}",
+							"itinnum": "${fn:escapeXml(event.itinnum)}",
+							"activitystarttimelong": "${fn:escapeXml(event.activitystarttimelong)}",
+							"actname": "${fn:escapeXml(event.actname)}",
+							"tzoffset": ${itinerary.tzoffset},
+							"startdatelong": ${itinerary.startdatelong},
+							"type": ${event.type}
 						}
 						events.push(event);				
-						i++;
 					</c:forEach>
+
 					callback(events);
 					console.log(JSON.stringify(events));			
 				}				   
@@ -375,7 +381,8 @@
 
 		function displaymodal(calEvent, jsEvent, view) {
 		
-			var framesrc = '"travelactivitymanage?activityid=' +  calEvent.activityid + '"';
+			var framesrc = '"travelactivitymanage?activityid=' +  calEvent.activityid + '&type=' + calEvent.type +
+			            '&tzoffset=' + calEvent.tzoffset + '&startdatelong=' + calEvent.startdatelong + '"';
 
 			var modal =
 			'<div class="modal"  id="activitymodal">\
@@ -423,6 +430,12 @@
 				modal.remove();
 			});
 
+			$(document).on('hide.bs.modal','#activitymodal', function () {
+
+			 	$('#activityiFrame').attr("src", " ");
+				$('#activityiFrame').remove();
+
+			});
 
 			//console.log(calEvent.id);
 			//console.log(jsEvent);
@@ -434,13 +447,13 @@
 		}
 
 		function onLoadHandler() {
-				var actIframesHeight = $("#activityiFrame").height() + 10;
-				$("#activityiFrame").height(actIframesHeight);
+			var actIframesHeight = $("#activityiFrame").height();
+			adjustModalHeight(actIframesHeight+10);
 		}
 		
 		function adjustModalHeight(height) {
-				$("#activityiFrame").height(height);
-				$('.modal-body #activitymodal').css({"height":height + "px"} );
+			$("#activityiFrame").height(height);
+			$('.modal-body #activitymodal').css({"height":height + "px"} );
 		}			
 
 		</script>

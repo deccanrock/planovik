@@ -4,7 +4,6 @@ package com.deccanrock.planovik.service.dao;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +22,6 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.deccanrock.planovik.constants.Constants;
 import com.deccanrock.planovik.entity.TravelActivityEntity;
 import com.deccanrock.planovik.service.TravelActivityMapper;
 import com.deccanrock.planovik.service.utils.TimeFormatter;
@@ -198,10 +196,54 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntity
 		TravelActivityMapper tam = new TravelActivityMapper();
 		tam.setTzoffset(tzoffset);
 		tam.setStartdatelong(startdatelong);
- 		List <TravelActivityEntity> travelentities = dbtemplate.query(SQL, tam);
+		tam.setReqfulldetails(true);
+
+		List <TravelActivityEntity> travelentities = null;
+    	try {    	
+    		travelentities = dbtemplate.query(SQL, tam);
+    	} catch (Exception ex) {
+    		travelentities = null;
+		} 					
  		
  		return travelentities; 		
  	}
 
+	@Override
+	public List<TravelActivityEntity> getActivitiesDetForType(int itinnum, int version, short tzoffset, long startdatelong, int type)
+				throws IOException, SQLException {
+    
+		String SQL = "Call sp_get_activities_for_type(" + itinnum + ',' + version + ',' + type + ");";    	
+		
+		JdbcTemplate dbtemplate = new JdbcTemplate(dataSource);  	
 
+		TravelActivityMapper tam = new TravelActivityMapper();
+		tam.setTzoffset(tzoffset);
+		tam.setStartdatelong(startdatelong);
+		tam.setReqfulldetails(false);
+		
+		List <TravelActivityEntity> travelentities = dbtemplate.query(SQL, tam);
+ 		
+ 		return travelentities; 		
+ 	}
+
+	@Override
+	public Object GetActivityDetails(int activityid, int type, short tzoffset, long startdatelong) throws IOException, SQLException {
+		// TODO Auto-generated method stub
+		String SQL = "Call sp_get_activity_details(" + activityid + ',' + type + ");";    	
+		
+		JdbcTemplate dbtemplate = new JdbcTemplate(dataSource);  	
+
+		if (type == 0) {
+			TravelActivityMapper tam = new TravelActivityMapper();
+			tam.setTzoffset(tzoffset);
+			tam.setStartdatelong(startdatelong);
+			tam.setReqfulldetails(true);
+			List <TravelActivityEntity> travelentities = dbtemplate.query(SQL, tam);
+	 		return travelentities.get(0); 		
+		}
+ 		
+		// This should never really happen
+		return null;
+	}
+	
 }
