@@ -205,7 +205,8 @@
 	                    <form:input type="hidden" id="postbutton" path="postbutton" />
 	
 						<button class="btn btn-large btn-primary" style="margin-left:33%;" id="manageitinerarybtn">Save</button>
-						<button class="btn btn-large btn-primary" style="margin-left:10%;" id="activitybtn">Activity</button>
+						<button class="btn btn-large btn-primary" style="margin-left:6%;" id="activitybtn">Activities</button>
+						<button class="btn btn-large btn-primary" style="margin-left:2%;" id="activitybtn">Activity Master</button>
                     
 	                    </form:form>
 		        	</div>

@@ -413,6 +413,16 @@ public class AppController {
 			ame.setTzoffset(itinerary.getTzoffset());
 			ame.setPax(itinerary.getNumtravellers());
 		}
+		else if ( itinerary.getPostbutton().contentEquals("activitymaster")) {
+			map.addAttribute("itinerary", itinerary);
+
+			ame = IED.GetActivityMaster(itinerary);
+			ame.setItinnum(itinerary.getId());
+			ame.setGroupnum(1); // set to 1 for testing
+			ame.setVersion(itinerary.getVersion());
+			ame.setTzoffset(itinerary.getTzoffset());
+			ame.setPax(itinerary.getNumtravellers());
+		}
 		
 		map.addAttribute("activitymaster", ame);
 		
@@ -442,7 +452,7 @@ public class AppController {
     
     // Read session variables and build the page
     @RequestMapping(value = "/app/manage/travelactivitymanage", method = RequestMethod.GET)    
-    public String travelActivityManage(ModelMap map, HttpSession session, @RequestParam int activityid, @RequestParam int type, 
+    public String travelActivityManage(ModelMap map, HttpSession session, @RequestParam int itinnum, @RequestParam int activityid, @RequestParam int type, 
     		@RequestParam short tzoffset, @RequestParam long startdatelong) throws IOException, SQLException {
 
     	// This is ajax support function for JQGrid
@@ -450,13 +460,21 @@ public class AppController {
 
 		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
 		ActivityEntityDAO AED = (ActivityEntityDAO)context.getBean("ActivityEntityDAO");
-		
+		TravelActivityEntity TAE = null;		
 		if (type == 0) {// travel
-			TravelActivityEntity TAE = null;
-			TAE = (TravelActivityEntity)AED.GetActivityDetails(activityid, type, tzoffset, startdatelong);
-			map.addAttribute("travelactivity", TAE);
+			if (activityid == 0) {// safe to assume new activity
+				TAE = new TravelActivityEntity();
+				TAE.setActivityid(activityid);
+				TAE.setItinnum(itinnum);
+				TAE.setType(type);
+				TAE.setTzoffset(tzoffset);
+				TAE.setActivitystarttimelong(startdatelong);
+			}
+			else
+				TAE = (TravelActivityEntity)AED.GetActivityDetails(activityid, type, tzoffset, startdatelong);
 		}
 		
+		map.addAttribute("travelactivity", TAE);
 		((ClassPathXmlApplicationContext) context).close();		
 
 		return "app/travelactivitymanage";	

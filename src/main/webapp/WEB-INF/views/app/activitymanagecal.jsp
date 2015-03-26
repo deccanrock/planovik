@@ -288,7 +288,7 @@
 						var y = date.getFullYear();				
 			
 						var start = new Date(y, m, d);
-			            console.log(start);
+			            // console.log(start);
 						if (${event.type == 0})
 							var color = "#82AF6F";
 						if (${event.type == 1})
@@ -317,7 +317,7 @@
 					</c:forEach>
 
 					callback(events);
-					console.log(JSON.stringify(events));			
+					//console.log(JSON.stringify(events));			
 				}				   
 			    ,		
 				editable: true,
@@ -327,8 +327,7 @@
 					// retrieve the dropped element's stored Event Object
 					var originalEventObject = $(this).data('eventObject');
 					var $extraEventClass = $(this).attr('data-class');
-					
-					console.log(date);			
+						
 					// we need to copy it, so that multiple events don't have a reference to the same object
 					var copiedEventObject = $.extend({}, originalEventObject);
 					
@@ -341,14 +340,9 @@
 					// the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
 					$('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
 					
+					console.log(copiedEventObject);
+					displaymodal(copiedEventObject);
 				},
-				eventReceive: function (event) {
-					alert("event");
-					console.log(event);
-				},
-				eventDrop: function(event, delta, revertFunc) {
-			        alert(event.title + " was dropped on " + event.start.format());
-			    },
 				selectable: true,
 				selectHelper: true,
 				select: function(start, end, allDay) {
@@ -373,17 +367,24 @@
 				,
 				eventClick: function(calEvent, jsEvent, view) {
 			
-					displaymodal(calEvent, jsEvent, view);
+					displaymodal(calEvent);
 				}		
 			});			
 			
 		})
 
-		function displaymodal(calEvent, jsEvent, view) {
-		
-			var framesrc = '"travelactivitymanage?activityid=' +  calEvent.activityid + '&type=' + calEvent.type +
+		function displaymodal(calEvent) {
+			
+			var framesrc;
+			if (calEvent.title === "New Travel") {
+				framesrc = '"travelactivitymanage?itinnum=' + ${itinerary.id} + '&activityid=' +  '0' + '&type=' + '0' +
+				            '&tzoffset=' + ${itinerary.tzoffset} + '&startdatelong=' + ${itinerary.startdatelong} + '"';	
+			}
+			else {
+				framesrc = '"travelactivitymanage?itinnum=' + calEvent.itinnum + '&activityid=' +  calEvent.activityid + '&type=' + calEvent.type +
 			            '&tzoffset=' + calEvent.tzoffset + '&startdatelong=' + calEvent.startdatelong + '"';
-
+			}
+			
 			var modal =
 			'<div class="modal"  id="activitymodal">\
 			   <div class="modal-dialog">\
