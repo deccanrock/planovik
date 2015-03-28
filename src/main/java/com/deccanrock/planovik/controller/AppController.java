@@ -403,7 +403,7 @@ public class AppController {
 			ame.setTzoffset(itinerarydb.getTzoffset());
 			ame.setPax(itinerarydb.getNumtravellers());
 		}
-		else if ( itinerary.getPostbutton().contentEquals("activity")) {
+		else if ( itinerary.getPostbutton().contentEquals("activitymaster")) {
 			map.addAttribute("itinerary", itinerary);
 
 			ame = IED.GetActivityMaster(itinerary);
@@ -413,7 +413,7 @@ public class AppController {
 			ame.setTzoffset(itinerary.getTzoffset());
 			ame.setPax(itinerary.getNumtravellers());
 		}
-		else if ( itinerary.getPostbutton().contentEquals("activitymaster")) {
+		else if ( itinerary.getPostbutton().contentEquals("activity")) {
 			map.addAttribute("itinerary", itinerary);
 
 			ame = IED.GetActivityMaster(itinerary);

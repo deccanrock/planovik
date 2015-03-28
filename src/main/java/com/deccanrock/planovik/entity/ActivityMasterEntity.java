@@ -5,7 +5,6 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 
 
 @Entity
@@ -52,7 +51,7 @@ public class ActivityMasterEntity
 
     @Column(name="dateupdated")    
 	private Date dateupdated;
-    
+        
     private String lastupdatedby;
     
     private String createdby;
@@ -62,6 +61,8 @@ public class ActivityMasterEntity
     private String arrdatetimepicker;
 
     private String depdatetimepicker;
+    
+    ArrayList<String> masteractnames;
         
     // Getter-Setters
     
@@ -208,6 +209,13 @@ public class ActivityMasterEntity
 	public void setStartdatetimepicker(String depdatetimepicker) {
 		this.depdatetimepicker = depdatetimepicker;		
 	}
-
+	
+	public void setMasteractnames (ArrayList<String> masteractnames) {
+		this.masteractnames = masteractnames;
+	}
+		
+	public ArrayList<String> getMasteractnames() {
+		return masteractnames;
+	}	
 
 }

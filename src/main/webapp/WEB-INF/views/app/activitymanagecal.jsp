@@ -42,9 +42,12 @@
 		  <link rel="stylesheet" href="../assets/css/ace-ie.min.css" />
 		  <link rel="stylesheet" href="<c:url value='/resources/css/ace-ie.min.css'/>" />	
 		<![endif]-->
+		
+		<link rel="stylesheet" href="<c:url value='/resources/css/chosen.css'/>" />			
 
 		<!-- inline styles related to this page -->
-
+		
+		
 		<!-- ace settings handler -->
 		<script src="/resources/js/ace-extra.min.js"></script>
 
@@ -54,6 +57,7 @@
 		<script src="/resources/js/html5shiv.min.js"></script>
 		<script src="/resources/js/respond.min.js"></script>
 		<![endif]-->
+		
 	</head>
 	
 	<%@ include file="nav.jsp" %>
@@ -118,6 +122,53 @@
 										<!-- /section:plugins/data-time.calendar -->
 									</div>
 
+									<div class="space-14"></div>
+									<!-- #section:settings.box -->
+									<div class="ace-settings-container" id="master-act-container" >
+										<div class="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn">
+											<i class="ace-icon fa fa-cog bigger-150"></i>
+										</div>
+				
+																				
+										<div class="ace-settings-box clearfix" id="ace-settings-box">
+											<div class="pull-left">
+												<h5>Manage Master Activities</h5>
+											</div><!-- /.pull-left -->
+
+											<div class="row" style="margin-left:3px;margin-right:5px;">
+												<div class="pull-left clearfix">
+													<select class="hideearrow" id="masteractnames" style="width:380px;">
+														<option value="">"Pick a activity master..."</option>
+														<option value="#438EB9">012345678901234567890123456789012345678912345</option>
+														<option value="#222A2D">222A2Dyyyyyyyyyyyyyyyyy</option>
+														<option value="#C6487E">C6487Ezzzzzzzzzzzzzzzzzzzzz</option>
+														<option value="#D0D0D0">D0D0D0111111111111111111111</option>
+														<option value="#438EB9">438EB9xxxxxxxxxxxxxx</option>
+														<option value="#222A2D">222A2Dyyyyyyyyyyyyyyyyy</option>
+														<option value="#C6487E">C6487Ezzzzzzzzzzzzzzzzzzzzz</option>
+														<option value="#D0D0D0">D0D0D0111111111111111111111</option>
+													</select>
+												</div>											
+											</div>
+											<div class="space-6"></div>
+											<div class="row" style="margin-left:40px;">
+												<div class="pull-left">
+													<h4> or </h4>
+												</div>											
+											</div>
+											<div class="space-4"></div>
+											<div class="row" style="margin-left:3px;">
+												<div class="pull-left">
+													<button type="submit" style="margin-left=20px;" id="masteractnew" class="btn btn-primary" > Create New </button>
+												</div>											
+											</div>
+											<div class="space-8"></div>
+
+
+										</div><!-- /.ace-settings-box -->
+									</div><!-- /.ace-settings-container -->	
+									<!-- /section:settings.box -->
+									<div class="space-32"></div>
 									<div class="col-sm-3">
 										<div class="widget-box transparent scrolltop">
 											<div class="widget-header">
@@ -152,7 +203,6 @@
 															<i class="ace-icon fa fa-arrows"></i>
 															New Other
 														</div>
-
 													</div>
 												</div>
 											</div>
@@ -230,9 +280,25 @@
 		<!-- ace scripts -->
 		<script src="/resources/js/ace-elements.min.js"></script>
 		<script src="/resources/js/ace.min.js"></script>
+		<script src="/resources/js/chosen.jquery.min.js"></script>	
 		
 		<!-- inline scripts related to this page -->
 		<script type="text/javascript">
+							
+		jQuery(function($) {
+		
+			$('.chosen-select').chosen({allow_single_deselect:true}); 
+			//resize the chosen on window resize
+		
+			$(window)
+			.off('resize.chosen')
+			.on('resize.chosen', function() {
+				$('.chosen-select').each(function() {
+					 var $this = $(this);
+					 $this.next().css({'width': $this.parent().width()});
+				})
+			}).trigger('resize.chosen');	
+		
 		
 			$(window).on('scroll', function () {
 			    var scrollPos = $(document).scrollTop();
@@ -240,8 +306,6 @@
 			        top: scrollPos
 			    });
 			}).scroll();
-					
-		jQuery(function($) {
 		
 			$('#external-events div.external-event').each(function() {
 		

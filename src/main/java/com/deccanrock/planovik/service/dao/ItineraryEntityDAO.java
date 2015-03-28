@@ -394,35 +394,33 @@ public class ItineraryEntityDAO extends JdbcDaoSupport implements IItneraryEntit
 		// *TO-DO* For now default to Group 1, change to handle multiple groups
 		ame.setGroupnum(1);
 		
-		/*		
-		simpleJdbcCall = new SimpleJdbcCall(dbtemplate)
-		.withProcedureName("sp_getitinactivitycount");
+		// Set master activity names		
+		simpleJdbcCall = new SimpleJdbcCall(dbtemplate).withProcedureName("sp_getmasteractnamesforitin");
 
-		inParamMap = new HashMap<String, Object>();
-			
-		inParamMap.put("initinnum", itinerarydb.getId());
-		inParamMap.put("inversion", itinerarydb.getVersion());
+		inParamMap = new HashMap<String, Object>();			
+		inParamMap.put("initinnum", ame.getItinnum());
+		inParamMap.put("inversion", ame.getVersion());
+		in = new MapSqlParameterSource(inParamMap);
 
-		Map<String, Object> daywiseactivity = simpleJdbcCall.execute(in);
-
-		// Safe to assume result is in result set 1
-		ArrayList <HashMap<Integer, Object>> daywiseactivitycount = (ArrayList<HashMap<Integer, Object>>) daywiseactivity.get("#result-set-1");
-		if (daywiseactivitycount.size() == 0) {
-			ame.setDaywiseactivitycnt(null);
+		Map<String, Object> dbmasteractnames = simpleJdbcCall.execute(in);
+		if (dbmasteractnames.isEmpty()) {
+			ame.setMasteractnames(null);
 			return ame;
 		}
-		
-    	ArrayList<Integer> daywiseactivitycountlist = new ArrayList<Integer>(daywiseactivitycount.size());
+
+		// Safe to assume result is in result set 
+		ArrayList <HashMap<String, Object>> actnames = (ArrayList<HashMap<String, Object>>) dbmasteractnames.get("#result-set-1");
+    	ArrayList<String> actnamearray = new ArrayList<String>(actnames.size());
     	    	
-    	for (HashMap<Integer, Object> map : daywiseactivitycount) {
-    	     for (Entry<Integer, Object> mapEntry : map.entrySet())
-    	    	 daywiseactivitycountlist.add((Integer) mapEntry.getValue());
-    	}    	
+    	for (HashMap<String, Object> map : actnames) {
+    	     for (Entry<String, Object> mapEntry : ((Map<String, Object>) map).entrySet())
+    	    	 actnamearray.add(mapEntry.getValue().toString());
+    	}
     	
-    	ame.setDaywiseactivitycnt(daywiseactivitycountlist);
-    	*/
-		
-    	return ame;
+		    	
+		ame.setMasteractnames(actnamearray);    	    	
+    	
+		return ame;
 	}    
  	
 }

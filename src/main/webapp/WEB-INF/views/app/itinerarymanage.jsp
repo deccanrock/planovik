@@ -21,7 +21,6 @@
 	<!-- /section:basics/content.breadcrumbs -->
 	<div class="page-content">
 	
-	<!-- /section:settings.box -->
 	<div class="page-content-area">
 		<div class="page-header">
 			<h1 style="display:inline-block;margin-right:10px; width:600px;">
@@ -47,174 +46,171 @@
 			<input type="hidden" id="csrfHeader" value="${_csrf.headerName}"/>
 			
 		</div><!-- /.page-header -->
-	
-	
-	<!-- PAGE CONTENT BEGINS -->
-	<div class="row">
-	
-	    <div class="col-xs-9" style="margin-left:20px;">
-	
-		<c:if test="${not empty error}">
-			<div class="error">${error}</div>
-		</c:if>
-		<c:if test="${not empty msg}">
-			<div class="msg">${msg}</div>
-		</c:if>
-	
-		<div class="widget-box">          	                            
-		    <div class="widget-body">
-		    	<div class="widget-main">
-		            <form:form id="manageitinerarysave-form" method="post" action="/app/manage/save" modelAttribute="itinerary" name="itinerary">
-			        <div class="row">
-						<div class='col-md-4'>
-		                    <div class="form-group">
-		                        <div class="clearfix">
-		                            <label for="name">Name (less than 50 chars)</label>
-		                    		<form:input type="text" path="name" id="name" class="col-sm-12" value="${itinerary.name}" />
-		                        </div>
-		                    </div>
-	                    </div>
-	                    
-	                    <div class='col-md-4'>
-		                    <div class="form-group">
-		                        <div class="clearfix">
-		                            <label for="touroperator">Tour Operator</label>
-		                    		<form:input type="text" path="touroperator" id="touroperator" name="touroperator" class="col-sm-12" value="${itinerary.touroperator}" />
-		                        </div>
-		                    </div>
-	                    </div>
 
-						<div class='col-md-4'>
-		                    <div class="form-group">
-		                        <div class="clearfix">
-		                        	<label for="grouphead">Group Head</label>
-										<form:input type="text" path="grouphead" name="grouphead" id="grouphead" class="col-sm-12" 
-		                            			value="${itinerary.grouphead}" />                                		
-		                        </div>
+		<!-- PAGE CONTENT BEGINS -->
+		<div class="row">
+		
+		    <div class="col-xs-9" style="margin-left:20px;">
+		
+			<c:if test="${not empty error}">
+				<div class="error">${error}</div>
+			</c:if>
+			<c:if test="${not empty msg}">
+				<div class="msg">${msg}</div>
+			</c:if>
+		
+			<div class="widget-box">          	                            
+			    <div class="widget-body">
+			    	<div class="widget-main">
+			            <form:form id="manageitinerarysave-form" method="post" action="/app/manage/save" modelAttribute="itinerary" name="itinerary">
+				        <div class="row">
+							<div class='col-md-4'>
+			                    <div class="form-group">
+			                        <div class="clearfix">
+			                            <label for="name">Name (less than 50 chars)</label>
+			                    		<form:input type="text" path="name" id="name" class="col-sm-12" value="${itinerary.name}" />
+			                        </div>
+			                    </div>
 		                    </div>
-	                    </div>
-
-					</div>                    
-	                <div class="space-6"></div>	                    		                    
+		                    
+		                    <div class='col-md-4'>
+			                    <div class="form-group">
+			                        <div class="clearfix">
+			                            <label for="touroperator">Tour Operator</label>
+			                    		<form:input type="text" path="touroperator" id="touroperator" name="touroperator" class="col-sm-12" value="${itinerary.touroperator}" />
+			                        </div>
+			                    </div>
+		                    </div>
 	
-			        <div class="row">
-	                    <div class='col-md-4'>
-		                    <div class="form-group">
-		                        <div class="clearfix">
-		                        	<label for="numtravellers">PAX Count (incl group head)</label>
-										<form:input type="text" path="numtravellers" name="numtravellers" id="numtravellers" class="col-sm-12" 
-		                            			value="${itinerary.numtravellers}" />                                		
-		                        </div>
+							<div class='col-md-4'>
+			                    <div class="form-group">
+			                        <div class="clearfix">
+			                        	<label for="grouphead">Group Head</label>
+											<form:input type="text" path="grouphead" name="grouphead" id="grouphead" class="col-sm-12" 
+			                            			value="${itinerary.grouphead}" />                                		
+			                        </div>
+			                    </div>
 		                    </div>
-		            	</div>
-
-					    <div class='col-md-4'>
-					        <div class="form-group">
-		                        <div class="clearfix">
-		                    		<label for="quotecurrency">Client Quote Currency</label>
-		                    		<div id="remote">
-										<input type="text" class="typeahead scrollable" id="quotecurrency" name="quotecurrency" style="width:149px;" />                                		
-						                <form:input type='hidden' id="quotecurrencystr" path="quotecurrencystr" name="quotecurrencystr" 
-						                	value="${itinerary.quotecurrencystr}" />
-									</div>
-								</div>
-					        </div>
-					    </div>	                    					    
-
-					    <div class='col-md-4'>
-					        <div class="form-group">
-			                    <div class="clearfix">
-			                		<label for="convcodes">Currency Conversion Code</label>
-									<a class="btn btn-minier btn-purple" style="float:right; margin-top:2px;" id="btnnewconvcode">New</a>
-					        		<div class="form-group">
-					        			<div id="remote">
-											<input type="text" class="typeahead scrollable" id="convcodes" name="convcodes"  
-					                        		style="width:149px;" />                                		
-											<form:input type="hidden" id="convcodestr" path="convcodestr" name="convcodestr"  
-					                        	value="${itinerary.convcodestr}" />                                		
+	
+						</div>                    
+		                <div class="space-6"></div>	                    		                    
+		
+				        <div class="row">
+		                    <div class='col-md-4'>
+			                    <div class="form-group">
+			                        <div class="clearfix">
+			                        	<label for="numtravellers">PAX Count (incl group head)</label>
+											<form:input type="text" path="numtravellers" name="numtravellers" id="numtravellers" class="col-sm-12" 
+			                            			value="${itinerary.numtravellers}" />                                		
+			                        </div>
+			                    </div>
+			            	</div>
+	
+						    <div class='col-md-4'>
+						        <div class="form-group">
+			                        <div class="clearfix">
+			                    		<label for="quotecurrency">Client Quote Currency</label>
+			                    		<div id="remote">
+											<input type="text" class="typeahead scrollable" id="quotecurrency" name="quotecurrency" style="width:149px;" />                                		
+							                <form:input type='hidden' id="quotecurrencystr" path="quotecurrencystr" name="quotecurrencystr" 
+							                	value="${itinerary.quotecurrencystr}" />
 										</div>
 									</div>
-								</div>
-					        </div>
-					    </div>
-					</div>
-	                
-	                <div class="space-2"></div>	                     
-			        <div class="row">
-					    <div class='col-md-3'>
-					        <div class="form-group">
-		                        <div class="clearfix">
-	                        		<label for="arrivalcity">Arrival City</label>
-					                <form:input type='text' path="arrivalcity" id="arrivalcity" name="arrivalcity" class="col-sm-12" 
-					                	value="${itinerary.arrivalcity}" />
-								</div>
-					        </div>
-					    </div>
-
-					    <div class='col-md-3'>
-					        <div class="form-group">
-		                        <div class="clearfix">
-	                        		<label for="depcity">Departure City</label>
-					                <form:input type='text' path="depcity" id="depcity" name="depcity" class="col-sm-12" 
-					                	value="${itinerary.depcity}" />
-								</div>
-					        </div>
-					    </div>
-		                    	                    	                                                            
-					    <div class='col-md-3'>
-					        <div class="form-group">
-		                        <div class="clearfix">
-		                    		<label for ="startdate">Arrival Date and Time</label>
-						            <div class='input-group'>
-										<span class="input-group-addon">
-											<i class="fa fa-calendar bigger-110"></i>
-										</span>					            
-						                <input type='text' id="startdatetimepicker" name="startdatetimepicker" class="form-control" 
-						                	value="${itinerary.startdatestr}" style="z-index:0;" />
-						                <form:input type='hidden' id="startdatestr" path="startdatestr" name="startdatestr" value="${itinerary.startdatestr}" />
-						                <form:input type='hidden' id="startdatelong" name="startdatelong" path="startdatelong" />
-						            </div>
-								</div>
-					        </div>
-					    </div>
-	                    
-					    <div class='col-md-3'>
-					        <div class="form-group">
-		                        <div class="clearfix">
-		                    		<label for ="enddate">Departure Date and Time</label>
-						            <div class='input-group'>
-										<span class="input-group-addon">
-											<i class="fa fa-calendar bigger-110"></i>
-										</span>					            
-						                <input type='text' id="enddatetimepicker" name="enddatetimepicker" class="form-control"
-						                	value="${itinerary.enddatestr}" style="z-index:0;" />
-						                <form:input type='hidden' id="enddatestr" path="enddatestr" name="enddatestr" value="${itinerary.enddatestr}" />
-						                <form:input type='hidden' id="enddatelong" name="enddatelong" path="enddatelong" />
-						            </div>
-								</div>
-					        </div>
-					    </div>
-					</div>
-	                <div class="space-8"></div>	                     
-
-	                    <form:input type="hidden" id="tzoffset" path="tzoffset"/>
-	                    <form:input type="hidden" id="id" path="id" value="${itinerary.id}"/>
-	                    <form:input type="hidden" id="mode" path="mode" value="${itinerary.mode}"/>
-	                    <form:input type="hidden" id="version" path="version" value="${itinerary.version}"/>
-	                    <form:input type="hidden" id="status" path="status" value="${itinerary.status}"/>
-	                    <form:input type="hidden" id="postbutton" path="postbutton" />
+						        </div>
+						    </div>	                    					    
 	
-						<button class="btn btn-large btn-primary" style="margin-left:33%;" id="manageitinerarybtn">Save</button>
-						<button class="btn btn-large btn-primary" style="margin-left:6%;" id="activitybtn">Activities</button>
-						<button class="btn btn-large btn-primary" style="margin-left:2%;" id="activitybtn">Activity Master</button>
-                    
-	                    </form:form>
-		        	</div>
-		        	
-				</div><!-- /.widget-main -->
-	        </div><!-- /.widget-body -->
-	    </div><!-- /.widget-box -->
-	</div><!-- row -->
+						    <div class='col-md-4'>
+						        <div class="form-group">
+				                    <div class="clearfix">
+				                		<label for="convcodes">Currency Conversion Code</label>
+										<a class="btn btn-minier btn-purple" style="float:right; margin-top:2px;" id="btnnewconvcode">New</a>
+						        		<div class="form-group">
+						        			<div id="remote">
+												<input type="text" class="typeahead scrollable" id="convcodes" name="convcodes"  
+						                        		style="width:149px;" />                                		
+												<form:input type="hidden" id="convcodestr" path="convcodestr" name="convcodestr"  
+						                        	value="${itinerary.convcodestr}" />                                		
+											</div>
+										</div>
+									</div>
+						        </div>
+						    </div>
+						</div>
+		                
+		                <div class="space-2"></div>	                     
+				        <div class="row">
+						    <div class='col-md-3'>
+						        <div class="form-group">
+			                        <div class="clearfix">
+		                        		<label for="arrivalcity">Arrival City</label>
+						                <form:input type='text' path="arrivalcity" id="arrivalcity" name="arrivalcity" class="col-sm-12" 
+						                	value="${itinerary.arrivalcity}" />
+									</div>
+						        </div>
+						    </div>
+	
+						    <div class='col-md-3'>
+						        <div class="form-group">
+			                        <div class="clearfix">
+		                        		<label for="depcity">Departure City</label>
+						                <form:input type='text' path="depcity" id="depcity" name="depcity" class="col-sm-12" 
+						                	value="${itinerary.depcity}" />
+									</div>
+						        </div>
+						    </div>
+			                    	                    	                                                            
+						    <div class='col-md-3'>
+						        <div class="form-group">
+			                        <div class="clearfix">
+			                    		<label for ="startdate">Arrival Date and Time</label>
+							            <div class='input-group'>
+											<span class="input-group-addon">
+												<i class="fa fa-calendar bigger-110"></i>
+											</span>					            
+							                <input type='text' id="startdatetimepicker" name="startdatetimepicker" class="form-control" 
+							                	value="${itinerary.startdatestr}" style="z-index:0;" />
+							                <form:input type='hidden' id="startdatestr" path="startdatestr" name="startdatestr" value="${itinerary.startdatestr}" />
+							                <form:input type='hidden' id="startdatelong" name="startdatelong" path="startdatelong" />
+							            </div>
+									</div>
+						        </div>
+						    </div>
+		                    
+						    <div class='col-md-3'>
+						        <div class="form-group">
+			                        <div class="clearfix">
+			                    		<label for ="enddate">Departure Date and Time</label>
+							            <div class='input-group'>
+											<span class="input-group-addon">
+												<i class="fa fa-calendar bigger-110"></i>
+											</span>					            
+							                <input type='text' id="enddatetimepicker" name="enddatetimepicker" class="form-control"
+							                	value="${itinerary.enddatestr}" style="z-index:0;" />
+							                <form:input type='hidden' id="enddatestr" path="enddatestr" name="enddatestr" value="${itinerary.enddatestr}" />
+							                <form:input type='hidden' id="enddatelong" name="enddatelong" path="enddatelong" />
+							            </div>
+									</div>
+						        </div>
+						    </div>
+						</div>
+		                <div class="space-8"></div>	                     
+	
+		                    <form:input type="hidden" id="tzoffset" path="tzoffset"/>
+		                    <form:input type="hidden" id="id" path="id" value="${itinerary.id}"/>
+		                    <form:input type="hidden" id="mode" path="mode" value="${itinerary.mode}"/>
+		                    <form:input type="hidden" id="version" path="version" value="${itinerary.version}"/>
+		                    <form:input type="hidden" id="status" path="status" value="${itinerary.status}"/>
+		                    <form:input type="hidden" id="postbutton" path="postbutton" />
+		
+							<button class="btn btn-large btn-success" style="margin-left:33%;" id="manageitinerarybtn">Save</button>
+							<button class="btn btn-large btn-primary" style="margin-left:6%;" id="activitybtn">Activities</button>					
+		                    </form:form>
+			        	</div>
+			        	
+					</div><!-- /.widget-main -->
+		        </div><!-- /.widget-body -->
+		    </div><!-- /.widget-box -->
+		</div><!-- row -->
 	</div><!-- /.page-content-area -->
 	</div><!-- /.page-content -->
 	</div><!-- /.main-content -->
