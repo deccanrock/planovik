@@ -43,11 +43,12 @@
 		  <link rel="stylesheet" href="<c:url value='/resources/css/ace-ie.min.css'/>" />	
 		<![endif]-->
 		
-		<link rel="stylesheet" href="<c:url value='/resources/css/chosen.css'/>" />			
-
 		<!-- inline styles related to this page -->
-		
-		
+		<link rel="stylesheet" href="<c:url value='/resources/css/datepicker.css'/>" />
+		<link rel="stylesheet" href="<c:url value='/resources/css/bootstrap-timepicker.css'/>" />
+		<link rel="stylesheet" href="<c:url value='/resources/css/daterangepicker.css'/>" />
+		<link rel="stylesheet" href="<c:url value='/resources/css/bootstrap-datetimepicker.css'/>" />	
+				
 		<!-- ace settings handler -->
 		<script src="/resources/js/ace-extra.min.js"></script>
 
@@ -126,44 +127,112 @@
 									<!-- #section:settings.box -->
 									<div class="ace-settings-container" id="master-act-container" >
 										<div class="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn">
-											<i class="ace-icon fa fa-cog bigger-150"></i>
-										</div>
-				
+											<i class="ace-icon fa fa-cog bigger-150" id="master-act-cog"></i>
+										</div>	
 																				
-										<div class="ace-settings-box clearfix" id="ace-settings-box">
+										<div class="ace-settings-box" id="ace-settings-box">										
+											
 											<div class="pull-left">
 												<h5>Manage Master Activities</h5>
 											</div><!-- /.pull-left -->
 
-											<div class="row" style="margin-left:3px;margin-right:5px;">
-												<div class="pull-left clearfix">
-													<select class="hideearrow" id="masteractnames" style="width:380px;">
-														<option value="">"Pick a activity master..."</option>
-														<option value="#438EB9">012345678901234567890123456789012345678912345</option>
-														<option value="#222A2D">222A2Dyyyyyyyyyyyyyyyyy</option>
-														<option value="#C6487E">C6487Ezzzzzzzzzzzzzzzzzzzzz</option>
-														<option value="#D0D0D0">D0D0D0111111111111111111111</option>
-														<option value="#438EB9">438EB9xxxxxxxxxxxxxx</option>
-														<option value="#222A2D">222A2Dyyyyyyyyyyyyyyyyy</option>
-														<option value="#C6487E">C6487Ezzzzzzzzzzzzzzzzzzzzz</option>
-														<option value="#D0D0D0">D0D0D0111111111111111111111</option>
-													</select>
-												</div>											
+											<div id="selectmasteract">
+												<div class="row" style="margin-left:3px;margin-right:5px;">
+													<div class="space-10"></div>
+													<div class="pull-left clearfix">
+														<select class="hideearrow" id="masteractnames" style="width:420px;"></select>
+													</div>											
+												</div>
+												<div class="space-4"></div>
+												<div class="row" style="margin-left:40px;">
+													<div class="pull-left">
+														<h4> or </h4>
+													</div>											
+												</div>
+												<div class="space-4"></div>
+												<div class="row" style="margin-left:3px;">
+													<div class="pull-left">
+														<button type="submit" style="margin-left=20px;" id="masteractnew" class="btn btn-primary" > Create New </button>
+													</div>
+												</div>
 											</div>
-											<div class="space-6"></div>
-											<div class="row" style="margin-left:40px;">
-												<div class="pull-left">
-													<h4> or </h4>
-												</div>											
-											</div>
-											<div class="space-4"></div>
-											<div class="row" style="margin-left:3px;">
-												<div class="pull-left">
-													<button type="submit" style="margin-left=20px;" id="masteractnew" class="btn btn-primary" > Create New </button>
-												</div>											
-											</div>
-											<div class="space-8"></div>
 
+											<div class="space-10"></div>
+											
+											<form:form id="masteractform" method="post" modelAttribute="activitymasteract" name="masteractform">											
+														
+						        			<div id="managemasteractgroup">
+						        				<div class="row" style="margin-left:3px;">									    																					    										
+													<div class="space-10"></div>
+
+														<div class="pull-left">
+																<span id="spnnewactname">Specify New Activity Name</span>
+																<span id="spnchangeactname" style="display:none;">Change Activity Name</span>
+															</div>
+														</div>
+												
+														<div class="space-2"></div>
+							        			
+								        				<div class="row" style="margin-left:3px;margin-right:5px;">									    																					    																        				
+										    				<form:input type="text" id="masteractname" name="masteractname" path="masteractname" style="width:420px;"  maxlength="45" />																		        				
+								        				</div>	
+											
+												
+												<div class="space-10"></div>											
+						        			
+						        				<div class="row" style="margin-left:3px;">									    																					    										
+													<div class="pull-left" style="width:48%;">
+														<span>Pick Start Date and Time</span>
+											
+														<div class="space-2"></div>
+						        			
+											            <div class='input-group'>
+															<span class="input-group-addon">
+																<i class="fa fa-calendar bigger-110"></i>
+															</span>															
+															
+											                <input type='text' id="masteractstartdate" name="masteractstartdate" class="form-control" 
+											                	style="z-index:0;width:89%;" />
+											                <form:input type='hidden' id="masteractstartdatestr" path="masteractstartdatestr" name="masteractstartdatestr" />
+											                <form:input type='hidden' id="masteractstartdatelong" name="masteractstartdatelong" path="masteractstartdatelong" />
+											       		</div>
+													</div>
+																				        			
+													<div class="pull-right" style="width:48%;">
+														<span>Pick End Date and Time</span>
+												
+														<div class="space-2"></div>
+								        			
+											            <div class='input-group'>
+															<span class="input-group-addon">
+																<i class="fa fa-calendar bigger-110"></i>
+															</span>					            
+											                <input type='text' id="masteractenddate" name="masteractenddate" class="form-control" 
+											                	style="z-index:0;width:89%;" />
+											                <form:input type='hidden' id="masteractenddatestr" path="masteractenddatestr" name="masteractenddatestr" />
+											                <form:input type='hidden' id="masteractenddatelong" name="masteractenddatelong" path="masteractenddatelong" />
+														</div>
+										       		</div>
+												</div>
+												
+												<div class="space-10"></div>																						
+											
+												<form:input type="hidden" id="itinnum" path="itinnum" value = "${itinerary.id}" />
+												<form:input type="hidden" id="version" path="version" value = "${itinerary.version}" />
+												<form:input type="hidden" id="tzoffset" path="tzoffset" value = "${itinerary.tzoffset}" />
+												<form:input type="hidden" id="masteractid" path="masteractid" value = "0" />														
+												
+												<div class="row" style="margin-left:3px;">
+													<div class="pull-left">
+														<button type="submit" style="margin-left=20px;" id="masteractnewsubmit" class="btn btn-primary"> Create </button>
+														<button type="submit" style="margin-left=20px;display:none" id="masteracteditsubmit" class="btn btn-primary"> Save </button>
+													</div>										
+												</div>
+												<div class="space-10"></div>
+																						
+												
+												</form:form>
+											</div>
 
 										</div><!-- /.ace-settings-box -->
 									</div><!-- /.ace-settings-container -->	
@@ -273,33 +342,207 @@
 		<!-- page specific plugin scripts -->
 		<script src="/resources/js/jquery-ui.custom.min.js"></script>
 		<script src="/resources/js/jquery.ui.touch-punch.min.js"></script>
-		<script src="/resources/js/date-time/moment.min.js"></script>
+		<script src="<c:url value='/resources/js/date-time/moment.min.js'/>" ></script>
 		<script src="/resources/js/fullcalendar.min.js"></script>
 		<script src="/resources/js/bootbox.min.js"></script>
+		<script src="<c:url value='/resources/js/jquery.validate.min.js'/>" ></script>
 		
 		<!-- ace scripts -->
 		<script src="/resources/js/ace-elements.min.js"></script>
 		<script src="/resources/js/ace.min.js"></script>
-		<script src="/resources/js/chosen.jquery.min.js"></script>	
+
+		<script src="<c:url value='/resources/js/date-time/moment.min.js'/>" ></script>
+		<script src="<c:url value='/resources/js/date-time/bootstrap-datepicker.min.js'/>" ></script>
+		<script src="<c:url value='/resources/js/date-time/bootstrap-timepicker.min.js'/>" ></script>
+		<script src="<c:url value='/resources/js/date-time/daterangepicker.min.js'/>" ></script>
+		<script src="<c:url value='/resources/js/date-time/bootstrap-datetimepicker.min.js'/>" ></script>
+	
+				
 		
 		<!-- inline scripts related to this page -->
 		<script type="text/javascript">
+												
 							
 		jQuery(function($) {
 		
-			$('.chosen-select').chosen({allow_single_deselect:true}); 
-			//resize the chosen on window resize
+			var masteractarr = new Array();
+			setMasterActArrInitial(masteractarr);
 		
-			$(window)
-			.off('resize.chosen')
-			.on('resize.chosen', function() {
-				$('.chosen-select').each(function() {
-					 var $this = $(this);
-					 $this.next().css({'width': $this.parent().width()});
-				})
-			}).trigger('resize.chosen');	
+	    	$.validator.setDefaults({	    
+	            errorElement: 'div',
+	            errorClass: 'help-block',
+	            focusInvalid: false,
+	            highlight: function (e) {
+	                $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+	            },
+	            success: function (e) {
+	                $(e).closest('.form-group').removeClass('has-error');//.addClass('has-info');
+	                $(e).remove();
+	            },
+	            errorPlacement: function (error, element) {
+	                if(element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+	                    var controls = element.closest('div[class*="col-"]');
+	                    if(controls.find(':checkbox,:radio').length > 1) controls.append(error);
+	                    else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+	                }
+	                else if(element.is('.select2')) {
+	                    error.insertAfter(element.siblings('[class*="select2-container"]:eq(0)'));
+	                }
+	                else if(element.is('.chosen-select')) {
+	                    error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+	                }
+	                else error.insertAfter(element.parent());
+	            },
+	            invalidHandler: function (form) {
+	            }	    
+		    });
 		
+
+			jQuery.validator.addMethod("enddategtstartdate", function(value, element){
+	           var startdate = GetDate($('#masteractstartdate').val());
+	           var enddate = GetDate($('#masteractenddate').val());
+	            return startdate.getTime() <= enddate.getTime();
+	     	}, 'Activity end date/time should be equal or more than activity start date/time.');   
+		        
+			jQuery.validator.addMethod("startdategtitinstartdate", function(value, element){
+	           var startdate = GetDate($('#masteractstartdate').val());
+	            return ${itinerary.startdatelong} <= startdate.getTime();
+	     	}, 'Activity start date/time should equal or fall after itinerary start date/time.');   
+
+			jQuery.validator.addMethod("enddategtitinenddate", function(value, element){
+	           var enddate = GetDate($('#masteractenddate').val());
+	            return enddate.getTime() <= ${itinerary.enddatelong};
+	     	}, 'Activity end date/time should be than equal or fall before itinerary end date/time.');   
+
+	        $('#masteractform').validate({
+	            rules: {
+	                masteractname: {
+	                    required: true
+	                },
+	                masteractstartdate: {
+	                    required: true,
+	                    startdategtitinstartdate: 'required'
+	                },
+	                masteractenddate: {
+	                    required: true,
+	                    enddategtstartdate: 'required',
+	                    enddategtitinenddate: 'required'
+	                }
+	            },
+	            messages: {
+	            	masteractname: {
+	            		required: "Please provide activity name, 45 chars or less"
+	            	},
+	                masteractstartdate: {
+	                    required: "Please provide master activity start date and time."
+	                },
+	                masteractenddate: {
+	                    required: "Please provide master activity end date and time."
+	                }
+	            }
+	        });        
+			
 		
+			$('#masteractnames').change(function() {
+				if ($(this).val() > 0) {
+					$("#selectmasteract").hide();
+					// Set the values in the fields
+					setMasterEntities(masteractarr, $(this).val());				
+					$("#managemasteractgroup").show();
+				}			    
+			});			
+		
+			$('#masteractstartdate').datetimepicker({
+			
+			   beforeShowDay: function (date) {
+        		return date.valueOf() >= $('${itinerary.startdatelong}');
+    		},
+    		autoclose: true
+			
+			}).next().on(ace.click_event, function(){
+				$(this).prev().focus();
+				console.log($(this));
+			});
+	
+			$('#masteractenddate').datetimepicker().next().on(ace.click_event, function(){
+				$(this).prev().focus();
+			});
+				
+			$("button").click(function() {
+	
+				if (this.id == "masteractnew") {
+					$("#selectmasteract").hide();
+					$("#managemasteractgroup").show();
+					// Set Calendar dates
+				}
+				
+				if (this.id == "masteracteditsubmit" || this.id == "masteractnewsubmit") {	
+				
+		            var startdate = GetDate($('#masteractstartdate').val());
+		            var enddate = GetDate($('#masteractenddate').val());
+
+		            if (startdate == "" || enddate == "" || $('#masteractname').val() == "") {
+		             	return false;	
+		             }	            
+		            
+		            $('#masteractstartdatelong').val(startdate.getTime());
+		            $('#masteractenddatelong').val(enddate.getTime());
+		            $('#masteractenddatelong').val(enddate.getTime());
+		            
+					if (this.id == "masteractnewsubmit")
+						$("#masteractid").val(0);
+					
+					var str = $("#masteractform").serialize();
+					
+					var type = this.id;
+					
+					var request = $.ajax({
+					    type:"post",
+					    data: str,
+					    url:"/app/masteractivityact/save",
+					    dataType: "json"
+					});
+					request.done(function( data ) {
+					  	updatemasteractselect(type, data, masteractarr);	
+						$('#masteractstartdate').val("");														
+						$('#masteractenddate').val("");	
+						$('#masteractname').val("");					    
+					    $("#managemasteractgroup").hide();
+					    setMasterActArr(masteractarr);
+						$("#selectmasteract").show();				    					    
+					}); 
+				    request.fail(function( jqXHR, textStatus ) {
+						$('#masteractstartdate').val("");														
+						$('#masteractenddate').val("");	
+						$('#masteractname').val("");
+						$("#managemasteractgroup").hide();	
+						$("#selectmasteract").show();				    					    
+					});	
+				}
+				
+				return false;
+					
+			});
+		
+		    $("#master-act-cog").click(function() {
+				if ($('#ace-settings-box').hasClass('ace-settings-box')) {
+					$("#selectmasteract").show();
+					$("#managemasteractgroup").hide();
+					$('#masteractstartdate').val("");														
+					$('#masteractenddate').val("");
+					setMasterActArr(masteractarr);
+					$('#masteractnames').val("0");	
+					$('#masteractname').val("");
+					$("#spnchangeactname").hide();
+					$("#spnnewactname").show();
+					$("#masteracteditsubmit").hide();
+					$("#masteractnewsubmit").show();
+					$(".help-block").hide();	
+				}
+				
+				return true;
+    		});
+
 			$(window).on('scroll', function () {
 			    var scrollPos = $(document).scrollTop();
 			    $('.scroll').css({
@@ -519,8 +762,87 @@
 		function adjustModalHeight(height) {
 			$("#activityiFrame").height(height);
 			$('.modal-body #activitymodal').css({"height":height + "px"} );
-		}			
+		}
+		
+		function GetDate(datestr) {
+			var arrdate = datestr.split(/\/|\s|:/);
+			var date; 
+		    if (datestr.indexOf("PM") > 0) {
+		    		if (arrdate[3] < 12) {
+						date = new Date(arrdate[2], arrdate[0] -1, arrdate[1], parseInt(arrdate[3]) +12, arrdate[4]);
+					}    
+					else
+						date = new Date(arrdate[2], arrdate[0] -1, arrdate[1], arrdate[3], arrdate[4]);
+			}
+		    else {
+		    	if (arrdate[3] == 12)
+					date = new Date(arrdate[2], arrdate[0] -1, arrdate[1], arrdate[3] -12, arrdate[4]);
+		    	else
+					date = new Date(arrdate[2], arrdate[0] -1, arrdate[1], arrdate[3], arrdate[4]);		    
+		    }
+		    
+		    return date;
+		};
 
+		function setMasterEntities(masteractarr, maid) {
+		  for (var i = 0; i < masteractarr.length; i++) {
+		    if (masteractarr[i].masteractid == maid) {
+		    	console.log(masteractarr[i]);
+				$("#masteractid").val(maid);
+				$("#masteractname").val(masteractarr[i].masteractname);
+				$("#masteractstartdate").val(masteractarr[i].masteractstartdatestr);
+				$("#masteractenddate").val(masteractarr[i].masteractenddatestr);
+				$("#spnchangeactname").show();
+				$("#spnnewactname").hide();
+				$("#masteracteditsubmit").show();
+				$("#masteractnewsubmit").hide();
+		    }
+		  }
+		};
+		
+		function setMasterActArrInitial (masteractarr) {		
+				<c:forEach var="item" items = "${activitymaster.masteractentities}">
+					var mactivity = {masteractid: ${item.masteractid}, masteractname:"${item.masteractname}", 
+									masteractstartdatestr:"${item.masteractstartdatestr}", masteractenddatestr:"${item.masteractenddatestr}"};
+					masteractarr.push(mactivity);
+				</c:forEach>
+		}
+		
+		function setMasterActArr (masteractarr) {		
+			
+			$('#masteractnames').children().remove();
+			
+			var div_data = 	"<option value=\"0\">" + "Pick a activity master..." + "</option>";
+   			$(div_data).appendTo('#masteractnames');
+
+			for (var i = 0; i < masteractarr.length; i++) {
+				var div_data = 	"<option value=" + masteractarr[i].masteractid + ">" + masteractarr[i].masteractid + " - " + masteractarr[i].masteractname + "</option>";
+	   			$(div_data).appendTo('#masteractnames');
+				console.log($(div_data));
+			 }				
+		}
+
+		function updatemasteractselect(type, data, masteractarr) {
+		  	var item = JSON.parse(data);
+		  	console.log(item);
+			if (type == "masteractnewsubmit") {
+				var mactivity = {masteractid: item.masteractid, masteractname:item.masteractname, 
+								masteractstartdatestr:item.masteractstartdate, masteractenddatestr:item.masteractenddate};
+				masteractarr.push(mactivity);
+			}
+    			
+    		if (type == "masteracteditsubmit") {
+			  for (var i = 0; i < masteractarr.length; i++) {
+			    if (masteractarr[i].masteractid == item.masteractid) {			    
+			    	masteractarr[i].masteractname = item.masteractname;
+			    	masteractarr[i].masteractstartdatestr = item.masteractstartdate;
+			    	masteractarr[i].masteractenddatestr = item.masteractenddate;
+			    }
+			  }
+		  	}
+		}
+		        
+					
 		</script>
 	</body>
 </html>

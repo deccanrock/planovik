@@ -203,7 +203,13 @@
 		                    <form:input type="hidden" id="postbutton" path="postbutton" />
 		
 							<button class="btn btn-large btn-success" style="margin-left:33%;" id="manageitinerarybtn">Save</button>
+							<c:if test="${itinerary.version == 0}">							
+							<button class="btn btn-large btn-primary" style="margin-left:6%;" id="activitybtn" disabled>Activities</button>					
+		                    </c:if>
+							<c:if test="${itinerary.version > 0}">							
 							<button class="btn btn-large btn-primary" style="margin-left:6%;" id="activitybtn">Activities</button>					
+		                    </c:if>
+		                    
 		                    </form:form>
 			        	</div>
 			        	

@@ -33,6 +33,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.codehaus.jackson.map.ObjectMapper;
 
+import com.deccanrock.planovik.entity.ActivityMasterActEntity;
 import com.deccanrock.planovik.entity.ActivityMasterEntity;
 import com.deccanrock.planovik.entity.TravelActivityEntity;
 import com.deccanrock.planovik.entity.RentalActivityEntity;
@@ -302,7 +303,7 @@ public class AppController {
 		ItineraryEntityDAO IED = (ItineraryEntityDAO)context.getBean("ItineraryEntityDAO");
 		
 		// Record admin who created/edited/modifyed
-		itinerary.setLastupdatedbyemail(username);
+		itinerary.setLastupdatedbyusername(username);
 		
 		ItineraryEntity itinerarydb = null;
 		if ( itinerary.getMode().equals("Create")) {
@@ -387,7 +388,7 @@ public class AppController {
 		}
 		
 		// Record admin who created/edited/modifyed
-		itinerary.setCreatedbyusername(username);
+		itinerary.setLastupdatedbyusername(username);
 		
 		ActivityMasterEntity ame = null;
 		// Get master activity for the itinerary since information changes on every save
@@ -425,6 +426,9 @@ public class AppController {
 		}
 		
 		map.addAttribute("activitymaster", ame);
+		
+		ActivityMasterActEntity AMAE = new ActivityMasterActEntity();
+		map.addAttribute("activitymasteract", AMAE);
 		
 		// Get all activities sorted day wise, heavy hitter
 		ActivitiesListForItinerary ALE = new ActivitiesListForItinerary(ame.getItinnum(), ame.getVersion(), ame.getTzoffset(), itinerary.getStartdatelong());
@@ -588,6 +592,43 @@ public class AppController {
 		// String jsonOutput = gson.toJson(taedb);
 		return jsonOut;
     }
+
+    
+    @RequestMapping(value = "/app/masteractivityact/save", method = RequestMethod.POST, produces = "application/json")    
+    public @ResponseBody String saveMasterActivityAct(HttpServletRequest request, HttpServletResponse response) 
+			throws IOException {
+    	
+    	// This is ajax support function for JQGrid
+    	logger.info("Master Activity Act - POST");
+			
+		// Save model to database
+		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
+		ActivityMasterDAO AMD = (ActivityMasterDAO)context.getBean("ActivityMasterDAO");
+		
+		String actname = request.getParameter("masteractname");
+		long startdatetimelong = Long.valueOf(request.getParameter("masteractstartdatelong"));
+		long enddatetimelong = Long.valueOf(request.getParameter("masteractenddatelong"));
+		int itinnum = Integer.valueOf(request.getParameter("itinnum"));
+		int version = Integer.valueOf(request.getParameter("version"));
+		short tzoffset = Short.valueOf(request.getParameter("tzoffset"));
+		int masteractid = Integer.valueOf(request.getParameter("masteractid"));
+		String startdateStr = request.getParameter("masteractstartdate");
+		String enddateStr = request.getParameter("masteractenddate");
+		
+		
+		String result = AMD.CreateMasterActivityAct(itinnum, version, actname, startdatetimelong, enddatetimelong, tzoffset, masteractid);
+		String strObj = "{ \"masteractid\": " + "\"" + result + "\"" + ", \"masteractname\": " + "\"" + actname + "\"" + ", \"masteractstartdate\": " +
+							"\"" +  startdateStr + "\"" + ", \"masteractenddate\": " + "\"" + enddateStr + "\"" + "}";
+				
+		// Send information for succcess as json format
+		((ClassPathXmlApplicationContext) context).close();		
+		response.setContentType("application/json");
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonOut = mapper.writeValueAsString(strObj);		
+		
+		return jsonOut;
+    }
+
 
     
     @RequestMapping(value = "/app/createcurrconvcode", method = RequestMethod.GET)    

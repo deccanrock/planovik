@@ -20,6 +20,9 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.deccanrock.planovik.constants.Constants;
+import com.deccanrock.planovik.service.utils.TimeFormatter;
+
 
  
 @Component
@@ -65,6 +68,38 @@ public class ActivityMasterDAO extends JdbcDaoSupport implements IActivityMaster
     	
  		return activitycodeslist;
 	}
+    
+	@Override		
+	public String CreateMasterActivityAct(int itinnum, int version, String actname, long actstarttime, long actendtime, 
+											short tzoffset, int masteractid) {
+    	JdbcTemplate dbtemplate = new JdbcTemplate(dataSource);    	
+
+		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(dbtemplate)
+		.withProcedureName("sp_createeditmasteractnamedet");
+
+		Map<String, Object> inParamMap = new HashMap<String, Object>();
+			
+		inParamMap.put("initinnum", itinnum);
+		inParamMap.put("inversion", version);
+		inParamMap.put("inmasteractname", actname);
+		inParamMap.put("inmasteractid", masteractid);
+		
+		// Convert UTC time strings to Date
+		long utcstime = TimeFormatter.LocalToUTC(actstarttime, tzoffset);
+		java.sql.Timestamp stimestamp = new java.sql.Timestamp(utcstime);			
+		inParamMap.put("inmasteractstartdate", stimestamp);
+		
+		long utcetime = TimeFormatter.LocalToUTC(actendtime, tzoffset);
+		java.sql.Timestamp etimestamp = new java.sql.Timestamp(utcetime);									
+		inParamMap.put("inmasteractenddate", etimestamp);		
+		SqlParameterSource in = new MapSqlParameterSource(inParamMap);
+
+		Map<String, Object> simpleJdbcCallResult = simpleJdbcCall.execute(in);
+    	String result = (String) simpleJdbcCallResult.get("outmasteractid");	
+    	
+ 		return result;
+	}
+    
 
 
 }

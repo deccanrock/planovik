@@ -14,6 +14,7 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
@@ -21,9 +22,14 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.deccanrock.planovik.entity.ActivityMasterActEntity;
 import com.deccanrock.planovik.entity.ActivityMasterEntity;
 import com.deccanrock.planovik.entity.ItineraryEntity;
+import com.deccanrock.planovik.entity.OrgEntity;
+import com.deccanrock.planovik.entity.UserLoginAttempts;
+import com.deccanrock.planovik.service.ActivityMasterActMapper;
 import com.deccanrock.planovik.service.ItineraryEntityMapper;
+import com.deccanrock.planovik.service.OrgDetailsMapper;
 import com.deccanrock.planovik.service.utils.TimeFormatter;
 import com.deccanrock.planovik.constants.Constants;
  
@@ -351,74 +357,92 @@ public class ItineraryEntityDAO extends JdbcDaoSupport implements IItneraryEntit
 
 		Map<String, Object> simpleJdbcCallResult = simpleJdbcCall.execute(in);
 		
-		if (simpleJdbcCallResult.get("countactivityhotel") != null) {
-			int countActivityHotel = (Integer) simpleJdbcCallResult.get("countactivityhotel");
+		if (simpleJdbcCallResult.get("outcountactivityhotel") != null) {
+			int countActivityHotel = (Integer) simpleJdbcCallResult.get("outcountactivityhotel");
 	    	if (countActivityHotel == 0)
 	    		ame.setCountactivityhotel(0);
 	    	else
 	    		ame.setCountactivityhotel(countActivityHotel);
 		}
 		
-		if (simpleJdbcCallResult.get("countactivityvisit") != null) {
-		    int countActivitysightseeing = (Integer) simpleJdbcCallResult.get("countactivityvisit");
+		if (simpleJdbcCallResult.get("outcountactivityvisit") != null) {
+		    int countActivitysightseeing = (Integer) simpleJdbcCallResult.get("outcountactivityvisit");
 	    	if (countActivitysightseeing == 0)
 	    		ame.setCountactivityvisit(0);
 	    	else
 	    		ame.setCountactivityvisit(countActivitysightseeing);
 		}
 		
-		if (simpleJdbcCallResult.get("countactivitytravel") != null) {		
-	    	int countActivityTravel = (Integer) simpleJdbcCallResult.get("countactivitytravel");
+		if (simpleJdbcCallResult.get("outcountactivitytravel") != null) {		
+	    	int countActivityTravel = (Integer) simpleJdbcCallResult.get("outcountactivitytravel");
 	    	if (countActivityTravel == 0)
 	    		ame.setCountactivitytravel(0);
 	    	else
 	    		ame.setCountactivitytravel(countActivityTravel);
 		}
 		
-		if (simpleJdbcCallResult.get("countactivityother") != null) {				
-		    int countActivityOther = (Integer) simpleJdbcCallResult.get("countactivityother");
+		if (simpleJdbcCallResult.get("outcountactivityother") != null) {				
+		    int countActivityOther = (Integer) simpleJdbcCallResult.get("outcountactivityother");
 	    	if (countActivityOther == 0)
 	    		ame.setCountactivityother(0);
 	    	else
 	    		ame.setCountactivityother(countActivityOther);
 		}
 
-		if (simpleJdbcCallResult.get("countactivityrental") != null) {				
-		    int countActivityRental = (Integer) simpleJdbcCallResult.get("countactivityrental");
+		if (simpleJdbcCallResult.get("outcountactivityrental") != null) {				
+		    int countActivityRental = (Integer) simpleJdbcCallResult.get("outcountactivityrental");
 	    	if (countActivityRental == 0)
 	    		ame.setCountactivityrental(0);
 	    	else
 	    		ame.setCountactivityother(countActivityRental);
 		}
 		
+		if (simpleJdbcCallResult.get("outitinnum") != null) {				
+		    int itinnum = (Integer) simpleJdbcCallResult.get("outitinnum");
+	    	if (itinnum == 0)
+	    		ame.setItinnum(0);
+	    	else
+	    		ame.setItinnum(itinnum);
+		}
+		
+		if (simpleJdbcCallResult.get("outversion") != null) {				
+		    int version = (Integer) simpleJdbcCallResult.get("outversion");
+	    	if (version == 0)
+	    		ame.setVersion(0);
+	    	else
+	    		ame.setVersion(version);
+		}
+		
+		if (simpleJdbcCallResult.get("outpax") != null) {				
+		    int pax = (Integer) simpleJdbcCallResult.get("outpax");
+	    	if (pax == 0)
+	    		ame.setPax(0);
+	    	else
+	    		ame.setPax(pax);
+		}
+		
+		if (simpleJdbcCallResult.get("outgroupnum") != null) {				
+		    int groupnum = (Integer) simpleJdbcCallResult.get("outgroupnum");
+	    	if (groupnum == 0)
+	    		ame.setGroupnum(0);
+	    	else
+	    		ame.setGroupnum(groupnum);
+		}
+		
+		
 		// *TO-DO* For now default to Group 1, change to handle multiple groups
 		ame.setGroupnum(1);
 		
 		// Set master activity names		
-		simpleJdbcCall = new SimpleJdbcCall(dbtemplate).withProcedureName("sp_getmasteractnamesforitin");
+		simpleJdbcCall = new SimpleJdbcCall(dbtemplate).withProcedureName("sp_getmasteractivityactdet");
 
-		inParamMap = new HashMap<String, Object>();			
-		inParamMap.put("initinnum", ame.getItinnum());
-		inParamMap.put("inversion", ame.getVersion());
-		in = new MapSqlParameterSource(inParamMap);
+        String SQL = "Call sp_getmasteractivityactdet(" + "'" + ame.getItinnum() + "'," + "'" + ame.getVersion() + "'" + ");";
 
-		Map<String, Object> dbmasteractnames = simpleJdbcCall.execute(in);
-		if (dbmasteractnames.isEmpty()) {
-			ame.setMasteractnames(null);
-			return ame;
-		}
-
-		// Safe to assume result is in result set 
-		ArrayList <HashMap<String, Object>> actnames = (ArrayList<HashMap<String, Object>>) dbmasteractnames.get("#result-set-1");
-    	ArrayList<String> actnamearray = new ArrayList<String>(actnames.size());
-    	    	
-    	for (HashMap<String, Object> map : actnames) {
-    	     for (Entry<String, Object> mapEntry : ((Map<String, Object>) map).entrySet())
-    	    	 actnamearray.add(mapEntry.getValue().toString());
-    	}
-    	
+        ActivityMasterActMapper AMAM = new ActivityMasterActMapper();
+        AMAM.setTzoffset(itinerarydb.getTzoffset());
+ 		ArrayList<ActivityMasterActEntity> actmasterentities = (ArrayList<ActivityMasterActEntity>) getJdbcTemplate().query(SQL, AMAM);		    	
 		    	
-		ame.setMasteractnames(actnamearray);    	    	
+		ame.setMsteractentities(actmasterentities);    	    	
     	
 		return ame;
 	}    

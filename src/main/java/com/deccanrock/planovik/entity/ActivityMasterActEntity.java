@@ -90,7 +90,7 @@ public class ActivityMasterActEntity
 		return masteractstartdatestr;
 	}
 
-	public void setMasteractstartdate(String masteractstartdatestr) {
+	public void setMasteractstartdatestr(String masteractstartdatestr) {
 		this.masteractstartdatestr = masteractstartdatestr;
 	}
     
@@ -114,7 +114,7 @@ public class ActivityMasterActEntity
 		return masteractenddatestr;
 	}
 
-	public void setMasteractenddate(String masteractenddatestr) {
+	public void setMasteractenddatestr(String masteractenddatestr) {
 		this.masteractenddatestr = masteractenddatestr;
 	}
     
@@ -138,7 +138,7 @@ public class ActivityMasterActEntity
 		return datecreated;
 	}
 
-	public void getDatecreated(Date datecreated) {
+	public void setDatecreated(Date datecreated) {
 		this.datecreated = datecreated;
 	}
 

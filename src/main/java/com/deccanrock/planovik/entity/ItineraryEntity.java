@@ -258,7 +258,7 @@ public class ItineraryEntity
 		return this.lastupdatedbyusername;
 	}
 	
-	public void setLastupdatedbyemail(String lastupdatedbyusername) {
+	public void setLastupdatedbyusername(String lastupdatedbyusername) {
 		this.lastupdatedbyusername = lastupdatedbyusername;
 	}
 	

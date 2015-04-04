@@ -62,7 +62,7 @@ public class ActivityMasterEntity
 
     private String depdatetimepicker;
     
-    ArrayList<String> masteractnames;
+    ArrayList<ActivityMasterActEntity> masteractentities;
         
     // Getter-Setters
     
@@ -210,12 +210,12 @@ public class ActivityMasterEntity
 		this.depdatetimepicker = depdatetimepicker;		
 	}
 	
-	public void setMasteractnames (ArrayList<String> masteractnames) {
-		this.masteractnames = masteractnames;
+	public void setMsteractentities (ArrayList<ActivityMasterActEntity> masteractentities) {
+		this.masteractentities = masteractentities;
 	}
 		
-	public ArrayList<String> getMasteractnames() {
-		return masteractnames;
+	public ArrayList<ActivityMasterActEntity> getMasteractentities() {
+		return masteractentities;
 	}	
 
 }
