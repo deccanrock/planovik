@@ -16,6 +16,12 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
     @GeneratedValue
     private Integer activityid;
     
+    @Column(name="itinnum")    
+    private int itinnum;
+    
+    @Column(name="masteractid")    
+    private short masteractid;    
+    
     @Column(name="pax")    
     private Integer pax;
       
@@ -109,9 +115,7 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
     private String [] codes;
     
     private int version;
-    
-    private int itinnum;
-        
+            
     private String lastupdatedby;
 
     private String createdby;
@@ -133,6 +137,23 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
 	public void setActivityid(Integer activityid) {
 		this.activityid = activityid;
 	}
+	
+	public int getItinnum() {
+		return itinnum;
+	}
+
+	public void setItinnum(int itinnum) {
+		this.itinnum = itinnum;
+	}
+	
+	public short getMasteractid() {
+		return masteractid;
+	}
+
+	public void setMasteractid(short masteractid) {
+		this.masteractid = masteractid;
+	}
+
 	
 	public Integer getPax() {
 		return pax;
@@ -405,14 +426,6 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
 	public void setCodes(String [] codes) {
 		this.codes = codes;
 	}	
-
-	public int getItinnum() {
-		return itinnum;
-	}
-
-	public void setItinnum(int itinnum) {
-		this.itinnum = itinnum;
-	}
 	
     public void setLastupdatedby(String emailid) {
     	lastupdatedby = emailid;

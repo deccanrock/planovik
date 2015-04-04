@@ -46,6 +46,9 @@ public class TravelActivityMapper implements RowMapper<TravelActivityEntity> {
 	   	// Separate out details for light pack without all details
 		travel.setActivityid(rs.getInt("activityid"));
 		travel.setItinnum(rs.getInt("itinnum"));
+
+		travel.setMasteractid(rs.getShort("masteractid"));
+
 		if (rs.getString("actname") != null)
 			travel.setActname(rs.getString("actname"));
 		else

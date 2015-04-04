@@ -457,7 +457,7 @@ public class AppController {
     // Read session variables and build the page
     @RequestMapping(value = "/app/manage/travelactivitymanage", method = RequestMethod.GET)    
     public String travelActivityManage(ModelMap map, HttpSession session, @RequestParam int itinnum, @RequestParam int activityid, @RequestParam int type, 
-    		@RequestParam short tzoffset, @RequestParam long startdatelong) throws IOException, SQLException {
+    		@RequestParam short tzoffset, @RequestParam long startdatelong, @RequestParam int version) throws IOException, SQLException {
 
     	// This is ajax support function for JQGrid
     	logger.info("Travel Activity Manage");
@@ -473,6 +473,7 @@ public class AppController {
 				TAE.setType(type);
 				TAE.setTzoffset(tzoffset);
 				TAE.setActivitystarttimelong(startdatelong);
+				TAE.setVersion(version);
 			}
 			else
 				TAE = (TravelActivityEntity)AED.GetActivityDetails(activityid, type, tzoffset, startdatelong);
@@ -508,6 +509,7 @@ public class AppController {
 		travelactivity.setVersion(Integer.parseInt(request.getParameter("version")));
 		travelactivity.setTzoffset((short)Integer.parseInt(request.getParameter("tzoffset")));
 		travelactivity.setItinnum(Integer.parseInt(request.getParameter("itinnum")));
+		travelactivity.setMasteractid((short) Integer.parseInt(request.getParameter("masteractid")));		
 		travelactivity.setGroupnum(Integer.parseInt(request.getParameter("groupnum")));
 		
 		// User filled data
@@ -618,7 +620,8 @@ public class AppController {
 		
 		String result = AMD.CreateMasterActivityAct(itinnum, version, actname, startdatetimelong, enddatetimelong, tzoffset, masteractid);
 		String strObj = "{ \"masteractid\": " + "\"" + result + "\"" + ", \"masteractname\": " + "\"" + actname + "\"" + ", \"masteractstartdate\": " +
-							"\"" +  startdateStr + "\"" + ", \"masteractenddate\": " + "\"" + enddateStr + "\"" + "}";
+							"\"" +  startdateStr + "\"" + ", \"masteractenddate\": " + "\"" + enddateStr + "\"" + 
+							", \"masteractstartdatelong\": " + "\"" +  startdatetimelong + "\"" + ", \"masteractenddatelong\": " + "\"" + enddatetimelong + "\"" +"}";
 				
 		// Send information for succcess as json format
 		((ClassPathXmlApplicationContext) context).close();		

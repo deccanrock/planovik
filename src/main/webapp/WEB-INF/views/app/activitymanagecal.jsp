@@ -140,7 +140,7 @@
 												<div class="row" style="margin-left:3px;margin-right:5px;">
 													<div class="space-10"></div>
 													<div class="pull-left clearfix">
-														<select class="hideearrow" id="masteractnames" style="width:420px;"></select>
+														<select class="hideearrow selectof" id="masteractnames" style="width:420px;"></select>
 													</div>											
 												</div>
 												<div class="space-4"></div>
@@ -362,12 +362,123 @@
 		<!-- inline scripts related to this page -->
 		<script type="text/javascript">
 												
+		var masteractarr = new Array();
 							
 		jQuery(function($) {
-		
-			var masteractarr = new Array();
-			setMasterActArrInitial(masteractarr);
-		
+			    	
+			var calendar = $('#calendar').fullCalendar({
+				//isRTL: true,
+				 buttonHtml: {
+					prev: '<i class="ace-icon fa fa-chevron-left"></i>',
+					next: '<i class="ace-icon fa fa-chevron-right"></i>'
+				},
+				
+				timezone: 'local',
+			
+				header: {
+					left: 'prev,next today',
+					center: 'title',
+					right: 'month,agendaWeek,agendaDay'		
+				},
+			   events: function(start, end, timezone, callback) {
+			
+					var events = [];
+					<c:forEach items="${activitylist}" var="event">
+						var title = "${fn:escapeXml(event.actname)}";
+				
+						var date = new Date(${event.activitystarttimelong});
+						// var date = new Date();
+						var d = date.getDate();
+						var m = date.getMonth();
+						var y = date.getFullYear();				
+			
+						var start = new Date(y, m, d);
+			            // console.log(start);
+						if (${event.type == 0})
+							var color = "#82AF6F";
+						if (${event.type == 1})
+							var color = "#D15B47";
+						if (${event.type == 2})
+							var color = "#9585BF";
+						if (${event.type == 3})
+							var color = "#FEE188";
+						if (${event.type == 4})
+							var color = "#D6487E";
+						
+						var event = {
+							"title": title,
+							"start": start,
+							"color": color,
+							"activityid": ${event.activityid},
+							"code": "${fn:escapeXml(event.code)}",
+							"itinnum": "${fn:escapeXml(event.itinnum)}",
+							"activitystarttimelong": "${fn:escapeXml(event.activitystarttimelong)}",
+							"actname": "${fn:escapeXml(event.actname)}",
+							"tzoffset": ${itinerary.tzoffset},
+							"startdatelong": ${itinerary.startdatelong},
+							"type": ${event.type}
+						}
+						events.push(event);				
+					</c:forEach>
+
+					callback(events);
+					//console.log(JSON.stringify(events));			
+				}				   
+			    ,		
+				editable: true,
+				droppable: true, // this allows things to be dropped onto the calendar !!!
+				drop: function(date, allDay) { // this function is called when something is dropped
+				
+					// retrieve the dropped element's stored Event Object
+					var originalEventObject = $(this).data('eventObject');
+					var $extraEventClass = $(this).attr('data-class');
+						
+					// we need to copy it, so that multiple events don't have a reference to the same object
+					var copiedEventObject = $.extend({}, originalEventObject);
+					
+					// assign it the date that was reported
+					copiedEventObject.start = date;
+					copiedEventObject.allDay = allDay;
+					if($extraEventClass) copiedEventObject['className'] = [$extraEventClass];
+					
+					// render the event on the calendar
+					// the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+					$('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
+					
+					console.log(copiedEventObject);
+					displaymodal(copiedEventObject);
+				},
+				selectable: true,
+				selectHelper: true,
+				select: function(start, end, allDay) {
+					
+					bootbox.prompt("New Event Title:", function(title) {
+						if (title !== null) {
+							calendar.fullCalendar('renderEvent',
+								{
+									title: title,
+									start: start,
+									end: end,
+									allDay: allDay
+								},
+								true // make the event "stick"
+							);
+						}
+					});
+					
+			
+					calendar.fullCalendar('unselect');
+				}
+				,
+				eventClick: function(calEvent, jsEvent, view) {
+			
+					displaymodal(calEvent);
+				}		
+			});			
+	    
+	    	setMasterActArrInitial(masteractarr);
+			setMasterActArr(masteractarr);
+	    
 	    	$.validator.setDefaults({	    
 	            errorElement: 'div',
 	            errorClass: 'help-block',
@@ -509,7 +620,8 @@
 						$('#masteractname').val("");					    
 					    $("#managemasteractgroup").hide();
 					    setMasterActArr(masteractarr);
-						$("#selectmasteract").show();				    					    
+						$("#selectmasteract").show();
+						setCalendarMasterActivity();				    					    
 					}); 
 				    request.fail(function( jqXHR, textStatus ) {
 						$('#masteractstartdate').val("");														
@@ -570,113 +682,6 @@
 				
 			});
 
-			var calendar = $('#calendar').fullCalendar({
-				//isRTL: true,
-				 buttonHtml: {
-					prev: '<i class="ace-icon fa fa-chevron-left"></i>',
-					next: '<i class="ace-icon fa fa-chevron-right"></i>'
-				},
-			
-				header: {
-					left: 'prev,next today',
-					center: 'title',
-					right: 'month,agendaWeek,agendaDay'		
-				},
-			   events: function(start, end, timezone, callback) {
-			
-					var events = [];
-					<c:forEach items="${activitylist}" var="event">
-						var title = "${fn:escapeXml(event.actname)}";
-				
-						var date = new Date(${event.activitystarttimelong});
-						// var date = new Date();
-						var d = date.getDate();
-						var m = date.getMonth();
-						var y = date.getFullYear();				
-			
-						var start = new Date(y, m, d);
-			            // console.log(start);
-						if (${event.type == 0})
-							var color = "#82AF6F";
-						if (${event.type == 1})
-							var color = "#D15B47";
-						if (${event.type == 2})
-							var color = "#9585BF";
-						if (${event.type == 3})
-							var color = "#FEE188";
-						if (${event.type == 4})
-							var color = "#D6487E";
-						
-						var event = {
-							"title": title,
-							"start": start,
-							"color": color,
-							"activityid": ${event.activityid},
-							"code": "${fn:escapeXml(event.code)}",
-							"itinnum": "${fn:escapeXml(event.itinnum)}",
-							"activitystarttimelong": "${fn:escapeXml(event.activitystarttimelong)}",
-							"actname": "${fn:escapeXml(event.actname)}",
-							"tzoffset": ${itinerary.tzoffset},
-							"startdatelong": ${itinerary.startdatelong},
-							"type": ${event.type}
-						}
-						events.push(event);				
-					</c:forEach>
-
-					callback(events);
-					//console.log(JSON.stringify(events));			
-				}				   
-			    ,		
-				editable: true,
-				droppable: true, // this allows things to be dropped onto the calendar !!!
-				drop: function(date, allDay) { // this function is called when something is dropped
-				
-					// retrieve the dropped element's stored Event Object
-					var originalEventObject = $(this).data('eventObject');
-					var $extraEventClass = $(this).attr('data-class');
-						
-					// we need to copy it, so that multiple events don't have a reference to the same object
-					var copiedEventObject = $.extend({}, originalEventObject);
-					
-					// assign it the date that was reported
-					copiedEventObject.start = date;
-					copiedEventObject.allDay = allDay;
-					if($extraEventClass) copiedEventObject['className'] = [$extraEventClass];
-					
-					// render the event on the calendar
-					// the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
-					$('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
-					
-					console.log(copiedEventObject);
-					displaymodal(copiedEventObject);
-				},
-				selectable: true,
-				selectHelper: true,
-				select: function(start, end, allDay) {
-					
-					bootbox.prompt("New Event Title:", function(title) {
-						if (title !== null) {
-							calendar.fullCalendar('renderEvent',
-								{
-									title: title,
-									start: start,
-									end: end,
-									allDay: allDay
-								},
-								true // make the event "stick"
-							);
-						}
-					});
-					
-			
-					calendar.fullCalendar('unselect');
-				}
-				,
-				eventClick: function(calEvent, jsEvent, view) {
-			
-					displaymodal(calEvent);
-				}		
-			});			
 			
 		})
 
@@ -685,11 +690,11 @@
 			var framesrc;
 			if (calEvent.title === "New Travel") {
 				framesrc = '"travelactivitymanage?itinnum=' + ${itinerary.id} + '&activityid=' +  '0' + '&type=' + '0' +
-				            '&tzoffset=' + ${itinerary.tzoffset} + '&startdatelong=' + ${itinerary.startdatelong} + '"';	
+				            '&tzoffset=' + ${itinerary.tzoffset} + '&startdatelong=' + ${itinerary.startdatelong} + '&version=' + ${itinerary.version} + '"';	
 			}
 			else {
 				framesrc = '"travelactivitymanage?itinnum=' + calEvent.itinnum + '&activityid=' +  calEvent.activityid + '&type=' + calEvent.type +
-			            '&tzoffset=' + calEvent.tzoffset + '&startdatelong=' + calEvent.startdatelong + '"';
+			            '&tzoffset=' + calEvent.tzoffset + '&startdatelong=' + calEvent.startdatelong + '&version=' + ${itinerary.version} + '"';
 			}
 			
 			var modal =
@@ -787,7 +792,6 @@
 		function setMasterEntities(masteractarr, maid) {
 		  for (var i = 0; i < masteractarr.length; i++) {
 		    if (masteractarr[i].masteractid == maid) {
-		    	console.log(masteractarr[i]);
 				$("#masteractid").val(maid);
 				$("#masteractname").val(masteractarr[i].masteractname);
 				$("#masteractstartdate").val(masteractarr[i].masteractstartdatestr);
@@ -800,15 +804,17 @@
 		  }
 		};
 		
-		function setMasterActArrInitial (masteractarr) {		
+		function setMasterActArrInitial (masteractarr, calendar) {		
 				<c:forEach var="item" items = "${activitymaster.masteractentities}">
 					var mactivity = {masteractid: ${item.masteractid}, masteractname:"${item.masteractname}", 
-									masteractstartdatestr:"${item.masteractstartdatestr}", masteractenddatestr:"${item.masteractenddatestr}"};
+									masteractstartdatestr:"${item.masteractstartdatestr}", masteractenddatestr:"${item.masteractenddatestr}",
+									masteractstartdatelong:${item.masteractstartdatelong}, masteractenddatelong:${item.masteractenddatelong}};
 					masteractarr.push(mactivity);
+					setCalendarMasterActivity(${item.masteractid}, "${item.masteractname}", ${item.masteractstartdatelong}, ${item.masteractenddatelong})
 				</c:forEach>
 		}
 		
-		function setMasterActArr (masteractarr) {		
+		function setMasterActArr (masteractarr, calendar) {		
 			
 			$('#masteractnames').children().remove();
 			
@@ -816,9 +822,15 @@
    			$(div_data).appendTo('#masteractnames');
 
 			for (var i = 0; i < masteractarr.length; i++) {
-				var div_data = 	"<option value=" + masteractarr[i].masteractid + ">" + masteractarr[i].masteractid + " - " + masteractarr[i].masteractname + "</option>";
+				// var optgroup = "<optgroup label=" + masteractarr[i].masteractstartdatestr + masteractarr[i].masteractenddatestr + ">";
+				var optgroup = "<optgroup label=" + "\"" + masteractarr[i].masteractstartdatestr + " - " + masteractarr[i].masteractenddatestr + "\"" + ">";
+				var option = "<option value=" + masteractarr[i].masteractid + ">" + masteractarr[i].masteractid + " - " + masteractarr[i].masteractname + "</option>";
+				var closeoptgroup = "</optgroup>";
+				div_data = optgroup + option + closeoptgroup;
 	   			$(div_data).appendTo('#masteractnames');
-				console.log($(div_data));
+				//setCalendarMasterActivity(masteractarr[i].masteractid, masteractarr[i].masteractname, masteractarr[i].masteractstartdatelong, 
+				//  masteractarr[i].masteractenddatelong);		  			  			  	
+	   			
 			 }				
 		}
 
@@ -827,8 +839,13 @@
 		  	console.log(item);
 			if (type == "masteractnewsubmit") {
 				var mactivity = {masteractid: item.masteractid, masteractname:item.masteractname, 
-								masteractstartdatestr:item.masteractstartdate, masteractenddatestr:item.masteractenddate};
+								masteractstartdatestr:item.masteractstartdate, masteractenddatestr:item.masteractenddate, masteractstartdatelong:item.masteractstartdatelong,
+								 masteractenddatelong:item.masteractenddatelong};
 				masteractarr.push(mactivity);
+				var maid = Number(item.masteractid);
+				var masdl = Number(item.masteractstartdatelong);
+				var maedl = Number(item.masteractenddatelong);
+				setCalendarMasterActivity(maid, item.masteractname, masdl, maedl, "update");
 			}
     			
     		if (type == "masteracteditsubmit") {
@@ -837,11 +854,49 @@
 			    	masteractarr[i].masteractname = item.masteractname;
 			    	masteractarr[i].masteractstartdatestr = item.masteractstartdate;
 			    	masteractarr[i].masteractenddatestr = item.masteractenddate;
+			    	masteractarr[i].masteractstartdatelong = item.masteractstartdatelong;
+			    	masteractarr[i].masteractenddatelong = item.masteractenddatelong;		  			  			  	
+					var maid = Number(masteractarr[i].masteractid);
+					var masdl = Number(masteractarr[i].masteractstartdatelong);
+					var maedl = Number(masteractarr[i].masteractenddatelong);
+
+					setCalendarMasterActivity(maid, masteractarr[i].masteractname, masdl, maedl, "update"); 
 			    }
 			  }
 		  	}
+		  	
 		}
-		        
+		
+		function setCalendarMasterActivity(masteractid, masteractname, masteractstartdatelong, masteractenddatelong, mode) {
+			
+			var sdate = new Date(masteractstartdatelong);
+			console.log(sdate);
+			var edate = new Date(masteractenddatelong);			
+			var color = "#A0A0A0";
+			var event = {
+				"id": masteractid,
+				"title": masteractname,
+				"start": sdate,
+				"end": edate,
+				"color": color,
+			}
+                        
+            if (mode === 'update') {
+				 var calevent = $('#calendar').fullCalendar( 'clientEvents', masteractid );            
+			     console.log(calevent[0]);
+			     calevent[0].masteractname = masteractname;
+			     calevent[0].start = sdate;
+			     calevent[0].end = edate;			     
+				 $('#calendar').fullCalendar('updateEvent', calevent[0]);
+				 return;
+            }
+             
+            $('#calendar').fullCalendar( 'renderEvent', event, 'stick');
+	        $('#calendar').fullCalendar({
+	            editable: false
+	        });		
+	        
+		}				    					    
 					
 		</script>
 	</body>

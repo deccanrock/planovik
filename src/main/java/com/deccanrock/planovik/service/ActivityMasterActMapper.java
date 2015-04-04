@@ -34,12 +34,14 @@ public class ActivityMasterActMapper implements RowMapper<ActivityMasterActEntit
 	   // Convert to MM/DD/YYYY hh:mm AM|PM format after adjusting for UTC timezone offset
 	   if (masteract.getMasteractstartdate() != null) {
 		   long sdatelong = TimeFormatter.UTCToLocal(rs.getTimestamp("masteractstartdate").getTime(), this.getTzoffset());
-		   masteract.setMasteractstartdatestr(TimeFormatter.FormatTimeMS(sdatelong));	   
+		   masteract.setMasteractstartdatestr(TimeFormatter.FormatTimeMS(sdatelong));
+		   masteract.setMasteractstartdatelong(sdatelong);
 	   }
 	   
 	   if (masteract.getMasteractenddate() != null) {
 		   long edatelong = TimeFormatter.UTCToLocal(rs.getTimestamp("masteractenddate").getTime(), this.getTzoffset());
 		   masteract.setMasteractenddatestr(TimeFormatter.FormatTimeMS(edatelong));	   
+		   masteract.setMasteractenddatelong(edatelong);
 	   }
 	   
 	   masteract.setDatecreated(rs.getTimestamp("datecreated"));

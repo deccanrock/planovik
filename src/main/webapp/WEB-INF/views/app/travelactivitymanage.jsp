@@ -18,18 +18,24 @@
 			<div class="page-content">
 	
 				<div class="widget-box" id="travelactivitywidget" style="border-style:1px;border-color:#A7C9A1;">          
+					<form:form id="travelactivityform" method="post" modelAttribute="travelactivity" name="travelactivity" class="form-horizontal">
 					<div class="widget-header">
-							<c:if test="${not empty travelactivity.activityid}">
-								<h5 class="widget-title" id="headeractivityid">Edit Activity Id: ${travelactivity.activityid}</h5>
-							</c:if>
-							<c:if test="${empty travelactivity.activityid}">
-								<h5 class="widget-title" id="headeractivityid">Create New Activity </h5>
-							</c:if>
+				        <div class="row">									    																					    
+							<div class='col-xs-4'>	
+								<c:if test="${travelactivity.activityid > 0}">
+									<h5 class="widget-title" id="headeractivityid">Edit Activity Id: ${travelactivity.activityid}</h5>
+								</c:if>
+								<c:if test="${travelactivity.activityid == 0}">
+									<h5 class="widget-title" id="headeractivityid">Create New Activity </h5>
+								</c:if>
+							</div>
+							<div class='col-xs-8'>	
+								<form:select class="hideearrow" path="" name="masteractnames" id="masteractnames" style="margin-top:4px;"/>
+							</div>
+						</div>								
 					</div>									
 				    <div class="widget-body">
 				    	<div class="widget-main">
-							<form:form id="travelactivityform" method="post" modelAttribute="travelactivity" 
-							name="travelactivity" class="form-horizontal">
 
 							<c:if test="${not empty error}">
 								<div class="alert alert-danger">
@@ -46,7 +52,7 @@
 								    <div class="form-group" style="margin-left:6px;">
 								        <div class="clearfix">
 									        <label for="code">Travel Code</label>
-												<form:select class="form-control col-sm-11" path="code" name="travelcodes" id="travelcodes" style="width:90%;" />
+												<form:select class="form-control col-sm-11 hideearrow" path="code" name="travelcodes" id="travelcodes" />
 										</div>
 									</div>							        
 								</div>
@@ -63,6 +69,7 @@
 			
 							<form:input id="day" type="hidden" path="day" />
 							<form:input id="itinnum" type="hidden" path="itinnum" />
+							<form:input id="masteractid" type="hidden" path="masteractid" />
 							<form:input id="version" type="hidden" path="version" />
 							<form:input id="tzoffset" type="hidden" path="tzoffset" />
 							<form:input id="activityid" type="hidden" path="activityid" />
@@ -362,7 +369,7 @@
 			var request = $.ajax({type: 'GET', url: "/app/activity/getactivitycodes?" + "query=" + activitytype });
 			request.done(function( data ) {
 				  $('#' + activitytype + 'codes').html('');
-				  var first_entry = "<option value=" +  ""+ ">" +  ""+ "</option>";
+				  var first_entry = "<option value=" +  ""+ ">" +  "Pick travel code..."+ "</option>";
 	        	  $(first_entry).appendTo('#' + activitytype + 'codes');			  
 				  $.each(data, function(i, val){
 					var div_data="<option value=" + val + ">" + val + "</option>";
@@ -521,15 +528,20 @@
 													
 		jQuery(function($) {
 		
-			
-		
 			$('#day').val($('#dayselect', window.parent.document).val());
 			$('#itinnum').val($('#itinnum', window.parent.document).val());
 			$('#version').val($('#version', window.parent.document).val());
 			$('#activityid').val($('#activityid', window.parent.document).val());
 			$('#groupnum').val($('#groupnum', window.parent.document).val());
 			$('#tzoffset').val($('#tzoffset', window.parent.document).val());
+			$("#masteractnames").html($("#masteractnames", window.parent.document).html());			
 						
+			$('#masteractnames').change(function() {
+				if ($(this).val() > 0) {
+					console.log(window.parent.masteractarr[$(this).val()-1]);
+				}			    
+			});			
+				
 			$.fn.extend({
 				 trackChanges: function() {
 				   $(":input",this).change(function() {
