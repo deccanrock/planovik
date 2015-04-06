@@ -601,7 +601,7 @@ public class AppController {
 			throws IOException {
     	
     	// This is ajax support function for JQGrid
-    	logger.info("Master Activity Act - POST");
+    	logger.info("Master Activity Act Save - POST");
 			
 		// Save model to database
 		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
@@ -632,6 +632,34 @@ public class AppController {
 		return jsonOut;
     }
 
+    
+    @RequestMapping(value = "/app/masteractivityact/delete", method = RequestMethod.POST, produces = "application/json")    
+    public @ResponseBody String deleteMasterActivityAct(HttpServletRequest request, HttpServletResponse response) 
+			throws IOException {
+    	
+    	// This is ajax support function for JQGrid
+    	logger.info("Master Activity Act Delete - POST");
+			
+		// Save model to database
+		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
+		ActivityMasterDAO AMD = (ActivityMasterDAO)context.getBean("ActivityMasterDAO");
+		
+		int itinnum = Integer.valueOf(request.getParameter("itinnum"));
+		int version = Integer.valueOf(request.getParameter("version"));
+		int masteractid = Integer.valueOf(request.getParameter("masteractid"));		
+		
+		String result = AMD.DeleteMasterActivityAct(itinnum, version, masteractid);
+				
+		// Send information for succcess as json format
+		((ClassPathXmlApplicationContext) context).close();		
+		response.setContentType("application/json");
+		ObjectMapper mapper = new ObjectMapper();
+		String strObj = "{ \"result\": " + "\"" + result + "\"" + "}";
+
+		String jsonOut = mapper.writeValueAsString(strObj);		
+		
+		return jsonOut;
+    }
 
     
     @RequestMapping(value = "/app/createcurrconvcode", method = RequestMethod.GET)    

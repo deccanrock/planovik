@@ -99,7 +99,33 @@ public class ActivityMasterDAO extends JdbcDaoSupport implements IActivityMaster
     	
  		return result;
 	}
+
+
+	public String DeleteMasterActivityAct(int itinnum, int version, int masteractid) {
+		// TODO Auto-generated method stub
+    	JdbcTemplate dbtemplate = new JdbcTemplate(dataSource);    	
+
+		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(dbtemplate)
+		.withProcedureName("sp_deletemasteract");
+
+		Map<String, Object> inParamMap = new HashMap<String, Object>();
+			
+		inParamMap.put("initinnum", itinnum);
+		inParamMap.put("inversion", version);
+		inParamMap.put("inmasteractid", masteractid);
+		
+		SqlParameterSource in = new MapSqlParameterSource(inParamMap);
+		
+		String result = null;
+		
+    	try {    	
+    		Map<String, Object> simpleJdbcCallResult = simpleJdbcCall.execute(in);
+        	result = "OK";	
+    	} catch (Exception ex) {
+    		result = ex.getMessage();
+		} 					
+    	
+ 		return result;	
+ 	}
     
-
-
 }

@@ -223,9 +223,12 @@
 												<form:input type="hidden" id="masteractid" path="masteractid" value = "0" />														
 												
 												<div class="row" style="margin-left:3px;">
-													<div class="pull-left">
-														<button type="submit" style="margin-left=20px;" id="masteractnewsubmit" class="btn btn-primary"> Create </button>
-														<button type="submit" style="margin-left=20px;display:none" id="masteracteditsubmit" class="btn btn-primary"> Save </button>
+													<div class="pull-left" style="width:80%;">
+														<a href="" id = "hrefgoback" class="ace-icon fa fa-hand-o-left green" style="text-decoration:none;margin-right:2px;">
+														<i style="margin-right:30px;color:black;">Go Back</i></a>
+														<button type="submit" id="masteractnewsubmit" class="btn btn-primary"> Create </button>
+														<button type="submit" style="display:none;" id="masteracteditsubmit" class="btn btn-primary"> Save </button>
+														<button type="submit" style="display:none;margin-left:20px;" id="masteractdelsubmit" class="btn btn-danger btn-primary"> Delete </button>
 													</div>										
 												</div>
 												<div class="space-10"></div>
@@ -520,10 +523,28 @@
 	            return ${itinerary.startdatelong} <= startdate.getTime();
 	     	}, 'Activity start date/time should equal or fall after itinerary start date/time.');   
 
+			jQuery.validator.addMethod("startdateltitinenddate", function(value, element){
+	           var startdate = GetDate($('#masteractstartdate').val());
+	            return ${itinerary.enddatelong} >= startdate.getTime();
+	     	}, 'Activity start date/time should equal or fall before itinerary end date/time.');   
+
 			jQuery.validator.addMethod("enddategtitinenddate", function(value, element){
 	           var enddate = GetDate($('#masteractenddate').val());
 	            return enddate.getTime() <= ${itinerary.enddatelong};
-	     	}, 'Activity end date/time should be than equal or fall before itinerary end date/time.');   
+	     	}, 'Activity end date/time should be equal or fall before itinerary end date/time.');   
+
+			jQuery.validator.addMethod("enddateltitinstartdate", function(value, element){
+	           var enddate = GetDate($('#masteractenddate').val());
+	            return enddate.getTime() <= ${itinerary.enddatelong};
+	     	}, 'Activity end date/time should be equal or after itinerary start date/time.');   
+
+			jQuery.validator.addMethod("dateinneroverlaperror", function(value, element){
+	            return checkInnerActivityOverlap (value, masteractarr);
+	     	}, 'Master activity date cannot overlap with another. Please adjust date.');  
+
+			jQuery.validator.addMethod("dateouteroverlaperror", function(value, element){
+	            return checkOuterActivityOverlap ($('#masteractstartdate').val(), $('#masteractenddate').val(), masteractarr);
+	     	}, 'Master activities cannot overlap with each other. Please adjust dates.');  
 
 	        $('#masteractform').validate({
 	            rules: {
@@ -532,12 +553,17 @@
 	                },
 	                masteractstartdate: {
 	                    required: true,
-	                    startdategtitinstartdate: 'required'
+	                    dateinneroverlaperror: 'required',
+	                    startdategtitinstartdate: 'required',
+	                    startdateltitinenddate: 'required'
 	                },
 	                masteractenddate: {
 	                    required: true,
+	                    dateinneroverlaperror: 'required',
+	                    dateouteroverlaperror: 'required',
 	                    enddategtstartdate: 'required',
-	                    enddategtitinenddate: 'required'
+	                    enddategtitinenddate: 'required',
+	                    enddateltitinstartdate: 'required'
 	                }
 	            },
 	            messages: {
@@ -587,7 +613,7 @@
 					// Set Calendar dates
 				}
 				
-				if (this.id == "masteracteditsubmit" || this.id == "masteractnewsubmit") {	
+				if (this.id == "masteracteditsubmit" || this.id == "masteractnewsubmit" || this.id == "masteractdelsubmit") {	
 				
 		            var startdate = GetDate($('#masteractstartdate').val());
 		            var enddate = GetDate($('#masteractenddate').val());
@@ -606,22 +632,44 @@
 					var str = $("#masteractform").serialize();
 					
 					var type = this.id;
+
+					var request;
+					if (this.id == "masteractdelsubmit") {
+						request = $.ajax({
+						    type:"post",
+						    data: str,
+						    url:"/app/masteractivityact/delete",
+						    dataType: "json"
+						});
 					
-					var request = $.ajax({
-					    type:"post",
-					    data: str,
-					    url:"/app/masteractivityact/save",
-					    dataType: "json"
-					});
+					}					
+					else {
+						request = $.ajax({
+						    type:"post",
+						    data: str,
+						    url:"/app/masteractivityact/save",
+						    dataType: "json"
+						});
+					
+					}
+					
 					request.done(function( data ) {
-					  	updatemasteractselect(type, data, masteractarr);	
+					    if (this.id == 'masteractdelsubmit')
+					    	deletemasteractselect($('#masteractid').val(), masteractarr);
+						else
+					  		updatemasteractselect(type, data, masteractarr);	
+						
 						$('#masteractstartdate').val("");														
 						$('#masteractenddate').val("");	
 						$('#masteractname').val("");					    
 					    $("#managemasteractgroup").hide();
-					    setMasterActArr(masteractarr);
+					    
+					    if (this.id == 'masteractdelsubmit')
+						    setMasterActArr(masteractarr,"delete");
+					    else 
+						    setMasterActArr(masteractarr);
+					    
 						$("#selectmasteract").show();
-						setCalendarMasterActivity();				    					    
 					}); 
 				    request.fail(function( jqXHR, textStatus ) {
 						$('#masteractstartdate').val("");														
@@ -648,6 +696,7 @@
 					$("#spnchangeactname").hide();
 					$("#spnnewactname").show();
 					$("#masteracteditsubmit").hide();
+					$("#masteractdelsubmit").hide();
 					$("#masteractnewsubmit").show();
 					$(".help-block").hide();	
 				}
@@ -673,7 +722,6 @@
 				// store the Event Object in the DOM element so we can get to it later
 				$(this).data('eventObject', eventObject);
 		
-				// make the event draggable using jQuery UI
 				$(this).draggable({
 					zIndex: 999,
 					revert: true,      // will cause the event to go back to its
@@ -681,8 +729,23 @@
 				});
 				
 			});
-
 			
+			$( "#hrefgoback" ).click(function() {
+					$("#selectmasteract").show();
+					$("#managemasteractgroup").hide();
+					$('#masteractstartdate').val("");														
+					$('#masteractenddate').val("");
+					$('#masteractnames').val("0");	
+					$('#masteractname').val("");
+					$("#spnchangeactname").hide();
+					$("#spnnewactname").show();
+					$("#masteracteditsubmit").hide();
+					$("#masteractdelsubmit").hide();
+					$("#masteractnewsubmit").show();
+					$(".help-block").hide();	
+					return false;			
+			});
+
 		})
 
 		function displaymodal(calEvent) {
@@ -799,6 +862,7 @@
 				$("#spnchangeactname").show();
 				$("#spnnewactname").hide();
 				$("#masteracteditsubmit").show();
+				$("#masteractdelsubmit").show();
 				$("#masteractnewsubmit").hide();
 		    }
 		  }
@@ -808,13 +872,13 @@
 				<c:forEach var="item" items = "${activitymaster.masteractentities}">
 					var mactivity = {masteractid: ${item.masteractid}, masteractname:"${item.masteractname}", 
 									masteractstartdatestr:"${item.masteractstartdatestr}", masteractenddatestr:"${item.masteractenddatestr}",
-									masteractstartdatelong:${item.masteractstartdatelong}, masteractenddatelong:${item.masteractenddatelong}};
+									masteractstartdatelong:${item.masteractstartdatelong}, masteractenddatelong:${item.masteractenddatelong}, activitycount: 0};
 					masteractarr.push(mactivity);
 					setCalendarMasterActivity(${item.masteractid}, "${item.masteractname}", ${item.masteractstartdatelong}, ${item.masteractenddatelong})
 				</c:forEach>
 		}
 		
-		function setMasterActArr (masteractarr, calendar) {		
+		function setMasterActArr (masteractarr, mode) {		
 			
 			$('#masteractnames').children().remove();
 			
@@ -840,12 +904,12 @@
 			if (type == "masteractnewsubmit") {
 				var mactivity = {masteractid: item.masteractid, masteractname:item.masteractname, 
 								masteractstartdatestr:item.masteractstartdate, masteractenddatestr:item.masteractenddate, masteractstartdatelong:item.masteractstartdatelong,
-								 masteractenddatelong:item.masteractenddatelong};
+								 masteractenddatelong:item.masteractenddatelong,  activitycount: 0};
 				masteractarr.push(mactivity);
 				var maid = Number(item.masteractid);
 				var masdl = Number(item.masteractstartdatelong);
 				var maedl = Number(item.masteractenddatelong);
-				setCalendarMasterActivity(maid, item.masteractname, masdl, maedl, "update");
+				setCalendarMasterActivity(maid, item.masteractname, masdl, maedl);
 			}
     			
     		if (type == "masteracteditsubmit") {
@@ -867,6 +931,23 @@
 		  	
 		}
 		
+		function deletemasteractselect(masteractid, masteractarr) {
+			for (var i = 0; i < masteractarr.length; i++) {
+		    	if (masteractarr[i].masteractid == masteractid) {			    
+			    	masteractarr[i].masteractname = item.masteractname;
+			    	masteractarr[i].masteractstartdatestr = item.masteractstartdate;
+			    	masteractarr[i].masteractenddatestr = item.masteractenddate;
+			    	masteractarr[i].masteractstartdatelong = item.masteractstartdatelong;
+			    	masteractarr[i].masteractenddatelong = item.masteractenddatelong;		  			  			  	
+					var maid = Number(masteractarr[i].masteractid);
+					var masdl = Number(masteractarr[i].masteractstartdatelong);
+					var maedl = Number(masteractarr[i].masteractenddatelong);
+	
+					setCalendarMasterActivity(maid, masteractarr[i].masteractname, masdl, maedl, "update"); 
+		    	}
+			}	  	
+		}
+
 		function setCalendarMasterActivity(masteractid, masteractname, masteractstartdatelong, masteractenddatelong, mode) {
 			
 			var sdate = new Date(masteractstartdatelong);
@@ -881,13 +962,19 @@
 				"color": color,
 			}
                         
-            if (mode === 'update') {
+            if (mode === 'update' || mode === 'delete') {
 				 var calevent = $('#calendar').fullCalendar( 'clientEvents', masteractid );            
 			     console.log(calevent[0]);
-			     calevent[0].masteractname = masteractname;
-			     calevent[0].start = sdate;
-			     calevent[0].end = edate;			     
-				 $('#calendar').fullCalendar('updateEvent', calevent[0]);
+			     
+			     if (mode === 'delete') {
+				     $('#calendar').fullCalendar( 'removeEvents', masteractid )		     
+			     }
+			     else {
+				     calevent[0].masteractname = masteractname;
+				     calevent[0].start = sdate;
+				     calevent[0].end = edate;			     
+					 $('#calendar').fullCalendar('updateEvent', calevent[0]);			     
+			     }
 				 return;
             }
              
@@ -896,7 +983,42 @@
 	            editable: false
 	        });		
 	        
+		}
+		
+		function checkInnerActivityOverlap (newdate, masteractarr) {
+		
+			var newmasteractdate = GetDate(newdate);
+			
+			for (var i = 0; i < masteractarr.length; i++) {
+		    	if (newmasteractdate.getTime() >= masteractarr[i].masteractstartdatelong &&
+		    		newmasteractdate.getTime() <= masteractarr[i].masteractenddatelong ) {			    
+					return false;	
+		    	}
+			}	  	
+			
+			return true;		
 		}				    					    
+
+	    function checkOuterActivityOverlap (newdatestart, newdateend, masteractarr) {
+			var newmasteractstartdate = GetDate(newdatestart);
+			var newmasteractenddate = GetDate(newdateend);
+			
+			for (var i = 0; i < masteractarr.length; i++) {
+		    	
+		    	if (masteractarr[i].masteractstartdatelong >= newmasteractstartdate.getTime() &&
+		    		masteractarr[i].masteractstartdatelong <= newmasteractenddate.getTime() ) {			    
+					return false;	
+		    	}
+
+		    	if (masteractarr[i].masteractenddatelong >= newmasteractstartdate.getTime() &&
+		    		masteractarr[i].masteractenddatelong <= newmasteractenddate.getTime() ) {			    
+					return false;	
+		    	}
+
+			}	  	
+			
+			return true;			    
+	    }
 					
 		</script>
 	</body>
