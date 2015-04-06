@@ -99,14 +99,16 @@
 								<small>
 									<i class="ace-icon fa fa-angle-double-right"></i>
 									activity &nbsp;&nbsp;&nbsp;
-									<span style="font-size:14px;color:black;">Itinerary (Number: <i>${itinerary.id}</i></span>&nbsp;&nbsp;
-									<span style="font-size:14px;color:black;">Version: <i>${itinerary.version}</i>)</span>&nbsp;&nbsp;
-								    <span style="font-size:14px;color:black;">Activity (Group: <i>${activitymaster.groupnum}</i></span>&nbsp;&nbsp;	
-									<span style="font-size:14px;color:black;">Count: <i>
+									<span style="font-size:12px;color:black;">Itinerary (Number: <i>${itinerary.id}</i></span>&nbsp;&nbsp;
+									<span style="font-size:12px;color:black;">Version: <i>${itinerary.version}</i>)</span>&nbsp;&nbsp;
+								    <span style="font-size:12px;color:black;">Activity (Group: <i>${activitymaster.groupnum}</i></span>&nbsp;&nbsp;	
+									<span style="font-size:12px;color:black;">Count: <i>
 											${activitymaster.countactivityhotel + activitymaster.countactivityother + 
 											  activitymaster.countactivityvisit + activitymaster.countactivitytravel +
 											  activitymaster.countactivityrental}
-									</i>)</span>						
+									</i>)</span>&nbsp;&nbsp;
+									<span style="font-size:12px;color:black;">Arrival: <i>${itinerary.startdatestr}</i></span>&nbsp;&nbsp;	
+									<span style="font-size:12px;color:black;">Departure: <i>${itinerary.enddatestr}</i></span>	
 									</small>
 							</h1>
 						</div><!-- /.page-header -->
@@ -389,14 +391,9 @@
 					<c:forEach items="${activitylist}" var="event">
 						var title = "${fn:escapeXml(event.actname)}";
 				
-						var date = new Date(${event.activitystarttimelong});
-						// var date = new Date();
-						var d = date.getDate();
-						var m = date.getMonth();
-						var y = date.getFullYear();				
+						var sdate = new Date(${event.activitystarttimelong});						
+						var edate = new Date(${event.activityendtimelong});
 			
-						var start = new Date(y, m, d);
-			            // console.log(start);
 						if (${event.type == 0})
 							var color = "#82AF6F";
 						if (${event.type == 1})
@@ -410,15 +407,18 @@
 						
 						var event = {
 							"title": title,
-							"start": start,
+							"start": sdate,
+							"end": edate,							
 							"color": color,
 							"activityid": ${event.activityid},
 							"code": "${fn:escapeXml(event.code)}",
 							"itinnum": "${fn:escapeXml(event.itinnum)}",
+							"masteractid": "${fn:escapeXml(event.masteractid)}",
 							"activitystarttimelong": "${fn:escapeXml(event.activitystarttimelong)}",
 							"actname": "${fn:escapeXml(event.actname)}",
 							"tzoffset": ${itinerary.tzoffset},
-							"startdatelong": ${itinerary.startdatelong},
+							"startdatelong": sdate,
+							"enddatelong": edate,
 							"type": ${event.type}
 						}
 						events.push(event);				
@@ -432,8 +432,17 @@
 				droppable: true, // this allows things to be dropped onto the calendar !!!
 				drop: function(date, allDay) { // this function is called when something is dropped
 				
+					// Don't render activity if out of range
+					if (checkActivityNotInItinRange(date._d.getTime()))
+						return;
+					var masteractid = getMasterActId(date._d.getTime(), masteractarr);
+				
 					// retrieve the dropped element's stored Event Object
 					var originalEventObject = $(this).data('eventObject');
+					originalEventObject.id = 0;
+					originalEventObject.masteractid = masteractid;
+					originalEventObject.startdatelong = date._d.getTime();
+
 					var $extraEventClass = $(this).attr('data-class');
 						
 					// we need to copy it, so that multiple events don't have a reference to the same object
@@ -448,8 +457,9 @@
 					// the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
 					$('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
 					
-					console.log(copiedEventObject);
+					
 					displaymodal(copiedEventObject);
+						
 				},
 				selectable: true,
 				selectHelper: true,
@@ -475,6 +485,7 @@
 				,
 				eventClick: function(calEvent, jsEvent, view) {
 			
+					console.log(calEvent);
 					displaymodal(calEvent);
 				}		
 			});			
@@ -539,11 +550,11 @@
 	     	}, 'Activity end date/time should be equal or after itinerary start date/time.');   
 
 			jQuery.validator.addMethod("dateinneroverlaperror", function(value, element){
-	            return checkInnerActivityOverlap (value, masteractarr);
+	            return checkInnerActivityOverlap ($("#masteractid").val(), value, masteractarr);
 	     	}, 'Master activity date cannot overlap with another. Please adjust date.');  
 
 			jQuery.validator.addMethod("dateouteroverlaperror", function(value, element){
-	            return checkOuterActivityOverlap ($('#masteractstartdate').val(), $('#masteractenddate').val(), masteractarr);
+	            return checkOuterActivityOverlap ($("#masteractid").val(), $('#masteractstartdate').val(), $('#masteractenddate').val(), masteractarr);
 	     	}, 'Master activities cannot overlap with each other. Please adjust dates.');  
 
 	        $('#masteractform').validate({
@@ -598,7 +609,6 @@
 			
 			}).next().on(ace.click_event, function(){
 				$(this).prev().focus();
-				console.log($(this));
 			});
 	
 			$('#masteractenddate').datetimepicker().next().on(ace.click_event, function(){
@@ -654,7 +664,7 @@
 					}
 					
 					request.done(function( data ) {
-					    if (this.id == 'masteractdelsubmit')
+					    if (type == 'masteractdelsubmit')
 					    	deletemasteractselect($('#masteractid').val(), masteractarr);
 						else
 					  		updatemasteractselect(type, data, masteractarr);	
@@ -664,7 +674,7 @@
 						$('#masteractname').val("");					    
 					    $("#managemasteractgroup").hide();
 					    
-					    if (this.id == 'masteractdelsubmit')
+					    if (type == 'masteractdelsubmit')
 						    setMasterActArr(masteractarr,"delete");
 					    else 
 						    setMasterActArr(masteractarr);
@@ -751,12 +761,15 @@
 		function displaymodal(calEvent) {
 			
 			var framesrc;
-			if (calEvent.title === "New Travel") {
-				framesrc = '"travelactivitymanage?itinnum=' + ${itinerary.id} + '&activityid=' +  '0' + '&type=' + '0' +
-				            '&tzoffset=' + ${itinerary.tzoffset} + '&startdatelong=' + ${itinerary.startdatelong} + '&version=' + ${itinerary.version} + '"';	
+			
+			if (calEvent.id == 0) {
+				// Get Masteractid
+				
+				framesrc = '"travelactivitymanage?itinnum=' + ${itinerary.id} + '&activityid=' +  '0' + '&masteractid=' +  calEvent.masteractid + '&type=' + '0' +
+				            '&tzoffset=' + ${itinerary.tzoffset} + '&startdatelong=' + calEvent.startdatelong + '&version=' + ${itinerary.version} + '"';	
 			}
 			else {
-				framesrc = '"travelactivitymanage?itinnum=' + calEvent.itinnum + '&activityid=' +  calEvent.activityid + '&type=' + calEvent.type +
+				framesrc = '"travelactivitymanage?itinnum=' + calEvent.itinnum + '&activityid=' +  calEvent.activityid + '&masteractid=' +  calEvent.masteractid +  '&type=' + calEvent.type +
 			            '&tzoffset=' + calEvent.tzoffset + '&startdatelong=' + calEvent.startdatelong + '&version=' + ${itinerary.version} + '"';
 			}
 			
@@ -796,8 +809,8 @@
 				modal.modal("hide");
 			});
 			modal.find('button[data-action=delete]').on('click', function() {
-				calendar.fullCalendar('removeEvents' , function(ev){
-					return (ev._id == calEvent._id);
+				$('#calendar').fullCalendar('removeEvents' , function(ev){
+					return (ev._id == calEvent.id);
 				})
 				modal.modal("hide");
 			});
@@ -900,7 +913,6 @@
 
 		function updatemasteractselect(type, data, masteractarr) {
 		  	var item = JSON.parse(data);
-		  	console.log(item);
 			if (type == "masteractnewsubmit") {
 				var mactivity = {masteractid: item.masteractid, masteractname:item.masteractname, 
 								masteractstartdatestr:item.masteractstartdate, masteractenddatestr:item.masteractenddate, masteractstartdatelong:item.masteractstartdatelong,
@@ -924,7 +936,7 @@
 					var masdl = Number(masteractarr[i].masteractstartdatelong);
 					var maedl = Number(masteractarr[i].masteractenddatelong);
 
-					setCalendarMasterActivity(maid, masteractarr[i].masteractname, masdl, maedl, "update"); 
+					setCalendarMasterActivity(maid, masteractarr[i].masteractname, masdl, maedl, 'update'); 
 			    }
 			  }
 		  	}
@@ -934,16 +946,7 @@
 		function deletemasteractselect(masteractid, masteractarr) {
 			for (var i = 0; i < masteractarr.length; i++) {
 		    	if (masteractarr[i].masteractid == masteractid) {			    
-			    	masteractarr[i].masteractname = item.masteractname;
-			    	masteractarr[i].masteractstartdatestr = item.masteractstartdate;
-			    	masteractarr[i].masteractenddatestr = item.masteractenddate;
-			    	masteractarr[i].masteractstartdatelong = item.masteractstartdatelong;
-			    	masteractarr[i].masteractenddatelong = item.masteractenddatelong;		  			  			  	
-					var maid = Number(masteractarr[i].masteractid);
-					var masdl = Number(masteractarr[i].masteractstartdatelong);
-					var maedl = Number(masteractarr[i].masteractenddatelong);
-	
-					setCalendarMasterActivity(maid, masteractarr[i].masteractname, masdl, maedl, "update"); 
+					setCalendarMasterActivity(masteractid, "", 0, 0, 'delete'); 
 		    	}
 			}	  	
 		}
@@ -951,7 +954,6 @@
 		function setCalendarMasterActivity(masteractid, masteractname, masteractstartdatelong, masteractenddatelong, mode) {
 			
 			var sdate = new Date(masteractstartdatelong);
-			console.log(sdate);
 			var edate = new Date(masteractenddatelong);			
 			var color = "#A0A0A0";
 			var event = {
@@ -961,14 +963,12 @@
 				"end": edate,
 				"color": color,
 			}
-                        
-            if (mode === 'update' || mode === 'delete') {
+            
+            if (mode == 'update' || mode == 'delete') {
 				 var calevent = $('#calendar').fullCalendar( 'clientEvents', masteractid );            
-			     console.log(calevent[0]);
 			     
-			     if (mode === 'delete') {
-				     $('#calendar').fullCalendar( 'removeEvents', masteractid )		     
-			     }
+			     if (mode == 'delete')
+				     $('#calendar').fullCalendar( 'removeEvents', masteractid );		     
 			     else {
 				     calevent[0].masteractname = masteractname;
 				     calevent[0].start = sdate;
@@ -985,11 +985,13 @@
 	        
 		}
 		
-		function checkInnerActivityOverlap (newdate, masteractarr) {
+		function checkInnerActivityOverlap (masteractid, newdate, masteractarr) {
 		
 			var newmasteractdate = GetDate(newdate);
 			
 			for (var i = 0; i < masteractarr.length; i++) {
+				if (masteractarr[i].masteractid == masteractid)
+					continue;
 		    	if (newmasteractdate.getTime() >= masteractarr[i].masteractstartdatelong &&
 		    		newmasteractdate.getTime() <= masteractarr[i].masteractenddatelong ) {			    
 					return false;	
@@ -999,11 +1001,14 @@
 			return true;		
 		}				    					    
 
-	    function checkOuterActivityOverlap (newdatestart, newdateend, masteractarr) {
+	    function checkOuterActivityOverlap (masteractid, newdatestart, newdateend, masteractarr) {
 			var newmasteractstartdate = GetDate(newdatestart);
 			var newmasteractenddate = GetDate(newdateend);
 			
 			for (var i = 0; i < masteractarr.length; i++) {
+
+				if (masteractarr[i].masteractid == masteractid)
+					continue;
 		    	
 		    	if (masteractarr[i].masteractstartdatelong >= newmasteractstartdate.getTime() &&
 		    		masteractarr[i].masteractstartdatelong <= newmasteractenddate.getTime() ) {			    
@@ -1019,7 +1024,25 @@
 			
 			return true;			    
 	    }
-					
+	    
+	    function checkActivityNotInItinRange(newactstartdatetime) {
+	    	if (newactstartdatetime < ${itinerary.startdatelong} ||
+	    		newactstartdatetime > ${itinerary.enddatelong})
+	    		return true;
+	    }
+
+		function getMasterActId(acttimelong, masteractarr) {
+			
+			for (var i = 0; i < masteractarr.length; i++) {
+		    	if (acttimelong >= masteractarr[i].masteractstartdatelong &&
+		    		acttimelong <= masteractarr[i].masteractenddatelong ) {			    
+					return masteractarr[i].masteractid;	
+		    	}
+			}
+			
+			return 0;	
+		}					
+		
 		</script>
 	</body>
 </html>

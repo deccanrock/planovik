@@ -29,8 +29,17 @@
 									<h5 class="widget-title" id="headeractivityid">Create New Activity </h5>
 								</c:if>
 							</div>
-							<div class='col-xs-8'>	
-								<form:select class="hideearrow" path="" name="masteractnames" id="masteractnames" style="margin-top:4px;"/>
+							<div class='col-xs-8'>
+								<div class="radio">
+									<label>
+										<input name="masteractid" id="radioind" value="0" type="radio" class="ace" />
+										<span class="lbl"> Independent</span>
+									</label>
+									<label>
+										<input name="masteractid" id="radiopom" type="radio" class="ace" />
+										<span class="lbl"> Part of Master</span>
+									</label>
+								</div>
 							</div>
 						</div>								
 					</div>									
@@ -534,14 +543,15 @@
 			$('#activityid').val($('#activityid', window.parent.document).val());
 			$('#groupnum').val($('#groupnum', window.parent.document).val());
 			$('#tzoffset').val($('#tzoffset', window.parent.document).val());
-			$("#masteractnames").html($("#masteractnames", window.parent.document).html());			
+			$('#masteractid').val(${travelactivity.masteractid});
+			
+			alert($('#masteractid').val());
 						
-			$('#masteractnames').change(function() {
-				if ($(this).val() > 0) {
-					console.log(window.parent.masteractarr[$(this).val()-1]);
-				}			    
-			});			
-				
+			if ($('#masteractid').val() == 0)
+				$( "#radioind" ).prop( "checked", true );
+			else
+				$( "#radiopom" ).prop( "checked", true );
+							
 			$.fn.extend({
 				 trackChanges: function() {
 				   $(":input",this).change(function() {

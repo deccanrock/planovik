@@ -431,7 +431,7 @@ public class AppController {
 		map.addAttribute("activitymasteract", AMAE);
 		
 		// Get all activities sorted day wise, heavy hitter
-		ActivitiesListForItinerary ALE = new ActivitiesListForItinerary(ame.getItinnum(), ame.getVersion(), ame.getTzoffset(), itinerary.getStartdatelong());
+		ActivitiesListForItinerary ALE = new ActivitiesListForItinerary(ame.getItinnum(), ame.getVersion(), ame.getTzoffset());
 		Object[] AL = ALE.BuildActivitiesList();
 		
 		map.addAttribute("activitylist", AL);
@@ -456,7 +456,7 @@ public class AppController {
     
     // Read session variables and build the page
     @RequestMapping(value = "/app/manage/travelactivitymanage", method = RequestMethod.GET)    
-    public String travelActivityManage(ModelMap map, HttpSession session, @RequestParam int itinnum, @RequestParam int activityid, @RequestParam int type, 
+    public String travelActivityManage(ModelMap map, HttpSession session, @RequestParam int itinnum, @RequestParam int activityid, @RequestParam short masteractid, @RequestParam int type, 
     		@RequestParam short tzoffset, @RequestParam long startdatelong, @RequestParam int version) throws IOException, SQLException {
 
     	// This is ajax support function for JQGrid
@@ -469,6 +469,7 @@ public class AppController {
 			if (activityid == 0) {// safe to assume new activity
 				TAE = new TravelActivityEntity();
 				TAE.setActivityid(activityid);
+				TAE.setMasteractid(masteractid);				
 				TAE.setItinnum(itinnum);
 				TAE.setType(type);
 				TAE.setTzoffset(tzoffset);
@@ -476,7 +477,7 @@ public class AppController {
 				TAE.setVersion(version);
 			}
 			else
-				TAE = (TravelActivityEntity)AED.GetActivityDetails(activityid, type, tzoffset, startdatelong);
+				TAE = (TravelActivityEntity)AED.GetActivityDetails(activityid, type, tzoffset);
 		}
 		
 		map.addAttribute("travelactivity", TAE);

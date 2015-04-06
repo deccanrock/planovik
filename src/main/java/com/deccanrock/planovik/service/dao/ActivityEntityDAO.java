@@ -186,7 +186,7 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntity
 
 
 	@Override
-	public List<TravelActivityEntity> getTravelActivities(int itinnum, int version, short tzoffset, long startdatelong) 
+	public List<TravelActivityEntity> getTravelActivities(int itinnum, int version, short tzoffset) 
 				throws IOException, SQLException {
     
 		String SQL = "Call sp_get_travel_activities(" + itinnum + ',' + version + ");";    	
@@ -195,7 +195,6 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntity
 
 		TravelActivityMapper tam = new TravelActivityMapper();
 		tam.setTzoffset(tzoffset);
-		tam.setStartdatelong(startdatelong);
 		tam.setReqfulldetails(true);
 
 		List <TravelActivityEntity> travelentities = null;
@@ -209,16 +208,15 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntity
  	}
 
 	@Override
-	public List<TravelActivityEntity> getActivitiesDetForType(int itinnum, int version, short tzoffset, long startdatelong, int type)
+	public List<TravelActivityEntity> getActivitiesDetForType(int itinnum, int version, short tzoffset, short i)
 				throws IOException, SQLException {
     
-		String SQL = "Call sp_get_activities_for_type(" + itinnum + ',' + version + ',' + type + ");";    	
+		String SQL = "Call sp_get_activities_for_type(" + itinnum + ',' + version + ',' + i + ");";    	
 		
 		JdbcTemplate dbtemplate = new JdbcTemplate(dataSource);  	
 
 		TravelActivityMapper tam = new TravelActivityMapper();
 		tam.setTzoffset(tzoffset);
-		tam.setStartdatelong(startdatelong);
 		tam.setReqfulldetails(false);
 		
 		List <TravelActivityEntity> travelentities = dbtemplate.query(SQL, tam);
@@ -227,7 +225,7 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntity
  	}
 
 	@Override
-	public Object GetActivityDetails(int activityid, int type, short tzoffset, long startdatelong) throws IOException, SQLException {
+	public Object GetActivityDetails(int activityid, int type, short tzoffset) throws IOException, SQLException {
 		// TODO Auto-generated method stub
 		String SQL = "Call sp_get_activity_details(" + activityid + ',' + type + ");";    	
 		
@@ -236,7 +234,6 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntity
 		if (type == 0) {
 			TravelActivityMapper tam = new TravelActivityMapper();
 			tam.setTzoffset(tzoffset);
-			tam.setStartdatelong(startdatelong);
 			tam.setReqfulldetails(true);
 			List <TravelActivityEntity> travelentities = dbtemplate.query(SQL, tam);
 	 		return travelentities.get(0); 		

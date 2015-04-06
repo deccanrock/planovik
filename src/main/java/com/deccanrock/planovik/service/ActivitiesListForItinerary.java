@@ -24,21 +24,17 @@ public class ActivitiesListForItinerary {
 	private List<TravelActivityEntity> travelList = null;
 	private int itinnum, version;
 	private short tzoffset;
-	private Date startdate;
-	private long startdatelong;
 	
     @SuppressWarnings("rawtypes")
 	public static class ActivityCallable implements Callable {
     	
     	private int itinnum, version, type;
     	private short tzoffset;
-    	private long startdatelong;
 
-    	ActivityCallable(int itinnum, int version, short tzoffset, long startdatelong, int i) {
+    	ActivityCallable(int itinnum, int version, short tzoffset, short type) {
             this.itinnum = itinnum;
             this.version = version;
             this.tzoffset = tzoffset;
-            this.startdatelong = startdatelong;
             this.type = type;
         }
         
@@ -47,9 +43,8 @@ public class ActivitiesListForItinerary {
     		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
     		ActivityEntityDAO AED = (ActivityEntityDAO)context.getBean("ActivityEntityDAO");		
     		try {
-    			// travelListthread = AED.getTravelActivities(itinnum, version, tzoffset, startdatelong);
     			// 0 = travel
-    			travelListthread = AED.getActivitiesDetForType(itinnum, version, tzoffset, startdatelong,0);
+    			travelListthread = AED.getActivitiesDetForType(itinnum, version, tzoffset, (short) 0);
     			
     		} catch (IOException e) {
     			// TODO Auto-generated catch block
@@ -66,11 +61,10 @@ public class ActivitiesListForItinerary {
     }	
 	
 
-    public ActivitiesListForItinerary(int itinnum, int version, short tzoffset, long startdatelong) {
+    public ActivitiesListForItinerary(int itinnum, int version, short tzoffset) {
 		this.itinnum = itinnum;
 		this.version = version;
 		this.tzoffset = tzoffset;
-		this.startdatelong = startdatelong;
 	}
 	
 
@@ -79,7 +73,7 @@ public class ActivitiesListForItinerary {
 		// Highly optimized function using multi threading
 		ExecutorService pool = Executors.newFixedThreadPool(1);
 		
-        ActivityCallable travelactivity = new ActivityCallable(itinnum, version, tzoffset, startdatelong, 0);
+        ActivityCallable travelactivity = new ActivityCallable(itinnum, version, tzoffset, (short) 0);
         
         Future future1 = pool.submit(travelactivity);
         try {

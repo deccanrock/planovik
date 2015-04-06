@@ -12,7 +12,6 @@ import com.deccanrock.planovik.service.utils.TimeFormatter;
 public class TravelActivityMapper implements RowMapper<TravelActivityEntity> {
 	
 	private short tzoffset;
-	private long startdatelong;
 	private boolean reqfulldetails;
 	
 	public void setTzoffset (short tzoffset) {
@@ -23,14 +22,6 @@ public class TravelActivityMapper implements RowMapper<TravelActivityEntity> {
 		return this.tzoffset;
 	}
 	
-	public void setStartdatelong(long startdatelong) {
-		this.startdatelong = startdatelong;
-	}
-	
-	public long getStartdatelong() {
-		return this.startdatelong;
-	}
-
 	public void setReqfulldetails(boolean reqfulldetails) {
 		this.reqfulldetails = reqfulldetails;
 	}
@@ -60,11 +51,6 @@ public class TravelActivityMapper implements RowMapper<TravelActivityEntity> {
 			travel.setCode(rs.getString("code"));
 		else
 			travel.setCode("");
-
-		// Setup Activity start time based on travel code, this field's consistency will determine performance of building
-		// activities list. Initally, no value may be set, for zero or null dates compute date from Itinerary start date + day
-		// **Important** At this point time zone conversion is done
-		long itinstartdatelong = this.startdatelong + travel.getDay() - 1 * (24*60*60*1000);
 		
 		if (travel.getCode().contentEquals("T_PIKUPDRP")) {	
 			if (travel.getPikupdropdatetime() != null) {
@@ -72,11 +58,7 @@ public class TravelActivityMapper implements RowMapper<TravelActivityEntity> {
 				travel.setArrdatetimestr(TimeFormatter.FormatTimeMS(pikupdropdatetimelong));
 			}
 
-			if (travel.getActivitystarttimelong() == 0)
-				if (travel.getPikupdropdatetimelong() != 0)
-					travel.setActivitystarttimelong(travel.getPikupdropdatetimelong());
-			else
-				travel.setActivitystarttimelong(itinstartdatelong);					
+			travel.setActivitystarttimelong(travel.getPikupdropdatetimelong());
 		}
 		
 		if (travel.getCode().contentEquals("T_BOOK")) {	
@@ -84,13 +66,15 @@ public class TravelActivityMapper implements RowMapper<TravelActivityEntity> {
 			if (travel.getDepdatetime() != null) {
 				long depdatelong = TimeFormatter.UTCToLocal(rs.getTimestamp("depdatetime").getTime(), this.getTzoffset());
 				travel.setDepdatetimestr(TimeFormatter.FormatTimeMS(depdatelong));
+			}		
+			travel.setActivitystarttimelong(travel.getDepdatetimelong());
+			
+			if (travel.getArrdatetime() != null) {
+				long arrdatelong = TimeFormatter.UTCToLocal(rs.getTimestamp("arrdatetime").getTime(), this.getTzoffset());
+				travel.setArrdatetimestr(TimeFormatter.FormatTimeMS(arrdatelong));
 			}
-		
-			if (travel.getActivitystarttimelong() == 0)
-				if (travel.getDepdatetimelong() != 0)
-					travel.setActivitystarttimelong(travel.getDepdatetimelong());
-			else
-					travel.setActivitystarttimelong(itinstartdatelong);										
+			travel.setActivityendtimelong(travel.getArrdatetimelong());
+			
 		}
 		
 		// Dump all other details

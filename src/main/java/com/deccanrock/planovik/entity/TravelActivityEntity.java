@@ -125,6 +125,8 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
     private String error;
     
     private long activitystarttimelong;
+
+    private long activityendtimelong;    
     
     // To be included in all activity entities to allow client side identification of activity type
     private int type;
@@ -473,6 +475,14 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
 
 	public void setActivitystarttimelong(long activitystarttimelong) {
 		this.activitystarttimelong = activitystarttimelong;
+	}
+	
+	public long getActivityendtimelong() {
+		return activityendtimelong;
+	}
+
+	public void setActivityendtimelong(long activityendtimelong) {
+		this.activityendtimelong = activityendtimelong;
 	}
 	
 	public void setType(int type) {
