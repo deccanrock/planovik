@@ -82,7 +82,7 @@
 										<input type="hidden" name="_csrf" value="token" /> 
 											<fieldset>
 												<div id="remote">
-													<form:input path="name" class="typeahead scrollable" type="text" id="name" name="name" style="min-width:245%" />
+													<form:input path="name" class="typeahead scrollable" type="text" id="name" name="name" style="min-width:230%" />
 												</div>			
 												<form:input type="hidden" id="mode" path="mode" />
 											</fieldset>

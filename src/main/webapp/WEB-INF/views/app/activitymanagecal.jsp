@@ -386,11 +386,9 @@
 					right: 'month,agendaWeek,agendaDay'		
 				},
 			   events: function(start, end, timezone, callback) {
-			
 					var events = [];
 					<c:forEach items="${activitylist}" var="event">
 						var title = "${fn:escapeXml(event.actname)}";
-				
 						var sdate = new Date(${event.activitystarttimelong});						
 						var edate = new Date(${event.activityendtimelong});
 			
@@ -404,7 +402,7 @@
 							var color = "#FEE188";
 						if (${event.type == 4})
 							var color = "#D6487E";
-						
+					
 						var event = {
 							"title": title,
 							"start": sdate,
@@ -417,10 +415,13 @@
 							"activitystarttimelong": "${fn:escapeXml(event.activitystarttimelong)}",
 							"actname": "${fn:escapeXml(event.actname)}",
 							"tzoffset": ${itinerary.tzoffset},
-							"startdatelong": sdate,
-							"enddatelong": edate,
+							"startdatelong": "${fn:escapeXml(event.activitystarttimelong)}",
+							"enddatelong": "${fn:escapeXml(event.activityendtimelong)}",
 							"type": ${event.type}
 						}
+					
+						console.log(event);
+					
 						events.push(event);				
 					</c:forEach>
 
@@ -766,11 +767,11 @@
 				// Get Masteractid
 				
 				framesrc = '"travelactivitymanage?itinnum=' + ${itinerary.id} + '&activityid=' +  '0' + '&masteractid=' +  calEvent.masteractid + '&type=' + '0' +
-				            '&tzoffset=' + ${itinerary.tzoffset} + '&startdatelong=' + calEvent.startdatelong + '&version=' + ${itinerary.version} + '"';	
+				            '&tzoffset=' + ${itinerary.tzoffset} + '&startdatelong=' + calEvent.startdatelong + '&version=' + ${itinerary.version} + '&groupnum=' + ${activitymaster.groupnum} + '"';	
 			}
 			else {
 				framesrc = '"travelactivitymanage?itinnum=' + calEvent.itinnum + '&activityid=' +  calEvent.activityid + '&masteractid=' +  calEvent.masteractid +  '&type=' + calEvent.type +
-			            '&tzoffset=' + calEvent.tzoffset + '&startdatelong=' + calEvent.startdatelong + '&version=' + ${itinerary.version} + '"';
+			            '&tzoffset=' + calEvent.tzoffset + '&startdatelong=' + calEvent.startdatelong + '&version=' + ${itinerary.version} + '&groupnum=' + ${activitymaster.groupnum} + '"';
 			}
 			
 			var modal =
@@ -887,7 +888,8 @@
 									masteractstartdatestr:"${item.masteractstartdatestr}", masteractenddatestr:"${item.masteractenddatestr}",
 									masteractstartdatelong:${item.masteractstartdatelong}, masteractenddatelong:${item.masteractenddatelong}, activitycount: 0};
 					masteractarr.push(mactivity);
-					setCalendarMasterActivity(${item.masteractid}, "${item.masteractname}", ${item.masteractstartdatelong}, ${item.masteractenddatelong})
+					if (${item.masteractid} > 0)
+						setCalendarMasterActivity(${item.masteractid}, "${item.masteractname}", ${item.masteractstartdatelong}, ${item.masteractenddatelong})
 				</c:forEach>
 		}
 		

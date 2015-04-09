@@ -457,7 +457,7 @@ public class AppController {
     // Read session variables and build the page
     @RequestMapping(value = "/app/manage/travelactivitymanage", method = RequestMethod.GET)    
     public String travelActivityManage(ModelMap map, HttpSession session, @RequestParam int itinnum, @RequestParam int activityid, @RequestParam short masteractid, @RequestParam int type, 
-    		@RequestParam short tzoffset, @RequestParam long startdatelong, @RequestParam int version) throws IOException, SQLException {
+    		@RequestParam short tzoffset, @RequestParam long startdatelong, @RequestParam int version, @RequestParam int groupnum) throws IOException, SQLException {
 
     	// This is ajax support function for JQGrid
     	logger.info("Travel Activity Manage");
@@ -475,6 +475,7 @@ public class AppController {
 				TAE.setTzoffset(tzoffset);
 				TAE.setActivitystarttimelong(startdatelong);
 				TAE.setVersion(version);
+				TAE.setGroupnum(groupnum);
 			}
 			else
 				TAE = (TravelActivityEntity)AED.GetActivityDetails(activityid, type, tzoffset);
@@ -506,7 +507,6 @@ public class AppController {
 		// Get all parameters from header
 		// hidden fields
 		travelactivity.setActivityid(Integer.parseInt(request.getParameter("activityid")));
-		travelactivity.setDay(Integer.parseInt(request.getParameter("day")));
 		travelactivity.setVersion(Integer.parseInt(request.getParameter("version")));
 		travelactivity.setTzoffset((short)Integer.parseInt(request.getParameter("tzoffset")));
 		travelactivity.setItinnum(Integer.parseInt(request.getParameter("itinnum")));
@@ -530,12 +530,12 @@ public class AppController {
 		if (request.getParameter("depdatetimelong").contentEquals(""))
 			travelactivity.setDepdatetimelong(0);			
 		else
-			travelactivity.setDepdatetimelong((long)Integer.parseInt(request.getParameter("depdatetimelong")));
+			travelactivity.setDepdatetimelong(Long.valueOf(request.getParameter("depdatetimelong")));
 		
 		if (request.getParameter("arrdatetimelong").contentEquals(""))
 			travelactivity.setArrdatetimelong(0);			
 		else
-			travelactivity.setArrdatetimelong((long)Integer.parseInt(request.getParameter("arrdatetimelong")));
+			travelactivity.setArrdatetimelong(Long.valueOf(request.getParameter("arrdatetimelong")));
 
 		travelactivity.setDepstation(request.getParameter("depstation"));
 		travelactivity.setArrstation(request.getParameter("arrstation"));
@@ -557,7 +557,7 @@ public class AppController {
 		if (request.getParameter("pikupdropdatetimelong").contentEquals(""))
 			travelactivity.setPikupdropdatetimelong(0);			
 		else
-			travelactivity.setPikupdropdatetimelong((long)Integer.parseInt(request.getParameter("pikupdropdatetimelong")));
+			travelactivity.setPikupdropdatetimelong(Long.valueOf(request.getParameter("pikupdropdatetimelong")));
 
 		if (request.getParameter("asstcost").contentEquals(""))
 			travelactivity.setAsstcost((float)0);			

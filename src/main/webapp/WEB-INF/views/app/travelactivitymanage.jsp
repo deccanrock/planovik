@@ -32,11 +32,11 @@
 							<div class='col-xs-8'>
 								<div class="radio">
 									<label>
-										<input name="masteractid" id="radioind" value="0" type="radio" class="ace" />
+										<input id="radioind" value="0" type="radio" class="ace" />
 										<span class="lbl"> Independent</span>
 									</label>
 									<label>
-										<input name="masteractid" id="radiopom" type="radio" class="ace" />
+										<input id="radiopom" type="radio" class="ace" />
 										<span class="lbl"> Part of Master</span>
 									</label>
 								</div>
@@ -145,9 +145,8 @@
 														<span class="input-group-addon">
 															<i class="fa fa-calendar bigger-110"></i>
 														</span>					            
-										                <input type='text' id="depdatetimepicker" name="depdatetimepicker" class="form-control col-sm-11"
-										                	value="${travelactivity.depdatetime}" style="z-index:0;width:90%;" />
-										                <form:input type='hidden' id="depdatetimestr" path="depdatetimestr" name="depdatetimestr" value="${travelactivity.depdatetimestr}" />
+										                <input type='text' id="depdatetimestr" name="depdatetimestr" class="form-control col-sm-11"
+										                	value="${travelactivity.depdatetimestr}" style="z-index:0;width:90%;" />
 										                <form:input type='hidden' id="depdatetimelong" name="depdatetimelong" path="depdatetimelong" />
 										       		</div>
 										 		</div>
@@ -161,9 +160,8 @@
 													<span class="input-group-addon">
 														<i class="fa fa-calendar bigger-110"></i>
 													</span>					            
-									                <input type='text' id="arrdatetimepicker" name="arrdatetimepicker" class="form-control col-sm-11"
-									                	value="${travelactivity.arrdatetime}" style="z-index:0;width:93%;" />
-									                <form:input type='hidden' id="arrdatetimestr" path="arrdatetimestr" name="arrdatetimestr" value="${travelactivity.arrdatetimestr}" />
+									                <input type='text' id="arrdatetimestr" name="arrdatetimestr" class="form-control col-sm-11"
+									                	value="${travelactivity.arrdatetimestr}" style="z-index:0;width:93%;" />
 									                <form:input type='hidden' id="arrdatetimelong" name="arrdatetimelong" path="arrdatetimelong" />
 									            </div>
 									        </div>
@@ -240,14 +238,13 @@
 										<div class='col-xs-6'>										    																					    
 											<div class="form-group" style="margin-left:6px;">
 												<div class="clearfix">
-						                    		<label for ="pickdroptimepicker">Date and Time</label>
+						                    		<label for ="pickdroptimestr">Date and Time</label>
 										            <div class='input-group'>
 														<span class="input-group-addon">
 															<i class="fa fa-calendar bigger-110"></i>
 														</span>					            
-										                <input type='text' id="pikupdropdatetimepicker" name="pikupdroptimepicker" class="form-control col-sm-11"
-										                	value="${travelactivity.pikupdropdatetime}" style="z-index:0;width:90%;" />
-										                <form:input type='hidden' id="pikupdropdatetimestr" path="pikupdropdatetimestr" name="pikupdropdatetimestr" value="${travelactivity.pikupdropdatetimestr}" />
+										                <input type='text' id="pikupdropdatetimestr" name="pikupdropdatetimestr" class="form-control col-sm-11"
+										                	value="${travelactivity.pikupdropdatetimestr}" style="z-index:0;width:90%;" />
 										                <form:input type='hidden' id="pikupdropdatetimelong" name="pikupdropdatetimelong" path="pikupdropdatetimelong" />
 										       		</div>
 										 		</div>
@@ -421,13 +418,19 @@
 		});		
 						
 		$(":submit").live('click', function() {
-            var startdate = GetDate($('#depdatetimepicker').val());
-            var enddate = GetDate($('#arrdatetimepicker').val());
+            var startdate = GetDate($('#depdatetimestr').val());
+            var enddate = GetDate($('#arrdatetimestr').val());
+            var pikupdate = GetDate($('#pikupdropdatetimestr').val());
             
             $('#depdatelong').val(startdate.getTime());
             $('#arrdatelong').val(enddate.getTime());
+            $('#pikupdropdatetimelong').val(pikupdate.getTime());
             
-
+            if($('#radioind').is(':checked'))
+				$('#masteractid').val(0);
+				
+			$('#day').val(0);
+				
 			var str = $("#travelactivityform").serialize();
 			
 			var request = $.ajax({
@@ -495,7 +498,7 @@
      	}, 'Departure and Arrival stations should be different!');   
      	
 		jQuery.validator.addMethod("enddategtstartdate", function(value, element){
-           var startdate = GetDate($('#depdatetimepicker').val());
+           var startdate = GetDate($('#depdatetimestr').val());
            var enddate = GetDate(value);
             return enddate > startdate;
      	}, 'Arrival date/time should be greater than departure date/time.');   
@@ -537,16 +540,13 @@
 													
 		jQuery(function($) {
 		
-			$('#day').val($('#dayselect', window.parent.document).val());
-			$('#itinnum').val($('#itinnum', window.parent.document).val());
-			$('#version').val($('#version', window.parent.document).val());
-			$('#activityid').val($('#activityid', window.parent.document).val());
-			$('#groupnum').val($('#groupnum', window.parent.document).val());
-			$('#tzoffset').val($('#tzoffset', window.parent.document).val());
+			$('#itinnum').val(${travelactivity.itinnum});
+			$('#version').val(${travelactivity.version});
+			$('#activityid').val(${travelactivity.activityid});
+			$('#groupnum').val(${travelactivity.groupnum});
+			$('#tzoffset').val(${travelactivity.tzoffset});
 			$('#masteractid').val(${travelactivity.masteractid});
 			
-			alert($('#masteractid').val());
-						
 			if ($('#masteractid').val() == 0)
 				$( "#radioind" ).prop( "checked", true );
 			else
@@ -567,15 +567,15 @@
 			$("#travelactivityform").trackChanges();        		    
 		    
 		    $(function () {
-				$('#depdatetimepicker').datetimepicker().next().on(ace.click_event, function(){
+				$('#depdatetimestr').datetimepicker().next().on(ace.click_event, function(){
 					$(this).prev().focus();
 				});
 		
-				$('#arrdatetimepicker').datetimepicker().next().on(ace.click_event, function(){
+				$('#arrdatetimestr').datetimepicker().next().on(ace.click_event, function(){
 					$(this).prev().focus();
 				});
 				
-				$('#pikupdropdatetimepicker').datetimepicker().next().on(ace.click_event, function(){
+				$('#pikupdropdatetimestr').datetimepicker().next().on(ace.click_event, function(){
 					$(this).prev().focus();
 				});				
 			});

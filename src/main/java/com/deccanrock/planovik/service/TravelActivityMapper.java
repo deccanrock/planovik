@@ -45,7 +45,6 @@ public class TravelActivityMapper implements RowMapper<TravelActivityEntity> {
 		else
 			travel.setActname("");
 
-		travel.setDay(rs.getInt("day"));
 		
 		if (rs.getString("code") != null)
 			travel.setCode(rs.getString("code"));
@@ -53,28 +52,22 @@ public class TravelActivityMapper implements RowMapper<TravelActivityEntity> {
 			travel.setCode("");
 		
 		if (travel.getCode().contentEquals("T_PIKUPDRP")) {	
-			if (travel.getPikupdropdatetime() != null) {
-				long pikupdropdatetimelong = TimeFormatter.UTCToLocal(rs.getTimestamp("pikupdropdatetime").getTime(), this.getTzoffset());
-				travel.setArrdatetimestr(TimeFormatter.FormatTimeMS(pikupdropdatetimelong));
-			}
-
+			long pikupdropdatetimelong = TimeFormatter.UTCToLocal(rs.getTimestamp("pikupdropdatetime").getTime(), this.getTzoffset());
+			travel.setPikupdropdatetimestr(TimeFormatter.FormatTimeMS(pikupdropdatetimelong));
+			travel.setPikupdropdatetimelong(pikupdropdatetimelong);
 			travel.setActivitystarttimelong(travel.getPikupdropdatetimelong());
 		}
 		
 		if (travel.getCode().contentEquals("T_BOOK")) {	
 			// Convert to MM/DD/YYYY hh:mm AM|PM format after adjusting for UTC timezone offset
-			if (travel.getDepdatetime() != null) {
-				long depdatelong = TimeFormatter.UTCToLocal(rs.getTimestamp("depdatetime").getTime(), this.getTzoffset());
-				travel.setDepdatetimestr(TimeFormatter.FormatTimeMS(depdatelong));
-			}		
+			long depdatelong = TimeFormatter.UTCToLocal(rs.getTimestamp("depdatetime").getTime(), this.getTzoffset());
+			travel.setDepdatetimestr(TimeFormatter.FormatTimeMS(depdatelong));
+			travel.setDepdatetimelong(depdatelong);
 			travel.setActivitystarttimelong(travel.getDepdatetimelong());
 			
-			if (travel.getArrdatetime() != null) {
-				long arrdatelong = TimeFormatter.UTCToLocal(rs.getTimestamp("arrdatetime").getTime(), this.getTzoffset());
-				travel.setArrdatetimestr(TimeFormatter.FormatTimeMS(arrdatelong));
-			}
-			travel.setActivityendtimelong(travel.getArrdatetimelong());
-			
+			long arrdatelong = TimeFormatter.UTCToLocal(rs.getTimestamp("arrdatetime").getTime(), this.getTzoffset());
+			travel.setArrdatetimestr(TimeFormatter.FormatTimeMS(arrdatelong));
+			travel.setActivityendtimelong(travel.getArrdatetimelong());			
 		}
 		
 		// Dump all other details
@@ -85,8 +78,12 @@ public class TravelActivityMapper implements RowMapper<TravelActivityEntity> {
 			travel.setGroupnum(rs.getInt("groupnum"));
 			
 			travel.setVersion(rs.getInt("version"));
-			travel.setDay(rs.getInt("day"));
-	
+
+			if (rs.getString("vesselno") != null)
+				travel.setVesselno(rs.getString("vesselno"));
+			else
+				travel.setVesselno("");
+			
 			if (rs.getString("vesselconame") != null)
 				travel.setVesselconame(rs.getString("vesselconame"));
 			else
