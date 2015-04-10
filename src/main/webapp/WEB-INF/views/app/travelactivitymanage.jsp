@@ -30,19 +30,23 @@
 								</c:if>
 							</div>
 							<div class='col-xs-8'>
-								<div class="radio">
-									<label>
-										<input id="radioind" value="0" type="radio" class="ace" />
-										<span class="lbl"> Independent</span>
-									</label>
-									<label>
-										<input id="radiopom" type="radio" class="ace" />
-										<span class="lbl"> Part of Master</span>
-									</label>
+							
+								<div class="control-group">								
+									<div class="radio">
+										<label>
+											<input id="radioind" name="form-field-radio" value="0" type="radio" class="ace" />
+											<span class="lbl"> Independent</span>
+										</label>
+										<label>
+											<input id="radiopom" name="form-field-radio" type="radio" class="ace" />
+											<span class="lbl"> Part of Master</span>
+										</label>
+									</div>
 								</div>
 							</div>
 						</div>								
 					</div>									
+
 				    <div class="widget-body">
 				    	<div class="widget-main">
 
@@ -55,9 +59,19 @@
 									${error}
 								</div>										
 							</c:if>			
+
+							<c:if test="${travelactivity.masteractid > 0}">
+						        <div class="row">									    																					    
+									<div class='col-xs-10'>	
+									    <div class="form-group" style="margin-left:6px;">
+									        <div id="masteractdates" class="clearfix"></div>
+										</div>							        
+									</div>			
+								</div> <!-- row -->
+							</c:if>			
 					        
 					        <div class="row">									    																					    
-								<div class='col-xs-6'>	
+								<div class='col-xs-4'>	
 								    <div class="form-group" style="margin-left:6px;">
 								        <div class="clearfix">
 									        <label for="code">Travel Code</label>
@@ -65,11 +79,11 @@
 										</div>
 									</div>							        
 								</div>
-								<div class='col-xs-6'>	
-								    <div class="form-group" style="margin-left:5px;">
+								<div class='col-xs-8'>	
+								    <div class="form-group" style="margin-left:5px;width:105%;">
 								        <div class="clearfix">
 									        <label for="name">Specify a name for activity</label>
-							    				<form:input id="actname" class="col-sm-11" path="actname" value= "${travelactivity.actname}" type="text" style="width:93%;" maxlength="45" />												
+							    				<form:input id="actname" class="col-sm-11" path="actname" value= "${travelactivity.actname}" type="text" style="width:92%;" maxlength="45" />												
 										</div>
 									</div>							        
 								</div>
@@ -117,7 +131,7 @@
 	
 								<div id="bookinggroup">								
 							        <div class="row">
-										<div class='col-xs-6'>										    																					    
+										<div class='col-xs-2'>										    																					    
 										    <div class="form-group" style="margin-left:6px;">
 										        <div class="clearfix">
 													<label for="bookingno">Booking Code</label>
@@ -126,7 +140,7 @@
 								    		</div>
 								    	</div>	
 				
-										<div class='col-xs-6'>										    																					    
+										<div class='col-xs-2'>										    																					    
 										    <div class="form-group" style="margin-left:5px;">
 										        <div class="clearfix">
 													<label for="bookingclass">Booking Class</label>
@@ -134,11 +148,9 @@
 								    			</div>
 								    		</div>												
 										</div>
-									</div>		
-				
-							        <div class="row">
-										<div class='col-xs-6'>										    																					    
-											<div class="form-group" style="margin-left:6px;">
+
+										<div class='col-xs-4'>										    																					    
+											<div class="form-group" style="margin-left:6px;width:90%">
 												<div class="clearfix">
 						                    		<label for ="depdatetime">Departure Date and Time</label>
 										            <div class='input-group'>
@@ -153,15 +165,15 @@
 								        	</div>
 										</div>
 				
-										<div class='col-xs-6'>										    																					    
-									        <div class="form-group" style="margin-left:5px;">
+										<div class='col-xs-4'>										    																					    
+									        <div class="form-group" style="margin-left:-35px;">
 					                    		<label for ="arrdatetime">Arrival Date and Time</label>
 									            <div class='input-group'>
 													<span class="input-group-addon">
 														<i class="fa fa-calendar bigger-110"></i>
 													</span>					            
 									                <input type='text' id="arrdatetimestr" name="arrdatetimestr" class="form-control col-sm-11"
-									                	value="${travelactivity.arrdatetimestr}" style="z-index:0;width:93%;" />
+									                	value="${travelactivity.arrdatetimestr}" style="z-index:0;width:90%;" />
 									                <form:input type='hidden' id="arrdatetimelong" name="arrdatetimelong" path="arrdatetimelong" />
 									            </div>
 									        </div>
@@ -169,7 +181,7 @@
 									</div>									        
 									
 							        <div class="row">
-										<div class='col-xs-6'>										    																					    
+										<div class='col-xs-4'>										    																					    
 											<div class="form-group" style="margin-left:6px;">
 												<div class="clearfix">
 					                        		<label for="depstation">Departure Station</label>
@@ -178,7 +190,7 @@
 												</div>
 											</div>
 										</div>
-										<div class='col-xs-6'>										    																					    									        
+										<div class='col-xs-4'>										    																					    									        
 									        <div class="form-group" style="margin-left:5px;">
 						                        <div class="clearfix">
 					                        		<label for="arrstation">Arrival Station</label>
@@ -187,23 +199,21 @@
 												</div>
 									        </div>
 							        	</div>	
-							        </div>    
-				
-							        <div class="row">
-										<div class='col-xs-6'>										    																					    
+
+										<div class='col-xs-2'>										    																					    
 											<div class="form-group" style="margin-left:6px;">
 												<div class="clearfix">
 													<label for="cost">Cost</label>
-								    				<form:input id="cost" path="cost" value="${travelactivity.cost}" style="width:90%;" type="text" class="col-sm-11"  maxlength="10" />												
+								    				<form:input id="cost" path="cost" value="${travelactivity.cost}" style="width:120%;" type="text" class="col-sm-11"  maxlength="10" />												
 												</div>
 											</div>
 										</div>
 												
-										<div class='col-xs-6'>										    																					    
-											<div class="form-group" style="margin-left:6px;">
+										<div class='col-xs-2'>										    																					    
+											<div class="form-group" style="margin-left:25px;">
 												<div class="clearfix">
-													<label for="costmarkup">Cost Markup (as %)</label>
-								    				<form:input id="costmarkup" path="costmarkup" value="${travelactivity.costmarkup}" type="text" class="col-sm-11" style="width:93%;"  maxlength="3"/>												
+													<label for="costmarkup">Markup</label>
+								    				<form:input id="costmarkup" path="costmarkup" value="${travelactivity.costmarkup}" type="text" class="col-sm-11" style="width:75%;"  maxlength="3"/>												
 												</div>
 											</div>
 										</div>
@@ -214,29 +224,27 @@
 
 							        <div class="row">									    																					    										
 								
-										<div class='col-xs-6'>	
+										<div class='col-xs-3'>	
 										    <div class="form-group" style="margin-left:6px;">
 										        <div class="clearfix">
 											        <label for="code">From Location</label>
-									    				<form:input id="pikupdroplocfrom" class="col-sm-11" path="pikupdroplocfrom" type="text" style="width:90%" value="${activitymaster.pikupdroplocfrom}" maxlength="30" />												
+									    				<form:input id="pikupdroplocfrom" class="col-sm-11" path="pikupdroplocfrom" type="text" style="width:85%" value="${activitymaster.pikupdroplocfrom}" maxlength="30" />												
 												</div>
 											</div>							        
 										</div>
 	
-										<div class='col-xs-6'>	
-										    <div class="form-group" style="margin-left:6px;">
+										<div class='col-xs-3'>	
+										    <div class="form-group">
 										        <div class="clearfix">
 											        <label for="code">To Location</label>
-									    				<form:input id="pikupdroplocto" class="col-sm-11" path="pikupdroplocto" type="text" style="width:93%" value="${activitymaster.pikupdroplocto}" maxlength="30" />												
+									    				<form:input id="pikupdroplocto" class="col-sm-11" path="pikupdroplocto" type="text" style="width:85%" value="${activitymaster.pikupdroplocto}" maxlength="30" />												
 												</div>
 											</div>							        
 										</div>
 									
-									</div>											
 	
-							        <div class="row">	
-										<div class='col-xs-6'>										    																					    
-											<div class="form-group" style="margin-left:6px;">
+										<div class='col-xs-3'>										    																					    
+											<div class="form-group">
 												<div class="clearfix">
 						                    		<label for ="pickdroptimestr">Date and Time</label>
 										            <div class='input-group'>
@@ -244,7 +252,7 @@
 															<i class="fa fa-calendar bigger-110"></i>
 														</span>					            
 										                <input type='text' id="pikupdropdatetimestr" name="pikupdropdatetimestr" class="form-control col-sm-11"
-										                	value="${travelactivity.pikupdropdatetimestr}" style="z-index:0;width:90%;" />
+										                	value="${travelactivity.pikupdropdatetimestr}" style="z-index:0;width:85%;" />
 										                <form:input type='hidden' id="pikupdropdatetimelong" name="pikupdropdatetimelong" path="pikupdropdatetimelong" />
 										       		</div>
 										 		</div>
@@ -252,20 +260,20 @@
 										</div>
 	
 	
-										<div class='col-xs-3'>										    																					    
-											<div class="form-group" style="margin-left:6px;">
+										<div class='col-xs-2'>										    																					    
+											<div class="form-group">
 												<div class="clearfix">
 													<label for="asstcost">Assistance Fee</label>
-								    				<form:input id="asstcost" path="asstcost" value="${travelactivity.asstcost}" style="width:120%;" class="col-sm-11" type="text"  maxlength="10" />												
+								    				<form:input id="asstcost" path="asstcost" value="${travelactivity.asstcost}" style="width:75%;" class="col-sm-11" type="text"  maxlength="10" />												
 												</div>
 											</div>
 										</div>
 				
-										<div class='col-xs-3'>										    																					    
-											<div class="form-group" style="margin-left:27px;">
+										<div class='col-xs-1'>										    																					    
+											<div class="form-group" style="margin-left:-35px;">
 												<div class="clearfix">
 													<label for="asstcostmarkup">Markup</label>
-								    				<form:input id="asstcostmarkup" path="asstcostmarkup" value="${travelactivity.asstcostmarkup}" style="width:82%;" type="text"  maxlength="3" />												
+								    				<form:input id="asstcostmarkup" path="asstcostmarkup" value="${travelactivity.asstcostmarkup}" style="width:72%;" type="text"  maxlength="3" />												
 												</div>
 											</div>
 										</div>
@@ -277,22 +285,22 @@
 										<div class="form-group" style="margin-left:6px;">														
 											<div class="clearfix">
 												<label for="vehdetails">Vehicle Details</label>
-							    				<form:input id="vehdetails" path="vehdetails" value="${travelactivity.vehdetails}" style="width:90%;" type="text" class="col-sm-11"  maxlength="45" />												
+							    				<form:input id="vehdetails" path="vehdetails" value="${travelactivity.vehdetails}" style="width:105%;" type="text" class="col-sm-11"  maxlength="45" />												
 											</div>
 										</div>
 									</div>
 								
 									<div class='col-xs-3'>										    																					    
-										<div class="form-group" style="margin-left:6px;">
+										<div class="form-group" style="margin-left:45px;">
 											<div class="clearfix">
 												<label for="pikupdropcost">Vehicle Fee</label>
-							    				<form:input id="pikupdropcost" path="pikupdropcost" value="${travelactivity.pikupdropcost}" type="text" style="width:120%;"  maxlength="10" />												
+							    				<form:input id="pikupdropcost" path="pikupdropcost" value="${travelactivity.pikupdropcost}" type="text" style="width:130%;"  maxlength="10" />												
 											</div>
 										</div>
 									</div>
 			
 									<div class='col-xs-3'>										    																					    
-										<div class="form-group" style="margin-left:27px;">
+										<div class="form-group" style="margin-left:60px;">
 											<div class="clearfix">
 												<label for="pikupdropcostmarkup">Markup</label>
 							    				<form:input id="pikupdropcostmarkup" path="pikupdropcostmarkup" value="${travelactivity.pikupdropcostmarkup}" type="text" style="width:82%;"  maxlength="3" />												
@@ -306,7 +314,7 @@
 									    <div class="form-group" style="margin-left:6px;">
 									        <div class="clearfix">
 												<label for="comments">Comments</label>
-												<form:textarea class="form-control limited" id="comments" path="comments" value="${travelactivity.comments}" maxlength="100" />
+												<form:textarea class="form-control limited" id="comments" path="comments" value="${travelactivity.comments}" style="width:101%;" maxlength="100" />
 											</div>
 										</div>
 									</div>
@@ -394,22 +402,21 @@
 
 		    if ( $(this).val() === '' ) {
 				$('#formgroupall').hide();
-				window.parent.adjustModalHeight(170);
+				window.parent.adjustModalHeight(195);
 				return;
 			}
 						
 			$('#formgroupall').show();
 						
+			window.parent.adjustModalHeight(570);						
+
 		    if ( $(this).val() === 'T_BOOK') {
-				window.parent.adjustModalHeight(690);
 				$('#bookinggroup').show();
 				$('#asstreqgroup').hide();
 				$('#pikupdropgroup').hide();
 		    }
 
 		    if ( $(this).val() === 'T_PIKUPDRP') {
-		        // Enable airport pickup and assistance required options
-				window.parent.adjustModalHeight(610);
 				$('#bookinggroup').hide();
 				$('#asstreqgroup').show();
 				$('#pikupdropgroup').show();
@@ -539,7 +546,7 @@
 		}
 													
 		jQuery(function($) {
-		
+				
 			$('#itinnum').val(${travelactivity.itinnum});
 			$('#version').val(${travelactivity.version});
 			$('#activityid').val(${travelactivity.activityid});
@@ -549,9 +556,20 @@
 			
 			if ($('#masteractid').val() == 0)
 				$( "#radioind" ).prop( "checked", true );
-			else
+			else {
 				$( "#radiopom" ).prop( "checked", true );
+			  	var masteractspan = "<span>" +  "Master activity dates (" + window.parent.getMasterActDates($('#masteractid').val(), window.parent.masteractarr) + ")"+ "</span>";
+        	  	$(masteractspan).appendTo('#masteractdates');			  				
+			}
 							
+			$("form input:radio").change(function () {
+			    if ($(this).val() == "0") {
+					$('#masteractdates').hide();
+			    } else {
+					$('#masteractdates').show();
+			    }
+			});				
+		
 			$.fn.extend({
 				 trackChanges: function() {
 				   $(":input",this).change(function() {

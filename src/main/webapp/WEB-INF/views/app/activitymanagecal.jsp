@@ -231,6 +231,9 @@
 														<button type="submit" id="masteractnewsubmit" class="btn btn-primary"> Create </button>
 														<button type="submit" style="display:none;" id="masteracteditsubmit" class="btn btn-primary"> Save </button>
 														<button type="submit" style="display:none;margin-left:20px;" id="masteractdelsubmit" class="btn btn-danger btn-primary"> Delete </button>
+														<div class="error" style="display:none;" id="masteractdelerr">
+															<span>You must delete all coressponding activities before deleting a master.</span>
+														</div>			
 													</div>										
 												</div>
 												<div class="space-10"></div>
@@ -370,6 +373,10 @@
 		var masteractarr = new Array();
 							
 		jQuery(function($) {
+		
+			$("#masteractstartdate").change(function(){
+		    	$("#masteractenddate").val($("#masteractstartdate").val());
+			});
 			    	
 			var calendar = $('#calendar').fullCalendar({
 				//isRTL: true,
@@ -419,6 +426,8 @@
 							"enddatelong": "${fn:escapeXml(event.activityendtimelong)}",
 							"type": ${event.type}
 						}
+						
+						updatemasteractivitycount("${fn:escapeXml(event.masteractid)}", masteractarr);
 					
 						console.log(event);
 					
@@ -434,10 +443,11 @@
 				drop: function(date, allDay) { // this function is called when something is dropped
 				
 					// Don't render activity if out of range
-					if (checkActivityNotInItinRange(date._d.getTime()))
+					if (!checkActivityInItinRange(date._d.getTime()))
 						return;
-					var masteractid = getMasterActId(date._d.getTime(), masteractarr);
-				
+					
+					console.log(date);	
+					var masteractid = getMasterActId( masteractarr, date);
 					// retrieve the dropped element's stored Event Object
 					var originalEventObject = $(this).data('eventObject');
 					originalEventObject.id = 0;
@@ -485,7 +495,6 @@
 				}
 				,
 				eventClick: function(calEvent, jsEvent, view) {
-			
 					console.log(calEvent);
 					displaymodal(calEvent);
 				}		
@@ -612,7 +621,13 @@
 				$(this).prev().focus();
 			});
 	
-			$('#masteractenddate').datetimepicker().next().on(ace.click_event, function(){
+			$('#masteractenddate').datetimepicker({
+			   beforeShowDay: function (date) {
+        		return date.valueOf() >= $('${itinerary.enddatelong}');
+    		},
+    		autoclose: true
+			
+			}).next().on(ace.click_event, function(){
 				$(this).prev().focus();
 			});
 				
@@ -646,6 +661,12 @@
 
 					var request;
 					if (this.id == "masteractdelsubmit") {
+					
+						if (deletemasteractselect($('#masteractid').val(), masteractarr) == false) {
+							$('#masteractdelerr').visibility("block");
+							return;
+						}
+						
 						request = $.ajax({
 						    type:"post",
 						    data: str,
@@ -762,44 +783,63 @@
 		function displaymodal(calEvent) {
 			
 			var framesrc;
-			
-			if (calEvent.id == 0) {
-				// Get Masteractid
-				
-				framesrc = '"travelactivitymanage?itinnum=' + ${itinerary.id} + '&activityid=' +  '0' + '&masteractid=' +  calEvent.masteractid + '&type=' + '0' +
-				            '&tzoffset=' + ${itinerary.tzoffset} + '&startdatelong=' + calEvent.startdatelong + '&version=' + ${itinerary.version} + '&groupnum=' + ${activitymaster.groupnum} + '"';	
-			}
-			else {
-				framesrc = '"travelactivitymanage?itinnum=' + calEvent.itinnum + '&activityid=' +  calEvent.activityid + '&masteractid=' +  calEvent.masteractid +  '&type=' + calEvent.type +
-			            '&tzoffset=' + calEvent.tzoffset + '&startdatelong=' + calEvent.startdatelong + '&version=' + ${itinerary.version} + '&groupnum=' + ${activitymaster.groupnum} + '"';
-			}
-			
-			var modal =
-			'<div class="modal"  id="activitymodal">\
-			   <div class="modal-dialog">\
-			   <div class="modal-content">\
-				 <div class="modal-body">\
-				   	<button type="button" class="close" data-dismiss="modal" style="margin-top:-10px;">&times;</button>\
-				 	<iframe id="activityiFrame" src=';
+
+			if (calEvent.type == -1) {
+				var modal =
+				'<div class="modal"  id="activitymodal">\
+					<div class="modal-dialog">\
+				   		<div class="modal-content">\
+							<div class="modal-body">\
+					   			<button type="button" class="close" data-dismiss="modal" style="margin-top:-10px;">&times;</button>\
+					   			<span>To manage master activity, click on the cog wheel on right and use manage master activities panel</span>\
+					 		</div>\
+					 	</div>\
+					</div>\
+				</div>';									
 				 	
 			
-			modal = modal.concat(framesrc);
-			
-			// T_PIKUPDRP (h - 610), T_BOOK (h - 680)
-			
-			var modalend = 
-			' frameborder="0" scrolling="no" width="700" onload="onLoadHandler();" ></iframe>\
+			}			
+			else {
+				if (calEvent.id == 0) {
+					// Get Masteractid
+					
+					framesrc = '"travelactivitymanage?itinnum=' + ${itinerary.id} + '&activityid=' +  '0' + '&masteractid=' +  calEvent.masteractid + '&type=' + '0' +
+					            '&tzoffset=' + ${itinerary.tzoffset} + '&startdatelong=' + calEvent.startdatelong + '&version=' + ${itinerary.version} + '&groupnum=' + ${activitymaster.groupnum} + '"';	
+				}
+				else {
+					framesrc = '"travelactivitymanage?itinnum=' + calEvent.itinnum + '&activityid=' +  calEvent.activityid + '&masteractid=' +  calEvent.masteractid +  '&type=' + calEvent.type +
+				            '&tzoffset=' + calEvent.tzoffset + '&startdatelong=' + calEvent.startdatelong + '&version=' + ${itinerary.version} + '&groupnum=' + ${activitymaster.groupnum} + '"';
+				}
+				
+				var modal =
+				'<div class="modal"  id="activitymodal">\
+				   <div class="modal-dialog">\
+				   <div class="modal-content">\
+					 <div class="modal-body">\
+					   	<button type="button" class="close" data-dismiss="modal" style="margin-top:-10px;">&times;</button>\
+					 	<iframe id="activityiFrame" src=';
+					 	
+				
+				modal = modal.concat(framesrc);
+				
+				// T_PIKUPDRP (h - 610), T_BOOK (h - 680)
+
+				var modalend1 = 'frameborder="0" scrolling="no" width="950" onload="onLoadHandler(' + calEvent.masteractid + ');" ></iframe>';
+				modal = modal.concat(modalend1);
+				
+				var modalend2 = 
+					 '</div>\
+					 <div class="modal-footer">\
+						<button type="button" class="btn btn-sm btn-danger" data-action="delete"><i class="ace-icon fa fa-trash-o"></i> Delete Event</button>\
+						<button type="button" class="btn btn-sm" data-dismiss="modal"><i class="ace-icon fa fa-times"></i> Cancel</button>\
+					 </div>\
+				  </div>\
 				 </div>\
-				 <div class="modal-footer">\
-					<button type="button" class="btn btn-sm btn-danger" data-action="delete"><i class="ace-icon fa fa-trash-o"></i> Delete Event</button>\
-					<button type="button" class="btn btn-sm" data-dismiss="modal"><i class="ace-icon fa fa-times"></i> Cancel</button>\
-				 </div>\
-			  </div>\
-			 </div>\
-			</div>';									
+				</div>';									
 		
-			modal = modal.concat(modalend);
-			
+				modal = modal.concat(modalend2);
+			}
+						
 			var modal = $(modal).appendTo("body");
 			
 			modal.find('form').on('submit', function(ev){
@@ -835,10 +875,15 @@
 			//$(this).css('border-color', 'red');
 		
 		}
+		
 
-		function onLoadHandler() {
+		function onLoadHandler(masteractid) {
 			var actIframesHeight = $("#activityiFrame").height();
-			adjustModalHeight(actIframesHeight+10);
+			if (masteractid == 0) {
+				adjustModalHeight(actIframesHeight+10);
+			}
+			else
+				adjustModalHeight(actIframesHeight+60);
 		}
 		
 		function adjustModalHeight(height) {
@@ -884,12 +929,13 @@
 		
 		function setMasterActArrInitial (masteractarr, calendar) {		
 				<c:forEach var="item" items = "${activitymaster.masteractentities}">
-					var mactivity = {masteractid: ${item.masteractid}, masteractname:"${item.masteractname}", 
-									masteractstartdatestr:"${item.masteractstartdatestr}", masteractenddatestr:"${item.masteractenddatestr}",
-									masteractstartdatelong:${item.masteractstartdatelong}, masteractenddatelong:${item.masteractenddatelong}, activitycount: 0};
-					masteractarr.push(mactivity);
-					if (${item.masteractid} > 0)
+					<c:if test="${item.masteractid > 0}">
+						var mactivity = {masteractid: ${item.masteractid}, masteractname:"${item.masteractname}", 
+										masteractstartdatestr:"${item.masteractstartdatestr}", masteractenddatestr:"${item.masteractenddatestr}",
+										masteractstartdatelong:${item.masteractstartdatelong}, masteractenddatelong:${item.masteractenddatelong}, activitycount: 0};
+						masteractarr.push(mactivity);
 						setCalendarMasterActivity(${item.masteractid}, "${item.masteractname}", ${item.masteractstartdatelong}, ${item.masteractenddatelong})
+					</c:if>
 				</c:forEach>
 		}
 		
@@ -901,15 +947,11 @@
    			$(div_data).appendTo('#masteractnames');
 
 			for (var i = 0; i < masteractarr.length; i++) {
-				// var optgroup = "<optgroup label=" + masteractarr[i].masteractstartdatestr + masteractarr[i].masteractenddatestr + ">";
 				var optgroup = "<optgroup label=" + "\"" + masteractarr[i].masteractstartdatestr + " - " + masteractarr[i].masteractenddatestr + "\"" + ">";
 				var option = "<option value=" + masteractarr[i].masteractid + ">" + masteractarr[i].masteractid + " - " + masteractarr[i].masteractname + "</option>";
 				var closeoptgroup = "</optgroup>";
 				div_data = optgroup + option + closeoptgroup;
-	   			$(div_data).appendTo('#masteractnames');
-				//setCalendarMasterActivity(masteractarr[i].masteractid, masteractarr[i].masteractname, masteractarr[i].masteractstartdatelong, 
-				//  masteractarr[i].masteractenddatelong);		  			  			  	
-	   			
+	   			$(div_data).appendTo('#masteractnames');	  			  			  	
 			 }				
 		}
 
@@ -947,8 +989,12 @@
 		
 		function deletemasteractselect(masteractid, masteractarr) {
 			for (var i = 0; i < masteractarr.length; i++) {
-		    	if (masteractarr[i].masteractid == masteractid) {			    
-					setCalendarMasterActivity(masteractid, "", 0, 0, 'delete'); 
+		    	if (masteractarr[i].masteractid == masteractid) {
+		    		if (masteractarr[i].activitycount > 0) {
+						return false;
+		    		}
+		    		else			    
+						setCalendarMasterActivity(masteractid, "", 0, 0, 'delete'); 
 		    	}
 			}	  	
 		}
@@ -964,7 +1010,10 @@
 				"start": sdate,
 				"end": edate,
 				"color": color,
+				"type": -1
 			}
+			
+			console.log(event);
             
             if (mode == 'update' || mode == 'delete') {
 				 var calevent = $('#calendar').fullCalendar( 'clientEvents', masteractid );            
@@ -1027,23 +1076,45 @@
 			return true;			    
 	    }
 	    
-	    function checkActivityNotInItinRange(newactstartdatetime) {
-	    	if (newactstartdatetime < ${itinerary.startdatelong} ||
-	    		newactstartdatetime > ${itinerary.enddatelong})
+	    function checkActivityInItinRange(newactstartdatetime) {
+	    
+	    	if (newactstartdatetime >= ${itinerary.startdatelong} &&
+	    		newactstartdatetime <= ${itinerary.enddatelong}) {
+	    	    console.log("Date in range");
 	    		return true;
+	    	}
+	    	
+	    	return false;
 	    }
 
-		function getMasterActId(acttimelong, masteractarr) {
+		function getMasterActId( masteractarr, date) {
 			
+			console.log(masteractarr);
+			console.log(masteractarr[0].masteractstartdatelong, date._d.getTime(), masteractarr[0].masteractenddatelong);
+
 			for (var i = 0; i < masteractarr.length; i++) {
-		    	if (acttimelong >= masteractarr[i].masteractstartdatelong &&
-		    		acttimelong <= masteractarr[i].masteractenddatelong ) {			    
+		    	if ( (date._d.getTime() >= masteractarr[i].masteractstartdatelong) &&
+		    		(date._d.getTime() <= masteractarr[i].masteractenddatelong) ) {
 					return masteractarr[i].masteractid;	
 		    	}
 			}
 			
 			return 0;	
-		}					
+		}
+		
+		function updatemasteractivitycount(masteractid, masteractarr) {
+			for (var i = 0; i < masteractarr.length; i++) {
+				if (masteractarr[i].masteractid == masteractid)
+					masteractarr[i].activitycount++;		
+			}				
+		}
+		
+		function getMasterActDates(masteractid, masteractarr) {
+			for (var i = 0; i < masteractarr.length; i++) {
+				if (masteractarr[i].masteractid == masteractid)
+					return masteractarr[i].masteractstartdatestr + " - " + masteractarr[i].masteractenddatestr;		
+			}						
+		}
 		
 		</script>
 	</body>
