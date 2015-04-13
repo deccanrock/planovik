@@ -511,7 +511,8 @@ public class AppController {
 		travelactivity.setTzoffset((short)Integer.parseInt(request.getParameter("tzoffset")));
 		travelactivity.setItinnum(Integer.parseInt(request.getParameter("itinnum")));
 		travelactivity.setMasteractid((short) Integer.parseInt(request.getParameter("masteractid")));		
-		travelactivity.setGroupnum(Integer.parseInt(request.getParameter("groupnum")));
+		//travelactivity.setGroupnum(Integer.parseInt(request.getParameter("groupnum")));
+		travelactivity.setGroupnum(1);
 		
 		// User filled data
 		travelactivity.setCode(request.getParameter("code"));

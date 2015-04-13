@@ -358,7 +358,7 @@
 		<!-- ace scripts -->
 		<script src="/resources/js/ace-elements.min.js"></script>
 		<script src="/resources/js/ace.min.js"></script>
-
+		<script src="<c:url value='/resources/js/jquery.validate.min.js'/>" ></script>
 		<script src="<c:url value='/resources/js/date-time/moment.min.js'/>" ></script>
 		<script src="<c:url value='/resources/js/date-time/bootstrap-datepicker.min.js'/>" ></script>
 		<script src="<c:url value='/resources/js/date-time/bootstrap-timepicker.min.js'/>" ></script>
@@ -500,6 +500,7 @@
 				}		
 			});			
 	    
+			
 	    	setMasterActArrInitial(masteractarr);
 			setMasterActArr(masteractarr);
 	    
@@ -599,7 +600,6 @@
 	                }
 	            }
 	        });        
-			
 		
 			$('#masteractnames').change(function() {
 				if ($(this).val() > 0) {
@@ -786,7 +786,7 @@
 
 			if (calEvent.type == -1) {
 				var modal =
-				'<div class="modal"  id="activitymodal">\
+				'<div class="modal" id="activitymodal" style="z-index:2099;">\
 					<div class="modal-dialog">\
 				   		<div class="modal-content">\
 							<div class="modal-body">\
@@ -812,7 +812,7 @@
 				}
 				
 				var modal =
-				'<div class="modal"  id="activitymodal">\
+				'<div class="modal"  id="activitymodal" style="z-index:2099;">\
 				   <div class="modal-dialog">\
 				   <div class="modal-content">\
 					 <div class="modal-body">\
@@ -839,12 +839,13 @@
 		
 				modal = modal.concat(modalend2);
 			}
+			
 						
 			var modal = $(modal).appendTo("body");
-			
+
 			modal.find('form').on('submit', function(ev){
 				ev.preventDefault();
-
+				
 				calEvent.title = $(this).find("input[type=text]").val();
 				calendar.fullCalendar('updateEvent', calEvent);
 				modal.modal("hide");
@@ -891,6 +892,11 @@
 			$('.modal-body #activitymodal').css({"height":height + "px"} );
 		}
 		
+		function adjustModalHeightDelta(delta) {
+			var actIframesHeight = $("#activityiFrame").height() + delta;
+			adjustModalHeight(actIframesHeight);
+		}
+
 		function GetDate(datestr) {
 			var arrdate = datestr.split(/\/|\s|:/);
 			var date; 
@@ -1114,6 +1120,18 @@
 				if (masteractarr[i].masteractid == masteractid)
 					return masteractarr[i].masteractstartdatestr + " - " + masteractarr[i].masteractenddatestr;		
 			}						
+		}
+		
+		function checkDateWithinMasteractRange(materactid, pikeddate, masteractarr) {
+			for (var i = 0; i < masteractarr.length; i++) {
+				if (masteractarr[i].masteractid == masteractid) {
+					if (pikeddate.getTime() >= masteractarr[i].masteractstartdatelong &&
+					    pikeddate.getTime() <= masteractarr[i].masteractenddatelong)
+					    return true;
+				}
+			}
+			
+			return false;			
 		}
 		
 		</script>

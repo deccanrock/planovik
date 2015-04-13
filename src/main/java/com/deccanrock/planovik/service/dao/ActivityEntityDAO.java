@@ -216,9 +216,13 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntity
 
 		TravelActivityMapper tam = new TravelActivityMapper();
 		tam.setTzoffset(tzoffset);
-		tam.setReqfulldetails(false);
-		
-		List <TravelActivityEntity> travelentities = dbtemplate.query(SQL, tam);
+		tam.setReqfulldetails(true);
+		List <TravelActivityEntity> travelentities;
+    	try {    			
+    		travelentities = dbtemplate.query(SQL, tam);
+    	} catch (Exception ex) {
+    		travelentities = null;
+		} 					
  		
  		return travelentities; 		
  	}
