@@ -86,7 +86,6 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntity
 		inParamMap.put("incode", travelactivity.getCode());		
 		inParamMap.put("inversion", travelactivity.getVersion());		
 		inParamMap.put("lastupdatedbyemail", travelactivity.getLastupdatedby());
-		inParamMap.put("createdbyemail", travelactivity.getCreatedby());
 		// Should be 0 for new activity
 		inParamMap.put("inactivityid", travelactivity.getActivityid().intValue());
 		if (travelactivity.getPax() == null)
@@ -244,6 +243,32 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntity
  		
 		// This should never really happen
 		return null;
+	}
+
+	@Override
+	public String DeleteActivity(int activityid, int itinnum, int type) throws IOException, SQLException {
+		// TODO Auto-generated method stub
+		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(getJdbcTemplate())
+		.withProcedureName("sp_delete_activity");
+
+		Map<String, Object> inParamMap = new HashMap<String, Object>();
+
+		inParamMap.put("inactivityid", activityid);
+		inParamMap.put("initinnum", itinnum);		
+		inParamMap.put("intype", type);
+
+		String result;
+		
+		try {    	
+    		simpleJdbcCall.execute(inParamMap);
+    		result = "Success";
+    	}
+    	catch (Exception ex) {
+    		result = ex.getMessage();
+		} 					
+				
+		// This should never really happen
+		return result;
 	}
 	
 }

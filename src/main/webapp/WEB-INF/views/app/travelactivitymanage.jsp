@@ -5,6 +5,7 @@
 		<script type="text/javascript">
 			try{ace.settings.check('main-container' , 'fixed')}catch(e){}
 		</script>
+		<script src="<c:url value='/resources/js/bootstrap.min.js'/>" ></script>
 		<script src="/resources/js/typeahead.bundle.min.js"></script>
 		<script src="<c:url value='/resources/js/jquery.validate.min.js'/>" ></script>		
 		<script src="<c:url value='/resources/js/date-time/moment.min.js'/>" ></script>
@@ -12,6 +13,7 @@
 		<script src="<c:url value='/resources/js/date-time/bootstrap-timepicker.min.js'/>" ></script>
 		<script src="<c:url value='/resources/js/date-time/daterangepicker.min.js'/>" ></script>
 		<script src="<c:url value='/resources/js/date-time/bootstrap-datetimepicker.min.js'/>" ></script>
+
 		
 		<div class="main-container" id="main-container" style="padding-top:0px;">
 			<script type="text/javascript">
@@ -22,7 +24,7 @@
 				<div class="page-content">
 		
 					<div class="widget-box" id="travelactivitywidget" style="border-style:1px;border-color:#A7C9A1;">          
-						<form:form id="travelactivityform" method="post" modelAttribute="travelactivity" name="travelactivityform" class="form-horizontal">
+						<form:form id="travelactivityform" method="post" action="/app/travelactivity/save" modelAttribute="travelactivity" name="travelactivityform" class="form-horizontal">
 						<div class="widget-header">
 					        <div class="row">									    																					    
 								<div class='col-xs-4'>	
@@ -38,11 +40,11 @@
 									<div class="control-group">								
 										<div class="radio">
 											<label>
-												<input id="radioind" name="form-field-radio" value="0" type="radio" class="ace" />
+												<form:radiobutton id="radioind" path="masterorindradio" name="masterorindradio" value="0" class="ace" />
 												<span class="lbl"> Independent</span>
 											</label>
 											<label>
-												<input id="radiopom" name="form-field-radio" type="radio" class="ace" />
+												<form:radiobutton id="radiopom" path="masterorindradio" name="masterorindradio" class="ace" />
 												<span class="lbl"> Part of Master</span>
 											</label>
 										</div>
@@ -102,39 +104,10 @@
 								<form:input id="tzoffset" type="hidden" path="tzoffset" />
 								<form:input id="activityid" type="hidden" path="activityid" />
 								<form:input id="groupnum" type="hidden" path="groupnum" />
-								
+								<input type="hidden" id="csrfToken" value="${_csrf.token}"/>
+								<input type="hidden" id="csrfHeader" value="${_csrf.headerName}"/>
+							
 								<div id="formgroupall">
-							        <div class="row">									    																					    										
-										<div class='col-xs-2'>	
-										    <div class="form-group" style="margin-left:6px;">
-										        <div class="clearfix">
-											        <label for="pax">PAX</label>
-									    				<form:input id="pax" path="pax" name="pax" class="col-sm-11" type="text" style="width:90%" value="${activitymaster.pax}" maxlength="5" />												
-												</div>
-												<div class="customerror" id="paxerr"></div>			
-											</div>							        
-										</div>
-	
-										<div class='col-xs-5'>										    																					    
-										    <div class="form-group" style="margin-left:6px;">
-										        <div class="clearfix">
-													<label for="vesselno">Flight/Train/Bus Number</label>
-								    				<form:input id="vesselno" path="vesselno" name="vesselno" class="col-sm-11" style="width:90%" value="${activitymaster.vesselno}" type="text"  maxlength="15" />												
-												</div>
-												<div class="customerror" id="vesselnoerr"></div>			
-											</div>
-										</div>
-										
-										<div class='col-xs-5'>										    																					    
-											<div class="form-group"  style="margin-left:-8px;">
-										        <div class="clearfix">
-													<label for="vesselconame">Travel Company</label>
-								    				<form:input id="vesselconame" path="vesselconame" name="vesselconame" class="col-sm-11" value="${activitymaster.vesselconame}" type="text" style="width:93%;"  maxlength="20" />												
-												</div>
-							    			</div>
-							    		</div>
-									
-									</div>											
 		
 									<div id="bookinggroup">								
 								        <div class="row">
@@ -330,6 +303,39 @@
 										</div>
 									</div> <!-- pikupdropgroup -->
 													
+							        <div class="row">									    																					    										
+										<div class='col-xs-2'>	
+										    <div class="form-group" style="margin-left:6px;">
+										        <div class="clearfix">
+											        <label for="pax">PAX</label>
+									    				<form:input id="pax" path="pax" name="pax" class="col-sm-11" type="text" style="width:90%" value="${activitymaster.pax}" maxlength="5" />												
+												</div>
+												<div class="customerror" id="paxerr"></div>			
+											</div>							        
+										</div>
+	
+										<div class='col-xs-5'>										    																					    
+										    <div class="form-group" style="margin-left:6px;">
+										        <div class="clearfix">
+													<label for="vesselno">Flight/Train/Bus Number</label>
+								    				<form:input id="vesselno" path="vesselno" name="vesselno" class="col-sm-11" style="width:90%" value="${activitymaster.vesselno}" type="text"  maxlength="15" />												
+												</div>
+												<div class="customerror" id="vesselnoerr"></div>			
+											</div>
+										</div>
+										
+										<div class='col-xs-5'>										    																					    
+											<div class="form-group"  style="margin-left:-8px;">
+										        <div class="clearfix">
+													<label for="vesselconame">Travel Company</label>
+								    				<form:input id="vesselconame" path="vesselconame" name="vesselconame" class="col-sm-11" value="${activitymaster.vesselconame}" type="text" style="width:93%;"  maxlength="20" />												
+												</div>
+							    			</div>
+							    		</div>
+									
+									</div>											
+							        
+							        
 							        <div class="row">									    																					    
 										<div class='col-xs-11' style="width:96%;">	
 										    <div class="form-group" style="margin-left:6px;">
@@ -419,25 +425,59 @@
 				$('#bookinggroup').show();
 				$('#asstreqgroup').hide();
 				$('#pikupdropgroup').hide();
+				// For new activity only
+				if ($('#depdatetimestr').val() == "") {
+					$('#depdatetimestr').val(window.parent.activitystartdate);
+					$('#arrdatetimestr').val(window.parent.activitystartdate);				
+				}
 		    }
 
 		    if ( $(this).val() === 'T_PIKUPDRP') {
 				$('#bookinggroup').hide();
 				$('#asstreqgroup').show();
 				$('#pikupdropgroup').show();
+				// For new activity only
+				if ($('#pikupdropdatetimestr').val() == "")
+					$('#pikupdropdatetimestr').val(window.parent.activitystartdate);
 		    }
 		    
 		});
 		
 		$("#travelactivitysave").click(function() {
 		
-            var startdate = GetDate($('#depdatetimestr').val());
-            var enddate = GetDate($('#arrdatetimestr').val());
-            var pikupdate = GetDate($('#pikupdropdatetimestr').val());
+            var startdate;
+            if ($('#depdatetimestr').val() == "")
+            	startdate = 0;
+            else
+            	startdate = GetDate($('#depdatetimestr').val());
+
+            if (startdate == 0)
+            	$('#depdatetimelong').val(0);
+			else            
+            	$('#depdatetimelong').val(startdate.getTime());
+
+
+            var enddate;
+            if ($('#arrdatetimestr').val() == "")
+            	enddate = 0;
+            else
+            	enddate = GetDate($('#arrdatetimestr').val());
+
+            if (enddate == 0)
+            	$('#arrdatetimelong').val(0);
+			else            
+            	$('#arrdatetimelong').val(enddate.getTime());
+
+            var pikupdate;
+            if ($('#pikupdropdatetimestr').val() == "")
+            	pikupdate = 0;
+            else
+            	pikupdate = GetDate($('#pikupdropdatetimestr').val());
             
-            $('#depdatelong').val(startdate.getTime());
-            $('#arrdatelong').val(enddate.getTime());
-            $('#pikupdropdatetimelong').val(pikupdate.getTime());
+            if (pikupdate == 0)
+            	$('#pikupdropdatetimelong').val(0);
+			else            
+            	$('#pikupdropdatetimelong').val(pikupdate.getTime());
             
             if($('#radioind').is(':checked'))
 				$('#masteractid').val(0);
@@ -447,17 +487,19 @@
 			if (travelactivityformValidated()) {
 				var str = $("#travelactivityform").serialize();
 				
-				var request = $.ajax({
-				    type:"post",
+				console.log(str);
+				
+				$.ajax({
+					type:"post",
 				    data: str,
 				    url:"/app/travelactivity/save",
 				    dataType: "json"
-				});
-				request.done(function( msg ) {
+				})
+				.done(function( msg ) {
 			   		console.log(msg);
 			   		console.log(msg.name);
-				});			
-			    request.fail(function( jqXHR, textStatus ) {
+				})			
+			    .fail(function( jqXHR, textStatus ) {
 				});
 				
 				return true;
@@ -465,9 +507,9 @@
 							
 			return false;				
 		});
+
 						
 		$(":submit").live('click', function() {
-
 			if (!$("#travelactivityform").isChanged())
 			   return true;
 			else
@@ -536,9 +578,9 @@
 		
 			$(".customerror").empty();
 			if ($("#masteractid").val() > 0)
-				window.parent.adjustModalHeight(570);						
+				window.parent.adjustModalHeight(600);						
 			else
-				window.parent.adjustModalHeight(540);			
+				window.parent.adjustModalHeight(570);			
 			
 			if ($('#actname').val() == "") {
 				validated = false;
@@ -554,11 +596,11 @@
 				$("#paxerr").show();
 			}
 			else {
-				var paxintval = parseInt($('#pax').val());
-				if (paxintval <=0 || isNaN(paxintval)) {
+				var paxval = $('#pax').val();
+				if (/^[1-9]*$/.test(paxval) === false) {
 					validated = false;
 					$("#paxerr").append("<p>PAX must be a number greater than 0.</p>");
-					window.parent.adjustModalHeightDelta(13);
+					window.parent.adjustModalHeightDelta(26);
 					$("#paxerr").show();					
 				}
 			}
@@ -585,6 +627,27 @@
 					window.parent.adjustModalHeightDelta(13);
 					$("#depdatetimestrerr").show();
 				}
+				else {
+					var deptimelong = GetDate($('#depdatetimestr').val());
+					var masteractid = $('#masteractid').val();
+					
+					if (masteractid == 0) {
+						if (window.parent.checkActivityInItinRange(deptimelong.getTime()) == false) {
+							validated = false;
+							$("#depdatetimestrerr").append("<p>Specified date/time should be within itinerary or master activity date/time periods.</p>");
+							window.parent.adjustModalHeightDelta(26);
+							$("#depdatetimestrerr").show();																		
+						}
+					}										
+					else {
+						if (window.parent.checkDateWithinMasteractRange(masteractid, deptimelong, window.parent.masteractarr) == false) {
+							validated = false;					
+							$("#depdatetimestrerr").append("<p>Specified date/time should be within itinerary or master activity date/time periods.</p>");
+							window.parent.adjustModalHeightDelta(26);
+							$("#depdatetimestrerr").show();
+						}			
+					}				
+				}
 
 				if ($('#arrdatetimestr').val() == "") {
 					validated = false;
@@ -592,7 +655,40 @@
 					window.parent.adjustModalHeightDelta(13);
 					$("#arrdatetimestrerr").show();
 				}
+				else {
+					var arrtimelong = GetDate($('#arrdatetimestr').val());
+					var masteractid = $('#masteractid').val();
+					
+					var deptimelong = GetDate($('#depdatetimestr').val());
+
+					if (arrtimelong.getTime() < deptimelong.getTime()) {
+						validated = false;
+						$("#arrdatetimestrerr").append("<p>Arrival date/time should be greater than departure date/time.</p>");
+						window.parent.adjustModalHeightDelta(26);
+						$("#arrdatetimestrerr").show();																		
+					
+					}					
+					else {
+						if (masteractid == 0) {
+							if (window.parent.checkActivityInItinRange(arrtimelong.getTime()) == false) {
+								validated = false;					
+								$("#arrdatetimestrerr").append("<p>Specified date/time should be within itinerary or master activity date/time periods.</p>");
+								window.parent.adjustModalHeightDelta(26);
+								$("#arrdatetimestrerr").show();																		
+							}
+						}										
+						else {
+							if (window.parent.checkDateWithinMasteractRange(masteractid, arrtimelong, window.parent.masteractarr) == false) {
+								validated = false;				
+								$("#arrdatetimestrerr").append("<p>Specified date/time should be within itinerary or master activity date/time periods.</p>");
+								window.parent.adjustModalHeightDelta(26);
+								$("#arrdatetimestrerr").show();
+							}			
+						}				
+					}
+				}
 				
+
 				if ($('#depstation').val() == "") {
 					validated = false;
 					$("#depstationerr").append("<p>Input required.</p>");
@@ -606,6 +702,14 @@
 					window.parent.adjustModalHeightDelta(13);
 					$("#arrstationerr").show();
 				}
+				else {
+					if ( ($('#arrstation').val()).toUpperCase() === ($('#depstation').val()).toUpperCase() ) {
+						validated = false;
+						$("#arrstationerr").append("<p>Departure and Arrival stations should be different.</p>");
+						window.parent.adjustModalHeightDelta(26);
+						$("#arrstationerr").show();																		
+					}	
+				}
 				
 				if ($('#cost').val() == "") {
 					validated = false;
@@ -613,12 +717,30 @@
 					window.parent.adjustModalHeightDelta(13);
 					$("#costerr").show();
 				}
-
+				else {
+					var cost = $('#cost').val();
+					if ( /^\d+\.\d{1,2}$/.test(cost) === false) {
+						validated = false;	            
+						$("#costerr").append("<p>Cost should contain digits and upto two decimals.</p>");
+						window.parent.adjustModalHeightDelta(26);
+					}
+	            }
+				
 				if ($('#costmarkup').val() == "") {
 					validated = false;
 					$("#costmarkuperr").append("<p>Input required.</p>");
 					window.parent.adjustModalHeightDelta(13);
 					$("#costmarkuperr").show();
+				}
+				else {
+					var costmarkup = $('#costmarkup').val();
+					if (/^\d{0,3}$/.test(costmarkup) === false) {
+						validated = false;
+						$("#costmarkuperr").append("<p>Cost markup should contain upto 3 digits only.</p>");
+						window.parent.adjustModalHeightDelta(26);
+						$("#costmarkuperr").show();
+					
+					}
 				}
 				
 			}
@@ -638,6 +760,14 @@
 					window.parent.adjustModalHeightDelta(13);
 					$("#pikupdroploctoerr").show();
 				}
+				else {
+					if ( ($('#pikupdroplocto').val()).toUpperCase() === ($('#pikupdroplocfrom').val()).toUpperCase() ) {
+						validated = false;
+						$("#pikupdroploctoerr").append("<p>'Pickup and drop points should be different.'</p>");
+						window.parent.adjustModalHeightDelta(26);
+						$("#pikupdroploctoerr").show();																		
+					}	
+				}
 				
 				if ($('#pikupdropdatetimestr').val() == "") {
 					validated = false;
@@ -645,6 +775,27 @@
 					window.parent.adjustModalHeightDelta(13);
 					$("#pikupdropdatetimestrerr").show();
 				}
+				else {
+					var pikuptimelong = GetDate($('#pikupdropdatetimestr').val());
+					var masteractid = $('#masteractid').val();
+
+					if (masteractid == 0) {
+						if (window.parent.checkActivityInItinRange(pikuptimelong.getTime()) == false) {
+							validated = false;					
+							$("#pikupdropdatetimestrerr").append("<p>Specified date/time should be within itinerary or master activity date/time periods.</p>");
+							window.parent.adjustModalHeightDelta(26);
+							$("#pikupdropdatetimestrerr").show();																		
+						}
+					}										
+					else {
+						if (window.parent.checkDateWithinMasteractRange(masteractid, pikuptimelong, window.parent.masteractarr) == false) {
+							validated = false;				
+							$("#pikupdropdatetimestrerr").append("<p>Specified date/time should be within itinerary or master activity date/time periods.</p>");
+							window.parent.adjustModalHeightDelta(26);
+							$("#pikupdropdatetimestrerr").show();
+						}			
+					}
+				}				
 
 				if ($('#asstcost').val() == "") {
 					validated = false;
@@ -652,12 +803,31 @@
 					window.parent.adjustModalHeightDelta(13);
 					$("#asstcosterr").show();
 				}
-
+				else {
+					var cost = $('#asstcost').val();
+					if ( /^\d+\.\d{1,2}$/.test(cost) === false) {
+						validated = false;	            
+						$("#asstcosterr").append("<p>Cost should contain digits and upto 2 decimals only.</p>");
+						window.parent.adjustModalHeightDelta(26);
+						$("#asstcosterr").show();
+					}
+	            }
+				
 				if ($('#asstcostmarkup').val() == "") {
 					validated = false;
 					$("#asstcostmarkuperr").append("<p>Input required.</p>");
 					window.parent.adjustModalHeightDelta(13);
 					$("#asstcostmarkuperr").show();
+				}
+				else {
+					var costmarkup = $('#asstcostmarkup').val();
+					if (/^\d{0,3}$/.test(costmarkup) === false) {
+						validated = false;
+						$("#asstcostmarkuperr").append("<p>Cost markup should contain upto 3 digits only.</p>");
+						window.parent.adjustModalHeightDelta(26);
+						$("#asstcostmarkuperr").show();
+					
+					}
 				}
 				
 				if ($('#vehdetails').val() == "") {
@@ -673,6 +843,15 @@
 					window.parent.adjustModalHeightDelta(13);
 					$("#pikupdropcosterr").show();
 				}
+				else {
+					var cost = $('#pikupdropcost').val();
+					if ( /^\d+\.\d{1,2}$/.test(cost) === false) {
+						validated = false;	            
+						$("#pikupdropcosterr").append("<p>Cost should contain digits and upto 2 decimals only.</p>");
+						window.parent.adjustModalHeightDelta(26);
+						$("#pikupdropcosterr").show();
+					}
+		        }
 
 				if ($('#pikupdropcostmarkup').val() == "") {
 					validated = false;
@@ -680,9 +859,19 @@
 					window.parent.adjustModalHeightDelta(13);
 					$("#pikupdropcostmarkuperr").show();
 				}
-
+				else {
+					var costmarkup = $('#pikupdropcostmarkup').val();
+					if (/^\d{0,3}$/.test(costmarkup) === false) {
+						validated = false;
+						$("#pikupdropcostmarkuperr").append("<p>Cost markup should contain upto 3 digits only.</p>");
+						window.parent.adjustModalHeightDelta(26);
+						$("#pikupdropcostmarkuperr").show();					
+					}
+				}
+				
 			}
-			
+
+			alert(validated);			
 			return validated;
 		}
 													
@@ -782,17 +971,19 @@
 	                
 	                	                	                
 		    $(function () {
+		    					    
 				$('#depdatetimestr').datetimepicker().next().on(ace.click_event, function(){
 					$(this).prev().focus();
 				});
-		
+									
 				$('#arrdatetimestr').datetimepicker().next().on(ace.click_event, function(){
 					$(this).prev().focus();
 				});
 				
 				$('#pikupdropdatetimestr').datetimepicker().next().on(ace.click_event, function(){
 					$(this).prev().focus();
-				});				
+				});
+											
 			});
 			
 		})

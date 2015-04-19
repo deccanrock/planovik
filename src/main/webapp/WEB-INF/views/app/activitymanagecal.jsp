@@ -371,6 +371,7 @@
 		<script type="text/javascript">
 												
 		var masteractarr = new Array();
+		var activitystartdate;
 							
 		jQuery(function($) {
 		
@@ -446,13 +447,16 @@
 					if (!checkActivityInItinRange(date._d.getTime()))
 						return;
 					
-					console.log(date);	
 					var masteractid = getMasterActId( masteractarr, date);
 					// retrieve the dropped element's stored Event Object
 					var originalEventObject = $(this).data('eventObject');
 					originalEventObject.id = 0;
 					originalEventObject.masteractid = masteractid;
 					originalEventObject.startdatelong = date._d.getTime();
+					
+					// Format for calendar
+					activitystartdate = date.format("MM/DD/YYYY h:mm A");	
+					console.log(activitystartdate);
 
 					var $extraEventClass = $(this).attr('data-class');
 						
@@ -496,6 +500,7 @@
 				,
 				eventClick: function(calEvent, jsEvent, view) {
 					console.log(calEvent);
+					activitystartdate = calEvent.start.format("MM/DD/YYYY h:mm A");	
 					displaymodal(calEvent);
 				}		
 			});			
@@ -667,6 +672,8 @@
 							return;
 						}
 						
+						console.log(str)
+						
 						request = $.ajax({
 						    type:"post",
 						    data: str,
@@ -830,7 +837,7 @@
 				var modalend2 = 
 					 '</div>\
 					 <div class="modal-footer">\
-						<button type="button" class="btn btn-sm btn-danger" data-action="delete"><i class="ace-icon fa fa-trash-o"></i> Delete Event</button>\
+						<button type="button" id="activitydelbtn" class="btn btn-sm btn-danger" data-action="delete"><i class="ace-icon fa fa-trash-o"></i> Delete Event</button>\
 						<button type="button" class="btn btn-sm" data-dismiss="modal"><i class="ace-icon fa fa-times"></i> Cancel</button>\
 					 </div>\
 				  </div>\
@@ -852,9 +859,26 @@
 			});
 			modal.find('button[data-action=delete]').on('click', function() {
 				$('#calendar').fullCalendar('removeEvents' , function(ev){
-					return (ev._id == calEvent.id);
-				})
-				modal.modal("hide");
+					if (ev.activityid == calEvent.activityid) {
+						alert(ev.activityid);
+						if (ev.activityid > 0) {
+							$.ajax({type: 'GET', url: "/app/activity/inactive?" + "activityid=" + 
+												  calEvent.activityid + "&itinnum=" + calEvent.itinnum + "&type=" + calEvent.type})					
+							.done(function( data ) {
+								alert(data);
+								modal.modal("hide");						
+							})				
+						    .fail(function( jqXHR, textStatus ) {
+								return false;
+							});						
+						}
+						else
+							modal.modal("hide");
+
+						return true;
+					}
+					return false;
+				});				
 			});
 			
 			modal.modal('show').on('hidden', function(){
@@ -1086,7 +1110,6 @@
 	    
 	    	if (newactstartdatetime >= ${itinerary.startdatelong} &&
 	    		newactstartdatetime <= ${itinerary.enddatelong}) {
-	    	    console.log("Date in range");
 	    		return true;
 	    	}
 	    	
@@ -1122,7 +1145,11 @@
 			}						
 		}
 		
-		function checkDateWithinMasteractRange(materactid, pikeddate, masteractarr) {
+		function checkDateWithinMasteractRange(masteractid, pikeddate, masteractarr) {
+			console.log(masteractid);
+			console.log(pikeddate);
+			console.log(masteractarr);
+			
 			for (var i = 0; i < masteractarr.length; i++) {
 				if (masteractarr[i].masteractid == masteractid) {
 					if (pikeddate.getTime() >= masteractarr[i].masteractstartdatelong &&
@@ -1133,7 +1160,7 @@
 			
 			return false;			
 		}
-		
+				
 		</script>
 	</body>
 </html>

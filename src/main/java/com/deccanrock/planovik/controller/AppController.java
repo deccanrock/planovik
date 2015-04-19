@@ -814,7 +814,28 @@ public class AppController {
 		return jsonOut;
 	}
 	
-	
+	@RequestMapping(value = "/app/activity/inactive", method = RequestMethod.GET, produces = "application/json")
+	public @ResponseBody String deleteActivity(ServletResponse response, @RequestParam(value = "activityid") int activityid, 
+											  @RequestParam(value = "itinnum") int itinnum, @RequestParam(value = "type") int type) 
+													  throws IOException {
+
+		logger.info("Inactive - Delete Activity");
+		
+		// Get Org List from database, should be changed to get from cache
+		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
+		ActivityEntityDAO AED  = (ActivityEntityDAO)context.getBean("ActivityEntityDAO");
+		String result = null;
+		try {
+			result = AED.DeleteActivity(activityid, itinnum, type);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		((ClassPathXmlApplicationContext) context).close();
+				
+		return result;
+	}	
 	
 	@RequestMapping(value = "/app/activity/getactivitycodes", method = RequestMethod.GET, produces = "application/json")
 	public @ResponseBody String getActivityCodes(ServletResponse response, @RequestParam(value = "query") String query) 

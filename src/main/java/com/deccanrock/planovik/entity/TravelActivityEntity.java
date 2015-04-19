@@ -131,6 +131,8 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
     // To be included in all activity entities to allow client side identification of activity type
     private int type;
     
+    private String masterorindradio;
+    
     // Getter-Setters
 	public Integer getActivityid() {
 		return activityid;
@@ -493,6 +495,13 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
 		return type=0; // always the case
 	}		
 
+	public void setMasterorindradio(String masterorindradio) {
+		this.masterorindradio = masterorindradio;
+	}
+		
+	public String getMasterorindradio() {
+		return masterorindradio;
+	}		
 	
 	// Comparator methods
 	public static Comparator<TravelActivityEntity> ActivityByIdComparator 
