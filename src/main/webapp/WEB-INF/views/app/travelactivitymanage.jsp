@@ -24,7 +24,7 @@
 				<div class="page-content">
 		
 					<div class="widget-box" id="travelactivitywidget" style="border-style:1px;border-color:#A7C9A1;">          
-						<form:form id="travelactivityform" method="post" action="/app/travelactivity/save" modelAttribute="travelactivity" name="travelactivityform" class="form-horizontal">
+						<form:form id="travelactivityform" method="post" modelAttribute="travelactivity" name="travelactivityform" class="form-horizontal">
 						<div class="widget-header">
 					        <div class="row">									    																					    
 								<div class='col-xs-4'>	
@@ -426,7 +426,7 @@
 				$('#asstreqgroup').hide();
 				$('#pikupdropgroup').hide();
 				// For new activity only
-				if ($('#depdatetimestr').val() == "") {
+				if ($('#depdatetimestr').val() == "" || ${travelactivity.eventdrop} == 1) {
 					$('#depdatetimestr').val(window.parent.activitystartdate);
 					$('#arrdatetimestr').val(window.parent.activitystartdate);				
 				}
@@ -437,13 +437,13 @@
 				$('#asstreqgroup').show();
 				$('#pikupdropgroup').show();
 				// For new activity only
-				if ($('#pikupdropdatetimestr').val() == "")
+				if ($('#pikupdropdatetimestr').val() == "" || ${travelactivity.eventdrop} == 1)
 					$('#pikupdropdatetimestr').val(window.parent.activitystartdate);
 		    }
 		    
 		});
 		
-		$("#travelactivitysave").click(function() {
+		$("#travelactivitysave").click(function(e) {
 		
             var startdate;
             if ($('#depdatetimestr').val() == "")
@@ -487,21 +487,23 @@
 			if (travelactivityformValidated()) {
 				var str = $("#travelactivityform").serialize();
 				
-				console.log(str);
+				console.log(str);			
 				
 				$.ajax({
 					type:"post",
 				    data: str,
-				    url:"/app/travelactivity/save",
-				    dataType: "json"
-				})
-				.done(function( msg ) {
-			   		console.log(msg);
-			   		console.log(msg.name);
-				})			
-			    .fail(function( jqXHR, textStatus ) {
+				    url:"/app/manage/travelactivitymanage",
+			        success:function(data, textStatus, jqXHR) {
+			            // var actdata = JSON.parse(data);
+			            window.parent.addUpdateActivity(data);
+			            window.parent.modal.modal("hide");
+			        },
+			        error: function(jqXHR, textStatus, errorThrown) {
+			            console.log(textStatus);    
+			        }				    
 				});
-				
+			    e.preventDefault();
+															
 				return true;
 			}
 							
@@ -871,7 +873,6 @@
 				
 			}
 
-			alert(validated);			
 			return validated;
 		}
 													
@@ -896,6 +897,9 @@
 			$('#tzoffset').val(${travelactivity.tzoffset});
 			$('#masteractid').val(${travelactivity.masteractid});
 			
+			if (window.parent.masteractarr == undefined || window.parent.masteractarr.length == 0)
+				$( "#radiopom" ).prop( "disabled", true );
+				
 			if ($('#masteractid').val() == 0)
 				$( "#radioind" ).prop( "checked", true );
 			else {

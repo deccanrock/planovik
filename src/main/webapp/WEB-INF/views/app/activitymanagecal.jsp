@@ -372,6 +372,9 @@
 												
 		var masteractarr = new Array();
 		var activitystartdate;
+		var calendar;
+		var modal;
+		var events = [];
 							
 		jQuery(function($) {
 		
@@ -379,7 +382,7 @@
 		    	$("#masteractenddate").val($("#masteractstartdate").val());
 			});
 			    	
-			var calendar = $('#calendar').fullCalendar({
+			calendar = $('#calendar').fullCalendar({
 				//isRTL: true,
 				 buttonHtml: {
 					prev: '<i class="ace-icon fa fa-chevron-left"></i>',
@@ -394,45 +397,58 @@
 					right: 'month,agendaWeek,agendaDay'		
 				},
 			   events: function(start, end, timezone, callback) {
-					var events = [];
-					<c:forEach items="${activitylist}" var="event">
-						var title = "${fn:escapeXml(event.actname)}";
-						var sdate = new Date(${event.activitystarttimelong});						
-						var edate = new Date(${event.activityendtimelong});
+					<c:forEach items="${activitylist}" var="activity">
+						var title = "${fn:escapeXml(activity.actname)}";
+						var sdate = new Date(${activity.activitystarttimelong});						
+						var edate = new Date(${activity.activityendtimelong});
 			
-						if (${event.type == 0})
+						var idtype;
+						if (${activity.type == 0}) {
 							var color = "#82AF6F";
-						if (${event.type == 1})
-							var color = "#D15B47";
-						if (${event.type == 2})
+							idtype = "T";
+						}
+						if (${activity.type == 1}) {
+							var color = "#D15B47";						
+							idtype = "H";
+						}
+						if (${activity.type == 2}) {
 							var color = "#9585BF";
-						if (${event.type == 3})
+							idtype = "V";							
+						}
+						if (${activity.type == 3}) {
 							var color = "#FEE188";
-						if (${event.type == 4})
+							idtype = "R";													
+						}
+						if (${activity.type == 4}) {
 							var color = "#D6487E";
+							idtype = "O";																			
+						}
 					
-						var event = {
+						var strid =  "${fn:escapeXml(activity.masteractid)}" + "." + ${activity.activityid} + "." + idtype;
+						var activity = {
+							"id": strid,
 							"title": title,
 							"start": sdate,
 							"end": edate,							
 							"color": color,
-							"activityid": ${event.activityid},
-							"code": "${fn:escapeXml(event.code)}",
-							"itinnum": "${fn:escapeXml(event.itinnum)}",
-							"masteractid": "${fn:escapeXml(event.masteractid)}",
-							"activitystarttimelong": "${fn:escapeXml(event.activitystarttimelong)}",
-							"actname": "${fn:escapeXml(event.actname)}",
+							"activityid": ${activity.activityid},
+							"code": "${fn:escapeXml(activity.code)}",
+							"itinnum": "${fn:escapeXml(activity.itinnum)}",
+							"masteractid": "${fn:escapeXml(activity.masteractid)}",
+							"activitystarttimelong": "${fn:escapeXml(activity.activitystarttimelong)}",
+							"actname": "${fn:escapeXml(activity.actname)}",
 							"tzoffset": ${itinerary.tzoffset},
-							"startdatelong": "${fn:escapeXml(event.activitystarttimelong)}",
-							"enddatelong": "${fn:escapeXml(event.activityendtimelong)}",
-							"type": ${event.type}
+							"startdatelong": "${fn:escapeXml(activity.activitystarttimelong)}",
+							"enddatelong": "${fn:escapeXml(activity.activityendtimelong)}",
+							"eventdrop": 0,							
+							"type": ${activity.type}
 						}
 						
-						updatemasteractivitycount("${fn:escapeXml(event.masteractid)}", masteractarr);
+						updatemasteractivitycount("${fn:escapeXml(activity.masteractid)}", masteractarr);
 					
-						console.log(event);
+						console.log(activity);
 					
-						events.push(event);				
+						events.push(activity);				
 					</c:forEach>
 
 					callback(events);
@@ -470,12 +486,32 @@
 					
 					// render the event on the calendar
 					// the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
-					$('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
+					// $('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
 					
 					
 					displaymodal(copiedEventObject);
 						
 				},
+			    eventDrop: function(event, delta, revertFunc) {
+			
+			        // alert(event.title + " was dropped on " + event.start.format());
+					// Don't render activity if out of range
+					console.log(event);
+					if (!checkActivityInItinRange(event.start._d.getTime())) {
+						revertFunc();
+						return;
+					}
+			
+			        if (!confirm("Are you sure about this change?")) {
+			            revertFunc();
+			            return;
+			        }
+			        event.startdatelong = event.start._d.getTime();
+			        activitystartdate = event.start.format("MM/DD/YYYY h:mm A");
+					event.eventdrop = 1;
+			        displaymodal(event);
+			
+			    },				
 				selectable: true,
 				selectHelper: true,
 				select: function(start, end, allDay) {
@@ -792,7 +828,7 @@
 			var framesrc;
 
 			if (calEvent.type == -1) {
-				var modal =
+				modal =
 				'<div class="modal" id="activitymodal" style="z-index:2099;">\
 					<div class="modal-dialog">\
 				   		<div class="modal-content">\
@@ -815,10 +851,10 @@
 				}
 				else {
 					framesrc = '"travelactivitymanage?itinnum=' + calEvent.itinnum + '&activityid=' +  calEvent.activityid + '&masteractid=' +  calEvent.masteractid +  '&type=' + calEvent.type +
-				            '&tzoffset=' + calEvent.tzoffset + '&startdatelong=' + calEvent.startdatelong + '&version=' + ${itinerary.version} + '&groupnum=' + ${activitymaster.groupnum} + '"';
+				            '&tzoffset=' + calEvent.tzoffset + '&eventdrop=' + calEvent.eventdrop + '&startdatelong=' + calEvent.startdatelong + '&startdatestr=' + calEvent.startdatestr + '&version=' + ${itinerary.version} + '&groupnum=' + ${activitymaster.groupnum} + '"';
 				}
 				
-				var modal =
+				modal =
 				'<div class="modal"  id="activitymodal" style="z-index:2099;">\
 				   <div class="modal-dialog">\
 				   <div class="modal-content">\
@@ -848,7 +884,7 @@
 			}
 			
 						
-			var modal = $(modal).appendTo("body");
+			modal = $(modal).appendTo("body");
 
 			modal.find('form').on('submit', function(ev){
 				ev.preventDefault();
@@ -857,20 +893,28 @@
 				calendar.fullCalendar('updateEvent', calEvent);
 				modal.modal("hide");
 			});
-			modal.find('button[data-action=delete]').on('click', function() {
+			modal.find('button[data-action=delete]').on('click', function(e) {
 				$('#calendar').fullCalendar('removeEvents' , function(ev){
 					if (ev.activityid == calEvent.activityid) {
-						alert(ev.activityid);
 						if (ev.activityid > 0) {
-							$.ajax({type: 'GET', url: "/app/activity/inactive?" + "activityid=" + 
-												  calEvent.activityid + "&itinnum=" + calEvent.itinnum + "&type=" + calEvent.type})					
-							.done(function( data ) {
-								alert(data);
-								modal.modal("hide");						
-							})				
-						    .fail(function( jqXHR, textStatus ) {
-								return false;
-							});						
+						
+							if (!confirm("Do you really wish to delete this activity?")) {
+				            	return;
+				        	}
+							
+							$.ajax({type: 'GET', 
+								url: "/app/activity/inactive?" + "activityid=" + calEvent.activityid + "&itinnum=" + calEvent.itinnum + "&type=" + calEvent.type,
+						        success:function(data, textStatus, jqXHR) {
+						        	var result = JSON.parse(data);
+						        	if (result.result == "success") 
+										modal.modal("hide");						
+						        },
+						        error: function(jqXHR, textStatus, errorThrown) {
+						        	alert(textStatus + " " + errorThrown);
+						            console.log(textStatus);    
+						        }													  										  
+							});					
+							e.preventDefault();						
 						}
 						else
 							modal.modal("hide");
@@ -1035,7 +1079,7 @@
 			var edate = new Date(masteractenddatelong);			
 			var color = "#A0A0A0";
 			var event = {
-				"id": masteractid,
+				"id": masteractid.toString(),
 				"title": masteractname,
 				"start": sdate,
 				"end": edate,
@@ -1046,10 +1090,10 @@
 			console.log(event);
             
             if (mode == 'update' || mode == 'delete') {
-				 var calevent = $('#calendar').fullCalendar( 'clientEvents', masteractid );            
+				 var calevent = $('#calendar').fullCalendar( 'clientEvents', masteractid.toString() );            
 			     
 			     if (mode == 'delete')
-				     $('#calendar').fullCalendar( 'removeEvents', masteractid );		     
+				     $('#calendar').fullCalendar( 'removeEvents', masteractid.toString() );		     
 			     else {
 				     calevent[0].masteractname = masteractname;
 				     calevent[0].start = sdate;
@@ -1107,7 +1151,7 @@
 	    }
 	    
 	    function checkActivityInItinRange(newactstartdatetime) {
-	    
+	    	console.log(${itinerary.startdatelong}, newactstartdatetime, ${itinerary.enddatelong});
 	    	if (newactstartdatetime >= ${itinerary.startdatelong} &&
 	    		newactstartdatetime <= ${itinerary.enddatelong}) {
 	    		return true;
@@ -1119,7 +1163,7 @@
 		function getMasterActId( masteractarr, date) {
 			
 			console.log(masteractarr);
-			console.log(masteractarr[0].masteractstartdatelong, date._d.getTime(), masteractarr[0].masteractenddatelong);
+			// console.log(masteractarr[0].masteractstartdatelong, date._d.getTime(), masteractarr[0].masteractenddatelong);
 
 			for (var i = 0; i < masteractarr.length; i++) {
 		    	if ( (date._d.getTime() >= masteractarr[i].masteractstartdatelong) &&
@@ -1159,6 +1203,74 @@
 			}
 			
 			return false;			
+		}
+		
+		function addUpdateActivity(data) {
+			var idtype;
+			if (data.type == 0) {
+				var color = "#82AF6F";
+				idtype = "T";
+			}
+			if (data.type == 1) {
+				var color = "#D15B47";						
+				idtype = "H";
+			}
+			if (data.type == 2) {
+				var color = "#9585BF";
+				idtype = "V";							
+			}
+			if (data.type == 3) {
+				var color = "#FEE188";
+				idtype = "R";													
+			}
+			if (data.type == 4) {
+				var color = "#D6487E";
+				idtype = "O";																			
+			}
+		
+			var strid =  data.masteractid + "." + data.activityid + "." + idtype;
+			console.log(strid);	
+			var calevent = $('#calendar').fullCalendar( 'clientEvents', strid);
+
+			if (typeof calevent[0] !== "undefined" && calevent[0] !== null) {
+				calevent[0].title = data.actname;
+				calevent[0].start = data.activitystarttimelong;
+				calevent[0].end = data.activityendtimelong;				
+				calevent[0].code = data.code;
+				calevent[0].itinnum = data.itinnum;
+				calevent[0].masteractid = data.masteractid;
+				calevent[0].activitystarttimelong =  data.activitystarttimelong;
+				calevent[0].actname = data.actname;
+				calevent[0].tzoffset =  data.tzoffset;
+				calevent[0].startdatelong =  data.activitystarttimelong;
+				calevent[0].enddatelong = data.activityendtimelong;
+				calevent[0].type =  data.type;
+				
+			 	$('#calendar').fullCalendar('updateEvent', calevent[0]);			     							
+			}				
+  			else {
+				var event = {
+					"id": strid,
+					"title": data.actname,
+					"start": data.activitystarttimelong,
+					"end": data.activityendtimelong,							
+					"color": color,
+					"activityid": data.activityid,
+					"code": data.code,
+					"itinnum": data.itinnum,
+					"masteractid": data.masteractid,
+					"activitystarttimelong": data.activitystarttimelong,
+					"actname": data.actname,
+					"tzoffset": data.tzoffset,
+					"startdatelong": data.activitystarttimelong,
+					"enddatelong": data.activityendtimelong,
+					"type": data.type
+				}
+				events.push(event);
+				updatemasteractivitycount(event, masteractarr);				
+				$('#calendar').fullCalendar( 'renderEvent', event, 'stick');
+  			}
+  					
 		}
 				
 		</script>

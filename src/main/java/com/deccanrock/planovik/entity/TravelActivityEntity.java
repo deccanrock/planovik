@@ -116,6 +116,8 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
     
     private int version;
             
+    private short eventdrop;
+    
     private String lastupdatedby;
 
     private String createdby;
@@ -502,6 +504,15 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
 	public String getMasterorindradio() {
 		return masterorindradio;
 	}		
+	
+	public void setEventdrop(short eventdrop) {
+		this.eventdrop = eventdrop;
+	}
+		
+	public short getEventdrop() {
+		return eventdrop;
+	}		
+
 	
 	// Comparator methods
 	public static Comparator<TravelActivityEntity> ActivityByIdComparator 

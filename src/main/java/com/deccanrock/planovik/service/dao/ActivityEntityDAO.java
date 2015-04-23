@@ -83,6 +83,9 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntity
 		inParamMap.put("initinnum", travelactivity.getItinnum());		
 		inParamMap.put("inactname", travelactivity.getActname());
 		
+		// 0 = travel activity
+		inParamMap.put("type", 0);
+
 		inParamMap.put("incode", travelactivity.getCode());		
 		inParamMap.put("inversion", travelactivity.getVersion());		
 		inParamMap.put("lastupdatedbyemail", travelactivity.getLastupdatedby());
@@ -113,11 +116,15 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntity
 		long utcstime = TimeFormatter.LocalToUTC(travelactivity.getDepdatetimelong(), travelactivity.getTzoffset());
 		java.sql.Timestamp stimestamp = new java.sql.Timestamp(utcstime);			
 		inParamMap.put("indepdatetime", stimestamp);
+		if (travelactivity.getCode().matches("T_BOOK"))
+			travelactivity.setActivitystarttimelong(travelactivity.getDepdatetimelong());
 		
 		long utcetime = TimeFormatter.LocalToUTC(travelactivity.getArrdatetimelong(), travelactivity.getTzoffset());
 		java.sql.Timestamp etimestamp = new java.sql.Timestamp(utcetime);									
 		inParamMap.put("inarrdatetime", etimestamp);
-
+		if (travelactivity.getCode().matches("T_BOOK"))
+			travelactivity.setActivityendtimelong(travelactivity.getArrdatetimelong());
+		
 		inParamMap.put("inarrstation", travelactivity.getArrstation());
 		inParamMap.put("indepstation", travelactivity.getDepstation());
 
@@ -150,6 +157,8 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntity
 		long utcpdtime = TimeFormatter.LocalToUTC(travelactivity.getPikupdropdatetimelong(), travelactivity.getTzoffset());
 		java.sql.Timestamp pdtimestamp = new java.sql.Timestamp(utcpdtime);									
 		inParamMap.put("inpikupdropdatetime", pdtimestamp);
+		if (travelactivity.getCode().matches("T_PIKUPDRP"))
+			travelactivity.setActivitystarttimelong(travelactivity.getPikupdropdatetimelong());
 		
 		if (travelactivity.getPikupdropcost() == null)					
 			inParamMap.put("inpikupdropcost", 0.0);
@@ -261,10 +270,11 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntity
 		
 		try {    	
     		simpleJdbcCall.execute(inParamMap);
-    		result = "Success";
+    		result = "{\"result\": \"success\"}";
     	}
     	catch (Exception ex) {
     		result = ex.getMessage();
+    		result = "{\"result\":" + "\"" + result + "\"}"; 
 		} 					
 				
 		// This should never really happen

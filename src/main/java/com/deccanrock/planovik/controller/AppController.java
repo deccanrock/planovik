@@ -457,7 +457,7 @@ public class AppController {
     // Read session variables and build the page
     @RequestMapping(value = "/app/manage/travelactivitymanage", method = RequestMethod.GET)    
     public String travelActivityManage(ModelMap map, HttpSession session, @RequestParam int itinnum, @RequestParam int activityid, @RequestParam short masteractid, @RequestParam int type, 
-    		@RequestParam short tzoffset, @RequestParam long startdatelong, @RequestParam int version, @RequestParam int groupnum) throws IOException, SQLException {
+    		@RequestParam short tzoffset, @RequestParam short eventdrop, @RequestParam long startdatelong, @RequestParam int version, @RequestParam int groupnum) throws IOException, SQLException {
 
     	// This is ajax support function for JQGrid
     	logger.info("Travel Activity Manage");
@@ -479,6 +479,8 @@ public class AppController {
 			}
 			else
 				TAE = (TravelActivityEntity)AED.GetActivityDetails(activityid, type, tzoffset);
+				TAE.setActivitystarttimelong(startdatelong);
+				TAE.setEventdrop(eventdrop);
 		}
 		
 		map.addAttribute("travelactivity", TAE);
@@ -489,7 +491,7 @@ public class AppController {
     
     
     // Hook for jqGrid ('Manage'), Set Session variables and manage tab
-    @RequestMapping(value = "/app/travelactivity/save", method = RequestMethod.POST, produces = "application/json")    
+    @RequestMapping(value = "/app/manage/travelactivitymanage", method = RequestMethod.POST, produces = "application/json")    
     public @ResponseBody String saveTravelActivity(HttpServletRequest request, HttpServletResponse response) 
 			throws IOException {
     	
@@ -592,8 +594,13 @@ public class AppController {
 		response.setContentType("application/json");
 		ObjectMapper mapper = new ObjectMapper();
 		String jsonOut = mapper.writeValueAsString(taedb);		
+		// String jsonOut = mapper.writeValueAsString("success");
+		//String jsonOutput = gson.toJson(taedb);
+		//String strObj = "{ \"masteractid\": " + "\"" + result + "\"" + ", \"masteractname\": " + "\"" + actname + "\"" + ", \"masteractstartdate\": " +
+		//		"\"" +  startdateStr + "\"" + ", \"masteractenddate\": " + "\"" + enddateStr + "\"" + 
+		//		", \"masteractstartdatelong\": " + "\"" +  startdatetimelong + "\"" + ", \"masteractenddatelong\": " + "\"" + enddatetimelong + "\"" +"}";
+
 		
-		// String jsonOutput = gson.toJson(taedb);
 		return jsonOut;
     }
 
@@ -833,8 +840,11 @@ public class AppController {
 		}
 		
 		((ClassPathXmlApplicationContext) context).close();
+		response.setContentType("application/json");
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonOut = mapper.writeValueAsString(result);			
 				
-		return result;
+		return jsonOut;
 	}	
 	
 	@RequestMapping(value = "/app/activity/getactivitycodes", method = RequestMethod.GET, produces = "application/json")

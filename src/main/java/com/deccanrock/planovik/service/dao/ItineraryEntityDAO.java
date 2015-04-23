@@ -209,10 +209,14 @@ public class ItineraryEntityDAO extends JdbcDaoSupport implements IItneraryEntit
 			long utcstime = TimeFormatter.LocalToUTC(itinerary.getStartdatelong(), itinerary.getTzoffset());
 			java.sql.Timestamp stimestamp = new java.sql.Timestamp(utcstime);			
 			inParamMap.put("startdate", stimestamp);
+			if (!itinerary.getStartdatetimepicker().isEmpty())
+				itinerary.setStartdatestr(itinerary.getStartdatetimepicker());
 			
 			long utcetime = TimeFormatter.LocalToUTC(itinerary.getEnddatelong(), itinerary.getTzoffset());
 			java.sql.Timestamp etimestamp = new java.sql.Timestamp(utcetime);									
 			inParamMap.put("enddate", etimestamp);
+			if (!itinerary.getEnddatetimepicker().isEmpty())
+				itinerary.setEnddatestr(itinerary.getEnddatetimepicker());
 
 			inParamMap.put("arrivalcity", itinerary.getArrivalcity());
 			inParamMap.put("depcity", itinerary.getDepcity());
