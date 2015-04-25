@@ -1,6 +1,7 @@
 package com.deccanrock.planovik.entity;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -365,6 +366,5 @@ public class ItineraryEntity
 	public void setPostbutton(String postbutton) {
 		this.postbutton = postbutton;		
 	}
-		
 
 }

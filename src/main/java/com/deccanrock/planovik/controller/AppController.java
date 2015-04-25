@@ -49,6 +49,7 @@ import com.deccanrock.planovik.service.dao.UserEntityDAO;
 import com.deccanrock.planovik.service.utils.UriHandler;
 import com.deccanrock.planovik.service.utils.FileHandler;
 import com.deccanrock.planovik.service.ActivitiesListForItinerary;
+import com.deccanrock.planovik.constants.PlnvkConstants;
 
 /**
  * Handles all requests for Organization general Users and functions
@@ -473,14 +474,18 @@ public class AppController {
 				TAE.setItinnum(itinnum);
 				TAE.setType(type);
 				TAE.setTzoffset(tzoffset);
-				TAE.setActivitystarttimelong(startdatelong);
 				TAE.setVersion(version);
 				TAE.setGroupnum(groupnum);
 			}
-			else
+			else {
 				TAE = (TravelActivityEntity)AED.GetActivityDetails(activityid, type, tzoffset);
-				TAE.setActivitystarttimelong(startdatelong);
 				TAE.setEventdrop(eventdrop);
+			}
+
+			TAE.setActivitystarttimelong(startdatelong);
+ 
+			PlnvkConstants pc = new PlnvkConstants();
+			TAE.setTravelmodelist(pc.getTravelmodes());
 		}
 		
 		map.addAttribute("travelactivity", TAE);
@@ -584,7 +589,8 @@ public class AppController {
 		else
 			travelactivity.setPikupdropcostmarkup(Integer.parseInt(request.getParameter("pikupdropcostmarkup")));
 		
-		travelactivity.setComments(request.getParameter("comments"));
+		travelactivity.setCommentsinternal(request.getParameter("commentsinternal"));
+		travelactivity.setCommentsexternal(request.getParameter("commentsexternal"));
 		
 		
 		TravelActivityEntity taedb = AED.saveTravelActivity(travelactivity);
@@ -594,12 +600,6 @@ public class AppController {
 		response.setContentType("application/json");
 		ObjectMapper mapper = new ObjectMapper();
 		String jsonOut = mapper.writeValueAsString(taedb);		
-		// String jsonOut = mapper.writeValueAsString("success");
-		//String jsonOutput = gson.toJson(taedb);
-		//String strObj = "{ \"masteractid\": " + "\"" + result + "\"" + ", \"masteractname\": " + "\"" + actname + "\"" + ", \"masteractstartdate\": " +
-		//		"\"" +  startdateStr + "\"" + ", \"masteractenddate\": " + "\"" + enddateStr + "\"" + 
-		//		", \"masteractstartdatelong\": " + "\"" +  startdatetimelong + "\"" + ", \"masteractenddatelong\": " + "\"" + enddatetimelong + "\"" +"}";
-
 		
 		return jsonOut;
     }

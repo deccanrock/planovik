@@ -9,7 +9,7 @@ import java.util.List;
 */
 
 
-public class Constants {
+public class PlnvkConstants {
 	
 	public enum Status {
 	    OPEN(0),
@@ -95,26 +95,7 @@ public class Constants {
 	        return value;
 	    }		
 	}
-	
-	public enum  Travelmode {
-		Air(0),
-		Train(1),
-		Car(2),
-		Bus(3),
-		Boat(4),
-		Ship(5);
-
-		private final int value;
-
-	    private Travelmode(int value) {
-	        this.value = value;
-	    }
-
-	    public int getValue() {
-	        return value;
-	    }		
-	}
-	
+		
 	public enum  ActivityType {
 		Travel(0),
 		Hotel(1),
@@ -136,5 +117,9 @@ public class Constants {
 	// TO_DO - This should be moved to DB
 	private final List <String> roles = Arrays.asList("ROLE_USER", "ROLE_ADMIN");
 	public List<String> getUserRoles() { return roles; }
+		
+	private final List <String> travelmodes = Arrays.asList("Air", "Train", "Car", "Bus", "Boat", "Ship");
+	public List<String> getTravelmodes() { return travelmodes; }
+	
 	
 }

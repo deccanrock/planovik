@@ -107,8 +107,6 @@
 											  activitymaster.countactivityvisit + activitymaster.countactivitytravel +
 											  activitymaster.countactivityrental}
 									</i>)</span>&nbsp;&nbsp;
-									<span style="font-size:12px;color:black;">Arrival: <i>${itinerary.startdatestr}</i></span>&nbsp;&nbsp;	
-									<span style="font-size:12px;color:black;">Departure: <i>${itinerary.enddatestr}</i></span>	
 									</small>
 							</h1>
 						</div><!-- /.page-header -->
@@ -283,6 +281,9 @@
 													</div>
 												</div>
 											</div>
+											<span style="font-size:12px;color:black;">Arrival: <i>${itinerary.startdatestr}</i></span>&nbsp;&nbsp;	
+											<span style="font-size:12px;color:black;">Departure: <i>${itinerary.enddatestr}</i></span>	
+										
 										</div>
 									</div>
 								</div>
@@ -382,6 +383,8 @@
 		    	$("#masteractenddate").val($("#masteractstartdate").val());
 			});
 			    	
+			var defaultDate = formatForCalendar("${itinerary.startdatestr}");
+
 			calendar = $('#calendar').fullCalendar({
 				//isRTL: true,
 				 buttonHtml: {
@@ -395,7 +398,7 @@
 					left: 'prev,next today',
 					center: 'title',
 					right: 'month,agendaWeek,agendaDay'		
-				},
+				},	
 			   events: function(start, end, timezone, callback) {
 					<c:forEach items="${activitylist}" var="activity">
 						var title = "${fn:escapeXml(activity.actname)}";
@@ -487,8 +490,7 @@
 					// render the event on the calendar
 					// the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
 					// $('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
-					
-					
+					copiedEventObject.eventdrop = 0;					
 					displaymodal(copiedEventObject);
 						
 				},
@@ -496,7 +498,8 @@
 			
 			        // alert(event.title + " was dropped on " + event.start.format());
 					// Don't render activity if out of range
-					console.log(event);
+					console.log(event); 
+					console.log(delta);
 					if (!checkActivityInItinRange(event.start._d.getTime())) {
 						revertFunc();
 						return;
@@ -537,10 +540,15 @@
 				eventClick: function(calEvent, jsEvent, view) {
 					console.log(calEvent);
 					activitystartdate = calEvent.start.format("MM/DD/YYYY h:mm A");	
+					calEvent.eventdrop = 0;					
 					displaymodal(calEvent);
-				}		
+				}
+				,
+				defaultDate: defaultDate
+				// defaultDate: ${itinerary.startdatestr}
 			});			
 	    
+			// calendar.fullCalendar( 'gotoDate', '2015-05-01' );
 			
 	    	setMasterActArrInitial(masteractarr);
 			setMasterActArr(masteractarr);
@@ -847,11 +855,11 @@
 					// Get Masteractid
 					
 					framesrc = '"travelactivitymanage?itinnum=' + ${itinerary.id} + '&activityid=' +  '0' + '&masteractid=' +  calEvent.masteractid + '&type=' + '0' +
-					            '&tzoffset=' + ${itinerary.tzoffset} + '&startdatelong=' + calEvent.startdatelong + '&version=' + ${itinerary.version} + '&groupnum=' + ${activitymaster.groupnum} + '"';	
+					            '&tzoffset=' + ${itinerary.tzoffset} + '&eventdrop=' + calEvent.eventdrop + '&startdatelong=' + calEvent.startdatelong + '&version=' + ${itinerary.version} + '&groupnum=' + ${activitymaster.groupnum} + '"';	
 				}
 				else {
 					framesrc = '"travelactivitymanage?itinnum=' + calEvent.itinnum + '&activityid=' +  calEvent.activityid + '&masteractid=' +  calEvent.masteractid +  '&type=' + calEvent.type +
-				            '&tzoffset=' + calEvent.tzoffset + '&eventdrop=' + calEvent.eventdrop + '&startdatelong=' + calEvent.startdatelong + '&startdatestr=' + calEvent.startdatestr + '&version=' + ${itinerary.version} + '&groupnum=' + ${activitymaster.groupnum} + '"';
+				            '&tzoffset=' + calEvent.tzoffset + '&eventdrop=' + calEvent.eventdrop + '&startdatelong=' + calEvent.startdatelong + '&version=' + ${itinerary.version} + '&groupnum=' + ${activitymaster.groupnum} + '"';
 				}
 				
 				modal =
@@ -859,7 +867,7 @@
 				   <div class="modal-dialog">\
 				   <div class="modal-content">\
 					 <div class="modal-body">\
-					   	<button type="button" class="close" data-dismiss="modal" style="margin-top:-10px;">&times;</button>\
+					   	<button type="button" class="close" data-dismiss="modal" data-action="cancel" style="margin-top:-10px;">&times;</button>\
 					 	<iframe id="activityiFrame" src=';
 					 	
 				
@@ -874,7 +882,7 @@
 					 '</div>\
 					 <div class="modal-footer">\
 						<button type="button" id="activitydelbtn" class="btn btn-sm btn-danger" data-action="delete"><i class="ace-icon fa fa-trash-o"></i> Delete Event</button>\
-						<button type="button" class="btn btn-sm" data-dismiss="modal"><i class="ace-icon fa fa-times"></i> Cancel</button>\
+						<button type="button" class="btn btn-sm" data-dismiss="modal" data-action="cancel"><i class="ace-icon fa fa-times"></i> Cancel</button>\
 					 </div>\
 				  </div>\
 				 </div>\
@@ -893,6 +901,15 @@
 				calendar.fullCalendar('updateEvent', calEvent);
 				modal.modal("hide");
 			});
+			
+			modal.find('button[data-action=cancel]').on('click', function(e) {
+				if (calEvent.eventdrop == 1) {
+					calEvent.start._d = calEvent.start._i;
+					calEvent.end._d = calEvent.end._i;
+					calendar.fullCalendar('updateEvent', calEvent);			
+				}
+			});
+			
 			modal.find('button[data-action=delete]').on('click', function(e) {
 				$('#calendar').fullCalendar('removeEvents' , function(ev){
 					if (ev.activityid == calEvent.activityid) {
@@ -1205,6 +1222,11 @@
 			return false;			
 		}
 		
+		function formatForCalendar(aDate) {
+			var c =  aDate.substring(6,10) + "-" + aDate.substring(0, 2) + "-" + aDate.substring(3, 5);
+			return c;
+		}
+
 		function addUpdateActivity(data) {
 			var idtype;
 			if (data.type == 0) {

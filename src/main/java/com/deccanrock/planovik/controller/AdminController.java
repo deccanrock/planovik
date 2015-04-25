@@ -17,8 +17,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -27,9 +25,8 @@ import org.springframework.validation.BindingResult;
 import com.deccanrock.planovik.entity.UserEntity;
 import com.deccanrock.planovik.location.MaxLocation;
 import com.deccanrock.planovik.location.MaxLocationBO;
-import com.deccanrock.planovik.service.dao.OrgEntityDAO;
 import com.deccanrock.planovik.service.dao.UserEntityDAO;
-import com.deccanrock.planovik.constants.Constants;
+import com.deccanrock.planovik.constants.PlnvkConstants;
 
 /**
  * Handles all requests for Organization and User level signup's
@@ -95,7 +92,7 @@ public class AdminController {
 		UserEntityDAO UED = (UserEntityDAO)context.getBean("UserEntityDAO");
 		
 		UserEntity dbUser = UED.GetUser(user.getUsername());
-		Constants constants = new Constants();
+		PlnvkConstants constants = new PlnvkConstants();
 		
 		if ( dbUser!=null && user.getMode().equals("Create")) {
 			String error = "User: " + user.getUsername() + " already exists!";

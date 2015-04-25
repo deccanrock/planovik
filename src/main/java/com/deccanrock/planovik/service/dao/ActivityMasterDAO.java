@@ -20,7 +20,6 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.deccanrock.planovik.constants.Constants;
 import com.deccanrock.planovik.service.utils.TimeFormatter;
 
 

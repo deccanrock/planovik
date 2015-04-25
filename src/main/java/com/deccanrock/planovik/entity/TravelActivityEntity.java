@@ -2,6 +2,7 @@ package com.deccanrock.planovik.entity;
 
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -103,9 +104,12 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
     @Column(name="asstcostmarkup")    
 	private Integer asstcostmarkup;
 
-    @Column(name="comments")    
-	private String comments;
+    @Column(name="commentsinternal")    
+	private String commentsinternal;
     
+    @Column(name="commentsexternal")    
+	private String commentsexternal;
+
     @Column(name="datecreated")    
 	private  Date datecreated;
 
@@ -134,6 +138,8 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
     private int type;
     
     private String masterorindradio;
+    
+    private List<String>travelmodelist;
     
     // Getter-Setters
 	public Integer getActivityid() {
@@ -393,14 +399,22 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
 		this.asstcostmarkup = asstcostmarkup;
 	}
 	
-	public String getComments() {
-		return comments;
+	public String getCommentsinternal() {
+		return commentsinternal;
 	}
 	
-	public void setComments(String comments) {
-		this.comments = comments;
+	public void setCommentsinternal(String commentsinternal) {
+		this.commentsinternal = commentsinternal;
 	}
 	
+	public String getCommentsexternal() {
+		return commentsexternal;
+	}
+	
+	public void setCommentsexternal(String commentsexternal) {
+		this.commentsexternal = commentsexternal;
+	}
+
 	public Date getDatecreated() {
 		return datecreated;
 	}
@@ -512,6 +526,15 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
 	public short getEventdrop() {
 		return eventdrop;
 	}		
+
+	
+	public List<String> getTravelmodelist () {
+		return this.travelmodelist;
+	}
+		
+	public void setTravelmodelist (List<String> travelmodelist) {
+		this.travelmodelist = travelmodelist;
+	}
 
 	
 	// Comparator methods

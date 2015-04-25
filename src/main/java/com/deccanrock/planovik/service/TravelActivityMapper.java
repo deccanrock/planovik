@@ -2,7 +2,6 @@ package com.deccanrock.planovik.service;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 
 import org.springframework.jdbc.core.RowMapper;
 
@@ -40,6 +39,8 @@ public class TravelActivityMapper implements RowMapper<TravelActivityEntity> {
 
 		travel.setMasteractid(rs.getShort("masteractid"));
 
+		travel.setTzoffset(this.getTzoffset());
+		
 		if (rs.getString("actname") != null)
 			travel.setActname(rs.getString("actname"));
 		else
@@ -67,6 +68,7 @@ public class TravelActivityMapper implements RowMapper<TravelActivityEntity> {
 			
 			long arrdatelong = TimeFormatter.UTCToLocal(rs.getTimestamp("arrdatetime").getTime(), this.getTzoffset());
 			travel.setArrdatetimestr(TimeFormatter.FormatTimeMS(arrdatelong));
+			travel.setArrdatetimelong(arrdatelong);
 			travel.setActivityendtimelong(travel.getArrdatetimelong());			
 		}
 		
@@ -140,11 +142,16 @@ public class TravelActivityMapper implements RowMapper<TravelActivityEntity> {
 			travel.setAsstcost(rs.getFloat("asstcost"));	   
 			travel.setAsstcostmarkup(rs.getInt("asstcostmarkup"));
 			
-			if (rs.getString("comments") != null)
-				travel.setComments(rs.getString("comments"));
+			if (rs.getString("commentsinternal") != null)
+				travel.setCommentsinternal(rs.getString("commentsinternal"));
 			else
-				travel.setComments("");
+				travel.setCommentsinternal("");
 		
+			if (rs.getString("commentsexternal") != null)
+				travel.setCommentsexternal(rs.getString("commentsexternal"));
+			else
+				travel.setCommentsexternal("");
+
 		}
 				
 		return travel;

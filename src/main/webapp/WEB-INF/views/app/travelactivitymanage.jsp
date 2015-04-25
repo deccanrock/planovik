@@ -314,7 +314,22 @@
 											</div>							        
 										</div>
 	
-										<div class='col-xs-5'>										    																					    
+										<div class='col-xs-2'>	
+										    <div class="form-group" style="margin-left:6px;">
+										        <div class="clearfix">
+											        <label for="travelmodelist">Mode</label>
+													<form:select class="form-control col-sm-11 hideearrow" path="mode" name="mode" id="mode">
+														<c:forEach items="${travelactivity.travelmodelist}" var="travelmode">
+												            <option value="${travelmode}"><c:out value="${travelmode}" /></option>
+														</c:forEach>																						
+													</form:select>
+												</div>											
+												
+												<div class="customerror" id="paxerr"></div>			
+											</div>							        
+										</div>
+
+										<div class='col-xs-4'>										    																					    
 										    <div class="form-group" style="margin-left:6px;">
 										        <div class="clearfix">
 													<label for="vesselno">Flight/Train/Bus Number</label>
@@ -324,11 +339,11 @@
 											</div>
 										</div>
 										
-										<div class='col-xs-5'>										    																					    
+										<div class='col-xs-4'>										    																					    
 											<div class="form-group"  style="margin-left:-8px;">
 										        <div class="clearfix">
 													<label for="vesselconame">Travel Company</label>
-								    				<form:input id="vesselconame" path="vesselconame" name="vesselconame" class="col-sm-11" value="${activitymaster.vesselconame}" type="text" style="width:93%;"  maxlength="20" />												
+								    				<form:input id="vesselconame" path="vesselconame" name="vesselconame" class="col-sm-11" value="${activitymaster.vesselconame}" type="text" style="width:90%;"  maxlength="20" />												
 												</div>
 							    			</div>
 							    		</div>
@@ -337,11 +352,19 @@
 							        
 							        
 							        <div class="row">									    																					    
-										<div class='col-xs-11' style="width:96%;">	
+										<div class='col-xs-6'>	
 										    <div class="form-group" style="margin-left:6px;">
 										        <div class="clearfix">
-													<label for="comments">Comments</label>
-													<form:textarea class="form-control limited" id="comments" name="comments" path="comments" value="${travelactivity.comments}" style="width:101%;" maxlength="100" />
+													<label for="commentsinternal">Comments (internal)</label>
+													<form:textarea class="form-control limited" id="commentsinternal" name="commentsinternal" path="commentsinternal" value="${travelactivity.commentsinternal}" maxlength="100" style="width:94%;"/>
+												</div>
+											</div>
+										</div>
+										<div class='col-xs-6'>	
+										    <div class="form-group">
+										        <div class="clearfix">
+													<label for="commentsexternal">Comments (for public display)</label>
+													<form:textarea class="form-control limited" id="commentsexternal" name="commentsexternal" path="commentsexternal" value="${travelactivity.commentsexternal}" maxlength="100"  style="width:94%;" />
 												</div>
 											</div>
 										</div>
@@ -436,6 +459,7 @@
 				$('#bookinggroup').hide();
 				$('#asstreqgroup').show();
 				$('#pikupdropgroup').show();
+				$('#mode').prop( "disabled", true );			
 				// For new activity only
 				if ($('#pikupdropdatetimestr').val() == "" || ${travelactivity.eventdrop} == 1)
 					$('#pikupdropdatetimestr').val(window.parent.activitystartdate);

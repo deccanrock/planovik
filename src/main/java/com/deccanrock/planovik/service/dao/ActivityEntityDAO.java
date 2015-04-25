@@ -170,7 +170,8 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntity
 		else
 			inParamMap.put("inpikupdropcostmarkup", travelactivity.getPikupdropcostmarkup().intValue());
 			
-		inParamMap.put("incomments", travelactivity.getComments());
+		inParamMap.put("incommentsinternal", travelactivity.getCommentsinternal());
+		inParamMap.put("incommentsexternal", travelactivity.getCommentsexternal());
 		
 		
 		SqlParameterSource in = new MapSqlParameterSource(inParamMap);
