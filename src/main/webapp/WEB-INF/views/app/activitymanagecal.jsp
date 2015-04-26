@@ -102,10 +102,7 @@
 									<span style="font-size:12px;color:black;">Itinerary (Number: <i>${itinerary.id}</i></span>&nbsp;&nbsp;
 									<span style="font-size:12px;color:black;">Version: <i>${itinerary.version}</i>)</span>&nbsp;&nbsp;
 								    <span style="font-size:12px;color:black;">Activity (Group: <i>${activitymaster.groupnum}</i></span>&nbsp;&nbsp;	
-									<span style="font-size:12px;color:black;">Count: <i>
-											${activitymaster.countactivityhotel + activitymaster.countactivityother + 
-											  activitymaster.countactivityvisit + activitymaster.countactivitytravel +
-											  activitymaster.countactivityrental}
+									<span style="font-size:12px;color:black;" id="activitycntspn">Count: <i>
 									</i>)</span>&nbsp;&nbsp;
 									</small>
 							</h1>
@@ -371,18 +368,24 @@
 		<!-- inline scripts related to this page -->
 		<script type="text/javascript">
 												
-		var masteractarr = new Array();
+		var masteractarr = [];
 		var activitystartdate;
 		var calendar;
 		var modal;
 		var events = [];
+		var activitycnt;
 							
 		jQuery(function($) {
 		
 			$("#masteractstartdate").change(function(){
 		    	$("#masteractenddate").val($("#masteractstartdate").val());
 			});
-			    	
+			
+			
+		    activitycnt = ${activitymaster.countactivityhotel} + ${activitymaster.countactivityother} + ${activitymaster.countactivityvisit} + 
+		    			  ${activitymaster.countactivitytravel} + ${activitymaster.countactivityrental};
+			$('#activitycntspn').html('Count: <i>' + activitycnt + '</i>)');
+			
 			var defaultDate = formatForCalendar("${itinerary.startdatestr}");
 
 			calendar = $('#calendar').fullCalendar({
@@ -400,6 +403,10 @@
 					right: 'month,agendaWeek,agendaDay'		
 				},	
 			   events: function(start, end, timezone, callback) {
+
+			    	setMasterActArrInitial(masteractarr);
+					setMasterActArr(masteractarr);
+
 					<c:forEach items="${activitylist}" var="activity">
 						var title = "${fn:escapeXml(activity.actname)}";
 						var sdate = new Date(${activity.activitystarttimelong});						
@@ -461,12 +468,13 @@
 				editable: true,
 				droppable: true, // this allows things to be dropped onto the calendar !!!
 				drop: function(date, allDay) { // this function is called when something is dropped
-				
+
 					// Don't render activity if out of range
-					if (!checkActivityInItinRange(date._d.getTime()))
+					if (!checkActivityInItinRange(date._d.getTime(), 0, masteracterr))
 						return;
+
+					var masteractid = getMasterActId( masteractarr, date);				
 					
-					var masteractid = getMasterActId( masteractarr, date);
 					// retrieve the dropped element's stored Event Object
 					var originalEventObject = $(this).data('eventObject');
 					originalEventObject.id = 0;
@@ -500,7 +508,7 @@
 					// Don't render activity if out of range
 					console.log(event); 
 					console.log(delta);
-					if (!checkActivityInItinRange(event.start._d.getTime())) {
+					if (!checkActivityInItinRange(event.start._d.getTime(), event.masteractid, masteractarr)) {
 						revertFunc();
 						return;
 					}
@@ -550,9 +558,7 @@
 	    
 			// calendar.fullCalendar( 'gotoDate', '2015-05-01' );
 			
-	    	setMasterActArrInitial(masteractarr);
-			setMasterActArr(masteractarr);
-	    
+    
 	    	$.validator.setDefaults({	    
 	            errorElement: 'div',
 	            errorClass: 'help-block',
@@ -680,10 +686,12 @@
 				$(this).prev().focus();
 			});
 				
-			$("button").click(function() {
+			$("button").click(function(e) {
 	
+				e.preventDefault();
 				if (this.id == "masteractnew") {
 					$("#selectmasteract").hide();
+					$("#masteractname").val("");
 					$("#managemasteractgroup").show();
 					// Set Calendar dates
 				}
@@ -711,12 +719,10 @@
 					var request;
 					if (this.id == "masteractdelsubmit") {
 					
-						if (deletemasteractselect($('#masteractid').val(), masteractarr) == false) {
-							$('#masteractdelerr').visibility("block");
-							return;
+						if (masterhasactivities($('#masteractid').val(), masteractarr)) {
+							$('#masteractdelerr').show();
+							return false;
 						}
-						
-						console.log(str)
 						
 						request = $.ajax({
 						    type:"post",
@@ -780,6 +786,7 @@
 					$("#spnnewactname").show();
 					$("#masteracteditsubmit").hide();
 					$("#masteractdelsubmit").hide();
+					$('#masteractdelerr').hide();
 					$("#masteractnewsubmit").show();
 					$(".help-block").hide();	
 				}
@@ -825,6 +832,7 @@
 					$("#masteracteditsubmit").hide();
 					$("#masteractdelsubmit").hide();
 					$("#masteractnewsubmit").show();
+					$('#masteractdelerr').hide();
 					$(".help-block").hide();	
 					return false;			
 			});
@@ -890,10 +898,15 @@
 		
 				modal = modal.concat(modalend2);
 			}
+				
 			
-						
 			modal = $(modal).appendTo("body");
 
+			
+			modal.draggable({
+            	handle: ".modal-body"
+        	});			
+			
 			modal.find('form').on('submit', function(ev){
 				ev.preventDefault();
 				
@@ -920,11 +933,16 @@
 				        	}
 							
 							$.ajax({type: 'GET', 
-								url: "/app/activity/inactive?" + "activityid=" + calEvent.activityid + "&itinnum=" + calEvent.itinnum + "&type=" + calEvent.type,
+								url: "/app/activity/inactive?" + "activityid=" + calEvent.activityid + "&itinnum=" + calEvent.itinnum + "&type=" + calEvent.type +
+										"&version=" + ${itinerary.version} + "&groupnum=" + ${activitymaster.groupnum},
 						        success:function(data, textStatus, jqXHR) {
 						        	var result = JSON.parse(data);
-						        	if (result.result == "success") 
+						        	if (result.result == "success") {
+						        		activitycnt = activitycnt - 1;
+						        		$('#activitycntspn').html('Count: <i>' + activitycnt + '</i>)');
 										modal.modal("hide");						
+										updatemasteractivitycount(calEvent.masteractid, masteractarr, 'delete');	
+						        	}
 						        },
 						        error: function(jqXHR, textStatus, errorThrown) {
 						        	alert(textStatus + " " + errorThrown);
@@ -945,14 +963,14 @@
 			modal.modal('show').on('hidden', function(){
 				modal.remove();
 			});
-
+			
 			$(document).on('hide.bs.modal','#activitymodal', function () {
 
 			 	$('#activityiFrame').attr("src", " ");
 				$('#activityiFrame').remove();
 
 			});
-
+			
 			//console.log(calEvent.id);
 			//console.log(jsEvent);
 			//console.log(view);
@@ -1020,14 +1038,18 @@
 		
 		function setMasterActArrInitial (masteractarr, calendar) {		
 				<c:forEach var="item" items = "${activitymaster.masteractentities}">
+					var mactivity = {masteractid: ${item.masteractid}, masteractname:"${item.masteractname}", 
+									masteractstartdatestr:"${item.masteractstartdatestr}", masteractenddatestr:"${item.masteractenddatestr}",
+									masteractstartdatelong:${item.masteractstartdatelong}, masteractenddatelong:${item.masteractenddatelong}, activitycount: 0};
+					
+					masteractarr.push(mactivity);
+
 					<c:if test="${item.masteractid > 0}">
-						var mactivity = {masteractid: ${item.masteractid}, masteractname:"${item.masteractname}", 
-										masteractstartdatestr:"${item.masteractstartdatestr}", masteractenddatestr:"${item.masteractenddatestr}",
-										masteractstartdatelong:${item.masteractstartdatelong}, masteractenddatelong:${item.masteractenddatelong}, activitycount: 0};
-						masteractarr.push(mactivity);
-						setCalendarMasterActivity(${item.masteractid}, "${item.masteractname}", ${item.masteractstartdatelong}, ${item.masteractenddatelong})
+						setCalendarMasterActivity(${item.masteractid}, "${item.masteractname}", ${item.masteractstartdatelong}, ${item.masteractenddatelong});
 					</c:if>
+
 				</c:forEach>
+				console.log(masteractarr);
 		}
 		
 		function setMasterActArr (masteractarr, mode) {		
@@ -1038,6 +1060,9 @@
    			$(div_data).appendTo('#masteractnames');
 
 			for (var i = 0; i < masteractarr.length; i++) {
+				if (masteractarr[i].masteractid == 0)
+					continue;
+					
 				var optgroup = "<optgroup label=" + "\"" + masteractarr[i].masteractstartdatestr + " - " + masteractarr[i].masteractenddatestr + "\"" + ">";
 				var option = "<option value=" + masteractarr[i].masteractid + ">" + masteractarr[i].masteractid + " - " + masteractarr[i].masteractname + "</option>";
 				var closeoptgroup = "</optgroup>";
@@ -1053,6 +1078,8 @@
 								masteractstartdatestr:item.masteractstartdate, masteractenddatestr:item.masteractenddate, masteractstartdatelong:item.masteractstartdatelong,
 								 masteractenddatelong:item.masteractenddatelong,  activitycount: 0};
 				masteractarr.push(mactivity);
+				console.log(masteractarr.length);
+				console.log(masteractarr);				
 				var maid = Number(item.masteractid);
 				var masdl = Number(item.masteractstartdatelong);
 				var maedl = Number(item.masteractenddatelong);
@@ -1079,15 +1106,31 @@
 		}
 		
 		function deletemasteractselect(masteractid, masteractarr) {
+			console.log(masteractarr.length);
+			console.log(masteractarr);			
 			for (var i = 0; i < masteractarr.length; i++) {
 		    	if (masteractarr[i].masteractid == masteractid) {
 		    		if (masteractarr[i].activitycount > 0) {
 						return false;
 		    		}
-		    		else			    
+		    		else {
 						setCalendarMasterActivity(masteractid, "", 0, 0, 'delete'); 
+						masteractarr.splice(i,1);
+		    		}			    
 		    	}
-			}	  	
+			}			
+			  	
+		}
+
+		function masterhasactivities(masteractid, masteractarr) {
+			for (var i = 0; i < masteractarr.length; i++) {
+		    	if (masteractarr[i].masteractid == masteractid) {
+		    		if (masteractarr[i].activitycount > 0) {
+						return true;
+		    		}
+		    	}
+			}			
+			return false;			  	
 		}
 
 		function setCalendarMasterActivity(masteractid, masteractname, masteractstartdatelong, masteractenddatelong, mode) {
@@ -1101,7 +1144,8 @@
 				"start": sdate,
 				"end": edate,
 				"color": color,
-				"type": -1
+				"type": -1,
+				"editable": false
 			}
 			
 			console.log(event);
@@ -1121,9 +1165,9 @@
             }
              
             $('#calendar').fullCalendar( 'renderEvent', event, 'stick');
-	        $('#calendar').fullCalendar({
-	            editable: false
-	        });		
+	        //$('#calendar').fullCalendar({
+	        //    editable: false
+	        //});		
 	        
 		}
 		
@@ -1132,7 +1176,7 @@
 			var newmasteractdate = GetDate(newdate);
 			
 			for (var i = 0; i < masteractarr.length; i++) {
-				if (masteractarr[i].masteractid == masteractid)
+				if (masteractarr[i].masteractid == masteractid || masteractarr[i].masteractid == 0)
 					continue;
 		    	if (newmasteractdate.getTime() >= masteractarr[i].masteractstartdatelong &&
 		    		newmasteractdate.getTime() <= masteractarr[i].masteractenddatelong ) {			    
@@ -1149,7 +1193,7 @@
 			
 			for (var i = 0; i < masteractarr.length; i++) {
 
-				if (masteractarr[i].masteractid == masteractid)
+				if (masteractarr[i].masteractid == masteractid  || masteractarr[i].masteractid == 0)
 					continue;
 		    	
 		    	if (masteractarr[i].masteractstartdatelong >= newmasteractstartdate.getTime() &&
@@ -1167,12 +1211,23 @@
 			return true;			    
 	    }
 	    
-	    function checkActivityInItinRange(newactstartdatetime) {
+	    function checkActivityInItinRange(newactstartdatetime, masteractid, masteractarr) {
 	    	console.log(${itinerary.startdatelong}, newactstartdatetime, ${itinerary.enddatelong});
-	    	if (newactstartdatetime >= ${itinerary.startdatelong} &&
-	    		newactstartdatetime <= ${itinerary.enddatelong}) {
-	    		return true;
-	    	}
+	    	
+	    	if (masteractid == 0) {
+		    	if (newactstartdatetime >= ${itinerary.startdatelong} && newactstartdatetime <= ${itinerary.enddatelong})
+		    		return true;
+			}
+			
+			if (masteractid > 0) {			
+				for (var i = 0; i < masteractarr.length; i++) {
+					if (masteractarr[i].masteractid == 0)
+						continue;
+					if (masteractarr[i].masteractid == masteractid)  		
+			  			if (newactstartdatetime >= masteractarr[i].masteractstartdatelong && newactstartdatetime <= masteractarr[i].masteractenddatelong )			    
+							return true;	
+				}	  				
+			}
 	    	
 	    	return false;
 	    }
@@ -1180,29 +1235,36 @@
 		function getMasterActId( masteractarr, date) {
 			
 			console.log(masteractarr);
+			console.log(date._d.getTime());
 			// console.log(masteractarr[0].masteractstartdatelong, date._d.getTime(), masteractarr[0].masteractenddatelong);
 
 			for (var i = 0; i < masteractarr.length; i++) {
+				if (masteractarr[i].masteractid == 0)
+					continue;
 		    	if ( (date._d.getTime() >= masteractarr[i].masteractstartdatelong) &&
 		    		(date._d.getTime() <= masteractarr[i].masteractenddatelong) ) {
-					return masteractarr[i].masteractid;	
+					return masteractarr[i].masteractid;
 		    	}
 			}
 			
 			return 0;	
 		}
 		
-		function updatemasteractivitycount(masteractid, masteractarr) {
+		function updatemasteractivitycount(masteractid, masteractarr, action) {
 			for (var i = 0; i < masteractarr.length; i++) {
-				if (masteractarr[i].masteractid == masteractid)
-					masteractarr[i].activitycount++;		
+				if (masteractarr[i].masteractid == masteractid) {
+					if ( !(action === undefined) && action === 'delete' )
+						masteractarr[i].activitycount = masteractarr[i].activitycount - 1;						
+					else
+						masteractarr[i].activitycount = masteractarr[i].activitycount + 1;						
+				}
 			}				
 		}
 		
-		function getMasterActDates(masteractid, masteractarr) {
+		function getMasterActDetails(masteractid, masteractarr) {
 			for (var i = 0; i < masteractarr.length; i++) {
 				if (masteractarr[i].masteractid == masteractid)
-					return masteractarr[i].masteractstartdatestr + " - " + masteractarr[i].masteractenddatestr;		
+					return masteractarr[i].masteractname + " / Dates: " + masteractarr[i].masteractstartdatestr + " - " + masteractarr[i].masteractenddatestr;		
 			}						
 		}
 		
@@ -1225,6 +1287,11 @@
 		function formatForCalendar(aDate) {
 			var c =  aDate.substring(6,10) + "-" + aDate.substring(0, 2) + "-" + aDate.substring(3, 5);
 			return c;
+		}
+		
+		function incrActivityCnt () {			
+    		activitycnt = activitycnt + 1;
+    		$('#activitycntspn').html('Count: <i>' + activitycnt + '</i>)');
 		}
 
 		function addUpdateActivity(data) {

@@ -520,6 +520,9 @@
 			        success:function(data, textStatus, jqXHR) {
 			            // var actdata = JSON.parse(data);
 			            window.parent.addUpdateActivity(data);
+			            if (${travelactivity.activityid} == 0)
+				            window.parent.incrActivityCnt();
+			            	
 			            window.parent.modal.modal("hide");
 			        },
 			        error: function(jqXHR, textStatus, errorThrown) {
@@ -928,7 +931,7 @@
 				$( "#radioind" ).prop( "checked", true );
 			else {
 				$( "#radiopom" ).prop( "checked", true );
-			  	var masteractspan = "<span>" +  "Master activity dates (" + window.parent.getMasterActDates($('#masteractid').val(), window.parent.masteractarr) + ")"+ "</span>";
+			  	var masteractspan = "<span>" + window.parent.getMasterActDetails($('#masteractid').val(), window.parent.masteractarr) + "</span>";
         	  	$(masteractspan).appendTo('#masteractdates');			  				
 			}
 							

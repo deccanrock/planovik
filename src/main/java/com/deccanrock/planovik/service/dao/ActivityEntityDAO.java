@@ -173,6 +173,7 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntity
 		inParamMap.put("incommentsinternal", travelactivity.getCommentsinternal());
 		inParamMap.put("incommentsexternal", travelactivity.getCommentsexternal());
 		
+		inParamMap.put("inmasteractid", travelactivity.getMasteractid());
 		
 		SqlParameterSource in = new MapSqlParameterSource(inParamMap);
 		
@@ -256,7 +257,7 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntity
 	}
 
 	@Override
-	public String DeleteActivity(int activityid, int itinnum, int type) throws IOException, SQLException {
+	public String DeleteActivity(int activityid, int itinnum, int type, int version, int groupnum) throws IOException, SQLException {
 		// TODO Auto-generated method stub
 		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(getJdbcTemplate())
 		.withProcedureName("sp_delete_activity");
@@ -266,6 +267,8 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntity
 		inParamMap.put("inactivityid", activityid);
 		inParamMap.put("initinnum", itinnum);		
 		inParamMap.put("intype", type);
+		inParamMap.put("inversion", version);
+		inParamMap.put("ingroupnum", groupnum);
 
 		String result;
 		
