@@ -89,6 +89,9 @@ public class ActivitiesListForItinerary {
         pool.shutdown();	    	    		
 		
 		// Done, create daywise list for 5 activities nicely sorted by start of respective activity start times
+        if (this.travelList == null)
+        	return null;
+        
 	    Collections.sort(this.travelList, TravelActivityEntity.ActivityByIdComparator);
 	    // Time may be set to 0 initially, therefore activity id sort is preceeds
 	    Collections.sort(this.travelList, TravelActivityEntity.ActivityByTimeLongComparator);

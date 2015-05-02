@@ -610,7 +610,7 @@
 			$("#manageitinerarybtn").removeAttr('disabled');
 		})
 
-        $(":submit").live('click', function() {
+		$("button").click(function(e) {
 
 		    if (this.id === 'newconvcodeformsubmit')
 		    	return true;
@@ -644,21 +644,21 @@
 		
 		$(function() {
 		
-            $("#depcity").suggest({
-                key: "AIzaSyDG_gsufq_KCjQYGf4SeZ44znuHsA61_10",
-                filter:'(any type:/location/citytown)'
-            })
-			.bind("fb-select", function(e, data) {
-  				checkname(data.name);
-			});  
+//            $("#depcity").suggest({
+//                key: "AIzaSyDG_gsufq_KCjQYGf4SeZ44znuHsA61_10",
+//                filter:'(any type:/location/citytown)'
+//            })
+//			.bind("fb-select", function(e, data) {
+//  				checkname(data.name);
+//			});  
 					
-            $("#arrivalcity").suggest({
-                key: "AIzaSyDG_gsufq_KCjQYGf4SeZ44znuHsA61_10",
-                filter:'(any type:/location/citytown)'
-            })
-			.bind("fb-select", function(e, data) {
-  				checkname(data.name);
-			});                      
+//            $("#arrivalcity").suggest({
+//                key: "AIzaSyDG_gsufq_KCjQYGf4SeZ44znuHsA61_10",
+//                filter:'(any type:/location/citytown)'
+            //})
+//			.bind("fb-select", function(e, data) {
+//  				checkname(data.name);
+//			});                      
 
         });
 	}); 

@@ -17,6 +17,10 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
     @GeneratedValue
     private Integer activityid;
     
+    @Column(name="activityidpair")    
+    @GeneratedValue
+    private Integer activityidpair;
+    
     @Column(name="itinnum")    
     private int itinnum;
     
@@ -44,31 +48,44 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
     @Column(name="vesselconame")        
     private String vesselconame;
     
-    @Column(name="vesselno")        
-    private String vesselno;
+    @Column(name="vesselnoon")        
+    private String vesselnoon;
     
+    @Column(name="vesselnoret")        
+    private String vesselnoret;
+
     @Column(name="bookingclass")    
 	private String bookingclass;
     
     @Column(name="bookingno")    
 	private String bookingno;
 
-    @Column(name="depdatetime")    
-	private  Date depdatetime;
-    private String depdatetimestr;
-    private long depdatetimelong;
+    @Column(name="depdatetimeon")    
+	private  Date depdatetimeon;
+    private String depdatetimeonstr;
+    private long depdatetimeonlong;
     
-    @Column(name="arrdatetime")    
-	private  Date arrdatetime;
-    private String arrdatetimestr;
-    private long arrdatetimelong;
+    @Column(name="arrdatetimeon")    
+	private  Date arrdatetimeon;
+    private String arrdatetimeonstr;
+    private long arrdatetimeonlong;
 
     @Column(name="depstation")    
 	private String depstation;
     
-    @Column(name="depstation")    
+    @Column(name="arrstation")    
 	private String arrstation;
 
+    @Column(name="depdatetimeret")    
+	private  Date depdatetimeret;
+    private String depdatetimeretstr;
+    private long depdatetimeretlong;
+    
+    @Column(name="arrdatetimeret")    
+	private  Date arrdatetimeret;
+    private String arrdatetimeretstr;
+    private long arrdatetimeretlong;
+     
     @Column(name="cost")    
 	private Float cost;
 
@@ -132,8 +149,12 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
     
     private long activitystarttimelong;
 
+    private long activitystarttimelongpair;
+    
     private long activityendtimelong;    
     
+    private long activityendtimelongpair;    
+
     // To be included in all activity entities to allow client side identification of activity type
     private int type;
     
@@ -149,6 +170,15 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
 	public void setActivityid(Integer activityid) {
 		this.activityid = activityid;
 	}
+	
+	public Integer getActivityidpair() {
+		return activityidpair;
+	}
+
+	public void setActivityidpair(Integer activityidpair) {
+		this.activityidpair = activityidpair;
+	}
+
 	
 	public int getItinnum() {
 		return itinnum;
@@ -215,14 +245,22 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
 		this.vesselconame = vesselconame;
 	}
 	
-	public String getVesselno() {
-		return vesselno;
+	public String getVesselnoon() {
+		return vesselnoon;
 	}
 
-	public void setVesselno(String vesselno) {
-		this.vesselno = vesselno;
+	public void setVesselnoon(String vesselnoon) {
+		this.vesselnoon = vesselnoon;
 	}
 	
+	public String getVesselnoret() {
+		return vesselnoret;
+	}
+
+	public void setVesselnoret(String vesselnoret) {
+		this.vesselnoret = vesselnoret;
+	}
+
 	public String getBookingclass() {
 		return bookingclass;
 	}
@@ -239,52 +277,101 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
 		this.bookingno = bookingno;
 	}
 
-	public Date getDepdatetime() {
-		return depdatetime;
+	public Date getDepdatetimeret() {
+		return depdatetimeret;
 	}
 
-	public void setDepdatetime(Date depdatetime) {
-		this.depdatetime = depdatetime;
+	public void setDepdatetimeret(Date depdatetimeret) {
+		this.depdatetimeon = depdatetimeret;
 	}
 
-	public String getDepdatetimestr() {
-		return depdatetimestr;
+	public String getDepdatetimeretstr() {
+		return depdatetimeretstr;
 	}
 
-	public void setDepdatetimestr(String depdatetimestr) {
-		this.depdatetimestr = depdatetimestr;
+	public void setDepdatetimeretstr(String depdatetimeretstr) {
+		this.depdatetimeretstr = depdatetimeretstr;
 	}
 
-	public long getDepdatetimelong() {
-		return depdatetimelong;
+	public long getDepdatetimeretlong() {
+		return depdatetimeretlong;
 	}
 
-	public void setDepdatetimelong(long depdatetimelong) {
-		this.depdatetimelong = depdatetimelong;
+	public void setDepdatetimeretlong(long depdatetimeretlong) {
+		this.depdatetimeretlong = depdatetimeretlong;
 	}
 	
-	public Date getArrdatetime() {
-		return arrdatetime;
+	public Date getArrdatetimeret() {
+		return arrdatetimeret;
 	}
 
-	public void setArrdatetime(Date arrdatetime) {
-		this.arrdatetime = arrdatetime;
+	public void setArrdatetimeret(Date arrdatetimeret) {
+		this.arrdatetimeret = arrdatetimeret;
 	}
 	
-	public String getArrdatetimestr() {
-		return arrdatetimestr;
+	public String getArrdatetimeretstr() {
+		return arrdatetimeretstr;
 	}
 
-	public void setArrdatetimestr(String arrdatetimestr) {
-		this.arrdatetimestr = arrdatetimestr;
+	public void setArrdatetimeretstr(String arrdatetimeretstr) {
+		this.arrdatetimeretstr = arrdatetimeretstr;
 	}
 
-	public long getArrdatetimelong() {
-		return arrdatetimelong;
+	public long getArrdatetimeretlong() {
+		return arrdatetimeretlong;
 	}
 
-	public void setArrdatetimelong(long arrdatetimelong) {
-		this.arrdatetimelong = arrdatetimelong;
+	public void setArrdatetimeretlong(long arrdatetimeretlong) {
+		this.arrdatetimeretlong = arrdatetimeretlong;
+	}
+
+
+	public Date getDepdatetimeon() {
+		return depdatetimeret;
+	}
+
+	public void setDepdatetimeon(Date depdatetimeon) {
+		this.depdatetimeon = depdatetimeon;
+	}
+
+	public String getDepdatetimeonstr() {
+		return depdatetimeonstr;
+	}
+
+	public void setDepdatetimeonstr(String depdatetimeonstr) {
+		this.depdatetimeonstr = depdatetimeonstr;
+	}
+
+	public long getDepdatetimeonlong() {
+		return depdatetimeonlong;
+	}
+
+	public void setDepdatetimeonlong(long depdatetimeonlong) {
+		this.depdatetimeonlong = depdatetimeonlong;
+	}
+	
+	public Date getArrdatetimeon() {
+		return arrdatetimeon;
+	}
+
+	public void setArrdatetimeon(Date arrdatetimeon) {
+		this.arrdatetimeon = arrdatetimeon;
+	}
+	
+	public String getArrdatetimeonstr() {
+		return arrdatetimeonstr;
+	}
+
+	public void setArrdatetimeonstr(String arrdatetimeonstr) {
+		this.arrdatetimeonstr = arrdatetimeonstr;
+	}
+
+	public long getArrdatetimeonlong() {
+		return arrdatetimeonlong;
+	}
+
+	public void setArrdatetimeonlong(long arrdatetimeonlong) {
+		this.arrdatetimeonlong = arrdatetimeonlong;
 	}
 
 	public String getDepstation() {
@@ -302,7 +389,7 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
 	public void setArrstation(String arrstation) {
 		this.arrstation = arrstation;
 	}
-
+	
 	public Float getCost() {
 		return cost;
 	}
@@ -503,6 +590,22 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
 		this.activityendtimelong = activityendtimelong;
 	}
 	
+	public long getActivityendtimelongpair() {
+		return activityendtimelongpair;
+	}
+
+	public void setActivityendtimelongpair(long activityendtimelongpair) {
+		this.activityendtimelongpair = activityendtimelongpair;
+	}
+
+	public long getActivitystarttimelongpair() {
+		return activitystarttimelongpair;
+	}
+	
+	public void setActivitystarttimelongpair(long activitystartimelongpair) {
+		this.activitystarttimelongpair = activitystartimelongpair;		
+	}	
+	
 	public void setType(int type) {
 		this.type = type;
 	}
@@ -576,6 +679,8 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
 	public int compareTo(TravelActivityEntity o) {
 		// TODO Auto-generated method stub
 		return 0;
-	}	
+	}
+
+
 
 }

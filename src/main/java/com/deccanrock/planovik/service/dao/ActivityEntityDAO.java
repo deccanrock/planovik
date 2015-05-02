@@ -106,70 +106,115 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntity
 			inParamMap.put("ingroupnum", 1); // default			
 		else
 			inParamMap.put("ingroupnum", travelactivity.getGroupnum().intValue());
-		
-		inParamMap.put("invesselno", travelactivity.getVesselno());
-		inParamMap.put("invesselconame", travelactivity.getVesselconame());
-		inParamMap.put("inbookingno", travelactivity.getBookingno());
-		inParamMap.put("inbookingclass", travelactivity.getBookingclass());
-		
-		// Convert UTC time strings to Date
-		long utcstime = TimeFormatter.LocalToUTC(travelactivity.getDepdatetimelong(), travelactivity.getTzoffset());
-		java.sql.Timestamp stimestamp = new java.sql.Timestamp(utcstime);			
-		inParamMap.put("indepdatetime", stimestamp);
-		if (travelactivity.getCode().matches("T_BOOK"))
-			travelactivity.setActivitystarttimelong(travelactivity.getDepdatetimelong());
-		
-		long utcetime = TimeFormatter.LocalToUTC(travelactivity.getArrdatetimelong(), travelactivity.getTzoffset());
-		java.sql.Timestamp etimestamp = new java.sql.Timestamp(utcetime);									
-		inParamMap.put("inarrdatetime", etimestamp);
-		if (travelactivity.getCode().matches("T_BOOK"))
-			travelactivity.setActivityendtimelong(travelactivity.getArrdatetimelong());
-		
-		inParamMap.put("inarrstation", travelactivity.getArrstation());
-		inParamMap.put("indepstation", travelactivity.getDepstation());
 
-		if (travelactivity.getCost() == null)		
-			inParamMap.put("incost", 0.0);
-		else
-			inParamMap.put("incost", travelactivity.getCost().floatValue());			
-		
-		if (travelactivity.getCostmarkup() == null)
-			inParamMap.put("incostmarkup", 0);
-		else
-			inParamMap.put("incostmarkup", travelactivity.getCostmarkup().intValue());
-		
-		if (travelactivity.getAsstcost() == null)			
-			inParamMap.put("inasstcost", 0.0);
-		else
-			inParamMap.put("inasstcost", travelactivity.getAsstcost().floatValue());			
+		inParamMap.put("invesselconame", "");
+		inParamMap.put("inbookingno", "");
+		inParamMap.put("inbookingclass", "");		
+		inParamMap.put("invesselnoon", "");
+		inParamMap.put("indepdatetimeon", new java.sql.Timestamp(0));
+		inParamMap.put("inarrdatetimeon", new java.sql.Timestamp(0));
+		inParamMap.put("invesselnoret", "");
+		inParamMap.put("inarrstation", "");
+		inParamMap.put("indepstation", "");
+		inParamMap.put("invesselnoret", "");
+		inParamMap.put("indepdatetimeret", new java.sql.Timestamp(0));
+		inParamMap.put("inarrdatetimeret", new java.sql.Timestamp(0));
 
-		if (travelactivity.getAsstcostmarkup() == null)					
-			inParamMap.put("inasstcostmarkup", 0);
-		else
-			inParamMap.put("inasstcostmarkup", travelactivity.getAsstcostmarkup().intValue());
-		
-		inParamMap.put("inpikupdroplocfrom", travelactivity.getPikupdroplocfrom());
-		
-		inParamMap.put("inpikupdroplocto", travelactivity.getPikupdroplocto());
+		inParamMap.put("incost", 0.0);
+		inParamMap.put("incostmarkup", 0);
+		inParamMap.put("invesselnoon", "");
+		inParamMap.put("inasstcost", 0.0);			
+		inParamMap.put("inasstcostmarkup", 0);			
+		inParamMap.put("inpikupdroplocfrom", "");
+		inParamMap.put("inpikupdroplocto", "");
+		inParamMap.put("invehdetails", "");
+		inParamMap.put("inpikupdropdatetime", new java.sql.Timestamp(0));
+		inParamMap.put("inpikupdropcost", 0.0);
+		inParamMap.put("inpikupdropcostmarkup", 0);
 
-		inParamMap.put("invehdetails", travelactivity.getVehdetails());
+		if (travelactivity.getCode().matches("T_BOOK_ONEWAY") || travelactivity.getCode().matches("T_BOOK_RETURN")) {
 
-		long utcpdtime = TimeFormatter.LocalToUTC(travelactivity.getPikupdropdatetimelong(), travelactivity.getTzoffset());
-		java.sql.Timestamp pdtimestamp = new java.sql.Timestamp(utcpdtime);									
-		inParamMap.put("inpikupdropdatetime", pdtimestamp);
-		if (travelactivity.getCode().matches("T_PIKUPDRP"))
-			travelactivity.setActivitystarttimelong(travelactivity.getPikupdropdatetimelong());
-		
-		if (travelactivity.getPikupdropcost() == null)					
-			inParamMap.put("inpikupdropcost", 0.0);
-		else
-			inParamMap.put("inpikupdropcost", travelactivity.getPikupdropcost().floatValue());
+			inParamMap.put("invesselconame", travelactivity.getVesselconame());
+			inParamMap.put("inbookingno", travelactivity.getBookingno());
+			inParamMap.put("inbookingclass", travelactivity.getBookingclass());
 			
-		if (travelactivity.getPikupdropcostmarkup() == null)							
-			inParamMap.put("inpikupdropcostmarkup", 0);
-		else
-			inParamMap.put("inpikupdropcostmarkup", travelactivity.getPikupdropcostmarkup().intValue());
+			inParamMap.put("invesselnoon", travelactivity.getVesselnoon());
+			// Convert UTC time strings to Date
+			long utcstimeon = TimeFormatter.LocalToUTC(travelactivity.getDepdatetimeonlong(), travelactivity.getTzoffset());
+			java.sql.Timestamp stimestampon = new java.sql.Timestamp(utcstimeon);			
+			inParamMap.put("indepdatetimeon", stimestampon);
+			travelactivity.setActivitystarttimelong(travelactivity.getDepdatetimeonlong());								
+			long utcetimeon = TimeFormatter.LocalToUTC(travelactivity.getArrdatetimeonlong(), travelactivity.getTzoffset());
+			java.sql.Timestamp etimestampon = new java.sql.Timestamp(utcetimeon);									
+			inParamMap.put("inarrdatetimeon", etimestampon);
+			travelactivity.setActivityendtimelong(travelactivity.getArrdatetimeonlong());
+			inParamMap.put("inarrstation", travelactivity.getArrstation());
+			inParamMap.put("indepstation", travelactivity.getDepstation());
+
+			if (travelactivity.getCost() == null)		
+				inParamMap.put("incost", 0.0);
+			else
+				inParamMap.put("incost", travelactivity.getCost().floatValue());			
 			
+			if (travelactivity.getCostmarkup() == null)
+				inParamMap.put("incostmarkup", 0);
+			else
+				inParamMap.put("incostmarkup", travelactivity.getCostmarkup().intValue());		
+			
+			if (travelactivity.getCode().matches("T_BOOK_RETURN")) {
+				inParamMap.put("invesselnoret", travelactivity.getVesselnoret());
+				long utcstimeret = TimeFormatter.LocalToUTC(travelactivity.getDepdatetimeretlong(), travelactivity.getTzoffset());
+				java.sql.Timestamp stimestampret = new java.sql.Timestamp(utcstimeret);			
+				inParamMap.put("indepdatetimeret", stimestampret);
+				travelactivity.setActivitystarttimelongpair(travelactivity.getDepdatetimeretlong());								
+				long utcetimeret = TimeFormatter.LocalToUTC(travelactivity.getArrdatetimeretlong(), travelactivity.getTzoffset());
+				java.sql.Timestamp etimestampret = new java.sql.Timestamp(utcetimeret);									
+				inParamMap.put("inarrdatetimeret", etimestampret);
+				travelactivity.setActivityendtimelongpair(travelactivity.getArrdatetimeretlong());
+			}	
+						
+		}
+		
+
+		if (travelactivity.getCode().matches("T_PIKUPDRP")) {
+
+			inParamMap.put("invesselnoon", travelactivity.getVesselnoon());
+			inParamMap.put("invesselconame", travelactivity.getVesselconame());
+			
+			if (travelactivity.getAsstcost() == null)			
+				inParamMap.put("inasstcost", 0.0);
+			else
+				inParamMap.put("inasstcost", travelactivity.getAsstcost().floatValue());			
+	
+			if (travelactivity.getAsstcostmarkup() == null)					
+				inParamMap.put("inasstcostmarkup", 0);
+			else
+				inParamMap.put("inasstcostmarkup", travelactivity.getAsstcostmarkup().intValue());
+			
+			inParamMap.put("inpikupdroplocfrom", travelactivity.getPikupdroplocfrom());
+			
+			inParamMap.put("inpikupdroplocto", travelactivity.getPikupdroplocto());
+	
+			inParamMap.put("invehdetails", travelactivity.getVehdetails());
+	
+			long utcpdtime = TimeFormatter.LocalToUTC(travelactivity.getPikupdropdatetimelong(), travelactivity.getTzoffset());
+			java.sql.Timestamp pdtimestamp = new java.sql.Timestamp(utcpdtime);									
+			inParamMap.put("inpikupdropdatetime", pdtimestamp);
+			if (travelactivity.getCode().matches("T_PIKUPDRP"))
+				travelactivity.setActivitystarttimelong(travelactivity.getPikupdropdatetimelong());
+			
+			if (travelactivity.getPikupdropcost() == null)					
+				inParamMap.put("inpikupdropcost", 0.0);
+			else
+				inParamMap.put("inpikupdropcost", travelactivity.getPikupdropcost().floatValue());
+				
+			if (travelactivity.getPikupdropcostmarkup() == null)							
+				inParamMap.put("inpikupdropcostmarkup", 0);
+			else
+				inParamMap.put("inpikupdropcostmarkup", travelactivity.getPikupdropcostmarkup().intValue());
+			
+		}
+		
 		inParamMap.put("incommentsinternal", travelactivity.getCommentsinternal());
 		inParamMap.put("incommentsexternal", travelactivity.getCommentsexternal());
 		
@@ -185,6 +230,11 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntity
     		if (travelactivity.getActivityid().intValue() == 0) {
 	    		String idStr = simpleJdbcCallResult.get("outactivityid").toString();
 	    		travelactivity.setActivityid(Integer.parseInt(idStr)); 	    		
+	    		if (travelactivity.getCode().contentEquals("T_BOOK_RETURN")) {
+		    		String idStrpair = simpleJdbcCallResult.get("outactivityidpair").toString();
+		    		travelactivity.setActivityidpair(Integer.parseInt(idStrpair)); 	    			    			
+	    		}
+
     		}
     	} catch (Exception ex) {
     		travelactivity.setError(ex.getMessage());

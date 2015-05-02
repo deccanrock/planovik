@@ -48,7 +48,10 @@
 		<link rel="stylesheet" href="<c:url value='/resources/css/bootstrap-timepicker.css'/>" />
 		<link rel="stylesheet" href="<c:url value='/resources/css/daterangepicker.css'/>" />
 		<link rel="stylesheet" href="<c:url value='/resources/css/bootstrap-datetimepicker.css'/>" />	
-				
+		
+	   <script src="<c:url value='/resources/js/1.9.1/jquery.min.js'/>" ></script>
+	   <script src="<c:url value='/resources/js/1.9.1/jquery-migrate-1.0.0.js'/>" ></script>
+
 		<!-- ace settings handler -->
 		<script src="/resources/js/ace-extra.min.js"></script>
 
@@ -454,6 +457,10 @@
 							"type": ${activity.type}
 						}
 						
+						// if (${fn:escapeXml(activity.code)} == 'T_BOOK_RETURN') {
+						
+						//}
+						
 						updatemasteractivitycount("${fn:escapeXml(activity.masteractid)}", masteractarr);
 					
 						console.log(activity);
@@ -469,11 +476,11 @@
 				droppable: true, // this allows things to be dropped onto the calendar !!!
 				drop: function(date, allDay) { // this function is called when something is dropped
 
-					// Don't render activity if out of range
-					if (!checkActivityInItinRange(date._d.getTime(), 0, masteracterr))
-						return;
+					var masteractid = getMasterActId(masteractarr, date);				
 
-					var masteractid = getMasterActId( masteractarr, date);				
+					// Don't render activity if out of range
+					if (!checkActivityInItinRange(date._d.getTime(), masteractid, masteractarr))
+						return false;
 					
 					// retrieve the dropped element's stored Event Object
 					var originalEventObject = $(this).data('eventObject');
@@ -546,9 +553,9 @@
 				}
 				,
 				eventClick: function(calEvent, jsEvent, view) {
-					console.log(calEvent);
 					activitystartdate = calEvent.start.format("MM/DD/YYYY h:mm A");	
 					calEvent.eventdrop = 0;					
+					console.log(calEvent);					
 					displaymodal(calEvent);
 				}
 				,
@@ -883,7 +890,7 @@
 				
 				// T_PIKUPDRP (h - 610), T_BOOK (h - 680)
 
-				var modalend1 = 'frameborder="0" scrolling="no" width="950" onload="onLoadHandler(' + calEvent.masteractid + ');" ></iframe>';
+				var modalend1 = 'frameborder="0" scrolling="no" width="840" onload="onLoadHandler(' + calEvent.masteractid + ');" ></iframe>';
 				modal = modal.concat(modalend1);
 				
 				var modalend2 = 
@@ -993,6 +1000,10 @@
 		function adjustModalHeight(height) {
 			$("#activityiFrame").height(height);
 			$('.modal-body #activitymodal').css({"height":height + "px"} );
+		}
+		
+		function parentModalHeight() {
+			return $("#activityiFrame").height();		
 		}
 		
 		function adjustModalHeightDelta(delta) {
@@ -1212,11 +1223,17 @@
 	    }
 	    
 	    function checkActivityInItinRange(newactstartdatetime, masteractid, masteractarr) {
-	    	console.log(${itinerary.startdatelong}, newactstartdatetime, ${itinerary.enddatelong});
+
+	    	console.log(masteractid);
+	    	console.log(${itinerary.startdatelong});
+	    	console.log(newactstartdatetime);
+	    	console.log(${itinerary.enddatelong});
 	    	
 	    	if (masteractid == 0) {
 		    	if (newactstartdatetime >= ${itinerary.startdatelong} && newactstartdatetime <= ${itinerary.enddatelong})
 		    		return true;
+		    	else
+		    		return false;
 			}
 			
 			if (masteractid > 0) {			
@@ -1317,6 +1334,7 @@
 				idtype = "O";																			
 			}
 		
+			console.log(data);
 			var strid =  data.masteractid + "." + data.activityid + "." + idtype;
 			console.log(strid);	
 			var calevent = $('#calendar').fullCalendar( 'clientEvents', strid);
@@ -1325,15 +1343,10 @@
 				calevent[0].title = data.actname;
 				calevent[0].start = data.activitystarttimelong;
 				calevent[0].end = data.activityendtimelong;				
-				calevent[0].code = data.code;
-				calevent[0].itinnum = data.itinnum;
-				calevent[0].masteractid = data.masteractid;
 				calevent[0].activitystarttimelong =  data.activitystarttimelong;
 				calevent[0].actname = data.actname;
-				calevent[0].tzoffset =  data.tzoffset;
 				calevent[0].startdatelong =  data.activitystarttimelong;
 				calevent[0].enddatelong = data.activityendtimelong;
-				calevent[0].type =  data.type;
 				
 			 	$('#calendar').fullCalendar('updateEvent', calevent[0]);			     							
 			}				
@@ -1345,6 +1358,7 @@
 					"end": data.activityendtimelong,							
 					"color": color,
 					"activityid": data.activityid,
+					"activityidpair": data.activityidpair,						
 					"code": data.code,
 					"itinnum": data.itinnum,
 					"masteractid": data.masteractid,
@@ -1358,6 +1372,31 @@
 				events.push(event);
 				updatemasteractivitycount(event, masteractarr);				
 				$('#calendar').fullCalendar( 'renderEvent', event, 'stick');
+
+				if (data.code == "T_BOOK_RETURN") {
+					var stridpair =  data.masteractid + "." + data.activityidpair + "." + idtype;
+					var eventpair = {
+						"id": stridpair,
+						"title": data.actname,
+						"start": data.activitystarttimelongpair,
+						"end": data.activityendtimelongpair,							
+						"color": color,
+						"activityid": data.activityidpair,
+						"activityidpair": data.activityid,						
+						"code": data.code,
+						"itinnum": data.itinnum,
+						"masteractid": data.masteractid,
+						"activitystarttimelong": data.activitystarttimelongpair,
+						"actname": data.actname,
+						"tzoffset": data.tzoffset,
+						"startdatelong": data.activitystarttimelongpair,
+						"enddatelong": data.activityendtimelongpair,
+						"type": data.type
+					}
+					events.push(eventpair);
+					updatemasteractivitycount(eventpair, masteractarr);				
+					$('#calendar').fullCalendar( 'renderEvent', eventpair, 'stick');				
+				}
   			}
   					
 		}

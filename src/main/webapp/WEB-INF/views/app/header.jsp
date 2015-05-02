@@ -53,9 +53,11 @@
     <!-- ace styles -->
     <link rel="stylesheet" href="<c:url value='/resources/css/ace.min.css'/>" id="main-ace-style" />
       
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script src="http://code.jquery.com/jquery-migrate-1.0.0.js"></script>
-    <script src="https://www.gstatic.com/freebase/suggest/4_2/suggest.min.js"></script>
+   <!-- <script src="https://www.gstatic.com/freebase/suggest/4_2/suggest.min.js"></script> -->
+   <script src="<c:url value='/resources/js/1.9.1/jquery.min.js'/>" ></script>
+   <script src="<c:url value='/resources/js/1.9.1/jquery-migrate-1.0.0.js'/>" ></script>
+    	
+    	
     <script type="text/javascript">
         
         function checkname(username, type, fieldname) {
@@ -155,7 +157,7 @@
     <link rel="stylesheet" href="<c:url value='/resources/css/ace-ie.min.css'/>" />
     <![endif]-->    
     
-    <link rel="stylesheet" href="https://www.gstatic.com/freebase/suggest/4_2/suggest.min.css">
+    <!--  <link rel="stylesheet" href="https://www.gstatic.com/freebase/suggest/4_2/suggest.min.css"> -->
 
     <!-- ace settings handler -->
     <script src="<c:url value='/resources/js/ace-extra.min.js'/>" ></script>

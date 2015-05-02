@@ -524,7 +524,12 @@ public class AppController {
 		// User filled data
 		travelactivity.setCode(request.getParameter("code"));
 		travelactivity.setActname(request.getParameter("actname"));		
-		travelactivity.setVesselno(request.getParameter("vesselno"));
+		if (request.getParameter("vesselnoon").contentEquals(""))
+			travelactivity.setVesselnoon("");
+		else
+			travelactivity.setVesselnoret(request.getParameter("vesselnoon"));
+
+		
 		travelactivity.setVesselconame(request.getParameter("vesselconame"));
 		
 		if (request.getParameter("pax").contentEquals(""))
@@ -532,63 +537,88 @@ public class AppController {
 		else
 			travelactivity.setPax(Integer.parseInt(request.getParameter("pax")));
 
-		travelactivity.setBookingno(request.getParameter("bookingno"));
-		travelactivity.setBookingclass(request.getParameter("bookingclass"));
+
+		if (travelactivity.getCode().contentEquals("T_BOOK_ONEWAY") || travelactivity.getCode().contentEquals("T_BOOK_RETURN")) {
 		
-		if (request.getParameter("depdatetimelong").contentEquals(""))
-			travelactivity.setDepdatetimelong(0);			
-		else
-			travelactivity.setDepdatetimelong(Long.valueOf(request.getParameter("depdatetimelong")));
-		
-		if (request.getParameter("arrdatetimelong").contentEquals(""))
-			travelactivity.setArrdatetimelong(0);			
-		else
-			travelactivity.setArrdatetimelong(Long.valueOf(request.getParameter("arrdatetimelong")));
+			travelactivity.setBookingno(request.getParameter("bookingno"));
+			travelactivity.setBookingclass(request.getParameter("bookingclass"));
 
-		travelactivity.setDepstation(request.getParameter("depstation"));
-		travelactivity.setArrstation(request.getParameter("arrstation"));
+			if (request.getParameter("depdatetimeonlong").contentEquals(""))
+				travelactivity.setDepdatetimeonlong(0);			
+			else
+				travelactivity.setDepdatetimeonlong(Long.valueOf(request.getParameter("depdatetimeonlong")));
+			
+			if (request.getParameter("arrdatetimeonlong").contentEquals(""))
+				travelactivity.setArrdatetimeonlong(0);			
+			else
+				travelactivity.setArrdatetimeonlong(Long.valueOf(request.getParameter("arrdatetimeonlong")));
+	
+			travelactivity.setDepstation(request.getParameter("depstation"));
+			travelactivity.setArrstation(request.getParameter("arrstation"));
+	
+			if (request.getParameter("cost").contentEquals(""))
+				travelactivity.setCost((float) 0);		
+			else
+				travelactivity.setCost(Float.parseFloat(request.getParameter("cost")));
+	
+			if (request.getParameter("costmarkup").contentEquals(""))
+				travelactivity.setCostmarkup(0);			
+			else
+				travelactivity.setCostmarkup(Integer.parseInt(request.getParameter("costmarkup")));
+		}
 
-		if (request.getParameter("cost").contentEquals(""))
-			travelactivity.setCost((float) 0);		
-		else
-			travelactivity.setCost(Float.parseFloat(request.getParameter("cost")));
+		if (travelactivity.getCode().contentEquals("T_BOOK_RETURN")) {
 
-		if (request.getParameter("costmarkup").contentEquals(""))
-			travelactivity.setCostmarkup(0);			
-		else
-			travelactivity.setCostmarkup(Integer.parseInt(request.getParameter("costmarkup")));
-
-
-		travelactivity.setPikupdroplocfrom(request.getParameter("pikupdroplocfrom"));
-		travelactivity.setPikupdroplocto(request.getParameter("pikupdroplocto"));
-
-		if (request.getParameter("pikupdropdatetimelong").contentEquals(""))
-			travelactivity.setPikupdropdatetimelong(0);			
-		else
-			travelactivity.setPikupdropdatetimelong(Long.valueOf(request.getParameter("pikupdropdatetimelong")));
-
-		if (request.getParameter("asstcost").contentEquals(""))
-			travelactivity.setAsstcost((float)0);			
-		else
-			travelactivity.setAsstcost(Float.parseFloat(request.getParameter("asstcost")));
-
-		if (request.getParameter("asstcostmarkup").contentEquals(""))
-			travelactivity.setAsstcostmarkup(0);			
-		else
-			travelactivity.setAsstcostmarkup(Integer.parseInt(request.getParameter("asstcostmarkup")));
-		
-		travelactivity.setVehdetails(request.getParameter("vehdetails"));
-
-		if (request.getParameter("pikupdropcost").contentEquals(""))
-			travelactivity.setPikupdropcost((float)0);			
-		else
-			travelactivity.setPikupdropcost(Float.parseFloat(request.getParameter("pikupdropcost")));
+			
+			if (request.getParameter("vesselnoret").contentEquals(""))
+				travelactivity.setVesselnoret("");
+			else
+				travelactivity.setVesselnoret(request.getParameter("vesselnoret"));
 				
-		if (request.getParameter("pikupdropcostmarkup").contentEquals(""))
-			travelactivity.setPikupdropcostmarkup(0);			
-		else
-			travelactivity.setPikupdropcostmarkup(Integer.parseInt(request.getParameter("pikupdropcostmarkup")));
+			if (request.getParameter("depdatetimeretlong").contentEquals(""))
+				travelactivity.setDepdatetimeretlong(0);			
+			else
+				travelactivity.setDepdatetimeretlong(Long.valueOf(request.getParameter("depdatetimeretlong")));
+			
+			if (request.getParameter("arrdatetimeretlong").contentEquals(""))
+				travelactivity.setArrdatetimeretlong(0);			
+			else
+				travelactivity.setArrdatetimeretlong(Long.valueOf(request.getParameter("arrdatetimeretlong")));
+	
+		}
 		
+		if (travelactivity.getCode().contentEquals("T_PIKUPDRP")) {
+			travelactivity.setPikupdroplocfrom(request.getParameter("pikupdroplocfrom"));
+			travelactivity.setPikupdroplocto(request.getParameter("pikupdroplocto"));
+	
+			if (request.getParameter("pikupdropdatetimelong").contentEquals(""))
+				travelactivity.setPikupdropdatetimelong(0);			
+			else
+				travelactivity.setPikupdropdatetimelong(Long.valueOf(request.getParameter("pikupdropdatetimelong")));
+	
+			if (request.getParameter("asstcost").contentEquals(""))
+				travelactivity.setAsstcost((float)0);			
+			else
+				travelactivity.setAsstcost(Float.parseFloat(request.getParameter("asstcost")));
+	
+			if (request.getParameter("asstcostmarkup").contentEquals(""))
+				travelactivity.setAsstcostmarkup(0);			
+			else
+				travelactivity.setAsstcostmarkup(Integer.parseInt(request.getParameter("asstcostmarkup")));
+			
+			travelactivity.setVehdetails(request.getParameter("vehdetails"));
+	
+			if (request.getParameter("pikupdropcost").contentEquals(""))
+				travelactivity.setPikupdropcost((float)0);			
+			else
+				travelactivity.setPikupdropcost(Float.parseFloat(request.getParameter("pikupdropcost")));
+					
+			if (request.getParameter("pikupdropcostmarkup").contentEquals(""))
+				travelactivity.setPikupdropcostmarkup(0);			
+			else
+				travelactivity.setPikupdropcostmarkup(Integer.parseInt(request.getParameter("pikupdropcostmarkup")));
+		}
+
 		travelactivity.setCommentsinternal(request.getParameter("commentsinternal"));
 		travelactivity.setCommentsexternal(request.getParameter("commentsexternal"));
 		
