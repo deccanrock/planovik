@@ -852,7 +852,7 @@ public class AppController {
 	}
 	
 	@RequestMapping(value = "/app/activity/inactive", method = RequestMethod.GET, produces = "application/json")
-	public @ResponseBody String deleteActivity(ServletResponse response, @RequestParam(value = "activityid") int activityid, 
+	public @ResponseBody String deleteActivity(ServletResponse response, @RequestParam(value = "activityid") int activityid, @RequestParam(value = "activityidpair") int activityidpair,
 											  @RequestParam(value = "itinnum") int itinnum, @RequestParam(value = "type") int type,
 											  @RequestParam(value = "version") int version, @RequestParam(value = "groupnum") int groupnum)
 													  throws IOException {
@@ -864,7 +864,7 @@ public class AppController {
 		ActivityEntityDAO AED  = (ActivityEntityDAO)context.getBean("ActivityEntityDAO");
 		String result = null;
 		try {
-			result = AED.DeleteActivity(activityid, itinnum, type, version, groupnum);
+			result = AED.DeleteActivity(activityid, activityidpair, itinnum, type, version, groupnum);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

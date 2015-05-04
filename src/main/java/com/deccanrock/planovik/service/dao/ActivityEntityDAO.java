@@ -261,7 +261,7 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntity
     		travelentities = dbtemplate.query(SQL, tam);
     	} catch (Exception ex) {
     		travelentities = null;
-		} 					
+    	} 					
  		
  		return travelentities; 		
  	}
@@ -299,7 +299,49 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntity
 			tam.setTzoffset(tzoffset);
 			tam.setReqfulldetails(true);
 			List <TravelActivityEntity> travelentities = dbtemplate.query(SQL, tam);
-	 		return travelentities.get(0); 		
+			if (travelentities.get(0).getCode().equals("T_BOOK_RETURN")) {
+				// Get start and end pair values
+				SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(getJdbcTemplate())
+				.withProcedureName("sp_get_activitypairdet");
+				Map<String, Object> inParamMap = new HashMap<String, Object>();
+				inParamMap.put("inactivityid", travelentities.get(0).getActivityidpair());		
+				inParamMap.put("type", type);		
+				SqlParameterSource in = new MapSqlParameterSource(inParamMap);
+				Map<String, Object> rs=null;
+		    	try {    	
+		    		rs = simpleJdbcCall.execute(in);
+		    		// Check what field and process accordingly
+		    		if (rs.get("outdepdatetimeon") != null) {
+		    			
+		    			long depdatetimeonlongutc = Long.parseLong((String) rs.get("outdepdatetimeon"));
+						long depdatetimeonlong = TimeFormatter.UTCToLocal(depdatetimeonlongutc, 
+								travelentities.get(0).getTzoffset());
+						
+		    			long arrdatetimeonlongutc = Long.parseLong((String) rs.get("outarrdatetimeon"));
+						long arrdattimeeonlong = TimeFormatter.UTCToLocal(arrdatetimeonlongutc, 
+								travelentities.get(0).getTzoffset());
+						
+			    		travelentities.get(0).setActivitystarttimelongpair(depdatetimeonlong);    			    			
+			    		travelentities.get(0).setActivityendtimelongpair(arrdattimeeonlong); 
+		    		}
+		    		else {
+		    			long depdatetimeretlongutc = Long.parseLong((String) rs.get("outdepdatetimeret"));
+						long depdattimeretlong = TimeFormatter.UTCToLocal(depdatetimeretlongutc, 
+								travelentities.get(0).getTzoffset());
+						
+		    			long arrdatetimeretlongutc = Long.parseLong((String) rs.get("outarrdatetimeret"));
+						long arrdatetimeretlong = TimeFormatter.UTCToLocal(arrdatetimeretlongutc, 
+								travelentities.get(0).getTzoffset());
+		    		
+			    		travelentities.get(0).setActivitystarttimelongpair(depdattimeretlong);    			    			
+			    		travelentities.get(0).setActivityendtimelongpair(arrdatetimeretlong); 
+		    		}
+		    	} catch (Exception ex) {
+		    		travelentities.get(0).setError(ex.getMessage());
+				} 					
+			}
+	 		
+			return travelentities.get(0); 		
 		}
  		
 		// This should never really happen
@@ -307,7 +349,7 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntity
 	}
 
 	@Override
-	public String DeleteActivity(int activityid, int itinnum, int type, int version, int groupnum) throws IOException, SQLException {
+	public String DeleteActivity(int activityid, int activityidpair, int itinnum, int type, int version, int groupnum) throws IOException, SQLException {
 		// TODO Auto-generated method stub
 		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(getJdbcTemplate())
 		.withProcedureName("sp_delete_activity");
@@ -315,6 +357,7 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntity
 		Map<String, Object> inParamMap = new HashMap<String, Object>();
 
 		inParamMap.put("inactivityid", activityid);
+		inParamMap.put("inactivityidpair", activityidpair);
 		inParamMap.put("initinnum", itinnum);		
 		inParamMap.put("intype", type);
 		inParamMap.put("inversion", version);

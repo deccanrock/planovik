@@ -35,6 +35,10 @@ public class TravelActivityMapper implements RowMapper<TravelActivityEntity> {
 	   	
 	   	// Separate out details for light pack without all details
 		travel.setActivityid(rs.getInt("activityid"));
+
+		// This always defaults to 0
+		travel.setActivityidpair(rs.getInt("activityidpair"));
+
 		travel.setItinnum(rs.getInt("itinnum"));
 
 		travel.setMasteractid(rs.getShort("masteractid"));
@@ -76,7 +80,6 @@ public class TravelActivityMapper implements RowMapper<TravelActivityEntity> {
 
 			if (travel.getCode().contentEquals("T_BOOK_RETURN")) {
 				
-				travel.setActivityidpair(rs.getInt("activityidpair"));
 				// Convert to MM/DD/YYYY hh:mm AM|PM format after adjusting for UTC timezone offset
 				if (rs.getTimestamp("depdatetimeon") != null) {
 					long depdateonlong = TimeFormatter.UTCToLocal(rs.getTimestamp("depdatetimeon").getTime(), this.getTzoffset());

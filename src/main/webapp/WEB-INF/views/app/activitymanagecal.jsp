@@ -437,6 +437,7 @@
 							idtype = "O";																			
 						}
 					
+						// console.log(${activity});
 						var strid =  "${fn:escapeXml(activity.masteractid)}" + "." + ${activity.activityid} + "." + idtype;
 						var activity = {
 							"id": strid,
@@ -445,6 +446,7 @@
 							"end": edate,							
 							"color": color,
 							"activityid": ${activity.activityid},
+							"activityidpair": "${fn:escapeXml(activity.activityidpair)}",
 							"code": "${fn:escapeXml(activity.code)}",
 							"itinnum": "${fn:escapeXml(activity.itinnum)}",
 							"masteractid": "${fn:escapeXml(activity.masteractid)}",
@@ -456,10 +458,6 @@
 							"eventdrop": 0,							
 							"type": ${activity.type}
 						}
-						
-						// if (${fn:escapeXml(activity.code)} == 'T_BOOK_RETURN') {
-						
-						//}
 						
 						updatemasteractivitycount("${fn:escapeXml(activity.masteractid)}", masteractarr);
 					
@@ -931,25 +929,51 @@
 			});
 			
 			modal.find('button[data-action=delete]').on('click', function(e) {
-				$('#calendar').fullCalendar('removeEvents' , function(ev){
-					if (ev.activityid == calEvent.activityid) {
-						if (ev.activityid > 0) {
-						
-							if (!confirm("Do you really wish to delete this activity?")) {
-				            	return;
-				        	}
+				console.log("Delete button");
+
+//				$('#calendar').fullCalendar('removeEvents' , function(ev){
+					// if (ev.activityid == calEvent.activityid) {
+						console.log(calEvent);
+						if (calEvent.activityid > 0) {
+
+							var activityidpair = 0;						
+							if (calEvent.code == 'T_BOOK_RETURN') {
+								activityidpair = calEvent.activityidpair;
+								if (!confirm("This is a return booking activity, this will delete both onward and return activities!"))
+					            	return;
+					        }
+							else				
+								if (!confirm("Do you really wish to delete this activity?"))
+				            		return;
 							
 							$.ajax({type: 'GET', 
-								url: "/app/activity/inactive?" + "activityid=" + calEvent.activityid + "&itinnum=" + calEvent.itinnum + "&type=" + calEvent.type +
+								url: "/app/activity/inactive?" + "activityid=" + calEvent.activityid + "&activityidpair=" + activityidpair + "&itinnum=" + calEvent.itinnum + "&type=" + calEvent.type +
 										"&version=" + ${itinerary.version} + "&groupnum=" + ${activitymaster.groupnum},
 						        success:function(data, textStatus, jqXHR) {
 						        	var result = JSON.parse(data);
 						        	if (result.result == "success") {
-						        		activitycnt = activitycnt - 1;
-						        		$('#activitycntspn').html('Count: <i>' + activitycnt + '</i>)');
-										modal.modal("hide");						
+				        				$('#calendar').fullCalendar('removeEvents', calEvent._id);
+					        			activitycnt = activitycnt - 1;
 										updatemasteractivitycount(calEvent.masteractid, masteractarr, 'delete');	
-						        	}
+						        		$('#activitycntspn').html('Count: <i>' + activitycnt + '</i>)');
+	
+						        		if (calEvent.activityidpair > 0 ) {
+						        			var stridpair = calEvent.masteractid + "." + calEvent.activityidpair + "." + calEvent.type;
+						        			console.log(stridpair);
+											var pairevent = $('#calendar').fullCalendar( 'clientEvents', stridpair);
+						        			console.log(pairevent);
+											if (typeof pairevent[0] !== "undefined" && pairevent[0] !== null)					        			
+						        				$('#calendar').fullCalendar('removeEvents', stridpair);
+											else {
+							        			activitycnt = activitycnt - 1;
+												updatemasteractivitycount(calEvent.masteractid, masteractarr, 'delete');												
+											}
+										}
+										
+										modal.modal("hide");						
+										
+									}									
+						        	
 						        },
 						        error: function(jqXHR, textStatus, errorThrown) {
 						        	alert(textStatus + " " + errorThrown);
@@ -962,9 +986,9 @@
 							modal.modal("hide");
 
 						return true;
-					}
+					//}
 					return false;
-				});				
+				// });				
 			});
 			
 			modal.modal('show').on('hidden', function(){
@@ -1310,33 +1334,37 @@
     		activitycnt = activitycnt + 1;
     		$('#activitycntspn').html('Count: <i>' + activitycnt + '</i>)');
 		}
+		
+		function getFormattedDateTime(timelong) {
+			var datemoment = new moment(timelong).format('MM/DD/YYYY hh:mm A');;
+			// 05/10/2015 2:00 AM
+			return datemoment;
+		}
 
 		function addUpdateActivity(data) {
 			var idtype;
 			if (data.type == 0) {
 				var color = "#82AF6F";
-				idtype = "T";
+				//idtype = "T";
 			}
 			if (data.type == 1) {
 				var color = "#D15B47";						
-				idtype = "H";
+				//idtype = "H";
 			}
 			if (data.type == 2) {
 				var color = "#9585BF";
-				idtype = "V";							
+				//idtype = "V";							
 			}
 			if (data.type == 3) {
 				var color = "#FEE188";
-				idtype = "R";													
+				//idtype = "R";													
 			}
 			if (data.type == 4) {
 				var color = "#D6487E";
-				idtype = "O";																			
+				//idtype = "O";																			
 			}
 		
-			console.log(data);
-			var strid =  data.masteractid + "." + data.activityid + "." + idtype;
-			console.log(strid);	
+			var strid =  data.masteractid + "." + data.activityid + "." + data.type;
 			var calevent = $('#calendar').fullCalendar( 'clientEvents', strid);
 
 			if (typeof calevent[0] !== "undefined" && calevent[0] !== null) {
@@ -1374,7 +1402,7 @@
 				$('#calendar').fullCalendar( 'renderEvent', event, 'stick');
 
 				if (data.code == "T_BOOK_RETURN") {
-					var stridpair =  data.masteractid + "." + data.activityidpair + "." + idtype;
+					var stridpair =  data.masteractid + "." + data.activityidpair + "." + data.type;
 					var eventpair = {
 						"id": stridpair,
 						"title": data.actname,

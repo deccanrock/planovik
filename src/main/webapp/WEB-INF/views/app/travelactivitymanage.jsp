@@ -221,7 +221,7 @@
 												    			<form:input id="vesselnoon" path="vesselnoon" name="vesselnoon" class="col-sm-11" style="width:127%" type="text"  maxlength="15" disabled = "true"  value="" />												
 														    </c:when>
 														    <c:otherwise>
-											    				<form:input id="vesselnoon" path="vesselnoon" name="vesselnoon" class="col-sm-11" style="width:127%" value="${activitymaster.vesselnoon}" type="text"  maxlength="15" />												
+											    				<form:input id="vesselnoon" path="vesselnoon" name="vesselnoon" class="col-sm-11" style="width:127%" value="${travelactivity.vesselnoon}" type="text"  maxlength="15" />												
 														    </c:otherwise>
 														</c:choose>															
 														
@@ -364,7 +364,7 @@
 											    <div class="form-group" style="margin-left:6px;">
 											        <div class="clearfix">
 														<label for="vesselnoon">Flight/Train/Bus No</label>
-									    				<form:input id="vesselnoon" path="vesselnoon" name="vesselnoon" class="col-sm-11" style="width:99%" value="${activitymaster.vesselnoon}" type="text"  maxlength="15" />												
+									    				<form:input id="vesselnoonpikupdrp" path="vesselnoon" name="vesselnoonpikupdrp" class="col-sm-11" style="width:99%" value="${activitymaster.vesselnoon}" type="text"  maxlength="15" />												
 													</div>
 													<div class="customerror" id="vesselnoonpikupdrperr"></div>			
 												</div>
@@ -590,18 +590,18 @@
 					if (${travelactivity.activityid} > 0 && ${travelactivity.eventdrop} == 1) {
 						if (${travelactivity.depdatetimeretlong} > 0) {
 							$('#depdatetimeretstr').val(window.parent.activitystartdate);
-							$('#arrdatetimeretstr').val(window.parent.activitystartdate);									
+							$('#arrdatetimeretstr').val(window.parent.activityenddate);									
 						}
 						else {
 							$('#depdatetimeonstr').val(window.parent.activitystartdate);
-							$('#arrdatetimeonstr').val(window.parent.activitystartdate);														
+							$('#arrdatetimeonstr').val(window.parent.activityenddate);														
 						}
 					}
 					else {
 							$('#depdatetimeonstr').val(window.parent.activitystartdate);
 							$('#arrdatetimeonstr').val(window.parent.activitystartdate);																			
-							$('#depdatetimeretstr').val(window.parent.activitystartdate);
-							$('#arrdatetimeretstr').val(window.parent.activitystartdate);									
+							// $('#depdatetimeretstr').val(window.parent.activitystartdate);
+							// $('#arrdatetimeretstr').val(window.parent.activitystartdate);									
 					}
 				}
 		    }
@@ -832,21 +832,20 @@
 				var arrtimeonlong = GetDate($('#arrdatetimeonstr').val());
 				
 				if ( $('#vesselnoon').is(':enabled') ) {
-					var vesselno = $('#vesselnoon').find(':visible');
-					if (vesselno.val() == "") {
+
+					if ($('#vesselnoon').val() == "") {
 						validated = false;
-						
-						$("#vesselnoonbookerr").append("<p>Input required.</p>");
-						window.parent.adjustModalHeightDelta($("#vesselnoonbookerr").height());
-						$("#vesselnoonbookerr").show();
+						$("#vesselnoonerr").append("<p>Input required.</p>");
+						window.parent.adjustModalHeightDelta($("vesselnoonerr").height());
+						$("#vesselnoonerr").show();
 					}								
 				}
 				
-				if ($('#bookingnoon').val() == "") {
+				if ($('#bookingno').val() == "") {
 					validated = false;
-					$("#bookingnoonerr").append("<p>Input required.</p>");
-					window.parent.adjustModalHeightDelta($("#bookingnoonerr").height());
-					$("#bookingnoonerr").show();
+					$("#bookingnoerr").append("<p>Input required.</p>");
+					window.parent.adjustModalHeightDelta($("#bookingnoerr").height());
+					$("#bookingnoerr").show();
 				}
 
 				if ( $('#depdatetimeonstr').is(':enabled') ) {
@@ -890,6 +889,7 @@
 						var masteractid = $('#masteractid').val();
 						
 						var deptimeonlong = GetDate($('#depdatetimeonstr').val());
+						var arrtimeonlong = GetDate($('#arrdatetimeonstr').val());
 	
 						if (arrtimeonlong.getTime() < deptimeonlong.getTime()) {
 							validated = false;
@@ -917,6 +917,26 @@
 							}				
 						}
 					}
+				
+					// For old activity
+					if (${travelactivity.activityid} > 0) {
+						if (deptimeonlong.getTime() >= ${travelactivity.activitystarttimelongpair} || deptimeonlong.getTime() >= ${travelactivity.activityendtimelongpair}) {
+							validated = false;
+							$("#depdatetimeonstrerr").append("<p>Specified date/time should fall before return travel date/time: " +
+							window.parent.getFormattedDateTime(${travelactivity.activitystarttimelongpair}) + " </p>");
+							window.parent.adjustModalHeightDelta($("#depdatetimeonstrerr").height());
+							$("#depdatetimeonstrerr").show();						
+						}								
+						if (arrtimeonlong.getTime() >=  ${travelactivity.activitystarttimelongpair} || arrtimeretlong.getTime() >= ${travelactivity.activityendtimelongpair}) {
+							validated = false;					
+							$("#arrdatetimeonstrerr").append("<p>Specified date/time should fall before return travel date/time: " +
+							window.parent.getFormattedDateTime(${travelactivity.activitystarttimelongpair}) + " </p>");
+
+							window.parent.adjustModalHeightDelta($("#arrdatetimeonstrerr").height());
+							$("#arrdatetimeonstrerr").show();						
+						}								
+					}
+		
 				}				
 
 				if ($('#depstation').val() == "") {
@@ -975,6 +995,9 @@
 				
 				if ($("#T_BOOK_RETURN").is(':visible')) {
 
+					var deptimeretlong = GetDate($('#depdatetimeretstr').val());
+					var arrtimeretlong = GetDate($('#arrdatetimeretstr').val());
+
 					if ( $('#vesselnoret').is(':enabled') ) {
 						if ($('#vesselnoret').val() == "") {
 							validated = false;
@@ -992,10 +1015,7 @@
 							$("#depdatetimeretstrerr").show();
 						}
 						else {
-							var deptimeretlong = GetDate($('#depdatetimeretstr').val());
 							var masteractid = $('#masteractid').val();
-	
-							
 							if (masteractid == 0) {
 								if (window.parent.checkActivityInItinRange(deptimeonlong.getTime(), masteractid, window.parent.masteractarr) == false) {
 									validated = false;
@@ -1011,17 +1031,8 @@
 									window.parent.adjustModalHeightDelta($("#depdatetimeretstrerr").height());
 									$("#depdatetimeretstrerr").show();
 								}			
-							}
-							
-							if (deptimeretlong.getTime() <=  arrtimeonlong.getTime() || deptimeretlong.getTime() <=  deptimeonlong.getTime()) {
-								validated = false;					
-								$("#depdatetimeretstrerr").append("<p>Specified date/time should be greater than onward travel date/time.</p>");
-								window.parent.adjustModalHeightDelta($("#depdatetimeretstrerr").height());
-								$("#depdatetimeretstrerr").show();						
-							}
-											
+							}											
 						}
-	
 					}
 
 					if ( $('#arrdatetimeretstr').is(':enabled') ) {
@@ -1065,22 +1076,59 @@
 							}
 						}
 					}
+					
+					// For new activity
+					if (${travelactivity.activityid} == 0) {
+						if (deptimeretlong.getTime() <=  arrtimeonlong.getTime() || deptimeretlong.getTime() <=  deptimeonlong.getTime()) {
+							validated = false;					
+							$("#depdatetimeretstrerr").append("<p>Specified date/time should fall after onward travel date/time: " +
+							$('#arrdatetimeonstr').val() + " </p>");
+							window.parent.adjustModalHeightDelta($("#depdatetimeretstrerr").height());
+							$("#depdatetimeretstrerr").show();						
+						}								
+						if (arrtimeretlong.getTime() <=  arrtimeonlong.getTime() || arrtimeretlong.getTime() <=  deptimeonlong.getTime()) {
+							validated = false;					
+							$("#arrdatetimeretstrerr").append("<p>Specified date/time should fall after onward travel date/time: " +
+							$('#arrdatetimeonstr').val() + " </p>");
+							window.parent.adjustModalHeightDelta($("#arrdatetimeretstrerr").height());
+							$("#arrdatetimeretstrerr").show();						
+						}								
+					}
+					
+					// For old activity
+					if (${travelactivity.activityid} > 0) {
+						if (deptimeretlong.getTime() <=  ${travelactivity.activitystarttimelongpair} || deptimeretlong.getTime() <=  ${travelactivity.activityendtimelongpair}) {
+							validated = false;					
+							$("#depdatetimeretstrerr").append("<p>Specified date/time should fall after onward travel date/time: " +
+							window.parent.getFormattedDateTime(${travelactivity.activityendtimelongpair}) + " </p>");
+							window.parent.adjustModalHeightDelta($("#depdatetimeretstrerr").height());
+							$("#depdatetimeretstrerr").show();						
+						}								
+						if (arrtimeretlong.getTime() <=  ${travelactivity.activitystarttimelongpair} || arrtimeretlong.getTime() <=  ${travelactivity.activityendtimelongpair}) {
+							validated = false;					
+							$("#arrdatetimeretstrerr").append("<p>Specified date/time should fall after onward travel date/time: " +
+							window.parent.getFormattedDateTime(${travelactivity.activityendtimelongpair}) + " </p>");
+							window.parent.adjustModalHeightDelta($("#arrdatetimeretstrerr").height());
+							$("#arrdatetimeretstrerr").show();						
+						}								
+					}
+					
 				}
 				
 			}
 			
 			if ($("#T_PIKUPDRP").is(':visible')) {
 
-				var vesselno = $('#vesselnoon').find(':visible');
+//				var vesselno = $('#vesselnoon').find(':visible');
 				
-				if (vesselno.val() == "") {
+//				if (vesselno.val() == "") {
+				if ($('#vesselnoonpikupdrp').val() == "") {
 					validated = false;
-					console.log("vessel no on");
+//					console.log("vessel no on");
 					$("#vesselnoonpikupdrperr").append("<p>Input required.</p>");
 					window.parent.adjustModalHeightDelta($("#vesselnoonpikupdrperr").height());
 					$("#vesselnoonpikupdrperr").show();
 				}
-			
 
 				if ($('#pikupdroplocfrom').val() == "") {
 					validated = false;
