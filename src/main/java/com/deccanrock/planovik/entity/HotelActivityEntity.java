@@ -11,36 +11,35 @@ import javax.persistence.GeneratedValue;
 
 @Entity
 
-public class TravelActivityEntity extends Object implements Comparable<TravelActivityEntity>  {
+public class HotelActivityEntity extends Object implements Comparable<HotelActivityEntity>  {
 	// Columns
     @Column(name="activityid")    
     @GeneratedValue
     private Integer activityid;
-    
-    @Column(name="activityidpair")    
-    @GeneratedValue
-    private Integer activityidpair;
-    
+        
     @Column(name="itinnum")    
     private int itinnum;
     
     @Column(name="masteractid")    
     private short masteractid;    
     
+    @Column(name="actname")    
+	private String actname;
+
     @Column(name="pax")    
     private Integer pax;
       
-    @Column(name="mode")    
-    private Integer mode;
-
     @Column(name="groupnum")    
     private Integer groupnum;
     
     @Column(name="code")    
 	private String code;
 
-    @Column(name="actname")    
-	private String actname;
+    @Column(name="version")        
+    private int version;
+    
+    @Column(name="propertyname")    
+	private String propertyname;
     
     @Column(name="day")    
 	private Integer day;
@@ -135,7 +134,6 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
             
     private String [] codes;
     
-    private int version;
             
     private short eventdrop;
     
@@ -172,15 +170,6 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
 	public void setActivityid(Integer activityid) {
 		this.activityid = activityid;
 	}
-	
-	public Integer getActivityidpair() {
-		return activityidpair;
-	}
-
-	public void setActivityidpair(Integer activityidpair) {
-		this.activityidpair = activityidpair;
-	}
-
 	
 	public int getItinnum() {
 		return itinnum;
@@ -520,14 +509,6 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
 		this.dateupdated = dateupdated;
 	}
 
-	public Integer getMode() {
-		return mode;
-	}
-
-	public void setMode(Integer mode) {
-		this.mode = mode;
-	}
-	
 	public String [] getCodes() {
 		return codes;
 	}
@@ -652,11 +633,11 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
 	}	
 	
 	// Comparator methods
-	public static Comparator<TravelActivityEntity> ActivityByIdComparator 
-                          = new Comparator<TravelActivityEntity>() {
+	public static Comparator<HotelActivityEntity> ActivityByIdComparator 
+                          = new Comparator<HotelActivityEntity>() {
  
 		@Override
-		public int compare(TravelActivityEntity tae1, TravelActivityEntity tae2) {
+		public int compare(HotelActivityEntity tae1, HotelActivityEntity tae2) {
   
 			//ascending order
 			return tae1.compareToActivityid(tae2.getActivityid());
@@ -669,11 +650,11 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
 		return this.activityid - compareActivityid; 
 	}
 	
-	public static Comparator<TravelActivityEntity> ActivityByTimeLongComparator 
-	    = new Comparator<TravelActivityEntity>() {
+	public static Comparator<HotelActivityEntity> ActivityByTimeLongComparator 
+	    = new Comparator<HotelActivityEntity>() {
 	
 		@Override
-		public int compare(TravelActivityEntity tae1, TravelActivityEntity tae2) {
+		public int compare(HotelActivityEntity tae1, HotelActivityEntity tae2) {
 		
 			//ascending order
 			return tae1.compareToTimeLong(tae2.getActivitystarttimelong());
@@ -687,7 +668,7 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
 	}
 
 	@Override
-	public int compareTo(TravelActivityEntity o) {
+	public int compareTo(HotelActivityEntity o) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

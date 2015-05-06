@@ -2,9 +2,7 @@ package com.deccanrock.planovik.service;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -15,6 +13,7 @@ import java.util.concurrent.Future;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.deccanrock.planovik.controller.ApplicationContextProvider;
 import com.deccanrock.planovik.entity.TravelActivityEntity;
 import com.deccanrock.planovik.service.dao.ActivityEntityDAO;
 
@@ -40,7 +39,7 @@ public class ActivitiesListForItinerary {
         
     	public Object call() throws InterruptedException {
     		List<TravelActivityEntity>travelListthread = null;
-    		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
+			ApplicationContext context = ApplicationContextProvider.getApplicationContext();
     		ActivityEntityDAO AED = (ActivityEntityDAO)context.getBean("ActivityEntityDAO");		
     		try {
     			// 0 = travel
@@ -53,8 +52,6 @@ public class ActivitiesListForItinerary {
     			// TODO Auto-generated catch block
     			e.printStackTrace();
     		}
-    		
-    		((ClassPathXmlApplicationContext) context).close();
     		
     		return travelListthread;
         }

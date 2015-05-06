@@ -418,27 +418,27 @@
 						var idtype;
 						if (${activity.type == 0}) {
 							var color = "#82AF6F";
-							idtype = "T";
+							//idtype = "T";
 						}
 						if (${activity.type == 1}) {
 							var color = "#D15B47";						
-							idtype = "H";
+							//idtype = "H";
 						}
 						if (${activity.type == 2}) {
 							var color = "#9585BF";
-							idtype = "V";							
+							//idtype = "V";							
 						}
 						if (${activity.type == 3}) {
 							var color = "#FEE188";
-							idtype = "R";													
+							//idtype = "R";													
 						}
 						if (${activity.type == 4}) {
 							var color = "#D6487E";
-							idtype = "O";																			
+							//idtype = "O";																			
 						}
 					
 						// console.log(${activity});
-						var strid =  "${fn:escapeXml(activity.masteractid)}" + "." + ${activity.activityid} + "." + idtype;
+						var strid =  "${fn:escapeXml(activity.masteractid)}" + "." + ${activity.activityid} + "." + ${activity.type};
 						var activity = {
 							"id": strid,
 							"title": title,
@@ -1343,6 +1343,7 @@
 
 		function addUpdateActivity(data) {
 			var idtype;
+			console.log(data);
 			if (data.type == 0) {
 				var color = "#82AF6F";
 				//idtype = "T";
@@ -1365,9 +1366,16 @@
 			}
 		
 			var strid =  data.masteractid + "." + data.activityid + "." + data.type;
+			console.log(strid);
 			var calevent = $('#calendar').fullCalendar( 'clientEvents', strid);
+			console.log(calevent);
 
 			if (typeof calevent[0] !== "undefined" && calevent[0] !== null) {
+				if (data.activitystarttimelong == 0)
+					data.activitystarttimelong = data.activitystarttimelongpair;
+				if (data.activityendtimelong == 0)
+					data.activityendtimelong = data.activityendtimelongpair;
+					
 				calevent[0].title = data.actname;
 				calevent[0].start = data.activitystarttimelong;
 				calevent[0].end = data.activityendtimelong;				

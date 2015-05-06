@@ -178,7 +178,7 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntity
 
 		if (travelactivity.getCode().matches("T_PIKUPDRP")) {
 
-			inParamMap.put("invesselnoon", travelactivity.getVesselnoon());
+			inParamMap.put("invesselnoon", travelactivity.getVesselnopikupdrp());
 			inParamMap.put("invesselconame", travelactivity.getVesselconame());
 			
 			if (travelactivity.getAsstcost() == null)			

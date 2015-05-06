@@ -120,11 +120,6 @@ public class TravelActivityMapper implements RowMapper<TravelActivityEntity> {
 			travel.setGroupnum(rs.getInt("groupnum"));
 			
 			travel.setVersion(rs.getInt("version"));
-
-			if (rs.getString("vesselnoon") != null)
-				travel.setVesselnoon(rs.getString("vesselnoon"));
-			else
-				travel.setVesselnoon("");
 			
 			if (rs.getString("vesselconame") != null)
 				travel.setVesselconame(rs.getString("vesselconame"));
@@ -133,6 +128,11 @@ public class TravelActivityMapper implements RowMapper<TravelActivityEntity> {
 	
 	
 			if (travel.getCode().contentEquals("T_BOOK_ONEWAY") || travel.getCode().contentEquals("T_BOOK_RETURN")) {	
+
+				if (rs.getString("vesselnoon") != null)
+					travel.setVesselnoon(rs.getString("vesselnoon"));
+				else
+					travel.setVesselnoon("");
 
 				if (rs.getString("bookingclass") != null)
 					travel.setBookingclass(rs.getString("bookingclass"));
@@ -176,6 +176,11 @@ public class TravelActivityMapper implements RowMapper<TravelActivityEntity> {
 
 			if (travel.getCode().contentEquals("T_PIKUPDRP")) {	
 			
+				if (rs.getString("vesselnoon") != null)
+					travel.setVesselnopikupdrp(rs.getString("vesselnoon"));
+				else
+					travel.setVesselnopikupdrp("");
+				
 				if (rs.getString("pikupdroplocfrom") != null)
 					travel.setPikupdroplocfrom(rs.getString("pikupdroplocfrom"));
 				else

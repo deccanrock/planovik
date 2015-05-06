@@ -24,7 +24,7 @@
     <bean id="ActivityMasterDAO" class="com.deccanrock.planovik.service.dao.ActivityMasterDAO" />
     <bean id="ActivityCodesEntityDAO" class="com.deccanrock.planovik.service.dao.ActivityCodesEntityDAO" />
     <bean id="ActivityEntityDAO" class="com.deccanrock.planovik.service.dao.ActivityEntityDAO" />
-    
+    <bean id="applicationContextProvider" class="com.deccanrock.planovik.controller.ApplicationContextProvider"></bean>    
 	
 	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 	   <property name="location" value="classpath:/com/deccanrock/planovik/datasource/db.properties"/>

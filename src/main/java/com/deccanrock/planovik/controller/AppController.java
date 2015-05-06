@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.deccanrock.planovik.entity.ActivityMasterActEntity;
@@ -104,7 +103,7 @@ public class AppController {
 		if (!IsUserLoggedIn(map))
     		return "app/login";
         
-		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
+		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
 		UserEntityDAO UED = (UserEntityDAO)context.getBean("UserEntityDAO");
 		
 		UserEntity user = UED.GetUser(username);
@@ -116,7 +115,6 @@ public class AppController {
 		map.addAttribute("userphoto", userphoto);
 
 		// map.addAttribute("admintaskList", adminManager.getAllPending());
-		((ClassPathXmlApplicationContext) context).close();	
 	    return "app/userprofile";
     
     }
@@ -133,7 +131,7 @@ public class AppController {
 		if (pass.isEmpty())
 			return "";
 		
-		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
+		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
 		UserEntityDAO UED = (UserEntityDAO)context.getBean("UserEntityDAO");
 		UserEntity user = UED.GetUser(username);
 		
@@ -146,7 +144,6 @@ public class AppController {
 			String userphoto = "/resources/images/avatars/" + username + ".jpg";
 			map.addAttribute("userphoto", userphoto);
 			map.addAttribute("error", "New and current password cannot be same!");	
-			((ClassPathXmlApplicationContext) context).close();
 
 			return "app/userprofile";						
 		}
@@ -154,7 +151,6 @@ public class AppController {
 		// In future pass in fields and flags to see 
 		result = UED.UpdateUserProfile(id, pass);
 
-		((ClassPathXmlApplicationContext) context).close();
 		if (result.contentEquals("Success")) {
 			
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -175,7 +171,6 @@ public class AppController {
 			String userphoto = "/resources/images/avatars/" + username + ".jpg";
 			map.addAttribute("userphoto", userphoto);
 			map.addAttribute("error", "New and current password cannot be same!");	
-			((ClassPathXmlApplicationContext) context).close();
 			return "app/userprofile";						
 		}
 	}	
@@ -300,7 +295,7 @@ public class AppController {
 		map.addAttribute("phonecode", "+91");	
 		
 		// Save model to database
-		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
+		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
 		ItineraryEntityDAO IED = (ItineraryEntityDAO)context.getBean("ItineraryEntityDAO");
 		
 		// Record admin who created/edited/modifyed
@@ -316,7 +311,6 @@ public class AppController {
 			if (itinerarydb.getError().equals("Duplicate") == true) {
 				String errDup = "Itinerary: " + "\'" + itinerarydb.getName() + "\'" + " already exists! Edit that itinerary instead."; 
 				map.addAttribute("error", errDup);				
-				((ClassPathXmlApplicationContext) context).close();		
 				return "app/manage";
 			}
 			
@@ -350,7 +344,6 @@ public class AppController {
 			map.addAttribute("itinerary", itinerarydb);
 		}
 
-		((ClassPathXmlApplicationContext) context).close();		
 		return "app/itinerarymanage";
     	    	    	    	
     }
@@ -373,7 +366,7 @@ public class AppController {
 			
 		
 		// Save model to database
-		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
+		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
 		ItineraryEntityDAO IED = (ItineraryEntityDAO)context.getBean("ItineraryEntityDAO");
 		
 		// Check for Currency code and conversion code
@@ -449,7 +442,6 @@ public class AppController {
 		map.addAttribute("travelactivity", TAE);
 		map.addAttribute("rentalactivity", RAE);
 
-		((ClassPathXmlApplicationContext) context).close();		
 		// return "app/activitymanage";
 		return "app/activitymanagecal";    	    	    	    	
     }
@@ -463,7 +455,7 @@ public class AppController {
     	// This is ajax support function for JQGrid
     	logger.info("Travel Activity Manage");
 
-		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
+		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
 		ActivityEntityDAO AED = (ActivityEntityDAO)context.getBean("ActivityEntityDAO");
 		TravelActivityEntity TAE = null;		
 		if (type == 0) {// travel
@@ -476,6 +468,7 @@ public class AppController {
 				TAE.setTzoffset(tzoffset);
 				TAE.setVersion(version);
 				TAE.setGroupnum(groupnum);
+				TAE.setError("Success");
 			}
 			else {
 				TAE = (TravelActivityEntity)AED.GetActivityDetails(activityid, type, tzoffset);
@@ -489,7 +482,6 @@ public class AppController {
 		}
 		
 		map.addAttribute("travelactivity", TAE);
-		((ClassPathXmlApplicationContext) context).close();		
 
 		return "app/travelactivitymanage";	
     }
@@ -504,7 +496,7 @@ public class AppController {
     	logger.info("Itinerary Travel Activity Save - POST");
 			
 		// Save model to database
-		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
+		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
 		ActivityEntityDAO AED = (ActivityEntityDAO)context.getBean("ActivityEntityDAO");
 		
 		// Record admin who created/edited/modifyed
@@ -524,11 +516,6 @@ public class AppController {
 		// User filled data
 		travelactivity.setCode(request.getParameter("code"));
 		travelactivity.setActname(request.getParameter("actname"));		
-		if (request.getParameter("vesselnoon").contentEquals(""))
-			travelactivity.setVesselnoon("");
-		else
-			travelactivity.setVesselnoret(request.getParameter("vesselnoon"));
-
 		
 		travelactivity.setVesselconame(request.getParameter("vesselconame"));
 		
@@ -539,7 +526,12 @@ public class AppController {
 
 
 		if (travelactivity.getCode().contentEquals("T_BOOK_ONEWAY") || travelactivity.getCode().contentEquals("T_BOOK_RETURN")) {
-		
+
+			if (request.getParameter("vesselnoon").contentEquals(""))
+				travelactivity.setVesselnoon("");
+			else
+				travelactivity.setVesselnoon(request.getParameter("vesselnoon"));
+			
 			travelactivity.setBookingno(request.getParameter("bookingno"));
 			travelactivity.setBookingclass(request.getParameter("bookingclass"));
 
@@ -588,6 +580,12 @@ public class AppController {
 		}
 		
 		if (travelactivity.getCode().contentEquals("T_PIKUPDRP")) {
+			
+			if (request.getParameter("vesselnopikupdrp").contentEquals(""))
+				travelactivity.setVesselnoon("");
+			else
+				travelactivity.setVesselnopikupdrp(request.getParameter("vesselnopikupdrp"));
+
 			travelactivity.setPikupdroplocfrom(request.getParameter("pikupdroplocfrom"));
 			travelactivity.setPikupdroplocto(request.getParameter("pikupdroplocto"));
 	
@@ -626,7 +624,6 @@ public class AppController {
 		TravelActivityEntity taedb = AED.saveTravelActivity(travelactivity);
 		
 		// Send information for succcess as json format
-		((ClassPathXmlApplicationContext) context).close();		
 		response.setContentType("application/json");
 		ObjectMapper mapper = new ObjectMapper();
 		String jsonOut = mapper.writeValueAsString(taedb);		
@@ -643,7 +640,7 @@ public class AppController {
     	logger.info("Master Activity Act Save - POST");
 			
 		// Save model to database
-		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
+		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
 		ActivityMasterDAO AMD = (ActivityMasterDAO)context.getBean("ActivityMasterDAO");
 		
 		String actname = request.getParameter("masteractname");
@@ -663,7 +660,6 @@ public class AppController {
 							", \"masteractstartdatelong\": " + "\"" +  startdatetimelong + "\"" + ", \"masteractenddatelong\": " + "\"" + enddatetimelong + "\"" +"}";
 				
 		// Send information for succcess as json format
-		((ClassPathXmlApplicationContext) context).close();		
 		response.setContentType("application/json");
 		ObjectMapper mapper = new ObjectMapper();
 		String jsonOut = mapper.writeValueAsString(strObj);		
@@ -680,7 +676,7 @@ public class AppController {
     	logger.info("Master Activity Act Delete - POST");
 			
 		// Save model to database
-		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
+		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
 		ActivityMasterDAO AMD = (ActivityMasterDAO)context.getBean("ActivityMasterDAO");
 		
 		int itinnum = Integer.valueOf(request.getParameter("itinnum"));
@@ -690,7 +686,6 @@ public class AppController {
 		String result = AMD.DeleteMasterActivityAct(itinnum, version, masteractid);
 				
 		// Send information for succcess as json format
-		((ClassPathXmlApplicationContext) context).close();		
 		response.setContentType("application/json");
 		ObjectMapper mapper = new ObjectMapper();
 		String strObj = "{ \"result\": " + "\"" + result + "\"" + "}";
@@ -718,10 +713,9 @@ public class AppController {
 		}
     	
 		// Get Org List from database, should be changed to get from cache
-		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
+		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
 		ItineraryEntityDAO IED = (ItineraryEntityDAO)context.getBean("ItineraryEntityDAO");	
 		String convcode = IED.CreateCurrConvCode(fromcurr, tocurr, Float.parseFloat(unitrate));
-		((ClassPathXmlApplicationContext) context).close();	
 				
 		return convcode;
     }
@@ -744,8 +738,8 @@ public class AppController {
 			map.addAttribute("msg", "You've been logged out successfully.");
 		}
 				
-        HttpSession session =   request.getSession(false);
-        if(session!=null){
+        HttpSession session = request.getSession(false);
+        if(session!=null) {
             session.invalidate();//old session invalidated
         }		
 				
@@ -787,10 +781,9 @@ public class AppController {
 			return "";
 		
 		// Get Org List from database, should be changed to get from cache
-		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
+		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
 		ItineraryEntityDAO IED = (ItineraryEntityDAO)context.getBean("ItineraryEntityDAO");	
 		List<String> itinList = IED.GetItinList(query);
-		((ClassPathXmlApplicationContext) context).close();
 
 		// Build Json Reader map for jqgrid		
 		ObjectMapper mapper = new ObjectMapper();
@@ -812,10 +805,9 @@ public class AppController {
 			return "";
 		
 		// Get Org List from database, should be changed to get from cache
-		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
+		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
 		ItineraryEntityDAO IED = (ItineraryEntityDAO)context.getBean("ItineraryEntityDAO");	
 		List<String> isocurrlist = IED.GetISOCurrList(query);
-		((ClassPathXmlApplicationContext) context).close();
 
 		// Build Json Reader map for jqgrid		
 		ObjectMapper mapper = new ObjectMapper();
@@ -838,10 +830,9 @@ public class AppController {
 			return "";
 		
 		// Get Org List from database, should be changed to get from cache
-		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
+		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
 		ItineraryEntityDAO IED = (ItineraryEntityDAO)context.getBean("ItineraryEntityDAO");	
 		List<String> isocurrlist = IED.GetCurrConvCodes(query);
-		((ClassPathXmlApplicationContext) context).close();
 
 		// Build Json Reader map for jqgrid		
 		ObjectMapper mapper = new ObjectMapper();
@@ -860,7 +851,7 @@ public class AppController {
 		logger.info("Inactive - Delete Activity");
 		
 		// Get Org List from database, should be changed to get from cache
-		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
+		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
 		ActivityEntityDAO AED  = (ActivityEntityDAO)context.getBean("ActivityEntityDAO");
 		String result = null;
 		try {
@@ -870,7 +861,6 @@ public class AppController {
 			e.printStackTrace();
 		}
 		
-		((ClassPathXmlApplicationContext) context).close();
 		response.setContentType("application/json");
 		ObjectMapper mapper = new ObjectMapper();
 		String jsonOut = mapper.writeValueAsString(result);			
@@ -887,10 +877,9 @@ public class AppController {
 			return "";
 		
 		// Get Org List from database, should be changed to get from cache
-		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
+		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
 		ActivityMasterDAO AMD = (ActivityMasterDAO)context.getBean("ActivityMasterDAO");	
 		List<String> activitycodelist = AMD.GetActivityCodes(query);
-		((ClassPathXmlApplicationContext) context).close();
 
 		// Build Json Reader map for jqgrid		
 		ObjectMapper mapper = new ObjectMapper();
@@ -909,9 +898,8 @@ public class AppController {
 	public @ResponseBody String checkUserName(@RequestParam(value = "username") String userName) {
 		logger.info("Check User Name");
 
-		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
+		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
 		UserEntityDAO UED = (UserEntityDAO)context.getBean("UserEntityDAO");
-		((ClassPathXmlApplicationContext) context).close();
 		// This should be changed to memcached
 		if (UED.UserExists(userName))
 			return "exists";
@@ -927,10 +915,9 @@ public class AppController {
 		if (image.isEmpty())
 			return "";
 		
-		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
+		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
 		FileHandler FH = (FileHandler)context.getBean("filehandler");
 		String result = FH.fileUpload(image, "image", "setavatar", username);
-		((ClassPathXmlApplicationContext) context).close();
 
 		return result;				
 	}	

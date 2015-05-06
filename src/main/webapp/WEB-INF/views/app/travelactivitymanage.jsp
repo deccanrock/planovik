@@ -57,12 +57,12 @@
 					    	<div class="widget-main">
 	
 								<c:if test="${not empty error}">
-									<div class="alert alert-danger">
+									<div class="alert alert-danger" id="errordiv">
 										<button type="button" class="close" data-dismiss="alert">
 										<i class="ace-icon fa fa-times"></i>
 										</button>
 										<strong><i class="ace-icon fa fa-times"></i></strong>
-										${error}
+										<span id="errorspan">${error}</span>
 									</div>										
 								</c:if>			
 	
@@ -89,7 +89,7 @@
 									    <div class="form-group" style="margin-left:5px;width:95%;">
 									        <div class="clearfix">
 										        <label for="actname">Specify a name for activity</label>
-								    				<form:input id="actname" path="actname" name="actname" class="col-sm-11" value= "${travelactivity.actname}" type="text" style="width:92%;" maxlength="45" />												
+								    				<form:input id="actname" path="actname" name="actname" class="col-sm-11" value= "${travelactivity.actname}" type="text" style="width:92%;" maxlength="60" />												
 											</div>
 											<div class="customerror" id="actnameerr"></div>			
 										</div>							        
@@ -363,17 +363,17 @@
 											<div class='col-xs-3'>										    																					    
 											    <div class="form-group" style="margin-left:6px;">
 											        <div class="clearfix">
-														<label for="vesselnoon">Flight/Train/Bus No</label>
-									    				<form:input id="vesselnoonpikupdrp" path="vesselnoon" name="vesselnoonpikupdrp" class="col-sm-11" style="width:99%" value="${activitymaster.vesselnoon}" type="text"  maxlength="15" />												
+														<label for="vesselnoon">Arrival flight/Train/Bus No</label>
+									    				<form:input id="vesselnopikupdrp" path="vesselnopikupdrp" name="vesselnopikupdrp" class="col-sm-11" style="width:99%" value="${travelactivity.vesselnopikupdrp}" type="text"  maxlength="15" />												
 													</div>
-													<div class="customerror" id="vesselnoonpikupdrperr"></div>			
+													<div class="customerror" id="vesselnopikupdrperr"></div>			
 												</div>
 											</div>
 									
 											<div class='col-xs-3'>	
 											    <div class="form-group" style="margin-left:6px;">
 											        <div class="clearfix">
-												        <label for="code">From Location</label>
+												        <label for="code">Pickup From</label>
 										    				<form:input id="pikupdroplocfrom" name="pikupdroplocfrom" class="col-sm-11" path="pikupdroplocfrom" type="text" style="width:85%" value="${activitymaster.pikupdroplocfrom}" maxlength="30" />												
 													</div>
 													<div class="customerror" id="pikupdroplocfromerr"></div>												       		
@@ -383,7 +383,7 @@
 											<div class='col-xs-3'>	
 											    <div class="form-group">
 											        <div class="clearfix">
-												        <label for="code">To Location</label>
+												        <label for="code">Drop To</label>
 										    				<form:input id="pikupdroplocto" name="pikupdroplocto" class="col-sm-11" path="pikupdroplocto" type="text" style="width:85%" value="${activitymaster.pikupdroplocto}" maxlength="30" />												
 													</div>
 													<div class="customerror" id="pikupdroploctoerr"></div>												       		
@@ -706,14 +706,18 @@
 				    data: str,
 				    url:"/app/manage/travelactivitymanage",
 			        success:function(data, textStatus, jqXHR) {
-			            // var actdata = JSON.parse(data);
-			            window.parent.addUpdateActivity(data);
-			            if (${travelactivity.activityid} == 0)
-				            window.parent.incrActivityCnt();
-			            if (data.code == "T_BOOK_RETURN")
-				            window.parent.incrActivityCnt();			            
-			            	
-			            window.parent.modal.modal("hide");
+						if (data.error != "Success" ) {
+							alert(data.error);
+						}
+						else {
+				            window.parent.addUpdateActivity(data);
+				            if (${travelactivity.activityid} == 0)
+					            window.parent.incrActivityCnt();
+				            if (data.code == "T_BOOK_RETURN")
+					            window.parent.incrActivityCnt();			            
+				            	
+				            window.parent.modal.modal("hide");						
+						}
 			        },
 			        error: function(jqXHR, textStatus, errorThrown) {
 			            console.log(textStatus);    
@@ -1122,12 +1126,12 @@
 //				var vesselno = $('#vesselnoon').find(':visible');
 				
 //				if (vesselno.val() == "") {
-				if ($('#vesselnoonpikupdrp').val() == "") {
+				if ($('#vesselnopikupdrp').val() == "") {
 					validated = false;
 //					console.log("vessel no on");
-					$("#vesselnoonpikupdrperr").append("<p>Input required.</p>");
-					window.parent.adjustModalHeightDelta($("#vesselnoonpikupdrperr").height());
-					$("#vesselnoonpikupdrperr").show();
+					$("#vesselnopikupdrperr").append("<p>Input required.</p>");
+					window.parent.adjustModalHeightDelta($("#vesselnopikupdrperr").height());
+					$("#vesselnopikupdrperr").show();
 				}
 
 				if ($('#pikupdroplocfrom').val() == "") {

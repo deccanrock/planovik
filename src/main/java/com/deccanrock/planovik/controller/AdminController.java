@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.validation.BindingResult;
 
 import com.deccanrock.planovik.entity.UserEntity;
@@ -40,7 +40,7 @@ public class AdminController {
 	private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
 	@PreAuthorize("hasRole('ROLE_SUPERADMIN')")	
-    @RequestMapping(value = "/app/admin/", method = RequestMethod.GET)
+	@RequestMapping(value = "/admin", method = RequestMethod.GET)
     public String appAdmin(ModelMap map, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		final String userIPAddress = request.getRemoteAddr();
 		
@@ -64,7 +64,7 @@ public class AdminController {
 		String userphoto = "/resources/images/avatars/" + username + ".jpg";
 		map.addAttribute("userphoto", userphoto);
 		
-        return "app/admin/index";
+        return "admin/index";
     
     }	
 	
@@ -73,8 +73,8 @@ public class AdminController {
 	 * Manage users for an org
 	 * @throws URISyntaxException **/
 	 
-	@PreAuthorize("hasRole('ROLE_SUPERADMIN')")
-	@RequestMapping(value = "app/admin/manageusersform", method = RequestMethod.POST)
+	@PreAuthorize("hasRole('ROLE_SUPERADMIN')")	
+	@RequestMapping(value = "/admin/manageusersform", method = RequestMethod.POST)
     public String signupupprocess(@ModelAttribute(value="user") UserEntity user, Model map, HttpServletRequest request) {
 
 		logger.info("Manager Users Process Form");
@@ -88,54 +88,55 @@ public class AdminController {
 		map.addAttribute("phonecode", "+91");	
 		
 		// Save model to database
-		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
+		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
 		UserEntityDAO UED = (UserEntityDAO)context.getBean("UserEntityDAO");
 		
 		UserEntity dbUser = UED.GetUser(user.getUsername());
 		PlnvkConstants constants = new PlnvkConstants();
 		
+		boolean isError = false;
+		
 		if ( dbUser!=null && user.getMode().equals("Create")) {
 			String error = "User: " + user.getUsername() + " already exists!";
 			map.addAttribute("error", error);
+			isError = true;
 		}
 		
 		// Error if account is disabled
 		if ( dbUser!=null && user.getMode().equals("Edit") && dbUser.isEnabled()==false) {
 			String error = "User account: " + user.getUsername() + " is permanently disabled!";
 			map.addAttribute("error", error);
-			((ClassPathXmlApplicationContext) context).close();
-			return "app/admin/manageusers";
-		}
-		
-		
-		if ( dbUser==null && user.getMode().equals("Create")) {
-			user.setRolelist(constants.getUserRoles());
-			map.addAttribute("user", user);
-			((ClassPathXmlApplicationContext) context).close();		
-			return "app/admin/manageusersform";
+			isError = true;
 		}
 		
 		if ( dbUser==null && (user.getMode().equals("Edit"))) {
 			String error = "User: " + user.getUsername() + " not found!";
 			map.addAttribute("error", error);
+			isError = true;
 		}
-
-		if ( dbUser!=null && (user.getMode().equals("Edit"))) {
-			dbUser.setMode("Edit");
-			dbUser.setRolelist(constants.getUserRoles());
-			map.addAttribute("user", dbUser);
-			((ClassPathXmlApplicationContext) context).close();		
-			return "app/admin/manageusersform";
-		}
+		
+		if (isError)
+			return "admin/index";			
 
 		if ( dbUser!=null && (user.getMode().equals("Disable"))) {
 			UED.DeleteUser(user.getUsername());
 			String msg = "User: " + user.getUsername() + " was successfully disabled.";
 			map.addAttribute("msg", msg);
+			return "admin/index";
+		}
+		
+		if ( dbUser==null && user.getMode().equals("Create")) {
+			user.setRolelist(constants.getUserRoles());
+			map.addAttribute("user", user);
+		}
+		
+		if ( dbUser!=null && (user.getMode().equals("Edit"))) {
+			dbUser.setMode("Edit");
+			dbUser.setRolelist(constants.getUserRoles());
+			map.addAttribute("user", dbUser);
 		}
 
-		((ClassPathXmlApplicationContext) context).close();		
-		return "app/admin/manageusers";
+		return "admin/manageusersform";
 	}
 		
 	
@@ -144,7 +145,7 @@ public class AdminController {
 	 * @throws URISyntaxException **/
 	 
 	@PreAuthorize("hasRole('ROLE_SUPERADMIN')")	
-	@RequestMapping(value = "/app/admin/manageusers", method = RequestMethod.POST)
+	@RequestMapping(value = "/admin/manageusers", method = RequestMethod.POST)
     public String signupshowform(@ModelAttribute(value="user") UserEntity user, HttpServletRequest request, BindingResult result, Model map) {
 		
 		logger.info("Manager Users Show Form");
@@ -165,7 +166,7 @@ public class AdminController {
 		//user.setReportstousername(loggeduser.getUsername());
 		
 		// Save model to database
-		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
+		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
 		UserEntityDAO UED = (UserEntityDAO)context.getBean("UserEntityDAO");	
 		String dbresult = UED.ManageUser(user);
 
@@ -174,8 +175,7 @@ public class AdminController {
 		else
 			map.addAttribute("error", dbresult);
 			
-		((ClassPathXmlApplicationContext) context).close();
-		return "app/admin/index";
+		return "admin/index";
 	}
 		
 }

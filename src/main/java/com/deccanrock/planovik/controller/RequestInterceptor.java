@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -28,11 +27,9 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
 
 		// Get tenant object for the domain and send to context holder
 		// This will hit DB, but a concurrent map object that is maintained should be accessed
-		ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
-
+		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
 		TenantEntityDAO TED = (TenantEntityDAO)context.getBean("TenantEntityDAO");	
 		TenantEntity tenant = TED.GetTenant(domain.toString());
-		((ClassPathXmlApplicationContext) context).close();
 		
 		if (tenant == null)
 			return true; // Main DS should be used

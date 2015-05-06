@@ -9,14 +9,11 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.deccanrock.planovik.entity.TenantEntity;
-import com.deccanrock.planovik.service.dao.TenantEntityDAO;
 import com.deccanrock.planovik.service.dao.TenantImplDAO;
 import com.deccanrock.planovik.service.utils.UriHandler;
 
@@ -48,10 +45,9 @@ public class HomeController {
 			tagline = "Home";
 		else {
 			// Domain and context check
-			ApplicationContext  context = new ClassPathXmlApplicationContext("springdatabase.xml");
+			ApplicationContext context = ApplicationContextProvider.getApplicationContext();
 			TenantImplDAO TID = (TenantImplDAO)context.getBean("TenantImplDAO");	
 			tagline = TID.GetTagline("du");
-			((ClassPathXmlApplicationContext) context).close();
 		}
 		model.addAttribute("serverTime", formattedDate );
 		model.addAttribute("tagline", tagline );		

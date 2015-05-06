@@ -1,0 +1,27 @@
+select * from itin_activity_master;
+select * from itin_activity_master_act;
+select * from itin_master;
+select * from itin_activity_travel;
+
+update itin_activity_master set countactivitytravel=0 where itinnum=1;
+
+select UNIX_TIMESTAMP(depdatetimeon) from itin_activity_travel where activityid=2;
+
+update itin_activity_travel set vesselnoon=null where activityid=3;
+delete from itin_activity_codes where code='T_BOOK';
+
+select * from itin_activity_codes;
+insert into itin_activity_codes (code, description, datecreated, dateupdated) values ('T_BOOK_RETURN', 'Booking Return', UTC_TIMESTAMP(), UTC_TIMESTAMP());
+update itin_activity_codes set description='BOOK One Way' where code='T_BOOK';
+
+delete from itin_activity_master where itinnum=1;
+delete from itin_activity_master_act where itinnum=1;
+delete from itin_master where id=1;
+
+update itin_activity_master set countactivitytravel=0 where itinnum=1;
+
+select * from itin_activity_travel;
+delete from itin_activity_travel where activityid=3;
+ALTER TABLE itin_activity_travel AUTO_INCREMENT = 1;
+ALTER TABLE itin_activity_master AUTO_INCREMENT = 1;
+ALTER TABLE itin_master AUTO_INCREMENT = 1;
