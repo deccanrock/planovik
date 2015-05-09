@@ -19,12 +19,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.validation.BindingResult;
 
+import com.deccanrock.planovik.entity.ServiceProviderEntity;
 import com.deccanrock.planovik.entity.UserEntity;
 import com.deccanrock.planovik.location.MaxLocation;
 import com.deccanrock.planovik.location.MaxLocationBO;
+import com.deccanrock.planovik.service.dao.ServiceProviderDAO;
 import com.deccanrock.planovik.service.dao.UserEntityDAO;
 import com.deccanrock.planovik.constants.PlnvkConstants;
 
@@ -39,9 +40,11 @@ public class AdminController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
+	/** TO-DO **/
+	// Need to investigate why null parameter gets appended	
 	@PreAuthorize("hasRole('ROLE_SUPERADMIN')")	
-	@RequestMapping(value = "/admin", method = RequestMethod.GET)
-    public String appAdmin(ModelMap map, HttpServletRequest request, HttpServletResponse response) throws IOException {
+	@RequestMapping(value = {"/admin/index", "/admin/null"}, method = RequestMethod.GET)
+	public String appAdmin(ModelMap map, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		final String userIPAddress = request.getRemoteAddr();
 		
 		request.setAttribute("title", "Planovik Admin - Home");
@@ -56,7 +59,12 @@ public class AdminController {
         map.addAttribute("phonecode", phonecode);	
         
         UserEntity user = new UserEntity();    
-        map.addAttribute("user", user);	
+        map.addAttribute("user", user);
+        
+        ServiceProviderEntity SPE = new ServiceProviderEntity();
+		PlnvkConstants pc = new PlnvkConstants();
+		SPE.setTypes(pc.getServicetype());
+        map.addAttribute("serviceprovider", SPE);
 		
 		User loggeduser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = loggeduser.getUsername();
@@ -68,7 +76,48 @@ public class AdminController {
     
     }	
 	
-	
+	/**
+	 * Manage users for an org
+	 * @throws URISyntaxException **/
+	 
+	@PreAuthorize("hasRole('ROLE_SUPERADMIN')")	
+	@RequestMapping(value = "/admin/manageservicesform", method = RequestMethod.POST)
+    public String servicesprocess(@ModelAttribute(value="serviceprovider") ServiceProviderEntity serviceprovider, Model map, HttpServletRequest request) {
+
+		logger.info("Manager Services Process Form");
+		
+		request.setAttribute("title", "Planovik Admin Manage Service");
+		
+		if (serviceprovider.getMode().equals("Create"))
+			request.setAttribute("header", "Manage Services - Create");
+		else
+			request.setAttribute("header", "Manage Services - Edit");
+			
+		// Save model to database
+		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
+		ServiceProviderDAO SPD = (ServiceProviderDAO)context.getBean("ServiceProviderDAO");
+				
+		boolean isError = false;
+		ServiceProviderEntity dbServiceProvider = SPD.GetService(serviceprovider.getName(), serviceprovider.getType());
+		
+		if ( dbServiceProvider!=null && serviceprovider.getMode().equals("Create")) {
+			String error = "Service: " + serviceprovider.getName() + " already exists!";
+			map.addAttribute("error", error);
+			isError = true;
+		}
+		
+		if ( dbServiceProvider==null && (serviceprovider.getMode().equals("Edit"))) {
+			String error = "Service: " + serviceprovider.getName() + " not found!";
+			map.addAttribute("error", error);
+			isError = true;
+		}
+		
+		if (isError)
+			return "admin/index";			
+
+		return "admin/manageservicesform";
+	}
+			
 	/**
 	 * Manage users for an org
 	 * @throws URISyntaxException **/
@@ -178,4 +227,29 @@ public class AdminController {
 		return "admin/index";
 	}
 		
+	/**
+	 * Manage users for an org
+	 * @throws URISyntaxException **/
+	 
+	@PreAuthorize("hasRole('ROLE_SUPERADMIN')")	
+	@RequestMapping(value = "/admin/manageservices", method = RequestMethod.POST)
+    public String processservice(@ModelAttribute(value="serviceprovider") ServiceProviderEntity serviceprovider, HttpServletRequest request, BindingResult result, Model map) {
+		
+		logger.info("Manager Services process");
+		
+		request.setAttribute("title", "Planovik Admin - Process Service");
+		
+		// Save model to database
+		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
+		ServiceProviderDAO SPD = (ServiceProviderDAO)context.getBean("ServiceProviderDAO");	
+		String dbresult = SPD.ManageService(serviceprovider);
+
+		if (dbresult.matches("Success"))
+			map.addAttribute("msg", "Service request was processed successfully!");
+		else
+			map.addAttribute("error", dbresult);
+			
+		return "admin/index";
+	}
+
 }

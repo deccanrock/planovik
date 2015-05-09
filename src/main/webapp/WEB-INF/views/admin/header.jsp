@@ -58,7 +58,7 @@
         function checkname(username, type, fieldname) {
                 
         	var target;
-        	
+        	alert(username);
         	if (fieldname == '#username')
        			target = document.getElementById('spinnerusername');
        		
@@ -173,8 +173,8 @@
 		}
 
 		.error {
-			padding: 15px;
-			margin-bottom: 20px;
+			padding: 5px;
+			margin-bottom: 5px;
 			border: 1px solid transparent;
 			border-radius: 4px;
 			color: #a94442;

@@ -1,4 +1,5 @@
 <%@ include file="header.jsp" %>
+	<%@ include file="../app/nav.jsp" %>
 
 <!-- /section:basics/navbar.layout -->
 <div class="main-container" id="main-container">
@@ -10,7 +11,10 @@
 <link rel="stylesheet" href="<c:url value='/resources/css/jquery.gritter.css'/>" />
 <link rel="stylesheet" href="<c:url value='/resources/css/chosen.css'/>" />	
 
-
+	<c:set var="activetab" value="" scope="request"/>
+	<!-- /section:basics/sidebar -->
+	<%@ include file="../app/sidebar.jsp" %>
+		
 <!-- /section:basics/sidebar -->
 <div class="main-content">
 	<div class="page-content">
@@ -238,19 +242,22 @@
 												</div>
 											</div>
 										</div>
+						                <div class="space-20"></div>
 				             		</c:if>
 
-				                    <!-- #section:plugins/fuelux.wizard.buttons -->
-				            		<c:choose>
-				            			<c:when test="${user.mode == 'Create'}">
-				                        	<input type="submit" id="manageuserscreate" name="manageuserscreate" class="btn btn-large btn-primary" style="margin-left:200px;" value="Create" />
-				                    	</c:when>
-										<c:otherwise>
-					                        <input type="submit" id="manageusersedit" name="manageusersedit" class="btn btn-large btn-primary" style="margin-left:200px;margin-top:20px;" value="Save" />
-										</c:otherwise>
-				            		</c:choose>				                    
-			                        <input type="submit" id="manageuserscancel" name="manageuserscancel" class="btn btn-grey btn-primary" style="margin-left:100px;margin-top:20px;" value="Cancel" />
-
+									<div style="margin-top:20px;">
+					                    <!-- #section:plugins/fuelux.wizard.buttons -->
+					            		<c:choose>
+					            			<c:when test="${user.mode == 'Create'}">
+					                        	<input type="submit" id="manageuserscreate" name="manageuserscreate" class="btn btn-large btn-primary" style="margin-left:200px;" value="Create" />
+					                    	</c:when>
+											<c:otherwise>
+						                        <input type="submit" id="manageusersedit" name="manageusersedit" class="btn btn-large btn-primary" style="margin-left:200px;" value="Save" />
+											</c:otherwise>
+					            		</c:choose>				                    
+				                        <input type="submit" id="manageuserscancel" name="manageuserscancel" class="btn btn-grey btn-primary" style="margin-left:50px;" value="Cancel" />
+									</div>
+									
 			                    </form:form>
 								<div class="space-6"></div>								
 											                
@@ -421,7 +428,7 @@
 			}
 			            
 			if (this.id === 'manageuserscancel') {
-	            window.location("/admin");	
+	            $(location).attr('href', "/admin/index");	
 			}
 
             return false;					

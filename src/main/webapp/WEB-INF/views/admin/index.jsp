@@ -21,16 +21,25 @@
 				<!-- /section:settings.box -->
 				<div class="page-content-area">
 
-					<!-- PAGE CONTENT BEGINS -->
 					<div class="row">
-					
-					    <div class="col-xs-9" style="margin-left:150px;">
-					
-					       <div class="col-xs-6">
-					            <div class="widget-box" style="border:none;margin-top:20px;">
-					        		<h4 class="block green">Manage user</h4>            
-					                <div class="widget-body">
-					
+						<div class="col-xs-5" style="margin-left:10px;margin-top:30px;">
+							<div class="widget-box"  id="manageuserswidget"> 
+						
+								<div class="widget-header">
+									<h5 class="widget-title">Manage Users</h5>
+									<div class="widget-toolbar">
+										<a href="#" data-action="reload" style="visibility:hidden;">
+											<i class="ace-icon fa fa-refresh"></i>
+										</a>
+	
+										<a id="widgetcollapsemanageusers" href="#" data-action="collapse">
+											<i class="ace-icon fa fa-chevron-down"></i>
+										</a>
+									</div>
+								</div>																		
+						
+								<div class="widget-body">
+									<div class="widget-main no-padding">
 										<c:if test="${not empty error}">
 											<div class="error">${error}</div>
 										</c:if>
@@ -38,29 +47,82 @@
 											<div class="msg">${msg}</div>
 										</c:if>
 					
-					                    <form:form id="manageusers-form" method="post" action="admin/manageusersform" modelAttribute="user" name="user">
-					
+					                    <form:form id="manageusers-form" method="post" action="manageusersform" modelAttribute="user" name="user">				
 					                        <div class="form-group">
 					                            <div class="clearfix">
-					                                <form:input type="text" path="username" placeholder="Enter username" id="username" class="col-sm-11" />
-					                                <div class="pull-right center spinner-preview" id="spinnerusername" class="col-sm-1"></div>
+					                                <form:input type="text" path="username" placeholder="Enter username" id="username" class="col-sm-11" style="margin-left:10px;margin-top:20px;"/>
 					                            </div>
 					                        </div>
-					
-					                        <div class="space-2"></div>
-						                        <form:input type="hidden" id="mode" path="mode" />
-						
-						                        <!-- #section:plugins/fuelux.wizard.buttons -->
-					                        <input type="submit" id="manageuserscreate" path="manageuserscreate" class="btn btn-large btn-primary" value="Create" />	                    
-					                        <input type="submit" id="manageusersedit" path="manageusersedit" class="btn btn-large btn-primary" value="Edit" />
-					                        <input type="submit" id="manageusersdelete" path="manageusersdelete" class="btn btn-large btn-primary" value="Disable" />
+					                        <form:input type="hidden" id="usersmode" path="mode" />
+	
+					                        <div class="form-group" style="margin-top:20px;margin-left:20px;">
+						                        <input type="submit" id="manageuserscreate" path="manageuserscreate" class="btn btn-large btn-primary" value="Create" />	                    
+						                        <input type="submit" id="manageusersedit" path="manageusersedit" class="btn btn-large btn-primary" value="Edit" />
+						                        <input type="submit" id="manageusersdelete" path="manageusersdelete" class="btn btn-large btn-primary" value="Disable" />
+											</div>
 										</form:form>
-					                </div>
-					            </div><!-- /.widget-body -->
-					        </div>
-					            
-					    </div>
-					</div><!-- row -->
+									</div>
+								</div> <!-- widgetbody -->
+							</div> <!-- widgetbox -->
+						</div>
+				
+						<div class="col-xs-5" style="margin-left:10px;margin-top:30px;">
+					
+							<div class="widget-box" id="manageserviceswidget"> 
+						
+								<div class="widget-header">
+									<h5 class="widget-title">Manage Services</h5>								
+									<div class="widget-toolbar">
+										<a href="#" data-action="reload" style="visibility:hidden;">
+											<i class="ace-icon fa fa-refresh"></i>
+										</a>
+	
+										<a href="#" id="widgetcollapsemanageservices" data-action="collapse">
+											<i class="ace-icon fa fa-chevron-down"></i>
+										</a>
+									</div>
+								</div>																		
+						
+								<div class="widget-body">
+									<div class="widget-main no-padding">
+										<c:if test="${not empty error}">
+											<div class="error">${error}</div>
+										</c:if>
+										<c:if test="${not empty msg}">
+											<div class="msg">${msg}</div>
+										</c:if>
+					
+					                    <form:form id="manageservices-form" method="post" action="manageservicesform" modelAttribute="serviceprovider" name="serviceprovider">				
+					                        <div class="form-group" style="margin-left:10px;margin-top:10px;">
+					                            <div class="clearfix">
+													<form:select class="col-sm-11 hideearrow selectof" path="types" name="types" id="types" multiple="">
+											            <option value="">Pick Service Type..</option>
+													<c:forEach items="${serviceprovider.types}" var="servicetype">
+											            <option value="${servicetype}"><c:out value="${servicetype}" /></option>
+													</c:forEach>																				
+													</form:select>							                                
+												</div>
+											</div>
+					                        <div class="form-group">
+					                            <div class="clearfix">
+					                                <form:input type="text" path="name" placeholder="Enter service name" id="name" class="col-sm-11" 
+					                                style="margin-left:10px;width:90%" disable="true"/>
+					                            </div>
+					                        </div>
+	
+					                        <form:input type="hidden" id="servicesmode" path="mode" />
+
+					                        <div class="form-group" style="margin-top:20px;margin-left:20px;">
+						                        <input type="submit" id="manageservicescreate" path="manageservicescreate" class="btn btn-large btn-primary" value="Create" />	                    
+						                        <input type="submit" id="manageservicesedit" path="manageservicesedit" class="btn btn-large btn-primary" value="Edit" />
+											</div>
+										</form:form>
+									</div>
+								</div> <!-- widgetbody -->
+							</div> <!-- widgetbox -->
+						</div>
+					</div> <!-- row -->					
+				
 				</div><!-- /.page-content-area -->
 			</div><!-- /.page-content -->
 		</div><!-- /.main-content -->
@@ -100,7 +162,6 @@
 <!-- ace scripts -->
 <script src="<c:url value='/resources/js/ace-elements.min.js'/>" ></script>
 <script src="<c:url value='/resources/js/ace.min.js'/>" ></script>
-<script src="<c:url value='/resources/js/spin.min.js'/>" ></script>
 <script src="<c:url value='/resources/js/jquery.gritter.min.js'/>" ></script>
 
 <!-- inline scripts related to this page -->
@@ -156,11 +217,36 @@
             }
         });
        
-		
 		$(":submit").live('click', function() {
+			if (this.id === 'manageservicesedit' || this.id === 'manageservicescreate') {
+				var servicemode = $("#manageservices-form").find('#mode');
+				console.log($(servicemode));
+		    	$(servicemode).val($(this).val());
+			}
+		});
+		
+		$("a").click(function(e){
+		
+		    if ($(this).attr('id') == "widgetcollapsemanageusers") {
+			    $("#manageusers-form").find('input:text, input:password, input:file, select, textarea').val('');
+			    $("#manageusers-form").find('input:radio, input:checkbox').removeAttr('checked').removeAttr('selected');
+		    	$("div").remove('.error');
+		    	$("div").remove('.help-block');
+		    }
 
-		    $('#mode').val($(this).val());
-		});       		       
+		    if ($(this).attr('id') == "widgetcollapsemanageservices") {
+			    $("#manageservices-form").find('input:text, input:password, input:file, select, textarea').val('');
+			    $("#manageservices-form").find('input:radio, input:checkbox').removeAttr('checked').removeAttr('selected');
+				$("#manageserviceswidget").find('.has-error').removeClass();
+				$("#manageserviceswidget").find('.error').removeClass();
+		    }
+
+
+//		    if ($(this).attr('id') == "widgetcollapsemanageservices");
+//				$('#manageservices-form').get(0).reset();	
+
+
+		});		   
        
     })
 </script>
