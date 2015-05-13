@@ -82,7 +82,7 @@ public class AdminController {
 	 
 	@PreAuthorize("hasRole('ROLE_SUPERADMIN')")	
 	@RequestMapping(value = "/admin/manageservicesform", method = RequestMethod.POST)
-    public String servicesprocess(@ModelAttribute(value="serviceprovider") ServiceProviderEntity serviceprovider, Model map, HttpServletRequest request) {
+    public String servicesprocessform(@ModelAttribute(value="serviceprovider") ServiceProviderEntity serviceprovider, Model map, HttpServletRequest request) {
 
 		logger.info("Manager Services Process Form");
 		
@@ -93,31 +93,99 @@ public class AdminController {
 		else
 			request.setAttribute("header", "Manage Services - Edit");
 			
+		User loggeduser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = loggeduser.getUsername();
+		map.addAttribute("username", username);
+		String userphoto = "/resources/images/avatars/" + username + ".jpg";
+		map.addAttribute("userphoto", userphoto);
+		
+
 		// Save model to database
 		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
 		ServiceProviderDAO SPD = (ServiceProviderDAO)context.getBean("ServiceProviderDAO");
-				
+		
+		// This is required as admin form contains both user and service management
+		UserEntity user = new UserEntity();
+		map.addAttribute("user", user);
+		
 		boolean isError = false;
-		ServiceProviderEntity dbServiceProvider = SPD.GetService(serviceprovider.getName(), serviceprovider.getType());
+		ServiceProviderEntity dbServiceProvider = SPD.GetService(serviceprovider.getServicename(), serviceprovider.getType());
+		
 		
 		if ( dbServiceProvider!=null && serviceprovider.getMode().equals("Create")) {
-			String error = "Service: " + serviceprovider.getName() + " already exists!";
-			map.addAttribute("error", error);
+			String error = "Service: " + serviceprovider.getServicename() + " already exists!";
+			map.addAttribute("serviceerror", error);
 			isError = true;
 		}
 		
 		if ( dbServiceProvider==null && (serviceprovider.getMode().equals("Edit"))) {
-			String error = "Service: " + serviceprovider.getName() + " not found!";
-			map.addAttribute("error", error);
+			String error = "Service: " + serviceprovider.getServicename() + " not found!";
+			map.addAttribute("serviceerror", error);
 			isError = true;
 		}
 		
 		if (isError)
 			return "admin/index";			
-
+		
+		if ( dbServiceProvider==null && serviceprovider.getMode().equals("Create")) {
+			// Set the type
+			PlnvkConstants constants = new PlnvkConstants();
+			serviceprovider.setType((short)constants.getServiceIndex(serviceprovider.getTypestr()));
+			map.addAttribute("serviceprovider", serviceprovider);
+		}
+		
+		if ( dbServiceProvider!=null && (dbServiceProvider.getMode().equals("Edit"))) {
+			dbServiceProvider.setMode("Edit");
+			map.addAttribute("serviceprovider", dbServiceProvider);
+		}
+		
 		return "admin/manageservicesform";
 	}
 			
+	/**
+	 * Manage users for an org
+	 * @throws URISyntaxException **/
+	 
+	@PreAuthorize("hasRole('ROLE_SUPERADMIN')")	
+	@RequestMapping(value = "/admin/manageservices", method = RequestMethod.POST)
+    public String manageservices(@ModelAttribute(value="serviceprovider") ServiceProviderEntity serviceprovider, HttpServletRequest request, Model map) {
+		
+		logger.info("Manage Services");
+		
+		request.setAttribute("title", "Planovik Signup - Confirmation");		
+		
+		// Record admin who created/edited/modifyed
+		User loggeduser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		serviceprovider.setCreatedby(loggeduser.getUsername());
+		serviceprovider.setUpdatedby(loggeduser.getUsername());
+        String username = loggeduser.getUsername();
+		map.addAttribute("username", username);
+		String userphoto = "/resources/images/avatars/" + username + ".jpg";
+		map.addAttribute("userphoto", userphoto);
+		
+		// This is required as admin form contains both user and service management
+		UserEntity user = new UserEntity();
+		map.addAttribute("user", user);
+		
+		// Save model to database
+		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
+		ServiceProviderDAO SPD = (ServiceProviderDAO)context.getBean("ServiceProviderDAO");	
+		String dbresult = SPD.ManageService(serviceprovider);
+		PlnvkConstants pc = new PlnvkConstants();
+		serviceprovider.setTypes(pc.getServicetype());
+
+		if (dbresult.matches("Success")) {
+			map.addAttribute("servicemsg", "Service manage operation was successful!");
+			return "admin/index";
+		}
+		else {
+			map.addAttribute("serviceerror", dbresult);
+			return "admin/manageservicesform";
+		}
+
+	}
+		
+	
 	/**
 	 * Manage users for an org
 	 * @throws URISyntaxException **/
@@ -128,6 +196,9 @@ public class AdminController {
 
 		logger.info("Manager Users Process Form");
 		
+		request.setAttribute("title", "Planovik Admin - Home");
+		request.setAttribute("header", "Admin Home");	
+				
 		request.setAttribute("title", "Planovik Admin Manage User");
 		if (user.getMode().equals("Create"))
 			request.setAttribute("header", "Manage Users - Create");
@@ -136,6 +207,16 @@ public class AdminController {
 			
 		map.addAttribute("phonecode", "+91");	
 		
+		User loggeduser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = loggeduser.getUsername();
+		map.addAttribute("username", username);
+		String userphoto = "/resources/images/avatars/" + username + ".jpg";
+		map.addAttribute("userphoto", userphoto);
+
+		// This is required as admin form contains both user and service management
+		ServiceProviderEntity spe = new ServiceProviderEntity();
+		map.addAttribute("serviceprovider", spe);
+
 		// Save model to database
 		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
 		UserEntityDAO UED = (UserEntityDAO)context.getBean("UserEntityDAO");
@@ -147,20 +228,20 @@ public class AdminController {
 		
 		if ( dbUser!=null && user.getMode().equals("Create")) {
 			String error = "User: " + user.getUsername() + " already exists!";
-			map.addAttribute("error", error);
+			map.addAttribute("usererror", error);
 			isError = true;
 		}
 		
 		// Error if account is disabled
 		if ( dbUser!=null && user.getMode().equals("Edit") && dbUser.isEnabled()==false) {
 			String error = "User account: " + user.getUsername() + " is permanently disabled!";
-			map.addAttribute("error", error);
+			map.addAttribute("usererror", error);
 			isError = true;
 		}
 		
 		if ( dbUser==null && (user.getMode().equals("Edit"))) {
 			String error = "User: " + user.getUsername() + " not found!";
-			map.addAttribute("error", error);
+			map.addAttribute("usererror", error);
 			isError = true;
 		}
 		
@@ -170,7 +251,7 @@ public class AdminController {
 		if ( dbUser!=null && (user.getMode().equals("Disable"))) {
 			UED.DeleteUser(user.getUsername());
 			String msg = "User: " + user.getUsername() + " was successfully disabled.";
-			map.addAttribute("msg", msg);
+			map.addAttribute("usermsg", msg);
 			return "admin/index";
 		}
 		
@@ -212,7 +293,15 @@ public class AdminController {
 		// Record admin who created/edited/modifyed
 		User loggeduser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		user.setCreatedbyusername(loggeduser.getUsername());
+        String username = loggeduser.getUsername();
+		map.addAttribute("username", username);
+		String userphoto = "/resources/images/avatars/" + username + ".jpg";
+		map.addAttribute("userphoto", userphoto);
 		//user.setReportstousername(loggeduser.getUsername());
+
+		// This is required as admin form contains both user and service management
+		ServiceProviderEntity spe = new ServiceProviderEntity();
+		map.addAttribute("serviceprovider", spe);
 		
 		// Save model to database
 		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
@@ -220,36 +309,11 @@ public class AdminController {
 		String dbresult = UED.ManageUser(user);
 
 		if (dbresult.matches("Success"))
-			map.addAttribute("msg", "User manage operation was successful!");
+			map.addAttribute("usermsg", "User manage operation was successful!");
 		else
-			map.addAttribute("error", dbresult);
+			map.addAttribute("usererror", dbresult);
 			
 		return "admin/index";
 	}
 		
-	/**
-	 * Manage users for an org
-	 * @throws URISyntaxException **/
-	 
-	@PreAuthorize("hasRole('ROLE_SUPERADMIN')")	
-	@RequestMapping(value = "/admin/manageservices", method = RequestMethod.POST)
-    public String processservice(@ModelAttribute(value="serviceprovider") ServiceProviderEntity serviceprovider, HttpServletRequest request, BindingResult result, Model map) {
-		
-		logger.info("Manager Services process");
-		
-		request.setAttribute("title", "Planovik Admin - Process Service");
-		
-		// Save model to database
-		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
-		ServiceProviderDAO SPD = (ServiceProviderDAO)context.getBean("ServiceProviderDAO");	
-		String dbresult = SPD.ManageService(serviceprovider);
-
-		if (dbresult.matches("Success"))
-			map.addAttribute("msg", "Service request was processed successfully!");
-		else
-			map.addAttribute("error", dbresult);
-			
-		return "admin/index";
-	}
-
 }

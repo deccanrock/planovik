@@ -24,6 +24,8 @@
     <bean id="ActivityMasterDAO" class="com.deccanrock.planovik.service.dao.ActivityMasterDAO" />
     <bean id="ActivityCodesEntityDAO" class="com.deccanrock.planovik.service.dao.ActivityCodesEntityDAO" />	
     <bean id="ActivityEntityDAO" class="com.deccanrock.planovik.service.dao.ActivityEntityDAO" />
+    <bean id="ServiceProviderDAO" class="com.deccanrock.planovik.service.dao.ServiceProviderDAO" />
+
     <bean id="applicationContextProvider" class="com.deccanrock.planovik.controller.ApplicationContextProvider"></bean>
 	
 	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">

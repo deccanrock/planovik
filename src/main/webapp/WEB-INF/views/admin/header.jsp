@@ -173,7 +173,7 @@
 		}
 
 		.error {
-			padding: 5px;
+			padding: 8px;
 			margin-bottom: 5px;
 			border: 1px solid transparent;
 			border-radius: 4px;
@@ -183,8 +183,8 @@
 		}
 		 
 		.msg {
-			padding: 15px;
-			margin-bottom: 20px;
+			padding: 8px;
+			margin-bottom: 5px;
 			border: 1px solid transparent;
 			border-radius: 4px;
 			color: #31708f;

@@ -238,8 +238,69 @@ public class ServiceProviderDAO extends JdbcDaoSupport implements
 
     @Override
 	public String ManageService(ServiceProviderEntity serviceprovider) {
-		// TODO Auto-generated method stub
-		return null;
+
+    	SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(getJdbcTemplate())
+    	.withProcedureName("sp_manageservice");
+    	     	 
+    	Map<String, Object> inParamMap = new HashMap<String, Object>();
+		inParamMap.put("inservicename", serviceprovider.getServicename());
+		
+        // 0=Airlines, 1=Hotels, 2=Transport, 3=Other
+		if (serviceprovider.getType() == 0) {
+			inParamMap.put("iniatacode", serviceprovider.getIatacode());
+			inParamMap.put("indomesticonly", serviceprovider.getDomesticonly());
+			inParamMap.put("infullservice", serviceprovider.getFullservice());			
+		}
+		else {
+			inParamMap.put("iniatacode", "0");
+			inParamMap.put("indomesticonly", "0");
+			inParamMap.put("infullservice", "0");			
+		}
+		
+		if (serviceprovider.getType() == 2)
+			inParamMap.put("incoverage", serviceprovider.getCoverage());			
+		else	
+			inParamMap.put("incoverage", "0");
+		
+		if (serviceprovider.getType() == 3)
+			inParamMap.put("indescription", serviceprovider.getDescription());			
+		else	
+			inParamMap.put("indescription", "");
+
+		inParamMap.put("inid", serviceprovider.getId());		
+		inParamMap.put("incity", serviceprovider.getCity());		
+		inParamMap.put("incountry", serviceprovider.getCountry());		
+		inParamMap.put("incontactname", serviceprovider.getContactname());		
+		inParamMap.put("incontactphone", serviceprovider.getContactphone());		
+		inParamMap.put("incontactemail", serviceprovider.getContactemail());		
+		inParamMap.put("incontactwebsite", serviceprovider.getContactwebsite());		
+		inParamMap.put("inrating", serviceprovider.getRating());
+		inParamMap.put("mode", serviceprovider.getMode());
+		inParamMap.put("type", serviceprovider.getType());
+		inParamMap.put("inaddlinfo", serviceprovider.getAddlinfo());
+
+		
+		if (serviceprovider.getMode().contentEquals("Create")) {
+			inParamMap.put("increatedby", serviceprovider.getCreatedby());
+			inParamMap.put("inupdatedby", serviceprovider.getCreatedby());		
+		}
+		
+		if (serviceprovider.getMode().contentEquals("Update"))		
+			inParamMap.put("inupdatedby", serviceprovider.getUpdatedby());
+				
+    	SqlParameterSource in = new MapSqlParameterSource(inParamMap);
+
+		String result;
+    	try {    	
+			Map<String, Object> simpleJdbcCallResult = simpleJdbcCall.execute(in);
+			// No exception means insert/update/delete happened
+			result = "Success";
+		} catch (Exception ex) {
+		    result = ex.getMessage();
+		} 					
+		
+    	return result;
+
 	}
 
 }

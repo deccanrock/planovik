@@ -16,8 +16,8 @@ public class ServiceProviderEntity {
     @GeneratedValue
     private Integer id;
         
-    @Column(name="name")    
-	private String name;
+    @Column(name="servicename")    
+	private String servicename;
 
     // For Airlines only
     @Column(name="iatacode")    
@@ -59,8 +59,8 @@ public class ServiceProviderEntity {
     private Integer coverage;
     
     // For Other services only
-    @Column(name="desc")
-    private String desc;    
+    @Column(name="description")
+    private String description;    
     
     @Column(name="addlinfo")    
     private String addlinfo;    
@@ -95,12 +95,12 @@ public class ServiceProviderEntity {
 		this.id = id;
 	}
 		
-	public String getName() {
-		return name;
+	public String getServicename() {
+		return servicename;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setServicename(String servicename) {
+		this.servicename = servicename;
 	}
 		
 	public String getCity() {
@@ -167,6 +167,13 @@ public class ServiceProviderEntity {
 		this.mode = mode;
 	}
 	
+	public String getIatacode() {
+		return this.iatacode;
+	}
+	
+	public void setIatacode(String iatacode) {
+		this.iatacode = iatacode;
+	}
 
 	public Integer getFullservice() {
 		return fullservice;
@@ -200,12 +207,12 @@ public class ServiceProviderEntity {
 		this.coverage = coverage;
 	}
 		
-	public String getDesc() {
-		return desc;
+	public String getDescription() {
+		return description;
 	}
 	
-	public void setDesc(String desc) {
-		this.desc = desc;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public String getAddlinfo() {

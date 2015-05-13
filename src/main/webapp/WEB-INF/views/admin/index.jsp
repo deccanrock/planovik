@@ -40,11 +40,11 @@
 						
 								<div class="widget-body">
 									<div class="widget-main no-padding">
-										<c:if test="${not empty error}">
-											<div class="error">${error}</div>
+										<c:if test="${not empty usererror}">
+											<div class="error">${usererror}</div>
 										</c:if>
 										<c:if test="${not empty msg}">
-											<div class="msg">${msg}</div>
+											<div class="msg">${usermsg}</div>
 										</c:if>
 					
 					                    <form:form id="manageusers-form" method="post" action="manageusersform" modelAttribute="user" name="user">				
@@ -85,17 +85,17 @@
 						
 								<div class="widget-body">
 									<div class="widget-main no-padding">
-										<c:if test="${not empty error}">
-											<div class="error">${error}</div>
+										<c:if test="${not empty serviceerror}">
+											<div class="error">${serviceerror}</div>
 										</c:if>
-										<c:if test="${not empty msg}">
-											<div class="msg">${msg}</div>
+										<c:if test="${not empty servicemsg}">
+											<div class="msg">${servicemsg}</div>
 										</c:if>
 					
 					                    <form:form id="manageservices-form" method="post" action="manageservicesform" modelAttribute="serviceprovider" name="serviceprovider">				
 					                        <div class="form-group" style="margin-left:10px;margin-top:10px;">
 					                            <div class="clearfix">
-													<form:select class="col-sm-11 hideearrow selectof" path="types" name="types" id="types" multiple="">
+													<form:select class="col-sm-6 hideearrow selectof" path="types" name="types" id="types" multiple="">
 											            <option value="">Pick Service Type..</option>
 													<c:forEach items="${serviceprovider.types}" var="servicetype">
 											            <option value="${servicetype}"><c:out value="${servicetype}" /></option>
@@ -105,16 +105,17 @@
 											</div>
 					                        <div class="form-group">
 					                            <div class="clearfix">
-					                                <form:input type="text" path="name" placeholder="Enter service name" id="name" class="col-sm-11" 
-					                                style="margin-left:10px;width:90%" disable="true"/>
+					                                <form:input type="text" path="servicename" placeholder="Enter service name" id="servicename" class="col-sm-11" 
+					                                style="margin-left:10px;width:90%" disabled="disabled" />
 					                            </div>
 					                        </div>
 	
 					                        <form:input type="hidden" id="servicesmode" path="mode" />
+					                        <form:input type="hidden" id="typestr" path="typestr" />
 
 					                        <div class="form-group" style="margin-top:20px;margin-left:20px;">
-						                        <input type="submit" id="manageservicescreate" path="manageservicescreate" class="btn btn-large btn-primary" value="Create" />	                    
-						                        <input type="submit" id="manageservicesedit" path="manageservicesedit" class="btn btn-large btn-primary" value="Edit" />
+						                        <input type="submit" id="manageservicescreate" path="manageservicescreate" class="btn btn-primary" value="Create" disabled />	                    
+						                        <input type="submit" id="manageservicesedit" path="manageservicesedit" class="btn btn-primary" value="Edit" disabled />
 											</div>
 										</form:form>
 									</div>
@@ -218,12 +219,16 @@
         });
        
 		$(":submit").live('click', function() {
-			if (this.id === 'manageservicesedit' || this.id === 'manageservicescreate') {
-				var servicemode = $("#manageservices-form").find('#mode');
-				console.log($(servicemode));
-		    	$(servicemode).val($(this).val());
+			var btnid = $(this).attr('id');
+			if (btnid == 'manageservicescreate' || btnid == 'manageservicesedit') {
+			    $('#servicesmode').val($(this).val());
+			    $('#typestr').val($('#types').val());
+			} 
+			else {
+			    $('#usersmode').val($(this).val());					
 			}
-		});
+			
+		}); 
 		
 		$("a").click(function(e){
 		
@@ -241,11 +246,19 @@
 				$("#manageserviceswidget").find('.error').removeClass();
 		    }
 
+		});		   
 
-//		    if ($(this).attr('id') == "widgetcollapsemanageservices");
-//				$('#manageservices-form').get(0).reset();	
-
-
+		$('#types').change(function() {
+			if ($('#types').val() ==  '') {
+				$('#servicename').prop( "disabled", true );
+				$('#manageservicesedit').prop( "disabled", true );
+				$('#manageservicescreate').prop( "disabled", true );			
+			}
+			else {
+				$('#manageservicesedit').prop( "disabled", false );
+				$('#manageservicescreate').prop( "disabled", false );			
+				$('#servicename').prop( "disabled", false );			
+			}
 		});		   
        
     })

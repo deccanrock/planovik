@@ -123,6 +123,7 @@ public class PlnvkConstants {
 	
 	private final List <String> servicetype = Arrays.asList("Airlines", "Hotels", "Transport", "Other");
 	public List<String> getServicetype() { return servicetype; }
+	public int getServiceIndex(String servicename) { return servicetype.indexOf(servicename); }
 
     // 0=city transfers, 1=intercity
 	private final List <String> transportcoverage = Arrays.asList("cityonly", "intercity");
