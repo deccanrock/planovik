@@ -41,7 +41,7 @@ public class TravelActivityMapper implements RowMapper<TravelActivityEntity> {
 
 		travel.setItinnum(rs.getInt("itinnum"));
 
-		travel.setMasteractid(rs.getShort("masteractid"));
+		// travel.setMasteractid(rs.getShort("masteractid"));
 
 		travel.setTzoffset(this.getTzoffset());
 		
@@ -117,7 +117,7 @@ public class TravelActivityMapper implements RowMapper<TravelActivityEntity> {
 			
 			travel.setPax(rs.getInt("pax"));
 			travel.setMode(rs.getInt("mode"));
-			travel.setGroupnum(rs.getInt("groupnum"));
+			// travel.setGroupnum(rs.getInt("groupnum"));
 			
 			travel.setVersion(rs.getInt("version"));
 			

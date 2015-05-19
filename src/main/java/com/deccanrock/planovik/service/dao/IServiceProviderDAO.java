@@ -19,4 +19,5 @@ public interface IServiceProviderDAO {
 	public String UpdateUserProfile (int id, String pass) throws IOException, SQLException;	
 	public ServiceProviderEntity GetService(String name, short type) throws IOException, SQLException;
 	public String ManageService(ServiceProviderEntity serviceprovider) throws IOException, SQLException;
+	public boolean ServiceExists(String serviceName, short serviceType) throws IOException, SQLException;
 }

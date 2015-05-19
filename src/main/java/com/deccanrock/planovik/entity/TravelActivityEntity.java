@@ -24,8 +24,8 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
     @Column(name="itinnum")    
     private int itinnum;
     
-    @Column(name="masteractid")    
-    private short masteractid;    
+//    @Column(name="masteractid")    
+//    private short masteractid;    
     
     @Column(name="pax")    
     private Integer pax;
@@ -189,7 +189,8 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
 	public void setItinnum(int itinnum) {
 		this.itinnum = itinnum;
 	}
-	
+
+/*
 	public short getMasteractid() {
 		return masteractid;
 	}
@@ -197,7 +198,7 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
 	public void setMasteractid(short masteractid) {
 		this.masteractid = masteractid;
 	}
-
+*/
 	
 	public Integer getPax() {
 		return pax;

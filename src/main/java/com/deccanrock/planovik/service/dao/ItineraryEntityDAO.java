@@ -14,7 +14,6 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
@@ -25,11 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.deccanrock.planovik.entity.ActivityMasterActEntity;
 import com.deccanrock.planovik.entity.ActivityMasterEntity;
 import com.deccanrock.planovik.entity.ItineraryEntity;
-import com.deccanrock.planovik.entity.OrgEntity;
-import com.deccanrock.planovik.entity.UserLoginAttempts;
 import com.deccanrock.planovik.service.ActivityMasterActMapper;
 import com.deccanrock.planovik.service.ItineraryEntityMapper;
-import com.deccanrock.planovik.service.OrgDetailsMapper;
 import com.deccanrock.planovik.service.utils.TimeFormatter;
 import com.deccanrock.planovik.constants.PlnvkConstants;
  
@@ -425,6 +421,7 @@ public class ItineraryEntityDAO extends JdbcDaoSupport implements IItneraryEntit
 	    		ame.setPax(pax);
 		}
 		
+		/*
 		if (simpleJdbcCallResult.get("outgroupnum") != null) {				
 		    int groupnum = (Integer) simpleJdbcCallResult.get("outgroupnum");
 	    	if (groupnum == 0)
@@ -432,10 +429,10 @@ public class ItineraryEntityDAO extends JdbcDaoSupport implements IItneraryEntit
 	    	else
 	    		ame.setGroupnum(groupnum);
 		}
-		
+		*/
 		
 		// *TO-DO* For now default to Group 1, change to handle multiple groups
-		ame.setGroupnum(1);
+		//ame.setGroupnum(1);
 		
 		// Set master activity names		
 		simpleJdbcCall = new SimpleJdbcCall(dbtemplate).withProcedureName("sp_getmasteractivityactdet");

@@ -20,8 +20,8 @@ public class HotelActivityEntity extends Object implements Comparable<HotelActiv
     @Column(name="itinnum")    
     private int itinnum;
     
-    @Column(name="masteractid")    
-    private short masteractid;    
+//    @Column(name="masteractid")    
+//    private short masteractid;    
     
     @Column(name="actname")    
 	private String actname;
@@ -179,6 +179,7 @@ public class HotelActivityEntity extends Object implements Comparable<HotelActiv
 		this.itinnum = itinnum;
 	}
 	
+/*	
 	public short getMasteractid() {
 		return masteractid;
 	}
@@ -187,7 +188,7 @@ public class HotelActivityEntity extends Object implements Comparable<HotelActiv
 		this.masteractid = masteractid;
 	}
 
-	
+*/	
 	public Integer getPax() {
 		return pax;
 	}

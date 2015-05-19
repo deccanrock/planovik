@@ -618,6 +618,7 @@
 				if ($("#accountlockunlock").prop("checked")) {
 					$('#togglelock').val(1);
 				}
+
 				if ($("#credentialsexpired").prop("checked"))
 					$("#iscredentialsexpired").val(1);
 	

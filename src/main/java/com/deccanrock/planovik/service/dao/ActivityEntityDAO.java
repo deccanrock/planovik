@@ -102,10 +102,10 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntity
 			inParamMap.put("inmode", Integer.toString(travelactivity.getMode()));
 		
 		
-		if (travelactivity.getGroupnum() == null)
-			inParamMap.put("ingroupnum", 1); // default			
-		else
-			inParamMap.put("ingroupnum", travelactivity.getGroupnum().intValue());
+		//if (travelactivity.getGroupnum() == null)
+		//	inParamMap.put("ingroupnum", 1); // default			
+		//else
+		//	inParamMap.put("ingroupnum", travelactivity.getGroupnum().intValue());
 
 		inParamMap.put("invesselconame", "");
 		inParamMap.put("inbookingno", "");
@@ -218,7 +218,6 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntity
 		inParamMap.put("incommentsinternal", travelactivity.getCommentsinternal());
 		inParamMap.put("incommentsexternal", travelactivity.getCommentsexternal());
 		
-		inParamMap.put("inmasteractid", travelactivity.getMasteractid());
 		
 		SqlParameterSource in = new MapSqlParameterSource(inParamMap);
 		
@@ -349,7 +348,9 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntity
 	}
 
 	@Override
-	public String DeleteActivity(int activityid, int activityidpair, int itinnum, int type, int version, int groupnum) throws IOException, SQLException {
+	// public String DeleteActivity(int activityid, int activityidpair, int itinnum, int type, int version, int groupnum) throws IOException, SQLException {
+	public String DeleteActivity(int activityid, int activityidpair, int itinnum, int type, int version) throws IOException, SQLException {
+
 		// TODO Auto-generated method stub
 		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(getJdbcTemplate())
 		.withProcedureName("sp_delete_activity");
@@ -361,7 +362,7 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntity
 		inParamMap.put("initinnum", itinnum);		
 		inParamMap.put("intype", type);
 		inParamMap.put("inversion", version);
-		inParamMap.put("ingroupnum", groupnum);
+		//inParamMap.put("ingroupnum", groupnum);
 
 		String result;
 		

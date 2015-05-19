@@ -109,6 +109,9 @@ public class AdminController {
 		map.addAttribute("user", user);
 		
 		boolean isError = false;
+		// Set the type
+		PlnvkConstants constants = new PlnvkConstants();
+		serviceprovider.setType((short)constants.getServiceIndex(serviceprovider.getTypestr()));		
 		ServiceProviderEntity dbServiceProvider = SPD.GetService(serviceprovider.getServicename(), serviceprovider.getType());
 		
 		
@@ -128,9 +131,6 @@ public class AdminController {
 			return "admin/index";			
 		
 		if ( dbServiceProvider==null && serviceprovider.getMode().equals("Create")) {
-			// Set the type
-			PlnvkConstants constants = new PlnvkConstants();
-			serviceprovider.setType((short)constants.getServiceIndex(serviceprovider.getTypestr()));
 			map.addAttribute("serviceprovider", serviceprovider);
 		}
 		

@@ -24,8 +24,8 @@ public class ActivityMasterEntity
 	@Column(name="pax")    
 	private int pax;
 	
-	@Column(name="groupnnum")    
-	private int groupnum;
+//	@Column(name="groupnnum")    
+//	private int groupnum;
 	
 	private int numtourdays;
     
@@ -90,6 +90,7 @@ public class ActivityMasterEntity
 		this.pax = pax;
 	}
 
+	/*
 	public Integer getGroupnum() {
 		return groupnum;
 	}
@@ -97,7 +98,8 @@ public class ActivityMasterEntity
 	public void setGroupnum(Integer groupnum) {
 		this.groupnum = groupnum;
 	}
-
+	*/
+	
 	public ArrayList <Integer> getDaywiseactivitylistcnt() {
 		return daywiseactivitycntlist;
 	}

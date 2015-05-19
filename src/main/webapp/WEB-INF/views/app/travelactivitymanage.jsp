@@ -37,6 +37,7 @@
 								</div>
 								<div class='col-xs-8'>
 								
+									<!--
 									<div class="control-group">								
 										<div class="radio">
 											<label>
@@ -49,6 +50,7 @@
 											</label>
 										</div>
 									</div>
+									-->
 								</div>
 							</div>								
 						</div>									
@@ -64,16 +66,6 @@
 										<strong><i class="ace-icon fa fa-times"></i></strong>
 										<span id="errorspan">${error}</span>
 									</div>										
-								</c:if>			
-	
-								<c:if test="${travelactivity.masteractid > 0}">
-							        <div class="row">									    																					    
-										<div class='col-xs-10'>	
-										    <div class="form-group" style="margin-left:6px;">
-										        <div id="masteractdates" class="clearfix"></div>
-											</div>							        
-										</div>			
-									</div> <!-- row -->
 								</c:if>			
 						        
 						        <div class="row">									    																					    
@@ -132,7 +124,6 @@
 				
 								<form:input id="day" type="hidden" path="day" />
 								<form:input id="itinnum" type="hidden" path="itinnum" />
-								<form:input id="masteractid" type="hidden" path="masteractid" />
 								<form:input id="version" type="hidden" path="version" />
 								<form:input id="tzoffset" type="hidden" path="tzoffset" />
 								<form:input id="activityid" type="hidden" path="activityid" />
@@ -1294,23 +1285,8 @@
 			$('#itinnum').val(${travelactivity.itinnum});
 			$('#version').val(${travelactivity.version});
 			$('#activityid').val(${travelactivity.activityid});
-			$('#groupnum').val(${travelactivity.groupnum});
 			$('#tzoffset').val(${travelactivity.tzoffset});
-			$('#masteractid').val(${travelactivity.masteractid});
 			
-			if (window.parent.masteractarr == undefined || window.parent.masteractarr.length == 0 || $('#masteractid').val() == 0)
-				$( "#radiopom" ).prop( "disabled", true );
-				
-			if ($('#masteractid').val() > 0)
-				$( "#radioind" ).prop( "disabled", true );
-
-			if ($('#masteractid').val() == 0)
-				$( "#radioind" ).prop( "checked", true );
-			else {
-				$( "#radiopom" ).prop( "checked", true );
-			  	var masteractspan = "<span>" + window.parent.getMasterActDetails($('#masteractid').val(), window.parent.masteractarr) + "</span>";
-        	  	$(masteractspan).appendTo('#masteractdates');			  				
-			}
 							
 			$("form input:radio").change(function () {
 			    if ($(this).val() == "0") {

@@ -12,5 +12,6 @@ public interface IActivityEntityDAO {
 	public List<TravelActivityEntity> getTravelActivities (int itinnum, int version, short tzoffset) throws IOException, SQLException;
 	public List<TravelActivityEntity> getActivitiesDetForType(int itinnum, int version, short tzoffset, short type) throws IOException, SQLException;
 	Object GetActivityDetails(int activityid, int type, short tzoffset) throws IOException, SQLException;
-	String DeleteActivity(int activityid, int activityidpair, int itinnum, int type, int version, int groupnum) throws IOException, SQLException;
+	// String DeleteActivity(int activityid, int activityidpair, int itinnum, int type, int version, int groupnum) throws IOException, SQLException;
+	String DeleteActivity(int activityid, int activityidpair, int itinnum, int type, int version) throws IOException, SQLException;
 }

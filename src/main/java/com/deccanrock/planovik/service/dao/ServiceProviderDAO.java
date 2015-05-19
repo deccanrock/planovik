@@ -11,6 +11,7 @@ import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.deccanrock.planovik.entity.ServiceProviderEntity;
 import com.deccanrock.planovik.entity.UserEntity;
 import com.deccanrock.planovik.security.HashCode;
+import com.deccanrock.planovik.service.ServiceProviderMapper;
 import com.deccanrock.planovik.service.UserEntityMapper;
  
 @Component
@@ -231,10 +233,49 @@ public class ServiceProviderDAO extends JdbcDaoSupport implements
 	}
 
     @Override
-	public ServiceProviderEntity GetService(String name, short type) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public ServiceProviderEntity GetService(String servicename, short type) {
+    	String SQL = "Call sp_getservice(" + "'" + servicename + "'," + type + ");";
+
+		JdbcTemplate dbtemplate = new JdbcTemplate(dataSource);  	
+
+		ServiceProviderMapper spm = new ServiceProviderMapper();
+		spm.setType(type);
+
+		List <ServiceProviderEntity> serviceproviderentities = null;
+    	try {    	
+    		serviceproviderentities = dbtemplate.query(SQL, spm);
+    	} catch (Exception ex) {
+    		serviceproviderentities = null;
+    	} 					
+ 		
+    	if (serviceproviderentities == null)
+    		return null;
+    	else
+    		return serviceproviderentities.get(0); 	     	
+    }
+    
+    @Override
+	public boolean ServiceExists(String serviceName, short serviceType) {
+    	// JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);   	
+		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(getJdbcTemplate())
+		.withProcedureName("sp_service_exists");
+
+		Map<String, Object> inParamMap = new HashMap<String, Object>();
+
+		inParamMap.put("inservicename", serviceName);
+		inParamMap.put("type", serviceType);
+
+		SqlParameterSource in = new MapSqlParameterSource(inParamMap);
+
+		Map<String, Object> simpleJdbcCallResult = simpleJdbcCall.execute(in);
+		
+		String returnedservice = (String) simpleJdbcCallResult.get("serviceid").toString();
+		
+		if (returnedservice.matches("0"))
+			return false;
+		else
+			return true;
+	}    
 
     @Override
 	public String ManageService(ServiceProviderEntity serviceprovider) {

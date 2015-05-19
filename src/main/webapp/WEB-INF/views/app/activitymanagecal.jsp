@@ -96,25 +96,40 @@
 			<div class="main-content">
 				<div class="page-content">
 					<div class="page-content-area">
-						<div class="page-header">
-							<h1 >
+						<div class="page-header pull left">
+							<!-- #section:settings.box -->
+							<div class="ace-settings-container" id="master-act-container" >
+								<div class="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn">
+									<i class="ace-icon fa fa-cog bigger-150" id="master-act-cog"></i>
+								</div>	
+																		
+								<div class="ace-settings-box" id="ace-settings-box">										
+
+
+								</div><!-- /.ace-settings-box -->
+							</div><!-- /.ace-settings-container -->	
+							<!-- /section:settings.box -->							
+
+							<h1>
 								Itinerary
 								<small>
 									<i class="ace-icon fa fa-angle-double-right"></i>
 									activity &nbsp;&nbsp;&nbsp;
 									<span style="font-size:12px;color:black;">Itinerary (Number: <i>${itinerary.id}</i></span>&nbsp;&nbsp;
 									<span style="font-size:12px;color:black;">Version: <i>${itinerary.version}</i>)</span>&nbsp;&nbsp;
-								    <span style="font-size:12px;color:black;">Activity (Group: <i>${activitymaster.groupnum}</i></span>&nbsp;&nbsp;	
+									<!--
 									<span style="font-size:12px;color:black;" id="activitycntspn">Count: <i>
-									</i>)</span>&nbsp;&nbsp;
+									</i>)</span>-->&nbsp;&nbsp;
 									</small>
 							</h1>
+							
+							
 						</div><!-- /.page-header -->
 						<div class="row" style="margin-left:1px;margin-top:-10px;">
 							<div class="col-xs-12">
 								<!-- PAGE CONTENT BEGINS -->
 								<div class="row">
-									<div class="col-sm-9">
+									<div class="col-sm-9" style="width:85%;">
 										<div class="space"></div>
 
 										<!-- #section:plugins/data-time.calendar -->
@@ -124,134 +139,12 @@
 									</div>
 
 									<div class="space-14"></div>
-									<!-- #section:settings.box -->
-									<div class="ace-settings-container" id="master-act-container" >
-										<div class="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn">
-											<i class="ace-icon fa fa-cog bigger-150" id="master-act-cog"></i>
-										</div>	
-																				
-										<div class="ace-settings-box" id="ace-settings-box">										
-											
-											<div class="pull-left">
-												<h5>Manage Master Activities</h5>
-											</div><!-- /.pull-left -->
-
-											<div id="selectmasteract">
-												<div class="row" style="margin-left:3px;margin-right:5px;">
-													<div class="space-10"></div>
-													<div class="pull-left clearfix">
-														<select class="hideearrow selectof" id="masteractnames" style="width:420px;"></select>
-													</div>											
-												</div>
-												<div class="space-4"></div>
-												<div class="row" style="margin-left:40px;">
-													<div class="pull-left">
-														<h4> or </h4>
-													</div>											
-												</div>
-												<div class="space-4"></div>
-												<div class="row" style="margin-left:3px;">
-													<div class="pull-left">
-														<button type="submit" style="margin-left=20px;" id="masteractnew" class="btn btn-primary" > Create New </button>
-													</div>
-												</div>
-											</div>
-
-											<div class="space-10"></div>
-											
-											<form:form id="masteractform" method="post" modelAttribute="activitymasteract" name="masteractform">											
-														
-						        			<div id="managemasteractgroup">
-						        				<div class="row" style="margin-left:3px;">									    																					    										
-													<div class="space-10"></div>
-
-														<div class="pull-left">
-																<span id="spnnewactname">Specify New Activity Name</span>
-																<span id="spnchangeactname" style="display:none;">Change Activity Name</span>
-															</div>
-														</div>
-												
-														<div class="space-2"></div>
-							        			
-								        				<div class="row" style="margin-left:3px;margin-right:5px;">									    																					    																        				
-										    				<form:input type="text" id="masteractname" name="masteractname" path="masteractname" style="width:420px;"  maxlength="45" />																		        				
-								        				</div>	
-											
-												
-												<div class="space-10"></div>											
-						        			
-						        				<div class="row" style="margin-left:3px;">									    																					    										
-													<div class="pull-left" style="width:48%;">
-														<span>Pick Start Date and Time</span>
-											
-														<div class="space-2"></div>
-						        			
-											            <div class='input-group'>
-															<span class="input-group-addon">
-																<i class="fa fa-calendar bigger-110"></i>
-															</span>															
-															
-											                <input type='text' id="masteractstartdate" name="masteractstartdate" class="form-control" 
-											                	style="z-index:0;width:89%;" />
-											                <form:input type='hidden' id="masteractstartdatestr" path="masteractstartdatestr" name="masteractstartdatestr" />
-											                <form:input type='hidden' id="masteractstartdatelong" name="masteractstartdatelong" path="masteractstartdatelong" />
-											       		</div>
-													</div>
-																				        			
-													<div class="pull-right" style="width:48%;">
-														<span>Pick End Date and Time</span>
-												
-														<div class="space-2"></div>
-								        			
-											            <div class='input-group'>
-															<span class="input-group-addon">
-																<i class="fa fa-calendar bigger-110"></i>
-															</span>					            
-											                <input type='text' id="masteractenddate" name="masteractenddate" class="form-control" 
-											                	style="z-index:0;width:89%;" />
-											                <form:input type='hidden' id="masteractenddatestr" path="masteractenddatestr" name="masteractenddatestr" />
-											                <form:input type='hidden' id="masteractenddatelong" name="masteractenddatelong" path="masteractenddatelong" />
-														</div>
-										       		</div>
-												</div>
-												
-												<div class="space-10"></div>																						
-											
-												<form:input type="hidden" id="itinnum" path="itinnum" value = "${itinerary.id}" />
-												<form:input type="hidden" id="version" path="version" value = "${itinerary.version}" />
-												<form:input type="hidden" id="tzoffset" path="tzoffset" value = "${itinerary.tzoffset}" />
-												<form:input type="hidden" id="masteractid" path="masteractid" value = "0" />														
-												
-												<div class="row" style="margin-left:3px;">
-													<div class="pull-left" style="width:80%;">
-														<a href="" id = "hrefgoback" class="ace-icon fa fa-hand-o-left green" style="text-decoration:none;margin-right:2px;">
-														<i style="margin-right:30px;color:black;">Go Back</i></a>
-														<button type="submit" id="masteractnewsubmit" class="btn btn-primary"> Create </button>
-														<button type="submit" style="display:none;" id="masteracteditsubmit" class="btn btn-primary"> Save </button>
-														<button type="submit" style="display:none;margin-left:20px;" id="masteractdelsubmit" class="btn btn-danger btn-primary"> Delete </button>
-														<div class="error" style="display:none;" id="masteractdelerr">
-															<span>You must delete all coressponding activities before deleting a master.</span>
-														</div>			
-													</div>										
-												</div>
-												<div class="space-10"></div>
-																						
-												
-												</form:form>
-											</div>
-
-										</div><!-- /.ace-settings-box -->
-									</div><!-- /.ace-settings-container -->	
-									<!-- /section:settings.box -->
 									<div class="space-32"></div>
-									<div class="col-sm-3">
+									<div class="col-sm-1">
 										<div class="widget-box transparent scrolltop">
-											<div class="widget-header">
-												<h4>Draggable activities</h4>
-											</div>
 
 											<div class="widget-body">
-												<div class="widget-main no-padding">
+												<div class="widget-main no-padding" style="width:56%;">
 													<div id="external-events">
 													
 														<div class="external-event label-success" data-class="label-success">
@@ -281,8 +174,8 @@
 													</div>
 												</div>
 											</div>
-											<span style="font-size:12px;color:black;">Arrival: <i>${itinerary.startdatestr}</i></span>&nbsp;&nbsp;	
-											<span style="font-size:12px;color:black;">Departure: <i>${itinerary.enddatestr}</i></span>	
+											<span style="font-size:12px;color:black;">Arr: <i>${itinerary.startdatestr}</i></span><br>
+											<span style="font-size:12px;color:black;">Dep: <i>${itinerary.enddatestr}</i></span>	
 										
 										</div>
 									</div>
@@ -371,7 +264,7 @@
 		<!-- inline scripts related to this page -->
 		<script type="text/javascript">
 												
-		var masteractarr = [];
+		// var masteractarr = [];
 		var activitystartdate;
 		var calendar;
 		var modal;
@@ -380,14 +273,14 @@
 							
 		jQuery(function($) {
 		
-			$("#masteractstartdate").change(function(){
-		    	$("#masteractenddate").val($("#masteractstartdate").val());
-			});
+			//$("#masteractstartdate").change(function(){
+		    //	$("#masteractenddate").val($("#masteractstartdate").val());
+			//});
 			
 			
-		    activitycnt = ${activitymaster.countactivityhotel} + ${activitymaster.countactivityother} + ${activitymaster.countactivityvisit} + 
-		    			  ${activitymaster.countactivitytravel} + ${activitymaster.countactivityrental};
-			$('#activitycntspn').html('Count: <i>' + activitycnt + '</i>)');
+		    //activitycnt = ${activitymaster.countactivityhotel} + ${activitymaster.countactivityother} + ${activitymaster.countactivityvisit} + 
+		    //			  ${activitymaster.countactivitytravel} + ${activitymaster.countactivityrental};
+			//$('#activitycntspn').html('Count: <i>' + activitycnt + '</i>)');
 			
 			var defaultDate = formatForCalendar("${itinerary.startdatestr}");
 
@@ -407,8 +300,9 @@
 				},	
 			   events: function(start, end, timezone, callback) {
 
-			    	setMasterActArrInitial(masteractarr);
-					setMasterActArr(masteractarr);
+			    	// setMasterActArrInitial(masteractarr);
+					// setMasterActArr(masteractarr);
+					setItinDays();
 
 					<c:forEach items="${activitylist}" var="activity">
 						var title = "${fn:escapeXml(activity.actname)}";
@@ -437,8 +331,7 @@
 							//idtype = "O";																			
 						}
 					
-						// console.log(${activity});
-						var strid =  "${fn:escapeXml(activity.masteractid)}" + "." + ${activity.activityid} + "." + ${activity.type};
+						var strid =  ${activity.activityid} + "." + ${activity.type};						
 						var activity = {
 							"id": strid,
 							"title": title,
@@ -449,7 +342,6 @@
 							"activityidpair": "${fn:escapeXml(activity.activityidpair)}",
 							"code": "${fn:escapeXml(activity.code)}",
 							"itinnum": "${fn:escapeXml(activity.itinnum)}",
-							"masteractid": "${fn:escapeXml(activity.masteractid)}",
 							"activitystarttimelong": "${fn:escapeXml(activity.activitystarttimelong)}",
 							"actname": "${fn:escapeXml(activity.actname)}",
 							"tzoffset": ${itinerary.tzoffset},
@@ -459,7 +351,6 @@
 							"type": ${activity.type}
 						}
 						
-						updatemasteractivitycount("${fn:escapeXml(activity.masteractid)}", masteractarr);
 					
 						console.log(activity);
 					
@@ -474,16 +365,17 @@
 				droppable: true, // this allows things to be dropped onto the calendar !!!
 				drop: function(date, allDay) { // this function is called when something is dropped
 
-					var masteractid = getMasterActId(masteractarr, date);				
 
 					// Don't render activity if out of range
-					if (!checkActivityInItinRange(date._d.getTime(), masteractid, masteractarr))
-						return false;
+					
+		    		if ( (date._d.getTime() >= ${itinerary.startdatelong} && date._d.getTime() <= ${itinerary.enddatelong}) == false)
+		    			return false;
+					
 					
 					// retrieve the dropped element's stored Event Object
 					var originalEventObject = $(this).data('eventObject');
 					originalEventObject.id = 0;
-					originalEventObject.masteractid = masteractid;
+					// originalEventObject.masteractid = masteractid;
 					originalEventObject.startdatelong = date._d.getTime();
 					
 					// Format for calendar
@@ -513,7 +405,8 @@
 					// Don't render activity if out of range
 					console.log(event); 
 					console.log(delta);
-					if (!checkActivityInItinRange(event.start._d.getTime(), event.masteractid, masteractarr)) {
+//					if (!checkActivityInItinRange(event.start._d.getTime(), event.masteractid, masteractarr)) {
+		    		if (!(date._d.getTime() >= ${itinerary.startdatelong} && date._d.getTime() <= ${itinerary.enddatelong})) {
 						revertFunc();
 						return;
 					}
@@ -780,20 +673,20 @@
 		
 		    $("#master-act-cog").click(function() {
 				if ($('#ace-settings-box').hasClass('ace-settings-box')) {
-					$("#selectmasteract").show();
-					$("#managemasteractgroup").hide();
-					$('#masteractstartdate').val("");														
-					$('#masteractenddate').val("");
-					setMasterActArr(masteractarr);
-					$('#masteractnames').val("0");	
-					$('#masteractname').val("");
-					$("#spnchangeactname").hide();
-					$("#spnnewactname").show();
-					$("#masteracteditsubmit").hide();
-					$("#masteractdelsubmit").hide();
-					$('#masteractdelerr').hide();
-					$("#masteractnewsubmit").show();
-					$(".help-block").hide();	
+					//$("#selectmasteract").show();
+					//$("#managemasteractgroup").hide();
+					//$('#masteractstartdate').val("");														
+					//$('#masteractenddate').val("");
+					//setMasterActArr(masteractarr);
+					//$('#masteractnames').val("0");	
+					//$('#masteractname').val("");
+					//$("#spnchangeactname").hide();
+					//$("#spnnewactname").show();
+					//$("#masteracteditsubmit").hide();
+					//$("#masteractdelsubmit").hide();
+					//$('#masteractdelerr').hide();
+					//$("#masteractnewsubmit").show();
+					//$(".help-block").hide();	
 				}
 				
 				return true;
@@ -867,12 +760,16 @@
 				if (calEvent.id == 0) {
 					// Get Masteractid
 					
-					framesrc = '"travelactivitymanage?itinnum=' + ${itinerary.id} + '&activityid=' +  '0' + '&masteractid=' +  calEvent.masteractid + '&type=' + '0' +
-					            '&tzoffset=' + ${itinerary.tzoffset} + '&eventdrop=' + calEvent.eventdrop + '&startdatelong=' + calEvent.startdatelong + '&version=' + ${itinerary.version} + '&groupnum=' + ${activitymaster.groupnum} + '"';	
+					framesrc = '"travelactivitymanage?itinnum=' + ${itinerary.id} + '&activityid=' +  '0' + '&type=' + '0' +
+					//framesrc = '"travelactivitymanage?itinnum=' + ${itinerary.id} + '&activityid=' +  '0' + '&masteractid=' +  calEvent.masteractid + '&type=' + '0' +
+					            // '&tzoffset=' + ${itinerary.tzoffset} + '&eventdrop=' + calEvent.eventdrop + '&startdatelong=' + calEvent.startdatelong + '&version=' + ${itinerary.version} + '&groupnum=' + ${activitymaster.groupnum} + '"';	
+								'&tzoffset=' + ${itinerary.tzoffset} + '&eventdrop=' + calEvent.eventdrop + '&startdatelong=' + calEvent.startdatelong + '&version=' + ${itinerary.version} + '"';					            
 				}
 				else {
-					framesrc = '"travelactivitymanage?itinnum=' + calEvent.itinnum + '&activityid=' +  calEvent.activityid + '&masteractid=' +  calEvent.masteractid +  '&type=' + calEvent.type +
-				            '&tzoffset=' + calEvent.tzoffset + '&eventdrop=' + calEvent.eventdrop + '&startdatelong=' + calEvent.startdatelong + '&version=' + ${itinerary.version} + '&groupnum=' + ${activitymaster.groupnum} + '"';
+					framesrc = '"travelactivitymanage?itinnum=' + calEvent.itinnum + '&activityid=' +  calEvent.activityid + '&type=' + calEvent.type +
+					// framesrc = '"travelactivitymanage?itinnum=' + calEvent.itinnum + '&activityid=' +  calEvent.activityid + '&masteractid=' +  calEvent.masteractid +  '&type=' + calEvent.type +
+				            // '&tzoffset=' + calEvent.tzoffset + '&eventdrop=' + calEvent.eventdrop + '&startdatelong=' + calEvent.startdatelong + '&version=' + ${itinerary.version} + '&groupnum=' + ${activitymaster.groupnum} + '"';
+				            '&tzoffset=' + calEvent.tzoffset + '&eventdrop=' + calEvent.eventdrop + '&startdatelong=' + calEvent.startdatelong + '&version=' + ${itinerary.version} + '"';
 				}
 				
 				modal =
@@ -888,7 +785,9 @@
 				
 				// T_PIKUPDRP (h - 610), T_BOOK (h - 680)
 
-				var modalend1 = 'frameborder="0" scrolling="no" width="840" onload="onLoadHandler(' + calEvent.masteractid + ');" ></iframe>';
+				// var modalend1 = 'frameborder="0" scrolling="no" width="840" onload="onLoadHandler(' + calEvent.masteractid + ');" ></iframe>';
+				var modalend1 = 'frameborder="0" scrolling="no" width="840" onload="onLoadHandler(' + 0 + ');" ></iframe>';
+				
 				modal = modal.concat(modalend1);
 				
 				var modalend2 = 
@@ -948,17 +847,19 @@
 							
 							$.ajax({type: 'GET', 
 								url: "/app/activity/inactive?" + "activityid=" + calEvent.activityid + "&activityidpair=" + activityidpair + "&itinnum=" + calEvent.itinnum + "&type=" + calEvent.type +
-										"&version=" + ${itinerary.version} + "&groupnum=" + ${activitymaster.groupnum},
+										// "&version=" + ${itinerary.version} + "&groupnum=" + ${activitymaster.groupnum},
+										"&version=" + ${itinerary.version},
 						        success:function(data, textStatus, jqXHR) {
 						        	var result = JSON.parse(data);
 						        	if (result.result == "success") {
 				        				$('#calendar').fullCalendar('removeEvents', calEvent._id);
 					        			activitycnt = activitycnt - 1;
-										updatemasteractivitycount(calEvent.masteractid, masteractarr, 'delete');	
-						        		$('#activitycntspn').html('Count: <i>' + activitycnt + '</i>)');
+										// updatemasteractivitycount(calEvent.masteractid, masteractarr, 'delete');	
+						        		// $('#activitycntspn').html('Count: <i>' + activitycnt + '</i>)');
 	
 						        		if (calEvent.activityidpair > 0 ) {
-						        			var stridpair = calEvent.masteractid + "." + calEvent.activityidpair + "." + calEvent.type;
+						        			// var stridpair = calEvent.masteractid + "." + calEvent.activityidpair + "." + calEvent.type;
+						        			var stridpair = calEvent.activityidpair + "." + calEvent.type;
 						        			console.log(stridpair);
 											var pairevent = $('#calendar').fullCalendar( 'clientEvents', stridpair);
 						        			console.log(pairevent);
@@ -966,7 +867,7 @@
 						        				$('#calendar').fullCalendar('removeEvents', stridpair);
 											else {
 							        			activitycnt = activitycnt - 1;
-												updatemasteractivitycount(calEvent.masteractid, masteractarr, 'delete');												
+												// updatemasteractivitycount(calEvent.masteractid, masteractarr, 'delete');												
 											}
 										}
 										
@@ -1206,6 +1107,66 @@
 	        
 		}
 		
+		function setItinDays() {
+			
+			var numDays = Math.abs(${itinerary.enddatelong} - ${itinerary.startdatelong})/(24*60*60*1000);			
+			
+			var caldate = ${itinerary.startdatelong};
+			var color = "#A0A0A0";
+			for (var i = 0; i < numDays; i++) {
+				var id = "day" + (i+1).toString();
+				var title = "Day " + (i+1).toString();
+				
+				var event = {
+					"id": id,
+					"title": title,
+					"start": caldate,
+					"allDay": "true",
+					"color": color,
+					"type": -1,
+					"editable": false
+				}
+
+				console.log(event);             
+	            $('#calendar').fullCalendar( 'renderEvent', event, 'stick');
+	            caldate = caldate + 24*60*60*1000;
+			}
+		}
+		
+		function setCalendarMasterActivity(mode) {
+			
+			var sdate = new Date(masteractstartdatelong);
+			var edate = new Date(masteractenddatelong);			
+			var color = "#A0A0A0";
+			var event = {
+				"id": masteractid.toString(),
+				"title": masteractname,
+				"start": sdate,
+				"end": edate,
+				"color": color,
+				"type": -1,
+				"editable": false
+			}
+			
+			console.log(event);
+            
+            if (mode == 'update' || mode == 'delete') {
+				 var calevent = $('#calendar').fullCalendar( 'clientEvents', masteractid.toString() );            
+			     
+			     if (mode == 'delete')
+				     $('#calendar').fullCalendar( 'removeEvents', masteractid.toString() );		     
+			     else {
+				     calevent[0].masteractname = masteractname;
+				     calevent[0].start = sdate;
+				     calevent[0].end = edate;			     
+					 $('#calendar').fullCalendar('updateEvent', calevent[0]);			     
+			     }
+				 return;
+            }
+             
+            $('#calendar').fullCalendar( 'renderEvent', event, 'stick');		
+		}
+
 		function checkInnerActivityOverlap (masteractid, newdate, masteractarr) {
 		
 			var newmasteractdate = GetDate(newdate);
@@ -1365,7 +1326,7 @@
 				//idtype = "O";																			
 			}
 		
-			var strid =  data.masteractid + "." + data.activityid + "." + data.type;
+			var strid =  data.activityid + "." + data.type;
 			console.log(strid);
 			var calevent = $('#calendar').fullCalendar( 'clientEvents', strid);
 			console.log(calevent);
@@ -1397,7 +1358,6 @@
 					"activityidpair": data.activityidpair,						
 					"code": data.code,
 					"itinnum": data.itinnum,
-					"masteractid": data.masteractid,
 					"activitystarttimelong": data.activitystarttimelong,
 					"actname": data.actname,
 					"tzoffset": data.tzoffset,
@@ -1406,11 +1366,11 @@
 					"type": data.type
 				}
 				events.push(event);
-				updatemasteractivitycount(event, masteractarr);				
+				// updatemasteractivitycount(event, masteractarr);				
 				$('#calendar').fullCalendar( 'renderEvent', event, 'stick');
 
 				if (data.code == "T_BOOK_RETURN") {
-					var stridpair =  data.masteractid + "." + data.activityidpair + "." + data.type;
+					var stridpair =  data.activityidpair + "." + data.type;
 					var eventpair = {
 						"id": stridpair,
 						"title": data.actname,
@@ -1421,7 +1381,6 @@
 						"activityidpair": data.activityid,						
 						"code": data.code,
 						"itinnum": data.itinnum,
-						"masteractid": data.masteractid,
 						"activitystarttimelong": data.activitystarttimelongpair,
 						"actname": data.actname,
 						"tzoffset": data.tzoffset,
@@ -1430,7 +1389,7 @@
 						"type": data.type
 					}
 					events.push(eventpair);
-					updatemasteractivitycount(eventpair, masteractarr);				
+					//updatemasteractivitycount(eventpair, masteractarr);				
 					$('#calendar').fullCalendar( 'renderEvent', eventpair, 'stick');				
 				}
   			}

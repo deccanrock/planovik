@@ -32,8 +32,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.codehaus.jackson.map.ObjectMapper;
 
-import com.deccanrock.planovik.entity.ActivityMasterActEntity;
-import com.deccanrock.planovik.entity.ActivityMasterEntity;
+
+//import com.deccanrock.planovik.entity.ActivityMasterActEntity;
+//import com.deccanrock.planovik.entity.ActivityMasterEntity;
 import com.deccanrock.planovik.entity.TravelActivityEntity;
 import com.deccanrock.planovik.entity.RentalActivityEntity;
 import com.deccanrock.planovik.entity.ItineraryEntity;
@@ -42,7 +43,6 @@ import com.deccanrock.planovik.entity.UserEntity;
 import com.deccanrock.planovik.location.MaxLocationBO;
 import com.deccanrock.planovik.security.HashCode;
 import com.deccanrock.planovik.service.dao.ActivityEntityDAO;
-import com.deccanrock.planovik.service.dao.ActivityMasterDAO;
 import com.deccanrock.planovik.service.dao.ItineraryEntityDAO;
 import com.deccanrock.planovik.service.dao.UserEntityDAO;
 import com.deccanrock.planovik.service.utils.UriHandler;
@@ -384,58 +384,61 @@ public class AppController {
 		// Record admin who created/edited/modifyed
 		itinerary.setLastupdatedbyusername(username);
 		
-		ActivityMasterEntity ame = null;
+		// ActivityMasterEntity ame = null;
 		// Get master activity for the itinerary since information changes on every save
 		if ( itinerary.getPostbutton().contentEquals("manageitinerary")) {
 			ItineraryEntity itinerarydb = null;			
-			itinerarydb = IED.SaveItinerary(itinerary);
+			// itinerarydb = IED.SaveItinerary(itinerary);
+			itinerary = IED.SaveItinerary(itinerary);
 			map.addAttribute("itinerary", itinerarydb);
 		
-			ame = IED.GetActivityMaster(itinerarydb);
-			ame.setItinnum(itinerarydb.getId());
-			ame.setGroupnum(1); // set to 1 for testing
-			ame.setVersion(itinerarydb.getVersion());
-			ame.setTzoffset(itinerarydb.getTzoffset());
-			ame.setPax(itinerarydb.getNumtravellers());
+			//ame = IED.GetActivityMaster(itinerarydb);
+			//ame.setItinnum(itinerarydb.getId());
+			//ame.setGroupnum(1); // set to 1 for testing
+			//ame.setVersion(itinerarydb.getVersion());
+			//ame.setTzoffset(itinerarydb.getTzoffset());
+			//ame.setPax(itinerarydb.getNumtravellers());
 		}
 		else if ( itinerary.getPostbutton().contentEquals("activitymaster")) {
 			map.addAttribute("itinerary", itinerary);
 
-			ame = IED.GetActivityMaster(itinerary);
-			ame.setItinnum(itinerary.getId());
-			ame.setGroupnum(1); // set to 1 for testing
-			ame.setVersion(itinerary.getVersion());
-			ame.setTzoffset(itinerary.getTzoffset());
-			ame.setPax(itinerary.getNumtravellers());
+			//ame = IED.GetActivityMaster(itinerary);
+			//ame.setItinnum(itinerary.getId());
+			//ame.setGroupnum(1); // set to 1 for testing
+			//ame.setVersion(itinerary.getVersion());
+			//ame.setTzoffset(itinerary.getTzoffset());
+			//ame.setPax(itinerary.getNumtravellers());
 		}
 		else if ( itinerary.getPostbutton().contentEquals("activity")) {
 			map.addAttribute("itinerary", itinerary);
 
-			ame = IED.GetActivityMaster(itinerary);
-			ame.setItinnum(itinerary.getId());
-			ame.setGroupnum(1); // set to 1 for testing
-			ame.setVersion(itinerary.getVersion());
-			ame.setTzoffset(itinerary.getTzoffset());
-			ame.setPax(itinerary.getNumtravellers());
+			//ame = IED.GetActivityMaster(itinerary);
+			//ame.setItinnum(itinerary.getId());
+			//ame.setGroupnum(1); // set to 1 for testing
+			//ame.setVersion(itinerary.getVersion());
+			//ame.setTzoffset(itinerary.getTzoffset());
+			//ame.setPax(itinerary.getNumtravellers());
 		}
 		
-		map.addAttribute("activitymaster", ame);
+		//map.addAttribute("activitymaster", ame);
 		
-		ActivityMasterActEntity AMAE = new ActivityMasterActEntity();
-		map.addAttribute("activitymasteract", AMAE);
+		//ActivityMasterActEntity AMAE = new ActivityMasterActEntity();
+		//map.addAttribute("activitymasteract", AMAE);
 		
 		// Get all activities sorted day wise, heavy hitter
-		ActivitiesListForItinerary ALE = new ActivitiesListForItinerary(ame.getItinnum(), ame.getVersion(), ame.getTzoffset());
+		// ActivitiesListForItinerary ALE = new ActivitiesListForItinerary(ame.getItinnum(), ame.getVersion(), ame.getTzoffset());
+		ActivitiesListForItinerary ALE = new ActivitiesListForItinerary(itinerary.getId(), itinerary.getVersion(), itinerary.getTzoffset());
 		Object[] AL = ALE.BuildActivitiesList();
 		
 		map.addAttribute("activitylist", AL);
 		
 		TravelActivityEntity TAE = new TravelActivityEntity();
 		TAE.setActivityid(0); // default to 0 should be changed at client side
-		TAE.setItinnum(ame.getItinnum());
-		TAE.setVersion(ame.getVersion());
-		TAE.setTzoffset(ame.getTzoffset());
-		TAE.setPax(ame.getPax());
+		// TAE.setItinnum(ame.getItinnum());
+		TAE.setItinnum(itinerary.getId());
+		TAE.setVersion(itinerary.getVersion());
+		TAE.setTzoffset(itinerary.getTzoffset());
+		TAE.setPax(itinerary.getNumtravellers());
 
 		RentalActivityEntity RAE = new RentalActivityEntity();
 
@@ -449,8 +452,9 @@ public class AppController {
     
     // Read session variables and build the page
     @RequestMapping(value = "/app/manage/travelactivitymanage", method = RequestMethod.GET)    
-    public String travelActivityManage(ModelMap map, HttpSession session, @RequestParam int itinnum, @RequestParam int activityid, @RequestParam short masteractid, @RequestParam int type, 
-    		@RequestParam short tzoffset, @RequestParam short eventdrop, @RequestParam long startdatelong, @RequestParam int version, @RequestParam int groupnum) throws IOException, SQLException {
+    public String travelActivityManage(ModelMap map, HttpSession session, @RequestParam int itinnum, @RequestParam int activityid, @RequestParam int type, 
+    		// @RequestParam short tzoffset, @RequestParam short eventdrop, @RequestParam long startdatelong, @RequestParam int version, @RequestParam int groupnum) throws IOException, SQLException {
+    		@RequestParam short tzoffset, @RequestParam short eventdrop, @RequestParam long startdatelong, @RequestParam int version) throws IOException, SQLException {
 
     	// This is ajax support function for JQGrid
     	logger.info("Travel Activity Manage");
@@ -462,12 +466,12 @@ public class AppController {
 			if (activityid == 0) {// safe to assume new activity
 				TAE = new TravelActivityEntity();
 				TAE.setActivityid(activityid);
-				TAE.setMasteractid(masteractid);				
+				//TAE.setMasteractid(masteractid);				
 				TAE.setItinnum(itinnum);
 				TAE.setType(type);
 				TAE.setTzoffset(tzoffset);
 				TAE.setVersion(version);
-				TAE.setGroupnum(groupnum);
+				//TAE.setGroupnum(groupnum);
 				TAE.setError("Success");
 			}
 			else {
@@ -509,9 +513,9 @@ public class AppController {
 		travelactivity.setVersion(Integer.parseInt(request.getParameter("version")));
 		travelactivity.setTzoffset((short)Integer.parseInt(request.getParameter("tzoffset")));
 		travelactivity.setItinnum(Integer.parseInt(request.getParameter("itinnum")));
-		travelactivity.setMasteractid((short) Integer.parseInt(request.getParameter("masteractid")));		
+		// travelactivity.setMasteractid((short) Integer.parseInt(request.getParameter("masteractid")));		
 		//travelactivity.setGroupnum(Integer.parseInt(request.getParameter("groupnum")));
-		travelactivity.setGroupnum(1);
+		// travelactivity.setGroupnum(1);
 		
 		// User filled data
 		travelactivity.setCode(request.getParameter("code"));
@@ -631,7 +635,7 @@ public class AppController {
 		return jsonOut;
     }
 
-    
+/*    
     @RequestMapping(value = "/app/masteractivityact/save", method = RequestMethod.POST, produces = "application/json")    
     public @ResponseBody String saveMasterActivityAct(HttpServletRequest request, HttpServletResponse response) 
 			throws IOException {
@@ -649,7 +653,7 @@ public class AppController {
 		int itinnum = Integer.valueOf(request.getParameter("itinnum"));
 		int version = Integer.valueOf(request.getParameter("version"));
 		short tzoffset = Short.valueOf(request.getParameter("tzoffset"));
-		int masteractid = Integer.valueOf(request.getParameter("masteractid"));
+		// int masteractid = Integer.valueOf(request.getParameter("masteractid"));
 		String startdateStr = request.getParameter("masteractstartdate");
 		String enddateStr = request.getParameter("masteractenddate");
 		
@@ -695,7 +699,7 @@ public class AppController {
 		return jsonOut;
     }
 
-    
+*/    
     @RequestMapping(value = "/app/createcurrconvcode", method = RequestMethod.GET)    
     public @ResponseBody String createCurrConvCode(ServletResponse response, @RequestParam(value = "fromcurr") String fromcurr, @RequestParam(value = "tocurr") String tocurr,
     		@RequestParam(value = "unitrate") String unitrate) 	throws IOException {
@@ -845,8 +849,9 @@ public class AppController {
 	@RequestMapping(value = "/app/activity/inactive", method = RequestMethod.GET, produces = "application/json")
 	public @ResponseBody String deleteActivity(ServletResponse response, @RequestParam(value = "activityid") int activityid, @RequestParam(value = "activityidpair") int activityidpair,
 											  @RequestParam(value = "itinnum") int itinnum, @RequestParam(value = "type") int type,
-											  @RequestParam(value = "version") int version, @RequestParam(value = "groupnum") int groupnum)
-													  throws IOException {
+											  //@RequestParam(value = "version") int version, @RequestParam(value = "groupnum") int groupnum)
+											  @RequestParam(value = "version") int version)
+											  throws IOException {
 
 		logger.info("Inactive - Delete Activity");
 		
@@ -855,7 +860,8 @@ public class AppController {
 		ActivityEntityDAO AED  = (ActivityEntityDAO)context.getBean("ActivityEntityDAO");
 		String result = null;
 		try {
-			result = AED.DeleteActivity(activityid, activityidpair, itinnum, type, version, groupnum);
+			// result = AED.DeleteActivity(activityid, activityidpair, itinnum, type, version, groupnum);
+			result = AED.DeleteActivity(activityid, activityidpair, itinnum, type, version);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -878,7 +884,7 @@ public class AppController {
 		
 		// Get Org List from database, should be changed to get from cache
 		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
-		ActivityMasterDAO AMD = (ActivityMasterDAO)context.getBean("ActivityMasterDAO");	
+		ActivityEntityDAO AMD = (ActivityEntityDAO)context.getBean("ActivityEntityDAO");	
 		List<String> activitycodelist = AMD.GetActivityCodes(query);
 
 		// Build Json Reader map for jqgrid		
