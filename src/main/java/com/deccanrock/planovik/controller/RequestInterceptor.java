@@ -18,13 +18,18 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
 			HttpServletResponse response, Object handler) throws Exception {
 		
 		// Set datasource context based on domain name in request uri
-		String domain = UriHandler.getUrlDomainName(request.getRequestURL().toString());
-		
-		// No need to set context as its set by default to main data source
-		if (domain.equalsIgnoreCase("corp") || domain.equalsIgnoreCase("") || domain.equalsIgnoreCase("/") ||
-				domain.equalsIgnoreCase("127.0.0.1") || domain.equalsIgnoreCase("localhost"))
-			return true;
+		String domain = UriHandler.getTenantName(request.getRequestURL().toString());		
 
+		if (domain.equalsIgnoreCase("127.0.0.1") || domain.equalsIgnoreCase("localhost"))
+			return true;
+		
+		// Default is www
+		if (domain.equalsIgnoreCase(""))
+			domain = "www";		
+
+		//if (ContextHolder.getTenant().getDomainname().contentEquals(domain))
+		//	return true;
+		
 		// Get tenant object for the domain and send to context holder
 		// This will hit DB, but a concurrent map object that is maintained should be accessed
 		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
@@ -36,5 +41,6 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
 		
 		ContextHolder.setTenant(tenant);
 		return true;
+	
 	}
 }

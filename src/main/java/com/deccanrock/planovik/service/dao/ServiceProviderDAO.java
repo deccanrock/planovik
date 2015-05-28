@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
-import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,21 +25,23 @@ import com.deccanrock.planovik.service.UserEntityMapper;
  
 @Component
 @Transactional
-public class ServiceProviderDAO extends JdbcDaoSupport implements
-		IServiceProviderDAO {
+public class ServiceProviderDAO implements IServiceProviderDAO {
 
 	@Autowired
 	@Qualifier("mainDataSource")
 	private DataSource dataSource;
-	@PostConstruct
-	private void initialize() {
-	setDataSource(dataSource);
-	}
+    public ServiceProviderDAO(DataSource dataSource) {
+    	super();
+	    this.dataSource = dataSource;
+    }
 
+    ServiceProviderDAO () { }
+    
     @Override
     public boolean Login(String username, String inpass) {
 
-    	 SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(getJdbcTemplate())
+    	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	    	
+    	 SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
     	 .withProcedureName("sp_admin_getpasssalt");
     	 Map<String, Object> inParamMap = new HashMap<String, Object>();
     	 SqlParameterSource in = new MapSqlParameterSource(inParamMap);
@@ -64,9 +64,9 @@ public class ServiceProviderDAO extends JdbcDaoSupport implements
     @Override	
 	public List<String> GetOrgList(String query) {
 
-        // dbtemplate = new JdbcTemplate(dataSource);    	
+    	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	    	
 
-    	SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(getJdbcTemplate())
+    	SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
     	.withProcedureName("sp_getidnamelist");
     	Map<String, Object> inParamMap = new HashMap<String, Object>();
     	inParamMap.put("query", query);
@@ -89,7 +89,8 @@ public class ServiceProviderDAO extends JdbcDaoSupport implements
     @Override
     public String ManageUser(UserEntity user) {
 
-    	SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(getJdbcTemplate())
+    	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	    	
+    	SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
     	.withProcedureName("sp_manageuser");
     	     	 
     	Map<String, Object> inParamMap = new HashMap<String, Object>();
@@ -144,8 +145,8 @@ public class ServiceProviderDAO extends JdbcDaoSupport implements
 
     @Override
 	public boolean UserExists(String userName) {
-    	// JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);   	
-		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(getJdbcTemplate())
+    	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);   	
+		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
 		.withProcedureName("sp_user_exists");
 
 		Map<String, Object> inParamMap = new HashMap<String, Object>();
@@ -167,16 +168,16 @@ public class ServiceProviderDAO extends JdbcDaoSupport implements
 	public UserEntity GetUser(String username) {
 	
     	String SQL = "Call sp_getuserdetails(" + "'" + username + "'" + ");";
-    	// JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+    	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 
- 		List<UserEntity> user = getJdbcTemplate().query(SQL, new UserEntityMapper());
+ 		List<UserEntity> user = jdbcTemplate.query(SQL, new UserEntityMapper());
  		
  		if (user.isEmpty())
  			return null;
  		
  		// This should be combined to one statement in future
  		SQL = "Call sp_getreportingmanagers("  + user.get(0).getId() + ");";
- 		List<Map<String, Object>> managers = getJdbcTemplate().queryForList(SQL);
+ 		List<Map<String, Object>> managers = jdbcTemplate.queryForList(SQL);
  		
  		// Set reporting manager and created by information, should always get 2 strings in that order
  		int i = 0;
@@ -196,7 +197,8 @@ public class ServiceProviderDAO extends JdbcDaoSupport implements
 	}
 
 	public void DeleteUser(String username) {
-		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(getJdbcTemplate())
+    	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	    			
+		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
 		.withProcedureName("sp_delete_user");
 		Map<String, Object> inParamMap = new HashMap<String, Object>();
 
@@ -208,7 +210,8 @@ public class ServiceProviderDAO extends JdbcDaoSupport implements
 	// This method will be extended to allow users to edit more settings on their profile, for now password
     @Override
 	public String UpdateUserProfile(int id, String pass) {
-		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(getJdbcTemplate())
+    	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	    	    	
+		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
 		.withProcedureName("sp_updateuser");
 
 		Map<String, Object> inParamMap = new HashMap<String, Object>();
@@ -256,8 +259,8 @@ public class ServiceProviderDAO extends JdbcDaoSupport implements
     
     @Override
 	public boolean ServiceExists(String serviceName, short serviceType) {
-    	// JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);   	
-		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(getJdbcTemplate())
+    	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);   	
+		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
 		.withProcedureName("sp_service_exists");
 
 		Map<String, Object> inParamMap = new HashMap<String, Object>();
@@ -279,8 +282,8 @@ public class ServiceProviderDAO extends JdbcDaoSupport implements
 
     @Override
 	public String ManageService(ServiceProviderEntity serviceprovider) {
-
-    	SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(getJdbcTemplate())
+    	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	    	
+    	SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
     	.withProcedureName("sp_manageservice");
     	     	 
     	Map<String, Object> inParamMap = new HashMap<String, Object>();

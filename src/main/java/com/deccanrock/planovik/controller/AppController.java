@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -28,9 +29,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.codehaus.jackson.map.ObjectMapper;
+
+
 
 
 //import com.deccanrock.planovik.entity.ActivityMasterActEntity;
@@ -928,6 +932,36 @@ public class AppController {
 		return result;				
 	}	
 	
+	
+	@RequestMapping(value = "/upload", method = RequestMethod.POST)
+	public @ResponseBody String upload(MultipartHttpServletRequest request, HttpServletResponse response) {                 
+ 
+		Iterator<String> itr =  request.getFileNames();
+ 
+		MultipartFile mpf = request.getFile(itr.next());
+		System.out.println(mpf.getOriginalFilename() +" uploaded!");
+ 
+//	     try {
+	        //just temporary save file info into ufile
+	        //ufile.length = mpf.getBytes().length;
+	        //ufile.bytes= mpf.getBytes();
+	        //ufile.type = mpf.getContentType();
+	        //ufile.name = mpf.getOriginalFilename();
+//	 		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
+//			FileHandler FH = (FileHandler)context.getBean("filehandler");
+//			String result = FH.fileUpload(mpf, "image", "setavatar", username);	 
+
+//	     } catch (IOException e) {
+	        // TODO Auto-generated catch block
+//	        e.printStackTrace();
+//	    }
+	 
+	   //2. send it back to the client as <img> that calls get method
+	   //we are using getTimeInMillis to avoid server cached image 
+	 
+	   return "<img src='http://localhost:8080/repo/du/"+ mpf.getOriginalFilename() +"' />";
+ 
+  }
 	
 	private boolean IsUserLoggedIn(ModelMap map) {
     

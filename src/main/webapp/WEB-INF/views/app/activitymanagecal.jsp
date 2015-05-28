@@ -48,20 +48,22 @@
 		<link rel="stylesheet" href="<c:url value='/resources/css/bootstrap-timepicker.css'/>" />
 		<link rel="stylesheet" href="<c:url value='/resources/css/daterangepicker.css'/>" />
 		<link rel="stylesheet" href="<c:url value='/resources/css/bootstrap-datetimepicker.css'/>" />	
-		
-	   <script src="<c:url value='/resources/js/1.9.1/jquery.min.js'/>" ></script>
-	   <script src="<c:url value='/resources/js/1.9.1/jquery-migrate-1.0.0.js'/>" ></script>
+			   
+  		<link rel="stylesheet" href="<c:url value='/resources/css/font-awesome.min.css'/>" />
+	    <link href="<c:url value='/resources/css/froala_editor.min.css" rel="stylesheet'/>" />
+		<link href="<c:url value='/resources/css/froala_style.min.css" rel="stylesheet'/>" />
+
+	   <script src="<c:url value='/resources/js/jquery.min.js'/>" ></script>
 
 		<!-- ace settings handler -->
 		<script src="/resources/js/ace-extra.min.js"></script>
-
 		<!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
 
 		<!--[if lte IE 8]>
 		<script src="/resources/js/html5shiv.min.js"></script>
 		<script src="/resources/js/respond.min.js"></script>
 		<![endif]-->
-		
+						
 	</head>
 	
 	<%@ include file="nav.jsp" %>
@@ -131,6 +133,11 @@
 								<div class="row">
 									<div class="col-sm-9" style="width:85%;">
 										<div class="space"></div>
+										
+										  <form>
+										    <textarea id="rteditor" name="content"></textarea>
+										    <button>Submit</button>
+										  </form>
 
 										<!-- #section:plugins/data-time.calendar -->
 										<div id="calendar"></div>
@@ -258,20 +265,77 @@
 		<script src="<c:url value='/resources/js/date-time/bootstrap-timepicker.min.js'/>" ></script>
 		<script src="<c:url value='/resources/js/date-time/daterangepicker.min.js'/>" ></script>
 		<script src="<c:url value='/resources/js/date-time/bootstrap-datetimepicker.min.js'/>" ></script>
-	
-				
 		
+	    <!-- Include JS files. -->
+	    <script src="<c:url value='/resources/js/froala_editor.min.js'/>"></script>
+	
+	    <!-- Include IE8 JS. -->
+	    <!--[if lt IE 9]>
+	      <script src="<c:url value='/resources/js/froala_editor_ie8.min.js'/>"></script>
+	    <![endif]-->		
+
+		  <!-- Initialize the editor. -->
+		  <script>
+		      $(function() {
+		          $('#rteditor').editable({inlineMode: false})
+		      });
+		  </script>
+		  
+		<script>
+		  $(function() {
+		    $('.selector')
+		      .editable({
+		        // Set the image upload parameter.
+		        imageUploadParam: 'image',
+		
+		        // Set the image upload URL.
+		        imageUploadURL: '/app/uploadphoto',
+		
+		        // Additional upload params.
+		        imageUploadParams: {id: 'rteditor'}
+		      })
+		      .on('editable.imageError', function (e, editor, error) {
+		        // Custom error message returned from the server.
+		        if (error.code == 0) alert("Code 0");
+		
+		        // Bad link.
+		        else if (error.code == 1) alert("Code 1");
+		
+		        // No link in upload response.
+		        else if (error.code == 2) alert("Code 2");
+		
+		        // Error during image upload.
+		        else if (error.code == 3) alert("Code 3");
+		
+		        // Parsing response failed.
+		        else if (error.code == 4) alert("Code 4");
+		
+		        // Image too text-large.
+		        else if (error.code == 5) alert("Code 5");
+		
+		        // Invalid image type.
+		        else if (error.code == 6) alert("Code 6");
+		
+		        // Image can be uploaded only to same domain in IE 8 and IE 9.
+		        else if (error.code == 7) alert("Code 7");
+		      });
+		  });
+		</script>		  
+  
 		<!-- inline scripts related to this page -->
 		<script type="text/javascript">
-												
+							
 		// var masteractarr = [];
 		var activitystartdate;
 		var calendar;
 		var modal;
 		var events = [];
 		var activitycnt;
+		var itinstartdate;
+		var itinenddate;
+
 							
-		jQuery(function($) {
+		jQuery(function($) {	
 		
 			//$("#masteractstartdate").change(function(){
 		    //	$("#masteractenddate").val($("#masteractstartdate").val());
@@ -280,7 +344,10 @@
 			
 		    //activitycnt = ${activitymaster.countactivityhotel} + ${activitymaster.countactivityother} + ${activitymaster.countactivityvisit} + 
 		    //			  ${activitymaster.countactivitytravel} + ${activitymaster.countactivityrental};
-			//$('#activitycntspn').html('Count: <i>' + activitycnt + '</i>)');
+			//$('#activitycntspn').html('Count: <i>' + activitycnt + '</i>)'); 
+		 
+			itinstartdate = ${itinerary.startdatelong};
+			itinenddate = ${itinerary.enddatelong};
 			
 			var defaultDate = formatForCalendar("${itinerary.startdatestr}");
 
@@ -406,7 +473,7 @@
 					console.log(event); 
 					console.log(delta);
 //					if (!checkActivityInItinRange(event.start._d.getTime(), event.masteractid, masteractarr)) {
-		    		if (!(date._d.getTime() >= ${itinerary.startdatelong} && date._d.getTime() <= ${itinerary.enddatelong})) {
+		    		if (!(event.start._d.getTime() >= ${itinerary.startdatelong} && event.start._d.getTime() <= ${itinerary.enddatelong})) {
 						revertFunc();
 						return;
 					}
@@ -744,11 +811,12 @@
 			if (calEvent.type == -1) {
 				modal =
 				'<div class="modal" id="activitymodal" style="z-index:2099;">\
-					<div class="modal-dialog">\
+					<div class="modal-dialog" style="min-height:50px;">\
 				   		<div class="modal-content">\
 							<div class="modal-body">\
 					   			<button type="button" class="close" data-dismiss="modal" style="margin-top:-10px;">&times;</button>\
 					   			<span>To manage master activity, click on the cog wheel on right and use manage master activities panel</span>\
+								<form method="post"><textarea  style="margin-top:20px;height:400px;width:600px;"></textarea></form>\
 					 		</div>\
 					 	</div>\
 					</div>\

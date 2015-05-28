@@ -11,20 +11,55 @@
 	<bean id="parentDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" abstract="true">
 	   <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
 	</bean>	
-	
+
+	<!-- 	
 	<bean id="mainDataSource" parent="parentDataSource">
 	   <property name="url" value="${db.url.main}"/>
 	   <property name="username" value="${db.username.main}"/>
 	   <property name="password" value="${db.password.main}"/>	   
 	</bean>
+    -->	
 	
-    <bean id="OrgEntityDAO" class="com.deccanrock.planovik.service.dao.OrgEntityDAO" />
-    <bean id="UserEntityDAO" class="com.deccanrock.planovik.service.dao.UserEntityDAO" />
-    <bean id="ItineraryEntityDAO" class="com.deccanrock.planovik.service.dao.ItineraryEntityDAO" />
-    <bean id="ActivityMasterDAO" class="com.deccanrock.planovik.service.dao.ActivityMasterDAO" />
-    <bean id="ActivityCodesEntityDAO" class="com.deccanrock.planovik.service.dao.ActivityCodesEntityDAO" />
-    <bean id="ActivityEntityDAO" class="com.deccanrock.planovik.service.dao.ActivityEntityDAO" />
-    <bean id="ServiceProviderDAO" class="com.deccanrock.planovik.service.dao.ServiceProviderDAO" />
+    <bean id="mainDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+        <property name="jndiName" value="java:comp/env/jdbc/planovik_main"/>
+    </bean>
+	
+	<bean id="OrgEntityDAO" class="com.deccanrock.planovik.service.dao.OrgEntityDAO">
+	    <constructor-arg>
+	        <ref bean="mainDataSource" />
+	    </constructor-arg>
+	</bean>	
+	
+    <bean id="UserEntityDAO" class="com.deccanrock.planovik.service.dao.UserEntityDAO">
+	    <constructor-arg>
+	        <ref bean="mainDataSource" />
+	    </constructor-arg>
+	</bean>	
+    
+    
+    <bean id="ItineraryEntityDAO" class="com.deccanrock.planovik.service.dao.ItineraryEntityDAO">
+	    <constructor-arg>
+	        <ref bean="mainDataSource" />
+	    </constructor-arg>
+	</bean>	
+
+    <bean id="ActivityMasterDAO" class="com.deccanrock.planovik.service.dao.ActivityMasterDAO">
+	    <constructor-arg>
+	        <ref bean="mainDataSource" />
+	    </constructor-arg>
+	</bean>	
+	    
+    <bean id="ActivityEntityDAO" class="com.deccanrock.planovik.service.dao.ActivityEntityDAO">
+	    <constructor-arg>
+	        <ref bean="mainDataSource" />
+	    </constructor-arg>
+	</bean>	
+	    
+    <bean id="ServiceProviderDAO" class="com.deccanrock.planovik.service.dao.ServiceProviderDAO">
+	    <constructor-arg>
+	        <ref bean="mainDataSource" />
+	    </constructor-arg>
+	</bean>	    
 
     <bean id="applicationContextProvider" class="com.deccanrock.planovik.controller.ApplicationContextProvider"></bean>    
 	

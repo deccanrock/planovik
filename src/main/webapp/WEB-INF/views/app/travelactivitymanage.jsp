@@ -531,11 +531,7 @@
 			
 		    if ( $(this).val() === '' ) {
 				$('#formgroupall').hide();
-				if ($("#masteractid").val() > 0)
-					window.parent.adjustModalHeight(170);
-				else
-					window.parent.adjustModalHeight(150);
-
+				window.parent.adjustModalHeight(150);
 				modalheight = window.parent.parentModalHeight();
 
 				return;
@@ -543,18 +539,10 @@
 						
 			$('#formgroupall').show();
 			
-		    if ( $(this).val() === 'T_BOOK_RETURN') {
-				if ($("#masteractid").val() > 0)
-					window.parent.adjustModalHeight(540);						
-				else
+		    if ( $(this).val() === 'T_BOOK_RETURN')
 					window.parent.adjustModalHeight(500);								
-			}
-			else {				
-				if ($("#masteractid").val() > 0)
-					window.parent.adjustModalHeight(460);						
-				else
-					window.parent.adjustModalHeight(430);						
-			}
+			else				
+				window.parent.adjustModalHeight(430);						
 			
 			modalheight = window.parent.parentModalHeight();
 			
@@ -681,10 +669,7 @@
 				}
 			
 			}
-                        
-            if($('#radioind').is(':checked'))
-				$('#masteractid').val(0);
-				
+                        				
 			$('#day').val(0);
 			
 			if (travelactivityformValidated()) {
@@ -785,18 +770,10 @@
 						
 			$(".customerror").empty();
 			
-		    if ( $('#travelcodes').val() === 'T_BOOK_RETURN') {
-				if ($("#masteractid").val() > 0)
-					window.parent.adjustModalHeight(540);						
-				else
-					window.parent.adjustModalHeight(500);								
-			}
-			else {				
-				if ($("#masteractid").val() > 0)
-					window.parent.adjustModalHeight(460);						
-				else
-					window.parent.adjustModalHeight(430);						
-			}
+		    if ( $('#travelcodes').val() === 'T_BOOK_RETURN')
+				window.parent.adjustModalHeight(500);								
+			else				
+				window.parent.adjustModalHeight(430);						
 						
 			if ($('#actname').val() == "") {
 				validated = false;
@@ -852,24 +829,12 @@
 						$("#depdatetimeonstrerr").show();
 					}
 					else {
-						var masteractid = $('#masteractid').val();
-						
-						if (masteractid == 0) {
-							if (window.parent.checkActivityInItinRange(deptimeonlong.getTime(), masteractid, window.parent.masteractarr) == false) {
-								validated = false;
-								$("#depdatetimeonstrerr").append("<p>Specified date/time should be within itinerary date/time periods.</p>");
-								window.parent.adjustModalHeightDelta($("#depdatetimeonstrerr").height());
-								$("#depdatetimeonstrerr").show();																		
-							}
-						}										
-						else {
-							if (window.parent.checkDateWithinMasteractRange(masteractid, deptimeonlong, window.parent.masteractarr) == false) {
-								validated = false;					
-								$("#depdatetimeonstrerr").append("<p>Specified date/time should be within master activity date/time periods.</p>");
-								window.parent.adjustModalHeightDelta($("#depdatetimeonstrerr").height());
-								$("#depdatetimeonstrerr").show();
-							}			
-						}				
+			    		if (!(deptimeonlong >= window.parent.itinstartdate && deptimeonlong <= window.parent.itinenddate)) {							
+							validated = false;					
+							$("#depdatetimeonstrerr").append("<p>Specified date/time should be within itinerary date/time periods.</p>");
+							window.parent.adjustModalHeightDelta($("#depdatetimeonstrerr").height());
+							$("#depdatetimeonstrerr").show();
+						}			
 					}
 				}
 				
@@ -881,8 +846,6 @@
 						$("#arrdatetimeonstrerr").show();
 					}
 					else {
-						var masteractid = $('#masteractid').val();
-						
 						var deptimeonlong = GetDate($('#depdatetimeonstr').val());
 						var arrtimeonlong = GetDate($('#arrdatetimeonstr').val());
 	
@@ -894,22 +857,12 @@
 						
 						}					
 						else {
-							if (masteractid == 0) {
-								if (window.parent.checkActivityInItinRange(arrtimeonlong.getTime(), masteractid, window.parent.masteractarr ) == false) {
-									validated = false;					
-									$("#arrdatetimeonstrerr").append("<p>Specified date/time should be within itinerary date/time periods.</p>");
-									window.parent.adjustModalHeightDelta($("#arrdatetimeonstrerr").height());
-									$("#arrdatetimeonstrerr").show();																		
-								}
-							}										
-							else {
-								if (window.parent.checkDateWithinMasteractRange(masteractid, arrtimeonlong, window.parent.masteractarr) == false) {
-									validated = false;				
-									$("#arrdatetimeonstrerr").append("<p>Specified date/time should be within master activity date/time periods.</p>");
-									window.parent.adjustModalHeightDelta($("#arrdatetimeonstrerr").height());
-									$("#arrdatetimeonstrerr").show();
-								}			
-							}				
+				    		if (!(deptimeonlong >= window.parent.itinstartdate && deptimeonlong <= window.parent.itinenddate)) {							
+								validated = false;					
+								$("#arrdatetimeonstrerr").append("<p>Specified date/time should be within itinerary date/time periods.</p>");
+								window.parent.adjustModalHeightDelta($("#arrdatetimeonstrerr").height());
+								$("#arrdatetimeonstrerr").show();																		
+							}
 						}
 					}
 				
@@ -1010,23 +963,12 @@
 							$("#depdatetimeretstrerr").show();
 						}
 						else {
-							var masteractid = $('#masteractid').val();
-							if (masteractid == 0) {
-								if (window.parent.checkActivityInItinRange(deptimeonlong.getTime(), masteractid, window.parent.masteractarr) == false) {
-									validated = false;
-									$("#depdatetimeretstrerr").append("<p>Specified date/time should be within itinerary or master activity date/time periods.</p>");
-									window.parent.adjustModalHeightDelta($("#depdatetimeretstrerr").height());
-									$("#depdatetimeretstrerr").show();																		
-								}
-							}										
-							else {
-								if (window.parent.checkDateWithinMasteractRange(masteractid, deptimeretlong, window.parent.masteractarr) == false) {
-									validated = false;					
-									$("#depdatetimeretstrerr").append("<p>Specified date/time should be within itinerary or master activity date/time periods.</p>");
-									window.parent.adjustModalHeightDelta($("#depdatetimeretstrerr").height());
-									$("#depdatetimeretstrerr").show();
-								}			
-							}											
+							if (window.parent.checkActivityInItinRange(deptimeonlong.getTime(), masteractid, window.parent.masteractarr) == false) {
+								validated = false;
+								$("#depdatetimeretstrerr").append("<p>Specified date/time should be within itinerary or master activity date/time periods.</p>");
+								window.parent.adjustModalHeightDelta($("#depdatetimeretstrerr").height());
+								$("#depdatetimeretstrerr").show();																		
+							}
 						}
 					}
 
@@ -1039,9 +981,7 @@
 							$("#arrdatetimeretstrerr").show();
 						}
 						else {
-							var arrtimeretlong = GetDate($('#arrdatetimeretstr').val());
-							var masteractid = $('#masteractid').val();
-							
+							var arrtimeretlong = GetDate($('#arrdatetimeretstr').val());							
 							var deptimeretlong = GetDate($('#depdatetimeretstr').val());
 		
 							if (arrtimeretlong.getTime() < deptimeretlong.getTime()) {
@@ -1052,22 +992,12 @@
 							
 							}					
 							else {
-								if (masteractid == 0) {
-									if (window.parent.checkActivityInItinRange(arrtimeretlong.getTime(), masteractid, window.parent.masteractarr) == false) {
-										validated = false;					
-										$("#arrdatetimeretstrerr").append("<p>Specified date/time should be within itinerary or master activity date/time periods.</p>");
-										window.parent.adjustModalHeightDelta($("#arrdatetimeretstrerr").height());
-										$("#arrdatetimeretstrerr").show();																		
-									}
-								}										
-								else {
-									if (window.parent.checkDateWithinMasteractRange(masteractid, arrtimeretlong, window.parent.masteractarr) == false) {
-										validated = false;				
-										$("#arrdatetimeretstrerr").append("<p>Specified date/time should be within itinerary or master activity date/time periods.</p>");
-										window.parent.adjustModalHeightDelta($("#arrdatetimeretstrerr").height());
-										$("#arrdatetimeretstrerr").show();
-									}			
-								}				
+					    		if (!(arrtimeretlong.getTime() >= window.parent.itinstartdate && arrtimeretlong.getTime() <= window.parent.itinenddate)) {							
+									validated = false;					
+									$("#arrdatetimeretstrerr").append("<p>Specified date/time should be within itinerary or master activity date/time periods.</p>");
+									window.parent.adjustModalHeightDelta($("#arrdatetimeretstrerr").height());
+									$("#arrdatetimeretstrerr").show();																		
+								}
 							}
 						}
 					}
@@ -1107,9 +1037,7 @@
 							$("#arrdatetimeretstrerr").show();						
 						}								
 					}
-					
 				}
-				
 			}
 			
 			if ($("#T_PIKUPDRP").is(':visible')) {
@@ -1159,26 +1087,14 @@
 				}
 				else {
 					var pikuptimelong = GetDate($('#pikupdropdatetimestr').val());
-					var masteractid = $('#masteractid').val();
 
-					if (masteractid == 0) {
-						if (window.parent.checkActivityInItinRange(pikuptimelong.getTime(), masteractid, window.parent.masteractarr) == false) {
-							validated = false;					
-							console.log("#pikupdropdatetimestr date/time");					
-							$("#pikupdropdatetimestrerr").append("<p>Specified date/time should be within itinerary date/time periods.</p>");
-							window.parent.adjustModalHeightDelta($("#pikupdropdatetimestrerr").height());
-							$("#pikupdropdatetimestrerr").show();																		
-						}
+		    		if (!(pikuptimelong.getTime() >= window.parent.itinstartdate && pikuptimelong.getTime() <= window.parent.itinenddate)) {							
+						validated = false;					
+						console.log("#pikupdropdatetimestr date/time");					
+						$("#pikupdropdatetimestrerr").append("<p>Specified date/time should be within itinerary date/time periods.</p>");
+						window.parent.adjustModalHeightDelta($("#pikupdropdatetimestrerr").height());
+						$("#pikupdropdatetimestrerr").show();																		
 					}										
-					else {
-						if (window.parent.checkDateWithinMasteractRange(masteractid, pikuptimelong, window.parent.masteractarr) == false) {
-							validated = false;				
-							console.log("#pikupdropdatetimestr master");					
-							$("#pikupdropdatetimestrerr").append("<p>Specified date/time should be within master activity date/time periods.</p>");
-							window.parent.adjustModalHeightDelta($("#pikupdropdatetimestrerr").height());
-							$("#pikupdropdatetimestrerr").show();
-						}			
-					}
 				}				
 
 				if ($('#asstcost').val() == "") {

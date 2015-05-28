@@ -20,6 +20,8 @@ public class TenantEntityDAO extends JdbcDaoSupport {
 	@Autowired
     @Qualifier("mainDataSource")
 	private DataSource dataSource;
+	
+	TenantEntityDAO () {}
 
 	@PostConstruct
 	private void initialize() {

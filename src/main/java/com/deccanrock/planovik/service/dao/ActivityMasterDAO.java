@@ -5,7 +5,6 @@ package com.deccanrock.planovik.service.dao;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
-import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,18 +22,17 @@ import com.deccanrock.planovik.service.utils.TimeFormatter;
  
 @Component
 @Transactional
-public class ActivityMasterDAO extends JdbcDaoSupport implements IActivityMasterDAO {
+public class ActivityMasterDAO implements IActivityMasterDAO {
 
 	@Autowired
-    @Qualifier("mainDataSource")
+	@Qualifier("mainDataSource")
 	private DataSource dataSource;
+    public ActivityMasterDAO(DataSource dataSource) {
+    	super();
+	    this.dataSource = dataSource;
+    }
 
-	@PostConstruct
-	private void initialize() {
-		setDataSource(dataSource);
-	}
-
-    
+    ActivityMasterDAO () {}
     
 	@Override		
 	public String CreateMasterActivityAct(int itinnum, int version, String actname, long actstarttime, long actendtime, 

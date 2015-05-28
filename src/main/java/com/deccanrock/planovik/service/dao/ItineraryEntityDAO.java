@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
-import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,17 +29,17 @@ import com.deccanrock.planovik.constants.PlnvkConstants;
  
 @Component
 @Transactional
-public class ItineraryEntityDAO extends JdbcDaoSupport implements IItneraryEntityDAO {
+public class ItineraryEntityDAO implements IItneraryEntityDAO {
 
 	@Autowired
-    @Qualifier("mainDataSource")
+	@Qualifier("mainDataSource")
 	private DataSource dataSource;
-
-	@PostConstruct
-	private void initialize() {
-		setDataSource(dataSource);
-	}
-
+    public ItineraryEntityDAO(DataSource dataSource) {
+    	super();
+	    this.dataSource = dataSource;
+    }
+	
+    ItineraryEntityDAO () {}
     
     @Override	
 	public List<String> GetItinList(String query) {
@@ -87,8 +85,8 @@ public class ItineraryEntityDAO extends JdbcDaoSupport implements IItneraryEntit
     @Override
 	public ItineraryEntity CreateItinerary(ItineraryEntity itinerary) {
 		
-    	// JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	
-		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(getJdbcTemplate())
+    	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	
+		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
 		.withProcedureName("sp_create_itinerary");
 
 		Map<String, Object> inParamMap = new HashMap<String, Object>();
@@ -132,15 +130,17 @@ public class ItineraryEntityDAO extends JdbcDaoSupport implements IItneraryEntit
     @Override
 	public ItineraryEntity GetItinerary(int itinnum) {
     	    			
+    	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	
+    	
         String SQL = "Call sp_get_itinerary(" + "'" + itinnum + "'" + ");";
 
- 		List<ItineraryEntity> dbitinerary = getJdbcTemplate().query(SQL, new ItineraryEntityMapper());
+ 		List<ItineraryEntity> dbitinerary = jdbcTemplate.query(SQL, new ItineraryEntityMapper());
 		// INR should be changed to company locale currency
 		// For INR no conversion or anything extra is required
  		if (dbitinerary.get(0).getQuotecurrency() == null)
  				dbitinerary.get(0).setQuotecurrencystr(""); // should be locale currency
  		else {  	
- 			 SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(getJdbcTemplate())
+ 			 SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
  	    	 .withProcedureName("sp_getisocurrencydetails");
  	    	 Map<String, Object> inParamMap = new HashMap<String, Object>();
  	    	 inParamMap.put("inisocode", dbitinerary.get(0).getQuotecurrency());
@@ -155,7 +155,7 @@ public class ItineraryEntityDAO extends JdbcDaoSupport implements IItneraryEntit
  		if (dbitinerary.get(0).getConvcode() == 0)
 				dbitinerary.get(0).setConvcodestr("");
  		else {
-	    	 SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(getJdbcTemplate())
+	    	 SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
 	    	 .withProcedureName("sp_getconvcodedetails");
 	    	 Map<String, Object> inParamMap = new HashMap<String, Object>();
 	    	 inParamMap.put("currconvcode", dbitinerary.get(0).getConvcode());
@@ -183,8 +183,8 @@ public class ItineraryEntityDAO extends JdbcDaoSupport implements IItneraryEntit
 
 	@Override
 	public ItineraryEntity SaveItinerary(ItineraryEntity itinerary) {
-	   	// JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	
-			SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(getJdbcTemplate())
+	   		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	
+			SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
 			.withProcedureName("sp_save_itinerary");
 
 			Map<String, Object> inParamMap = new HashMap<String, Object>();
@@ -441,7 +441,7 @@ public class ItineraryEntityDAO extends JdbcDaoSupport implements IItneraryEntit
 
         ActivityMasterActMapper AMAM = new ActivityMasterActMapper();
         AMAM.setTzoffset(itinerarydb.getTzoffset());
- 		ArrayList<ActivityMasterActEntity> actmasterentities = (ArrayList<ActivityMasterActEntity>) getJdbcTemplate().query(SQL, AMAM);		    	
+ 		ArrayList<ActivityMasterActEntity> actmasterentities = (ArrayList<ActivityMasterActEntity>) dbtemplate.query(SQL, AMAM);		    	
 		    	
 		ame.setMsteractentities(actmasterentities);    	    	
     	

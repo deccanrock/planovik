@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
-import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,16 +27,17 @@ import com.deccanrock.planovik.service.utils.TimeFormatter;
  
 @Component
 @Transactional
-public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntityDAO {
+public class ActivityEntityDAO implements IActivityEntityDAO {
 
 	@Autowired
-    @Qualifier("mainDataSource")
+	@Qualifier("mainDataSource")
 	private DataSource dataSource;
-
-	@PostConstruct
-	private void initialize() {
-		setDataSource(dataSource);
-	}
+    public ActivityEntityDAO(DataSource dataSource) {
+    	super();
+	    this.dataSource = dataSource;
+    }
+    
+    ActivityEntityDAO () {}
 
     
     @Override	
@@ -75,7 +74,8 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntity
     @Override	    
 	public TravelActivityEntity saveTravelActivity(TravelActivityEntity travelactivity) {
 
-		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(getJdbcTemplate())
+   	 	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	    	
+		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
 		.withProcedureName("sp_save_travelactivity");
 
 		Map<String, Object> inParamMap = new HashMap<String, Object>();
@@ -291,16 +291,16 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntity
 		// TODO Auto-generated method stub
 		String SQL = "Call sp_get_activity_details(" + activityid + ',' + type + ");";    	
 		
-		JdbcTemplate dbtemplate = new JdbcTemplate(dataSource);  	
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);  	
 
 		if (type == 0) {
 			TravelActivityMapper tam = new TravelActivityMapper();
 			tam.setTzoffset(tzoffset);
 			tam.setReqfulldetails(true);
-			List <TravelActivityEntity> travelentities = dbtemplate.query(SQL, tam);
+			List <TravelActivityEntity> travelentities = jdbcTemplate.query(SQL, tam);
 			if (travelentities.get(0).getCode().equals("T_BOOK_RETURN")) {
 				// Get start and end pair values
-				SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(getJdbcTemplate())
+				SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
 				.withProcedureName("sp_get_activitypairdet");
 				Map<String, Object> inParamMap = new HashMap<String, Object>();
 				inParamMap.put("inactivityid", travelentities.get(0).getActivityidpair());		
@@ -351,8 +351,8 @@ public class ActivityEntityDAO extends JdbcDaoSupport implements IActivityEntity
 	// public String DeleteActivity(int activityid, int activityidpair, int itinnum, int type, int version, int groupnum) throws IOException, SQLException {
 	public String DeleteActivity(int activityid, int activityidpair, int itinnum, int type, int version) throws IOException, SQLException {
 
-		// TODO Auto-generated method stub
-		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(getJdbcTemplate())
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	    	
+		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
 		.withProcedureName("sp_delete_activity");
 
 		Map<String, Object> inParamMap = new HashMap<String, Object>();

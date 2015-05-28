@@ -39,6 +39,8 @@ public class UserDetailsDao extends JdbcDaoSupport implements IUserDetailsDao {
 	private void initialize() {
 		setDataSource(dataSource);
 	}
+	
+	UserDetailsDao () {}
 
 	@Override
 	public void updateFailAttempts(String username) {

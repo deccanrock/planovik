@@ -4,10 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
-import org.springframework.jdbc.core.support.JdbcDaoSupport;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -23,23 +22,27 @@ import com.deccanrock.planovik.service.TenantDetailsMapper;
  
 @Component
 @Transactional
-public class OrgEntityDAO extends JdbcDaoSupport implements
+public class OrgEntityDAO implements
 		IOrgEntityDAO {
 
+	
 	@Autowired
-    @Qualifier("mainDataSource")
+	@Qualifier("mainDataSource")
 	private DataSource dataSource;
-
-	@PostConstruct
-	private void initialize() {
-		setDataSource(dataSource);
-	}
- 	
+         	
+    public OrgEntityDAO(DataSource dataSource) {
+    	super();
+	    this.dataSource = dataSource;
+    }
+    
+    OrgEntityDAO () {}
+      
+     	
     @Override
     public Map<String, Object> createOrg( OrgEntity org) {
 
-    	// JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	
-		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(getJdbcTemplate())
+    	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	
+		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
 		.withProcedureName("sp_vrf_org_insert");
 
 		Map<String, Object> inParamMap = new HashMap<String, Object>();
@@ -75,9 +78,9 @@ public class OrgEntityDAO extends JdbcDaoSupport implements
     	String orgid = orgidname.substring(orgidname.lastIndexOf(' ')+1, orgidname.length()); 
     			
         String SQL = "Call sp_getorgdetails(" + "'" + orgid + "'" + ");";
-    	// JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	   	
+    	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	   	
 
- 		List<OrgEntity> org = getJdbcTemplate().query(SQL, new OrgDetailsMapper());
+ 		List<OrgEntity> org = jdbcTemplate.query(SQL, new OrgDetailsMapper());
  		
  		// For now only return one but can be used to retrieve multiple org details
  		return org.get(0); 			
@@ -88,8 +91,8 @@ public class OrgEntityDAO extends JdbcDaoSupport implements
     public boolean OrgExists( String orgname) {
 
         
-    	// JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);   	
-		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(getJdbcTemplate())
+    	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);   	
+		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
 		.withProcedureName("sp_org_exists");
 
 		Map<String, Object> inParamMap = new HashMap<String, Object>();
@@ -112,9 +115,9 @@ public class OrgEntityDAO extends JdbcDaoSupport implements
     	// format of orgidname is "<name> <id>"
     	    			
         String SQL = "Call sp_gettenantdetails(" + "'" + tenantName + "'" + ");";
-    	// JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	   	
+    	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	   	
 
- 		List<TenantEntity> tenantList = getJdbcTemplate().query(SQL, new TenantDetailsMapper());
+ 		List<TenantEntity> tenantList = jdbcTemplate.query(SQL, new TenantDetailsMapper());
  		
  		// For now only return one but can be used to retrieve multiple org details
  		return tenantList.get(0); 		}

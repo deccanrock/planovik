@@ -37,7 +37,7 @@ public class HomeController {
 		
 		String formattedDate = dateFormat.format(date);
 
-		String domain = UriHandler.getUrlDomainName(request.getRequestURL().toString());		
+		String domain = UriHandler.getTenantName(request.getRequestURL().toString());		
 		String tagline;
 		// No need to set context as its set by default to main data source
 		if (domain.equalsIgnoreCase("corp") || domain.equalsIgnoreCase("") || domain.equalsIgnoreCase("/") ||
