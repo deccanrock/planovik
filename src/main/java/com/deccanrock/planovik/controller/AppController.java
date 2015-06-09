@@ -107,8 +107,7 @@ public class AppController {
 		if (!IsUserLoggedIn(map))
     		return "app/login";
         
-		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
-		UserEntityDAO UED = (UserEntityDAO)context.getBean("UserEntityDAO");
+		UserEntityDAO UED = (UserEntityDAO)AppCtxtProv.getApplicationContext().getBean("UserEntityDAO");
 		
 		UserEntity user = UED.GetUser(username);
 		
@@ -135,7 +134,7 @@ public class AppController {
 		if (pass.isEmpty())
 			return "";
 		
-		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
+		ApplicationContext context = AppCtxtProv.getApplicationContext();
 		UserEntityDAO UED = (UserEntityDAO)context.getBean("UserEntityDAO");
 		UserEntity user = UED.GetUser(username);
 		
@@ -299,7 +298,7 @@ public class AppController {
 		map.addAttribute("phonecode", "+91");	
 		
 		// Save model to database
-		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
+		ApplicationContext context = AppCtxtProv.getApplicationContext();
 		ItineraryEntityDAO IED = (ItineraryEntityDAO)context.getBean("ItineraryEntityDAO");
 		
 		// Record admin who created/edited/modifyed
@@ -370,7 +369,7 @@ public class AppController {
 			
 		
 		// Save model to database
-		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
+		ApplicationContext context = AppCtxtProv.getApplicationContext();
 		ItineraryEntityDAO IED = (ItineraryEntityDAO)context.getBean("ItineraryEntityDAO");
 		
 		// Check for Currency code and conversion code
@@ -463,7 +462,7 @@ public class AppController {
     	// This is ajax support function for JQGrid
     	logger.info("Travel Activity Manage");
 
-		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
+		ApplicationContext context = AppCtxtProv.getApplicationContext();
 		ActivityEntityDAO AED = (ActivityEntityDAO)context.getBean("ActivityEntityDAO");
 		TravelActivityEntity TAE = null;		
 		if (type == 0) {// travel
@@ -504,7 +503,7 @@ public class AppController {
     	logger.info("Itinerary Travel Activity Save - POST");
 			
 		// Save model to database
-		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
+		ApplicationContext context = AppCtxtProv.getApplicationContext();
 		ActivityEntityDAO AED = (ActivityEntityDAO)context.getBean("ActivityEntityDAO");
 		
 		// Record admin who created/edited/modifyed
@@ -721,15 +720,39 @@ public class AppController {
 		}
     	
 		// Get Org List from database, should be changed to get from cache
-		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
+		ApplicationContext context = AppCtxtProv.getApplicationContext();
 		ItineraryEntityDAO IED = (ItineraryEntityDAO)context.getBean("ItineraryEntityDAO");	
 		String convcode = IED.CreateCurrConvCode(fromcurr, tocurr, Float.parseFloat(unitrate));
 				
 		return convcode;
     }
 
+    @RequestMapping(value = "/login")
+    public String rootlogin(ModelMap map, HttpServletResponse response, HttpServletRequest request,
+    		@RequestParam(value = "error", required = false) String error,
+    		@RequestParam(value = "logout", required = false) String logout)
+    {
+		logger.info("User Login");    	
+		map.addAttribute("title", "Planovik - Login Required!");
+		map.addAttribute("header", "User Login");
+
+		if (error != null) {
+			map.addAttribute("error", error);
+		}
+ 
+		if (logout != null) {
+			map.addAttribute("msg", "You've been logged out successfully.");
+		}
+				
+        HttpSession session = request.getSession(false);
+        if(session!=null) {
+            session.invalidate();//old session invalidated
+        }		
+				
+		return "app/login";
+    }
     
-    @RequestMapping(value = "/app/login", method = RequestMethod.GET)
+    @RequestMapping(value = "/app/login")
     public String login(ModelMap map, HttpServletResponse response, HttpServletRequest request,
     		@RequestParam(value = "error", required = false) String error,
     		@RequestParam(value = "logout", required = false) String logout)
@@ -789,7 +812,7 @@ public class AppController {
 			return "";
 		
 		// Get Org List from database, should be changed to get from cache
-		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
+		ApplicationContext context = AppCtxtProv.getApplicationContext();
 		ItineraryEntityDAO IED = (ItineraryEntityDAO)context.getBean("ItineraryEntityDAO");	
 		List<String> itinList = IED.GetItinList(query);
 
@@ -813,7 +836,7 @@ public class AppController {
 			return "";
 		
 		// Get Org List from database, should be changed to get from cache
-		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
+		ApplicationContext context = AppCtxtProv.getApplicationContext();
 		ItineraryEntityDAO IED = (ItineraryEntityDAO)context.getBean("ItineraryEntityDAO");	
 		List<String> isocurrlist = IED.GetISOCurrList(query);
 
@@ -838,7 +861,7 @@ public class AppController {
 			return "";
 		
 		// Get Org List from database, should be changed to get from cache
-		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
+		ApplicationContext context = AppCtxtProv.getApplicationContext();
 		ItineraryEntityDAO IED = (ItineraryEntityDAO)context.getBean("ItineraryEntityDAO");	
 		List<String> isocurrlist = IED.GetCurrConvCodes(query);
 
@@ -860,7 +883,7 @@ public class AppController {
 		logger.info("Inactive - Delete Activity");
 		
 		// Get Org List from database, should be changed to get from cache
-		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
+		ApplicationContext context = AppCtxtProv.getApplicationContext();
 		ActivityEntityDAO AED  = (ActivityEntityDAO)context.getBean("ActivityEntityDAO");
 		String result = null;
 		try {
@@ -887,7 +910,7 @@ public class AppController {
 			return "";
 		
 		// Get Org List from database, should be changed to get from cache
-		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
+		ApplicationContext context = AppCtxtProv.getApplicationContext();
 		ActivityEntityDAO AMD = (ActivityEntityDAO)context.getBean("ActivityEntityDAO");	
 		List<String> activitycodelist = AMD.GetActivityCodes(query);
 
@@ -908,7 +931,7 @@ public class AppController {
 	public @ResponseBody String checkUserName(@RequestParam(value = "username") String userName) {
 		logger.info("Check User Name");
 
-		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
+		ApplicationContext context = AppCtxtProv.getApplicationContext();
 		UserEntityDAO UED = (UserEntityDAO)context.getBean("UserEntityDAO");
 		// This should be changed to memcached
 		if (UED.UserExists(userName))
@@ -925,7 +948,7 @@ public class AppController {
 		if (image.isEmpty())
 			return "";
 		
-		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
+		ApplicationContext context = AppCtxtProv.getApplicationContext();
 		FileHandler FH = (FileHandler)context.getBean("filehandler");
 		String result = FH.fileUpload(image, "image", "setavatar", username);
 

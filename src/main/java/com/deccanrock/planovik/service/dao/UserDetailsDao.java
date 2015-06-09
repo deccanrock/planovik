@@ -4,21 +4,20 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 
-import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.stereotype.Repository;
 
 import com.deccanrock.planovik.entity.UserLoginAttempts;
 
 @Repository
-public class UserDetailsDao extends JdbcDaoSupport implements IUserDetailsDao {
+public class UserDetailsDao implements IUserDetailsDao {
 
 	private static final String SQL_USERS_UPDATE_LOCKED = "UPDATE users SET accountNonLocked = ? WHERE username = ?";
 	private static final String SQL_USERS_COUNT = "SELECT count(*) FROM users WHERE username = ?";
@@ -31,36 +30,44 @@ public class UserDetailsDao extends JdbcDaoSupport implements IUserDetailsDao {
 
 	private static final int MAX_ATTEMPTS = 3;
 
-	@Autowired
-    @Qualifier("mainDataSource")
-	private DataSource dataSource;
-
-	@PostConstruct
-	private void initialize() {
-		setDataSource(dataSource);
-	}
 	
+	@Autowired
+	@Qualifier("mainDataSource")
+	private DataSource dataSource;
+    public UserDetailsDao(DataSource dataSource) {
+    	super();
+    	this.dataSource = TenantDS.setTenantDataSource(dataSource);
+	    // this.dataSource = dataSource;
+    }
+    
+    public void setDataSource(DataSource dataSource) {
+       	this.dataSource = TenantDS.setTenantDataSource(dataSource);
+    }    
+
 	UserDetailsDao () {}
+
 
 	@Override
 	public void updateFailAttempts(String username) {
 
 		UserLoginAttempts user = getUserAttempts(username);
+    	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	    	
+		
 		if (user == null) {
 			if (isUserExists(username)) {
 				// if no record, insert a new
-				getJdbcTemplate().update(SQL_USER_ATTEMPTS_INSERT, new Object[] { username, 1, new Date() });
+				jdbcTemplate.update(SQL_USER_ATTEMPTS_INSERT, new Object[] { username, 1, new Date() });
 			}
 		} else {
 
 			if (isUserExists(username)) {
 				// update attempts count, +1
-				getJdbcTemplate().update(SQL_USER_ATTEMPTS_UPDATE_ATTEMPTS, new Object[] { new Date(), username });
+				jdbcTemplate.update(SQL_USER_ATTEMPTS_UPDATE_ATTEMPTS, new Object[] { new Date(), username });
 			}
 
 			if (user.getAttempts() + 1 >= MAX_ATTEMPTS) {
 				// locked user
-				getJdbcTemplate().update(SQL_USERS_UPDATE_LOCKED, new Object[] { false, username });
+				jdbcTemplate.update(SQL_USERS_UPDATE_LOCKED, new Object[] { false, username });
 				// throw exception
 				throw new LockedException("User Account is locked!");
 			}
@@ -73,8 +80,8 @@ public class UserDetailsDao extends JdbcDaoSupport implements IUserDetailsDao {
 	public UserLoginAttempts getUserAttempts(String username) {
 
 		try {
-
-			UserLoginAttempts userAttempts = getJdbcTemplate().queryForObject(SQL_USER_ATTEMPTS_GET,
+	    	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	    	
+			UserLoginAttempts userAttempts = jdbcTemplate.queryForObject(SQL_USER_ATTEMPTS_GET,
 					new Object[] { username }, new RowMapper<UserLoginAttempts>() {
 						public UserLoginAttempts mapRow(ResultSet rs, int rowNum) throws SQLException {
 
@@ -98,16 +105,15 @@ public class UserDetailsDao extends JdbcDaoSupport implements IUserDetailsDao {
 
 	@Override
 	public void resetFailAttempts(String username) {
-
-		getJdbcTemplate().update(SQL_USER_ATTEMPTS_RESET_ATTEMPTS, new Object[] { username });
-
+    	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	    	
+		jdbcTemplate.update(SQL_USER_ATTEMPTS_RESET_ATTEMPTS, new Object[] { username });
 	}
 
 	private boolean isUserExists(String username) {
 
 		boolean result = false;
-
-		int count = getJdbcTemplate().queryForObject(SQL_USERS_COUNT, new Object[] { username }, Integer.class);
+    	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	    	
+		int count = jdbcTemplate.queryForObject(SQL_USERS_COUNT, new Object[] { username }, Integer.class);
 		if (count > 0) {
 			result = true;
 		}

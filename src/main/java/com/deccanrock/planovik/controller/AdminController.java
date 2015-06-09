@@ -101,7 +101,7 @@ public class AdminController {
 		
 
 		// Save model to database
-		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
+		ApplicationContext context = AppCtxtProv.getApplicationContext();
 		ServiceProviderDAO SPD = (ServiceProviderDAO)context.getBean("ServiceProviderDAO");
 		
 		// This is required as admin form contains both user and service management
@@ -168,7 +168,7 @@ public class AdminController {
 		map.addAttribute("user", user);
 		
 		// Save model to database
-		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
+		ApplicationContext context = AppCtxtProv.getApplicationContext();
 		ServiceProviderDAO SPD = (ServiceProviderDAO)context.getBean("ServiceProviderDAO");	
 		String dbresult = SPD.ManageService(serviceprovider);
 		PlnvkConstants pc = new PlnvkConstants();
@@ -218,7 +218,7 @@ public class AdminController {
 		map.addAttribute("serviceprovider", spe);
 
 		// Save model to database
-		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
+		ApplicationContext context = AppCtxtProv.getApplicationContext();
 		UserEntityDAO UED = (UserEntityDAO)context.getBean("UserEntityDAO");
 		
 		UserEntity dbUser = UED.GetUser(user.getUsername());
@@ -304,7 +304,7 @@ public class AdminController {
 		map.addAttribute("serviceprovider", spe);
 		
 		// Save model to database
-		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
+		ApplicationContext context = AppCtxtProv.getApplicationContext();
 		UserEntityDAO UED = (UserEntityDAO)context.getBean("UserEntityDAO");	
 		String dbresult = UED.ManageUser(user);
 

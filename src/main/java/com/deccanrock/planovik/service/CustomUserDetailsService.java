@@ -4,12 +4,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.sql.DataSource;
+
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
+
+import com.deccanrock.planovik.service.dao.TenantDS;
 
 /**
  * Reference org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl
@@ -33,7 +38,12 @@ public class CustomUserDetailsService extends JdbcDaoImpl {
 	//override to pass get accountNonLocked  
 	@Override
 	public List<UserDetails> loadUsersByUsername(String username) {
-		return getJdbcTemplate().query(super.getUsersByUsernameQuery(), new String[] { username },
+		// Tenant DS hook
+		DataSource dataSource=null;
+		dataSource = TenantDS.setTenantDataSource(dataSource);
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+		
+		return jdbcTemplate.query(super.getUsersByUsernameQuery(), new String[] { username },
 				new RowMapper<UserDetails>() {
 					public UserDetails mapRow(ResultSet rs, int rowNum) throws SQLException {
 						String username = rs.getString("username");

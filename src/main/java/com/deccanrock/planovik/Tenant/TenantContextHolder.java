@@ -1,0 +1,93 @@
+package com.deccanrock.planovik.Tenant;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sf.ehcache.Element;
+
+import org.springframework.util.Assert;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import com.deccanrock.planovik.controller.AppCtxtProv;
+import com.deccanrock.planovik.entity.TenantEntity;
+import com.deccanrock.planovik.service.dao.TenantEntityDAO;
+import com.deccanrock.planovik.service.utils.CacheService;
+import com.deccanrock.planovik.service.utils.CookieHelper;
+import com.deccanrock.planovik.service.utils.UriHandler;
+
+public class TenantContextHolder {
+
+   private static final ThreadLocal<TenantEntity> tenantcontextHolder = 
+            new ThreadLocal<TenantEntity>();
+
+   public static void setTenant(TenantEntity tenant ) {
+      Assert.notNull(tenant, "Tenant cannot be null");
+      tenantcontextHolder.set(tenant);
+   }
+
+   public static TenantEntity getTenant() {
+	  if (tenantcontextHolder == null)
+		  return null;
+      return (TenantEntity) tenantcontextHolder.get();
+   }
+
+   public static void clearContext() {
+	   tenantcontextHolder.remove();
+   }
+   
+   public static void setTenantFromRequestURL(HttpServletRequest request, HttpServletResponse response) {
+
+		if (request == null) {
+
+			// Read cookie which should have been set, this is required for Spring Security Authentication scheme
+			// wherein no request object is available and is explicitly set to null
+			// *TO-DO* this needs to be eliminated
+			  
+		}
+		
+	   	// Set datasource context based on domain name in request uri
+		String tenant = UriHandler.getTenantName(request.getRequestURL().toString());		
+		if (tenant.equalsIgnoreCase("127.0.0.1") || tenant.equalsIgnoreCase("localhost"))
+			tenant = "www";
+		
+		// Default is www
+		if (tenant.equalsIgnoreCase(""))
+			tenant = "www";		
+		 
+		// If current tenant context is same current tenant return
+		if (TenantContextHolder.getTenant() != null && TenantContextHolder.getTenant().getTenantname().equalsIgnoreCase(tenant))
+			return;
+		
+		CacheService cs = (CacheService) AppCtxtProv.getApplicationContext().getBean("cacheservice");
+		Element tenantele = cs.getTenantCache().get(tenant);
+		
+		TenantEntity te = null;
+		if (tenantele != null) {
+			te = (TenantEntity) tenantele.getObjectValue();
+			TenantContextHolder.setTenant(te);
+			tenant = te.getTenantname();
+		}
+		else {
+			// This will hit DB
+			TenantEntityDAO TED = (TenantEntityDAO)AppCtxtProv.getApplicationContext().getBean("TenantEntityDAO");
+			te = TED.GetTenant(tenant);
+			if (te != null) {
+				cs.getTenantCache().put(new Element(tenant, te));				
+				TenantContextHolder.setTenant(te);
+				tenant = te.getTenantname();
+			}
+			else {
+					// No matching tenant found, default to www
+					tenantele = cs.getTenantCache().get("www");
+					TenantContextHolder.setTenant((TenantEntity) tenantele.getObjectValue());
+					tenant = "www";			
+			}
+		}
+		
+		// Set the cookie with domain name, *TO-DO*, this needs to go away
+		// Expiry set to 10 minutes
+		CookieHelper.saveCookie("tname", tenant, 600, response);
+   }
+
+}

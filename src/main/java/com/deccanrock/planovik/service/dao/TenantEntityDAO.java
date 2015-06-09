@@ -2,61 +2,45 @@ package com.deccanrock.planovik.service.dao;
  
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
-import org.springframework.jdbc.core.support.JdbcDaoSupport;
+
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.deccanrock.planovik.entity.TenantEntity;
-import com.deccanrock.planovik.service.TenantDetailsMapper;
+import com.deccanrock.planovik.service.TenantEntityMapper;
  
 @Component
 @Transactional
-public class TenantEntityDAO extends JdbcDaoSupport {
+public class TenantEntityDAO implements ITenantEntityDAO {
 
 	@Autowired
     @Qualifier("mainDataSource")
 	private DataSource dataSource;
 	
+    public TenantEntityDAO(DataSource dataSource) {
+    	super();
+	    this.dataSource = dataSource;
+    }
+		
 	TenantEntityDAO () {}
-
-	@PostConstruct
-	private void initialize() {
-		setDataSource(dataSource);
-	}
 	
-	public void TenantEntity() {
-		setDataSource(dataSource);		
-	}
  	
- 	public TenantEntity GetTenant(String tenantName) {
-    	// Use either org name or id to get details, orgid is PK
-    	// format of orgidname is "<name> <id>"
-    	    			
-        String SQL = "Call sp_gettenantdetails(" + "'" + tenantName + "'" + ");";
-    	// JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	   	
-		
- 		List<TenantEntity> tenantList = getJdbcTemplate().query(SQL, new TenantDetailsMapper());
+	@Override
+ 	public TenantEntity GetTenant(String domainname) {
  		
- 		// For now only return one but can be used to retrieve multiple org details
- 		return tenantList.get(0); 		
- 	}
- 
- 	public String GetTagline(String tenantName) {
-    	// Use either org name or id to get details, orgid is PK
-    	// format of orgidname is "<name> <id>"
-    	    			
-        String SQL = "Call sp_gettenantinfo(" + "'" + tenantName + "'" + ");";
-    	// JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	   	
+        String SQL = "Call sp_gettenantfordomain(" + "'" + domainname + "'" + ");";
+    	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	   	
 		
-        String tagline = (String) getJdbcTemplate().queryForObject(SQL, String.class);
-         		
- 		// For now only return one but can be used to retrieve multiple org details
- 		return tagline; 		
+ 		List<TenantEntity> tenantList = jdbcTemplate.query(SQL, new TenantEntityMapper());
+ 		
+ 		if (tenantList.size() == 0)
+ 			return null;
+ 		else
+ 			return tenantList.get(0);
  	}
-
 
 }

@@ -7,18 +7,21 @@
     http://www.springframework.org/schema/context/spring-context-3.0.xsd">
   	
   	<context:annotation-config />	
-	
-	<bean id="parentDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" abstract="true">
-	   <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-	</bean>	
 
-	<!-- 	
-	<bean id="mainDataSource" parent="parentDataSource">
-	   <property name="url" value="${db.url.main}"/>
-	   <property name="username" value="${db.username.main}"/>
-	   <property name="password" value="${db.password.main}"/>	   
+	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+		<property name="configLocation" value="classpath:ehcache.xml"/>
+		<property name="shared" value="true"/>
 	</bean>
-    -->	
+		
+	<bean id="cache" class="net.sf.ehcache.Cache" factory-bean="cacheManager" factory-method="getCache">
+	    <constructor-arg value="tenantCache" />          
+	</bean>	
+	
+	<bean id="cacheservice" class="com.deccanrock.planovik.service.utils.CacheService">
+		<constructor-arg> 
+			<ref bean="cache" />
+		</constructor-arg>
+	</bean>		
 	
     <bean id="mainDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
         <property name="jndiName" value="java:comp/env/jdbc/planovik_main"/>
@@ -61,39 +64,19 @@
 	    </constructor-arg>
 	</bean>	    
 
-    <bean id="applicationContextProvider" class="com.deccanrock.planovik.controller.ApplicationContextProvider"></bean>    
+    <bean id="TenantEntityDAO" class="com.deccanrock.planovik.service.dao.TenantEntityDAO">
+	    <constructor-arg>
+	        <ref bean="mainDataSource" />
+	    </constructor-arg>
+	</bean>	 
+	
+    <bean id="applicationContextProvider" class="com.deccanrock.planovik.controller.AppCtxtProv"></bean>    
 	
 	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 	   <property name="location" value="classpath:/com/deccanrock/planovik/datasource/db.properties"/>
 	</bean>
 	
-	
 	<bean id="dataSourceRegistry" class="com.deccanrock.planovik.Tenant.TenantTargetRegistry"></bean>
-	
-	<bean id="dataSourceTargetSource"
-		class="com.deccanrock.planovik.Tenant.ContextSwappableTargetSource">
-		<constructor-arg type="java.lang.Class">
-			<value>javax.sql.DataSource</value>
-		</constructor-arg>
-		<property name="targetRegistry" ref="dataSourceRegistry"></property>
-	</bean>
-	
-	<bean id="proxyDataSource" class="org.springframework.aop.framework.ProxyFactoryBean">
-		<property name="proxyInterfaces">
-			<list>
-				<value>javax.sql.DataSource</value>
-			</list>
-		</property>
-		<property name="targetSource">
-			<ref bean="dataSourceTargetSource" />
-		</property>
-	</bean>
-		
-	<bean id="TenantEntityDAO" class="com.deccanrock.planovik.service.dao.TenantEntityDAO" />
-
-	<bean id="TenantImplDAO" class="com.deccanrock.planovik.service.dao.TenantImplDAO">
-		<property name="dataSource" ref="proxyDataSource"></property>
-	</bean>
 	
 	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
     <property name="maxUploadSize" value="300000"/>
@@ -102,6 +85,5 @@
 	<bean id="filehandler" class="com.deccanrock.planovik.service.utils.FileHandler">
     	<property name="resourcesfolder" value="c:/planovikpub/resources/" />
 	</bean>
-
-				           
+					           
 </beans>

@@ -27,6 +27,6 @@ public interface TargetRegistry<T> {
      */
     public T getTarget(final TenantEntity contextName);
 
-	public Boolean IsTenantInMap(final String domainname);
+    public Boolean IsTenantInMap(final String domainname);
 
 }

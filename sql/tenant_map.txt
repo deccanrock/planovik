@@ -1,0 +1,32 @@
+Main tables
+isocurrencies
+itin_activity_codes
+plnvk_admin_tasks
+plnvk_db_replication
+plnvk_org_[0-9]
+plnvk_org_seq
+plnvk_tenant_master
+plnvk_zone_db_map
+user_login_attempts
+user_roles
+user_roles_map
+users
+
+
+Tenant Tables
+itin_activity_hotel
+itin_activity_master
+itin_activity_other
+itin_activity_travel
+itin_activity_visit
+itin_currconv
+itin_master
+itin_pax_info
+service_airlines
+service_hotels
+service_other
+service_transport
+user_login_attempts
+user_roles
+user_roles_map
+users

@@ -9,19 +9,20 @@
 		<c:if test="${not empty msg}">
 			<div class="msg">${msg}</div>
 		</c:if>
-		<c:url var="loginUrl" value="/app/j_spring_security_check" />
-		<form name='loginForm' autocomplete='off' action="${loginUrl}" method='POST'>		
+		<form name='loginForm' autocomplete='off' action="<c:url value='/j_spring_security_check' />" method='POST'>		
 		
 			<div>
 				<span style="color: #777;font-size:14px;">Username</span>
-				<input type='text' id="username" name="username" style="margin-bottom:16px;" class="col-sm-12" />				
+				<input type='text' name='username' style="margin-bottom:16px;" class="col-sm-12" />				
 			</div>
 			<div>
 				<span style="color: #777;font-size:14px;">Password</span>
-				<input type='password' id="password" name="password" style="margin-bottom:16px;" class="col-sm-12" />
+				<input type="text" name="preventAutoPass" id="preventAutoPass" style="display:none" />
+				<input type='password' name='password' style="margin-bottom:16px;" class="col-sm-12" />
 				<br />
 			</div>
-
+			
+			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 			
 			<div>		
 	            <input type="submit" id="signupsubmit" class="btn btn-info btn-sm" value="Login" />

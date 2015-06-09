@@ -3,9 +3,9 @@ package com.deccanrock.planovik.Tenant;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.naming.NamingException;
 import javax.sql.DataSource;
-
-import org.apache.commons.dbcp.BasicDataSource;
+import org.springframework.jndi.JndiTemplate;
 import org.springframework.util.Assert;
 
 import com.deccanrock.planovik.entity.TenantEntity;
@@ -19,7 +19,7 @@ public class TenantTargetRegistry implements TargetRegistry<DataSource> {
 		//TenantEntity tenant = ContextHolder.getTenant();
 
 		Assert.notNull(intenant, "Tenant was not set.");
-		String key = String.valueOf(intenant.getDomainname());
+		String key = String.valueOf(intenant.getTenantname());
 		DataSource dataSource = null;
 		
 		// Check if intenant is different from current tenant, if yes then get new data source and set in map
@@ -29,7 +29,7 @@ public class TenantTargetRegistry implements TargetRegistry<DataSource> {
 			}
 		
 		else {	
-			dataSource = getDataSource(intenant.getDsusername(), intenant.getDspassword(), intenant.getDsurl());
+			dataSource = getDataSource(intenant.getDatastore());
 			synchronized (this) {
 				map.put(key, dataSource);
 			}
@@ -38,18 +38,25 @@ public class TenantTargetRegistry implements TargetRegistry<DataSource> {
 		return dataSource;
 	}
 
-	private DataSource getDataSource(String username, String password,
-			String url) {
-		BasicDataSource dataSource = new BasicDataSource();
-		dataSource.setUsername(username);
-		dataSource.setPassword(password);
-		dataSource.setUrl(url);
+	private DataSource getDataSource(String datastore) {
+		// BasicDataSource dataSource = new BasicDataSource();
+		// dataSource.setUsername(username);
+		// dataSource.setPassword(password);
+		// dataSource.setUrl(url);
+	    JndiTemplate jndiTemplate = new JndiTemplate();
+	    DataSource dataSource = null;
+		try {
+			dataSource = (DataSource) jndiTemplate.lookup("java:comp/env/jdbc/" + datastore);
+		} catch (NamingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return dataSource;
 	}
 
 	@Override
-	public Boolean IsTenantInMap(String domainname) {
-		if (map.containsKey(domainname))
+	public Boolean IsTenantInMap(String tenantname) {
+		if (map.containsKey(tenantname))
 			return true;
 		return false;
 	}

@@ -7,10 +7,11 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 
+import com.deccanrock.planovik.Tenant.TenantContextHolder;
 import com.deccanrock.planovik.entity.UserLoginAttempts;
 import com.deccanrock.planovik.service.dao.UserDetailsDao;
 
-public class AuthenticationProvider extends DaoAuthenticationProvider {
+public class myAuthenticationProvider extends DaoAuthenticationProvider {
 
 	UserDetailsDao userDetailsDao;
 
@@ -19,6 +20,8 @@ public class AuthenticationProvider extends DaoAuthenticationProvider {
 
 		try {
 
+			// TenantContextHolder.setTenantFromRequestURL(null, null);
+			
 			Authentication auth = super.authenticate(authentication);
 
 			// if reach here, means login success, else exception will be thrown

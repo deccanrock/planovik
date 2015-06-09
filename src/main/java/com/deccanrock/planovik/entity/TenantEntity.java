@@ -1,140 +1,288 @@
 package com.deccanrock.planovik.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 
-public class TenantEntity {
+public class TenantEntity implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 9045905279942674913L;
+
 	// Columns
-	@Column(name="id")
+	@Column(name="tenantid")
 	@GeneratedValue
-	private int id;
+	private int tenantid;
 	
-	@Column(name="type")
-	private short type;
+	@Column(name="tenantdesc")
+	private String tenantdesc;
 	
-	@Column(name="status")
-	private short status;
+	@Column(name="tenantname")
+	private String tenantname;
+
+	@Column(name="datastore")	
+	public String datastore;
+
+	@Column(name="regip")	
+	public String regip;
+
+	@Column(name="zoneid")	
+	public short zoneid;
+
+	@Column(name="addrstreet1")	
+	public String addrstreet1;
+
+	@Column(name="addrstreet2")	
+	public String addrstreet2;
 	
-	@Column(name="subscription")
-	private String subscription;
+	@Column(name="addrcitytown")	
+	public String addrcitytown;
 	
-	@Column(name="domainname")
-	private String domainname;
+	@Column(name="addrdistrict")	
+	public String addrdistrict;
 	
-	@Column(name="dsurl")
-	private String dsurl;
+	@Column(name="addrstateprovrgn")	
+	public String addrstateprovrgn;
 	
-	@Column(name="dsusername")
-	private String dsusername;
+	@Column(name="addrpostalcode")	
+	public String addrpostalcode;
 	
-	@Column(name="dspassword")
-	private String dspassword;
+	@Column(name="addrhomeurl")	
+	public String addrhomeurl;
 	
-	@Column(name="bkdsurl")
-	private String bkdsurl;
+	@Column(name="contacttitle")	
+	public String contacttitle;
+
+	@Column(name="contactname")	
+	public String contactname;
+
+	@Column(name="contactphoneoffice")	
+	public String contactphoneoffice;
+
+	@Column(name="contactphonemobile")	
+	public String contactphonemobile;
+
+	@Column(name="contactemail")
+	private String contactemail;
+
+	@Column(name="contactdesignation")	
+	public String contactdesignation;
 	
-	@Column(name="bkdsusername")
-	private String bkdsusername;
+	@Column(name="regtype")
+	private  short regtype;
 	
-	@Column(name="bkdspassword")
-	private String bkdspassword;
+	@Column(name="regstatus")
+	private short regstatus;
 	
+	@Column(name="msgunrdcnt")
+	private short msgunrdcnt;
+	
+	@Column(name="alrtpendingcnt")
+	private short alrtpendingcnt;
+		
+	@Column(name="accntbal")
+	private float accntbal;
+
+	@Column(name="tzoffset")
+	private short tzoffset;
+
 	@Column(name="datecreated")
 	private Date datecreated;
 	
 	@Column(name="dateupdated")
 	private Date dateupdated;
 
+	@Column(name="createdby")
+	private short createdby;
+	
+	@Column(name="updatedby")
+	private short updatedby;
+	
+	private long datecreatedlong;
+	private long dateupdatedlong;
+	private String createdbyemail;
+	private String updatedbyemail;
+
 	
 	// Getter-Setters
-	public int getId() {
-		return id;
+	public int getTenantid() {
+		return tenantid;
 	}
 	
-	public void setId(int id) {
-		this.id = id;
+	public void setTenantid(int tenantid) {
+		this.tenantid = tenantid;
 	}
 	
-	public short getStatus() {
-		return status;
+	public String getTenantname() {
+		return tenantname;
 	}
 	
-	public void setStatus(short status) {
-		this.status = status;
+	public void setTenantname(String tenantname) {
+		this.tenantname = tenantname;
 	}
 	
-	public short getType() {
-		return type;
+
+	public String getTenantdesc() {
+		return tenantdesc;
 	}
 	
-	public void setType(short type) {
-		this.type = type;
+	public void setTenantdesc(String tenantdesc) {
+		this.tenantdesc = tenantdesc;
 	}
 
-	public String getSubscription() {
-		return subscription;
+	public String getDatastore() {
+		return datastore;
 	}
 	
-	public void setSubscription(String subscription) {
-		this.subscription = subscription;
-	}
-	
-	public String getDomainname() {
-		return domainname;
-	}
-	
-	public void setDomainname(String domainname) {
-		this.domainname = domainname;
+	public void setDatastore(String datastore) {
+		this.datastore = datastore;
 	}
 
-	public String getDsurl() {
-		return dsurl;
+	public String getRegip() {
+		return regip;
 	}
 	
-	public void setDsurl(String dsurl) {
-		this.dsurl = dsurl;
+	public void setRegip(String regip) {
+		this.regip = regip;
 	}
 		
-	public String getDsusername() {
-		return dsusername;
+	public int getZoneid() {
+		return zoneid;
 	}
 	
-	public void setDsusername(String dsusername) {
-		this.dsusername = dsusername;
+	public void setZoneid(short zoneid) {
+		this.zoneid = zoneid;
 	}
-			
-	public String getDspassword() {
-		return dspassword;
-	}
-	
-	public void setDspassword(String dspassword) {
-		this.dspassword = dspassword;
+
+	public String getAddrstreet1() {
+		return addrstreet1;
 	}
 	
-	public String getBkdsurl() {
-		return bkdsurl;
+	public void setAddrstreet1(String addrstreet1) {
+		this.addrstreet1 = addrstreet1;
+	}
+
+	public String getAddrstreet2() {
+		return addrstreet2;
 	}
 	
-	public void setBkdsurl(String bkdsurl) {
-		this.bkdsurl = bkdsurl;
+	public void setAddrstreet2(String addrstreet2) {
+		this.addrstreet2 = addrstreet2;
 	}
-		
-	public String getBkdsusername() {
-		return bkdsusername;
-	}
-	
-	public void setBkdsusername(String bkdsusername) {
-		this.bkdsusername = bkdsusername;
-	}
-			
-	public String getBkdspassword() {
-		return bkdspassword;
+
+	public String getAddrcitytown() {
+		return addrcitytown;
 	}
 	
-	public void setBkdspassword(String bkdspassword) {
-		this.bkdspassword = bkdspassword;
+	public void setAddrcitytown(String addrcitytown) {
+		this.addrcitytown = addrcitytown;
+	}
+
+	public String getAddrdistrict() {
+		return addrdistrict;
+	}
+	
+	public void setAddrdistrict(String addrdistrict) {
+		this.addrdistrict = addrdistrict;
+	}
+
+	public String getAddrstateprovrgn() {
+		return addrstateprovrgn;
+	}
+	
+	public void setAddrstateprovrgn(String addrstateprovrgn) {
+		this.addrstateprovrgn = addrstateprovrgn;
+	}
+
+	public String getAddrpostalcode() {
+		return addrpostalcode;
+	}
+	
+	public void setAddrpostalcode(String addrpostalcode) {
+		this.addrpostalcode = addrpostalcode;
+	}
+
+	public String getAddrhomeurl() {
+		return addrhomeurl;
+	}
+	
+	public void setAddrhomeurl(String addrhomeurl) {
+		this.addrhomeurl = addrhomeurl;
+	}
+
+	public String getContacttitle() {
+		return contacttitle;
+	}
+	
+	public void setContacttitle(String contacttitle) {
+		this.contacttitle = contacttitle;
+	}
+
+	public String getContactname() {
+		return contactname;
+	}
+	
+	public void setContactname(String contactname) {
+		this.contactname = contactname;
+	}
+
+	public String getContactdesignation() {
+		return contactdesignation;
+	}
+	
+	public void setContactdesignation(String contactdesignation) {
+		this.contactdesignation = contactdesignation;
+	}
+
+	public short getRegtype() {
+		return regtype;
+	}
+	
+	public void setRegtype(short regtype) {
+		this.regtype = regtype;
+	}
+	
+	public short getRegstatus() {
+		return regstatus;
+	}
+	
+	public void setRegstatus(short regstatus) {
+		this.regstatus = regstatus;
+	}
+
+	public short getAlrtpendingcnt() {
+		return alrtpendingcnt;
+	}
+	
+	public void setAlrtpendingcnt(short alrtpendingcnt) {
+		this.alrtpendingcnt = alrtpendingcnt;
+	}
+
+	public short getMsgunrdcnt() {
+		return msgunrdcnt;
+	}
+	
+	public void setMsgunrdcnt(short msgunrdcnt) {
+		this.msgunrdcnt = msgunrdcnt;
+	}
+
+	public float getAcctnbal() {
+		return accntbal;
+	}
+	
+	public void setAccntbal(float accntbal) {
+		this.accntbal = accntbal;
+	}
+
+	public short getTzoffset() {
+		return tzoffset;
+	}
+	
+	public void setTzoffset(short tzoffset) {
+		this.tzoffset = tzoffset;
 	}
 
 	public Date getDatecreated() {
@@ -152,5 +300,84 @@ public class TenantEntity {
 	public void setDateupdated(Date dateupdated) {
 		this.dateupdated = dateupdated;
 	}
+	
+	public short getUpdatedby() {
+		return updatedby;
+	}
+	
+	public void setUpdatedby(short updatedby) {
+		this.updatedby = updatedby;
+	}	
 		
+	public short getCreatedby() {
+		return createdby;
+	}
+	
+	public void setCreatedby(short createdby) {
+		this.createdby = createdby;
+	}
+
+	public String getContactphoneoffice() {
+		return contactphoneoffice;
+	}
+
+	public void setContactphoneoffice(String contactphoneoffice) {
+		this.contactphoneoffice = contactphoneoffice;
+		
+	}
+
+	public String getContactphonemobile() {
+		return contactphonemobile;
+	}
+
+	public void setContactphonemobile(String contactphonemobile) {
+		this.contactphonemobile = contactphonemobile;
+		
+	}
+
+	public String getContactemail() {
+		return contactemail;
+	}
+
+	public void setContactemail(String contactemail) {
+		this.contactemail = contactemail;
+		
+	}
+
+	public long getDatecreatedlong() {
+		return datecreatedlong;
+	}
+
+	public void setDatecreatedlong(long datecreatedlong) {
+		this.datecreatedlong = datecreatedlong;
+		
+	}
+
+	public long getDateupdatedlong() {
+		return dateupdatedlong;
+	}
+
+	public void setDateupdatedlong(long dateupdatedlong) {
+		this.dateupdatedlong = dateupdatedlong;
+		
+	}
+
+	public String getCreatedbyemail() {
+		return createdbyemail;
+	}
+
+	public void setCreatedbyemail(String createdbyemail) {
+		this.createdbyemail = createdbyemail;
+		
+	}
+
+	public String getUpdatedbyemail() {
+		return updatedbyemail;
+	}
+
+	public void setUpdatedbyemail(String updatedbyemail) {
+		this.updatedbyemail = updatedbyemail;
+		
+	}
+
 }

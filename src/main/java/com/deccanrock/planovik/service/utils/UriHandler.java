@@ -57,13 +57,6 @@ public class UriHandler {
 			tName = tName.substring(0, index);
 		}
 		
-		// check for and remove a preceding 'www'
-		// followed by any sequence of characters (non-greedy)
-		// followed by a '.'
-		// from the beginning of the string
-		// tName = tName.replaceFirst(".*?\\.", "");
-		
-		// Look for first '.' or ':' and get the string until that position which is real domain name we are looking
 		int pos = tName.indexOf('.');
 		if (pos == -1) {
 			pos = tName.indexOf(':');			
@@ -73,6 +66,42 @@ public class UriHandler {
 			return tName.substring(0, tName.length()-1);
 		else
 			return tName.substring(0, pos);
+	}
+
+	/**
+	 * Extracts the domain name from {@code url}
+	 * by means of String manipulation
+	 * rather than using the {@link URI} or {@link URL} class.
+	 * Example: extracts www from http://www.planovik.com:8080
+	 * will return localhost for http://localhost:8080 and 127.0.0.1 for http://127.0.0.1:8080
+	 * ignores port number
+	 * @param url is non-null.
+	 * @return the domain name within {@code url}.
+	 */
+	public static String getDomainUrl(String url) {
+		
+		if (url.contains("localhost"))
+			return "localhost";
+		
+		if (url.contains("127.0.0.1"))
+			return "127.0.0.1";
+
+		String dName = new String(url);
+		int index = dName.indexOf("://");
+		
+		if (index != -1) {
+		  // keep everything after the "://"
+			dName = dName.substring(index + 3);
+		}
+		
+		index = dName.indexOf('/');
+		
+		if (index != -1) {
+		  // keep everything after the '/'
+			dName = dName.substring(index, url.length());
+		}
+		
+		return dName;
 	}
 
 }

@@ -26,26 +26,7 @@ public class PlnvkConstants {
 	        return value;
 	    }
 	}
-	
-	public enum Code {
-		VERIFY_NEW_ORG(0), 
-		NEW_ORG_VERIFIED(1), 
-		ENABLE_ORG_FOR_ACTIVITY(2), 
-		AWAITING_ORG_CONFIRMATION(3), 
-		ORG_DETAILS_VERIFIED(4), 
-		ORG_SUSPENDED(5);
 		
-	    private final int value;
-
-	    private Code(int value) {
-	        this.value = value;
-	    }
-
-	    public int getValue() {
-	        return value;
-	    }		
-	}
-	
 	public enum  Itinstatus {
 		Initial(0),
 		Draft(1),
@@ -128,5 +109,11 @@ public class PlnvkConstants {
     // 0=city transfers, 1=intercity
 	private final List <String> transportcoverage = Arrays.asList("cityonly", "intercity");
 	public List<String> getTransportcoverage() { return transportcoverage; }
+	
+	private final List <String> regtype = Arrays.asList("NA", "Trial", "Pro Monthly", "Pro Annual", "Premium");
+	public List<String> getRegtype() { return regtype; }
+
+	private final List <String> regstatus = Arrays.asList("NA", "Pending", "Active",  "closed", "Suspended");
+	public List<String> getRegstatus() { return regstatus; }
 
 }

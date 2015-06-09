@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.deccanrock.planovik.entity.OrgEntity;
 import com.deccanrock.planovik.entity.TenantEntity;
 import com.deccanrock.planovik.service.OrgDetailsMapper;
-import com.deccanrock.planovik.service.TenantDetailsMapper;
+import com.deccanrock.planovik.service.TenantEntityMapper;
  
 @Component
 @Transactional
@@ -117,7 +117,7 @@ public class OrgEntityDAO implements
         String SQL = "Call sp_gettenantdetails(" + "'" + tenantName + "'" + ");";
     	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	   	
 
- 		List<TenantEntity> tenantList = jdbcTemplate.query(SQL, new TenantDetailsMapper());
+ 		List<TenantEntity> tenantList = jdbcTemplate.query(SQL, new TenantEntityMapper());
  		
  		// For now only return one but can be used to retrieve multiple org details
  		return tenantList.get(0); 		}

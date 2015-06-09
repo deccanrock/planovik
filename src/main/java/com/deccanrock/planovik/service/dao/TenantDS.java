@@ -1,27 +1,23 @@
 package com.deccanrock.planovik.service.dao;
 
-import java.util.List;
+import javax.sql.DataSource;
 
-import javax.servlet.http.HttpServletRequest;
+import com.deccanrock.planovik.Tenant.TenantContextHolder;
+import com.deccanrock.planovik.Tenant.TenantTargetRegistry;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import com.deccanrock.planovik.controller.ApplicationContextProvider;
-import com.deccanrock.planovik.entity.TenantEntity;
 
 public class TenantDS {
 	
-	private String tenantName;
-	// At this point tenant domain should be available within application context 
-	public TenantDS () {
+	public static DataSource setTenantDataSource (DataSource datasource) {
 		
-		// Get Task records from database
-		HttpServletRequest curRequest = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-		tenantName = curRequest.getServerName();
-		ApplicationContext context = ApplicationContextProvider.getApplicationContext();
-		OrgEntityDAO OED = (OrgEntityDAO)context.getBean("OrgEntityDAO");	
-		TenantEntity tenantDet = OED.GetTenant(tenantName);
+	    // Change data source based on tenant or default to main
+		if (TenantContextHolder.getTenant() == null)
+			return datasource;
+		else {
+			// If datasouce is set to null, safe to assume, we need main DB
+			TenantTargetRegistry ttr = new TenantTargetRegistry();
+			DataSource ds = ttr.getTarget(TenantContextHolder.getTenant());
+			return ds;
+		}		
 	}
 }

@@ -11,15 +11,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.deccanrock.planovik.controller.ApplicationContextProvider;
+import com.deccanrock.planovik.controller.AppCtxtProv;
 import com.deccanrock.planovik.entity.TravelActivityEntity;
 import com.deccanrock.planovik.service.dao.ActivityEntityDAO;
 
 public class ActivitiesListForItinerary {
 	
-	private Object[] activityList = null;
 	private List<TravelActivityEntity> travelList = null;
 	private int itinnum, version;
 	private short tzoffset;
@@ -39,7 +37,7 @@ public class ActivitiesListForItinerary {
         
     	public Object call() throws InterruptedException {
     		List<TravelActivityEntity>travelListthread = null;
-			ApplicationContext context = ApplicationContextProvider.getApplicationContext();
+			ApplicationContext context = AppCtxtProv.getApplicationContext();
     		ActivityEntityDAO AED = (ActivityEntityDAO)context.getBean("ActivityEntityDAO");		
     		try {
     			// 0 = travel
