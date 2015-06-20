@@ -47,7 +47,7 @@
 											<div class="msg">${usermsg}</div>
 										</c:if>
 					
-					                    <form:form id="manageusers-form" method="post" action="manageusersform" modelAttribute="user" name="user">				
+					                    <form:form id="manageusers-form" method="post" action="admin/manageusersform" modelAttribute="user" name="user">				
 					                        <div class="form-group">
 					                            <div class="clearfix">
 					                                <form:input type="text" path="username" placeholder="Enter username" id="username" class="col-sm-11" style="margin-left:10px;margin-top:20px;"/>
@@ -92,7 +92,7 @@
 											<div class="msg">${servicemsg}</div>
 										</c:if>
 					
-					                    <form:form id="manageservices-form" method="post" action="manageservicesform" modelAttribute="serviceprovider" name="serviceprovider">				
+					                    <form:form id="manageservices-form" method="post" action="admin/manageservicesform" modelAttribute="serviceprovider" name="serviceprovider">				
 					                        <div class="form-group" style="margin-left:10px;margin-top:10px;">
 					                            <div class="clearfix">
 													<form:select class="col-sm-6 hideearrow selectof" path="types" name="types" id="types" multiple="">

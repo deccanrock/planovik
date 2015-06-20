@@ -7,4 +7,5 @@ import com.deccanrock.planovik.entity.TenantEntity;
 public interface ITenantEntityDAO {
 	
  	public TenantEntity GetTenant(String tenantName) throws IOException, SQLException;
+ 	public String RegisterTenant(TenantEntity tenant)  throws IOException, SQLException;
 }

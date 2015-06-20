@@ -6,14 +6,11 @@ import javax.servlet.http.HttpServletResponse;
 import net.sf.ehcache.Element;
 
 import org.springframework.util.Assert;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.deccanrock.planovik.controller.AppCtxtProv;
 import com.deccanrock.planovik.entity.TenantEntity;
 import com.deccanrock.planovik.service.dao.TenantEntityDAO;
 import com.deccanrock.planovik.service.utils.CacheService;
-import com.deccanrock.planovik.service.utils.CookieHelper;
 import com.deccanrock.planovik.service.utils.UriHandler;
 
 public class TenantContextHolder {
@@ -37,14 +34,6 @@ public class TenantContextHolder {
    }
    
    public static void setTenantFromRequestURL(HttpServletRequest request, HttpServletResponse response) {
-
-		if (request == null) {
-
-			// Read cookie which should have been set, this is required for Spring Security Authentication scheme
-			// wherein no request object is available and is explicitly set to null
-			// *TO-DO* this needs to be eliminated
-			  
-		}
 		
 	   	// Set datasource context based on domain name in request uri
 		String tenant = UriHandler.getTenantName(request.getRequestURL().toString());		
@@ -83,11 +72,7 @@ public class TenantContextHolder {
 					TenantContextHolder.setTenant((TenantEntity) tenantele.getObjectValue());
 					tenant = "www";			
 			}
-		}
-		
-		// Set the cookie with domain name, *TO-DO*, this needs to go away
-		// Expiry set to 10 minutes
-		CookieHelper.saveCookie("tname", tenant, 600, response);
+		}		
    }
 
 }

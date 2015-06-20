@@ -28,7 +28,7 @@ public class UserDetailsDao implements IUserDetailsDao {
 	private static final String SQL_USER_ATTEMPTS_UPDATE_ATTEMPTS = "UPDATE user_login_attempts SET attempts = attempts + 1, lastmodified = ? WHERE username = ?";
 	private static final String SQL_USER_ATTEMPTS_RESET_ATTEMPTS = "UPDATE user_login_attempts SET attempts = 0 WHERE username = ?";
 
-	private static final int MAX_ATTEMPTS = 3;
+	private static final int MAX_ATTEMPTS = 5;
 
 	
 	@Autowired

@@ -43,7 +43,7 @@ public class AdminController {
 	/** TO-DO **/
 	// Need to investigate why null parameter gets appended	
 	@PreAuthorize("hasRole('ROLE_SUPERADMIN')")	
-	@RequestMapping(value = {"/admin/index", "/admin/null"}, method = RequestMethod.GET)
+	@RequestMapping(value = {"/admin/index", "/admin"}, method = RequestMethod.GET)
 	public String appAdmin(ModelMap map, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		final String userIPAddress = request.getRemoteAddr();
 		

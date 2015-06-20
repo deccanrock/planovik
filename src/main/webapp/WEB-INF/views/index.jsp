@@ -19,6 +19,9 @@
     <meta name="author" content="">
 
     <title>Planovik - Travel Planner and more!</title>
+    
+    <!-- Fav Icon -->
+    <link rel="shortcut icon" href="<c:url value='/resources/images/planovik_fav.png'/>" type="image/x-icon" />    
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="<c:url value='/resources/www/css/bootstrap.min.css'/>" />
@@ -36,18 +39,27 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-
+    
 </head>
 
 <body>
 
+    <!-- logo -->
+    <nav id="plnvk_logo" class="pull-left" style="position:fixed; z-index: 1000;margin-left:30px;margin-top:20px;">
+	    <a href="#">
+	        <div class="img_logo">
+	            <img src="/resources/images/planovik_logo_beta.png" />
+	        </div>
+	    </a>        
+    </nav>
+    
     <!-- Navigation -->
     <a id="menu-toggle" href="#" class="btn btn-dark btn-lg toggle"><i class="fa fa-bars"></i></a>
     <nav id="sidebar-wrapper">
         <ul class="sidebar-nav">
             <a id="menu-close" href="#" class="btn btn-light btn-lg pull-right toggle"><i class="fa fa-times"></i></a>
             <li class="sidebar-brand">
-                <a href="#top"  onclick = $("#menu-close").click(); >Start Bootstrap</a>
+                <a href="#top"  onclick = $("#menu-close").click(); >Menu</a>
             </li>
             <li>
                 <a href="#top" onclick = $("#menu-close").click(); >Home</a>
@@ -70,10 +82,10 @@
     <!-- Header -->
     <header id="top" class="header">
         <div class="text-vertical-center">
-            <h1>Start Bootstrap</h1>
-            <h3>Free Bootstrap Themes &amp; Templates</h3>
+            <h1>Start Planning</h1>
+            <h3>Travel Planning, Tracking and more</h3>
             <br>
-            <a href="#about" class="btn btn-dark btn-lg">Find Out More</a>
+            <a href="#" id="signupbtn" class="btn btn-dark btn-lg">Sign Up</a>
         </div>
     </header>
 
@@ -238,18 +250,84 @@
         </small>
         </iframe>
     </section>
+    
+    <div id="signupdlg" class="modal fade">
+	    <div class="modal-dialog">
+	        <div class="modal-content">
+				<div class="signup-header">
+	                <button type="button" class="close modal-close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	           		<div class="text">
+	    				<h1 class="signup-title">
+	        				<strong>Join for free</strong>
+	         					in seconds!
+	    				</h1> 
+						<h2 class="signup-subtitle">
+	        				Trip planning made absolutely delightful
+	    				</h2>
+					</div>
+				</div>	
+	        
+	            <div class="modal-body">
+                    <form class="" id="register-form" method="post" action="register">
 
+					    <span class="btn-text">
+							<img width="49%" alt="LinkedIn_signup" src="resources/images/LinkedIn-SignUp.png"></img>
+							<img width="49%" alt="Facebook_signup" src="resources/images/facebook_signup.png"></img>
+	    				</span>
+	
+						<div class="or">
+						    or
+						</div>
+
+							<div class="input-group" style="width:100%;border-radius:4px;">
+						    	<input class="form-control" type="text" placeholder="Company Name" id="tenantdesc" maxlength="120" name="tenantdesc" />
+						    </div>			
+							
+							<div class="space-2"></div>
+							
+							<div class="input-group" style="width:100%;border-radius:4px;">							
+								<input class="form-control" type="text" placeholder="Your Name" id="contactname" maxlength="60" name="contactname" />
+						    </div>			
+							
+							<div class="space-2"></div>							
+
+							<div class="input-group" style="width:100%;border-radius:4px;">														
+								<input class="form-control" type="text" placeholder="Your Email" id="contactemail" maxlength="100" name="contactemail" />
+						    </div>			
+						    
+							<div class="space-2"></div>
+							
+							<div class="input-group">
+							    <span class="input-group-addon" id="dialcode" style="border-radius:0;"></span>
+								<input class="form-control input-mask-phone" style="border-radius:0;" type="text" placeholder="Your Mobile" maxlength="20" id="contactphonemobile" name="contactphonemobile" />
+							</div>	                                       
+	                        
+	                        <input type="hidden" id="tzoffset" name="tzoffset"/>					
+						
+							<div class="space-4"></div>
+													
+							<button id="registerbtn" class="btn btn-success" type="submit">					
+				                <span class="btn-text">Create Account</span>
+				            </button>
+				            <div class="terms"> By signing up you agree to our <a href="/www/terms">terms of service</a></div>
+		        	</form>
+		    	</div> <!-- modal-body -->
+		    </div> <!-- modal-content -->
+		</div> <!-- modal-dialog -->       
+	</div> <!-- signupdlg -->
+
+	
     <!-- Footer -->
     <footer>
         <div class="container">
             <div class="row">
                 <div class="col-lg-10 col-lg-offset-1 text-center">
-                    <h4><strong>Start Bootstrap</strong>
+                    <h4><strong>Planovik</strong>
                     </h4>
-                    <p>3481 Melrose Place<br>Beverly Hills, CA 90210</p>
+                    <p>Plot 32 Road and Raju Colony<br>Road No 2 Banjara Hills<br>Hyderabad, TS 500034</p>
                     <ul class="list-unstyled">
-                        <li><i class="fa fa-phone fa-fw"></i> (123) 456-7890</li>
-                        <li><i class="fa fa-envelope-o fa-fw"></i>  <a href="mailto:name@example.com">name@example.com</a>
+                        <li><i class="fa fa-phone fa-fw"></i> (+91) 9866277000</li>
+                        <li><i class="fa fa-envelope-o fa-fw"></i>  <a href="mailto:support@planovik.com">Planovik Support</a>
                         </li>
                     </ul>
                     <br>
@@ -265,18 +343,20 @@
                         </li>
                     </ul>
                     <hr class="small">
-                    <p class="text-muted">Copyright &copy; Your Website 2014</p>
+                    <p class="text-muted">Copyright &copy; Deccan Rock Pvt Ltd. 2015</p>
                 </div>
             </div>
         </div>
     </footer>
-
+</body>
     <!-- jQuery -->
     <script src="<c:url value='/resources/www/js/jquery.js'/>" ></script>
 
     <!-- Bootstrap Core JavaScript -->
     <script src="<c:url value='/resources/www/js/bootstrap.min.js'/>" ></script>
 
+    <script src="<c:url value='/resources/js/jquery.validate.min.js'/>" ></script>
+    
     <!-- Custom Theme JavaScript -->
     <script>
     // Closes the sidebar menu
@@ -293,6 +373,7 @@
 
     // Scrolls to the selected menu item on the page
     $(function() {
+         
         $('a[href*=#]:not([href=#])').click(function() {
             if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') || location.hostname == this.hostname) {
 
@@ -306,7 +387,107 @@
                 }
             }
         });
+        
+        $.ajax({
+          url: "/phonecode",
+          type: "GET"
+        }).done(function( data ) {
+			$("#dialcode").text(data);
+		});
+                
+		$( "#signupbtn" ).click(function() {		
+	    	$("#register-form")[0].reset();
+	    	$(".help-block").remove();
+	    	$('.has-error').removeClass('has-error');	    	
+	    	$('.input-group').addClass('input-group');	    	
+			$("#signupdlg").modal('show');
+	    });
+	    	    
+        jQuery.validator.addMethod("contactphone", function (value, element) {
+            return this.optional(element) || /^\d{10}$/.test(value);
+        }, "Enter a valid phone number with 10 digits.");
+
+        jQuery.validator.addMethod("contactname", function (value, element) {
+            return this.optional(element) || /^[a-z  A-Z0-9]*$/.test(value);
+        }, "Enter a valid username. Alphanumeric only!");
+        
+		jQuery.validator.addMethod("contactemail", function (value, element) {
+            return this.optional(element) || /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/.test(value);
+        }, "Enter a valid email address.");                
+
+        $('#register-form').validate({
+            errorElement: 'div',
+            errorClass: 'help-block',
+            focusInvalid: false,
+	        submitHandler: function(form) {
+	            var d = new Date();
+	            $('#tzoffset').val(d.getTimezoneOffset());  
+				var dataString = 'tenantdesc=' + $('#tenantdesc').val() + '&contactname=' +  $('#contactname').val() + 
+								 '&contactemail=' +  $('#contactemail').val() + '&contactphonemobile=' + $('#contactphonemobile').val() +
+								 '&tzoffset=' + $('#tzoffset').val();
+				console.log(dataString);						 
+	            $.ajax({
+	              url: "/register",
+	              data: dataString,
+	              type: "POST"
+	            }).done(function( data ) {
+	                console.log( data );		                			
+	                location.reload();
+				});
+	        },            
+            rules: {
+                tenantdesc: {
+                    required: true,
+                    minlength: 3
+                },
+                contactemail: {
+                    required: true,
+                    contactemail: 'required'
+                },
+                contactphonemobile: {
+                    required: true,
+                    contactphone: 'required'
+                },
+                contactname: {
+                    required: true,
+                    minlength: 3,
+                    contactname: 'required'
+                }
+            },
+            messages: {
+
+            },
+
+            highlight: function (e) {
+                $(e).closest('.input-group').removeClass('has-info').addClass('has-error');
+            },
+
+            success: function (e) {
+                $(e).closest('.input-group').removeClass('has-error');//.addClass('has-info');
+                $(e).remove();
+            },
+
+            errorPlacement: function (error, element) {
+                if(element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+                    var controls = element.closest('div[class*="col-"]');
+                    if(controls.find(':checkbox,:radio').length > 1) controls.append(error);
+                    else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+                }
+                else if(element.is('.select2')) {
+                    error.insertAfter(element.siblings('[class*="select2-container"]:eq(0)'));
+                }
+                else if(element.is('.chosen-select')) {
+                    error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+                }
+                else error.insertAfter(element.parent());
+            },
+
+            invalidHandler: function (form) {
+            }
+        });
+            
     });
+
     </script>
 
 </body>

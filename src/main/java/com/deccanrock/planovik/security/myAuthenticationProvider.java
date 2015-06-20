@@ -33,7 +33,9 @@ public class myAuthenticationProvider extends DaoAuthenticationProvider {
 		} catch (BadCredentialsException e) {
 
 			userDetailsDao.updateFailAttempts(authentication.getName());
-			throw e;
+			String error = "Incorrect username or password.";
+			throw new BadCredentialsException(error);
+			// return authentication;
 
 		} catch (LockedException e) {
 

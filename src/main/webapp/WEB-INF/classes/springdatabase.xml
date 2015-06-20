@@ -72,10 +72,6 @@
 	
     <bean id="applicationContextProvider" class="com.deccanrock.planovik.controller.AppCtxtProv"></bean>    
 	
-	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-	   <property name="location" value="classpath:/com/deccanrock/planovik/datasource/db.properties"/>
-	</bean>
-	
 	<bean id="dataSourceRegistry" class="com.deccanrock.planovik.Tenant.TenantTargetRegistry"></bean>
 	
 	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">

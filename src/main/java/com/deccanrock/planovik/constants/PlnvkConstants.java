@@ -95,6 +95,24 @@ public class PlnvkConstants {
 	    }		
 	}
 	
+	public enum  RegStatus {
+		NA(0),
+		Pending(1),
+		Confirmed(2),
+		Closed(3),
+		Suspended(4);
+
+		private final int value;
+
+	    private RegStatus(int value) {
+	        this.value = value;
+	    }
+
+	    public int getValue() {
+	        return value;
+	    }		
+	}
+	
 	// TO_DO - This should be moved to DB
 	private final List <String> roles = Arrays.asList("ROLE_USER", "ROLE_ADMIN");
 	public List<String> getUserRoles() { return roles; }
@@ -112,8 +130,5 @@ public class PlnvkConstants {
 	
 	private final List <String> regtype = Arrays.asList("NA", "Trial", "Pro Monthly", "Pro Annual", "Premium");
 	public List<String> getRegtype() { return regtype; }
-
-	private final List <String> regstatus = Arrays.asList("NA", "Pending", "Active",  "closed", "Suspended");
-	public List<String> getRegstatus() { return regstatus; }
 
 }
