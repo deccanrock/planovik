@@ -23,8 +23,8 @@ public class TenantEntity implements Serializable {
 	@Column(name="tenantname")
 	private String tenantname;
 
-	@Column(name="datastore")	
-	public String datastore;
+	@Column(name="jndiname")	
+	public String jndiname;
 
 	@Column(name="regip")	
 	public String regip;
@@ -71,8 +71,8 @@ public class TenantEntity implements Serializable {
 	@Column(name="contactdesignation")	
 	public String contactdesignation;
 	
-	@Column(name="regtype")
-	private  short regtype;
+	@Column(name="tenanttype")
+	private  short tenanttype;
 	
 	@Column(name="regstatus")
 	private short regstatus;
@@ -133,12 +133,12 @@ public class TenantEntity implements Serializable {
 		this.tenantdesc = tenantdesc;
 	}
 
-	public String getDatastore() {
-		return datastore;
+	public String getJndiname() {
+		return jndiname;
 	}
 	
-	public void setDatastore(String datastore) {
-		this.datastore = datastore;
+	public void setJndiname(String jndiname) {
+		this.jndiname = jndiname;
 	}
 
 	public String getRegip() {
@@ -237,12 +237,12 @@ public class TenantEntity implements Serializable {
 		this.contactdesignation = contactdesignation;
 	}
 
-	public short getRegtype() {
-		return regtype;
+	public short getTenanttype() {
+		return tenanttype;
 	}
 	
-	public void setRegtype(short regtype) {
-		this.regtype = regtype;
+	public void setTenanttype(short tenanttype) {
+		this.tenanttype = tenanttype;
 	}
 	
 	public short getRegstatus() {

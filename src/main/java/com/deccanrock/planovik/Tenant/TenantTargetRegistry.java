@@ -29,7 +29,7 @@ public class TenantTargetRegistry implements TargetRegistry<DataSource> {
 			}
 		
 		else {	
-			dataSource = getDataSource(intenant.getDatastore());
+			dataSource = getDataSource(intenant.getJndiname());
 			synchronized (this) {
 				map.put(key, dataSource);
 			}
@@ -38,7 +38,7 @@ public class TenantTargetRegistry implements TargetRegistry<DataSource> {
 		return dataSource;
 	}
 
-	private DataSource getDataSource(String datastore) {
+	private DataSource getDataSource(String jndiname) {
 		// BasicDataSource dataSource = new BasicDataSource();
 		// dataSource.setUsername(username);
 		// dataSource.setPassword(password);
@@ -46,7 +46,7 @@ public class TenantTargetRegistry implements TargetRegistry<DataSource> {
 	    JndiTemplate jndiTemplate = new JndiTemplate();
 	    DataSource dataSource = null;
 		try {
-			dataSource = (DataSource) jndiTemplate.lookup("java:comp/env/jdbc/" + datastore);
+			dataSource = (DataSource) jndiTemplate.lookup("java:comp/env/jdbc/" + jndiname);
 		} catch (NamingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -16,7 +16,7 @@ public class TenantEntityMapper implements RowMapper<TenantEntity> {
 	   tenant.setTenantid(rs.getInt("tenantid"));	   	   
 	   tenant.setTenantdesc(rs.getString("tenantdesc"));
 	   tenant.setTenantname(rs.getString("tenantname"));
-	   tenant.setDatastore(rs.getString("datastore"));
+	   tenant.setJndiname(rs.getString("jndiname"));
 	   tenant.setRegip(rs.getString("regip"));
 	   tenant.setZoneid(rs.getShort("zoneid"));	   	   
 	   tenant.setRegip(rs.getString("regip"));
@@ -33,7 +33,7 @@ public class TenantEntityMapper implements RowMapper<TenantEntity> {
 	   tenant.setContactphonemobile(rs.getString("contactphonemobile"));
 	   tenant.setContactemail(rs.getString("contactemail"));
 	   tenant.setContactdesignation(rs.getString("contactdesignation"));
-	   tenant.setRegtype(rs.getShort("regtype"));
+	   tenant.setTenanttype(rs.getShort("tenanttype"));
 	   tenant.setRegstatus(rs.getShort("regstatus"));
 	   tenant.setTzoffset(rs.getShort("tzoffset"));	   
 	   tenant.setDatecreatedlong(TimeFormatter.UTCToLocal(rs.getTimestamp("datecreated").getTime(), tenant.getTzoffset()));

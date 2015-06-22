@@ -7,6 +7,12 @@ alter table plnvk_tenant_master AUTO_INCREMENT=3;
 
 delete from user_login_attempts where id=2;
 
+select * from plnvk_zone_map;
+insert into plnvk_zone_map (name, hostingtype, hostingprovider, datecreated, dateupdated, createdby, updatedby) 
+values ('Africa', 'Cloud', 'AWS', UTC_TIMESTAMP(), UTC_TIMESTAMP(), 1,1);
+
+update plnvk_zone_map set name='EME' where zoneid=3;
+
 select * from users;
 update users set accountNonlocked=1 where id=2;
 select * from user_login_attempts;

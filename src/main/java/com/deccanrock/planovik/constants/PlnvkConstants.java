@@ -128,7 +128,7 @@ public class PlnvkConstants {
 	private final List <String> transportcoverage = Arrays.asList("cityonly", "intercity");
 	public List<String> getTransportcoverage() { return transportcoverage; }
 	
-	private final List <String> regtype = Arrays.asList("NA", "Trial", "Pro Monthly", "Pro Annual", "Premium");
-	public List<String> getRegtype() { return regtype; }
+	private final List <String> tenanttype = Arrays.asList("NA", "Trial", "Pro Monthly", "Pro Annual", "Premium");
+	public List<String> getRegtype() { return tenanttype; }
 
 }

@@ -24,7 +24,7 @@
 	</bean>		
 	
     <bean id="mainDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-        <property name="jndiName" value="java:comp/env/jdbc/planovik_main"/>
+        <property name="jndiName" value="java:comp/env/jdbc/z1_planovik_main"/>
     </bean>
 	
 	<bean id="OrgEntityDAO" class="com.deccanrock.planovik.service.dao.OrgEntityDAO">
