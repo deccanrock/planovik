@@ -18,7 +18,7 @@ public class CacheService {
     CacheService () {}
 	
     // This is a singleton
-    public net.sf.ehcache.Cache getTenantCache() {
+    public net.sf.ehcache.Cache getCache() {
         return cache;
     }
 }

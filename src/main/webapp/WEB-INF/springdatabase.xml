@@ -14,7 +14,7 @@
 	</bean>
 		
 	<bean id="cache" class="net.sf.ehcache.Cache" factory-bean="cacheManager" factory-method="getCache">
-	    <constructor-arg value="tenantCache" />          
+	    <constructor-arg value="cache" />          
 	</bean>	
 	
 	<bean id="cacheservice" class="com.deccanrock.planovik.service.utils.CacheService">
@@ -81,5 +81,40 @@
 	<bean id="filehandler" class="com.deccanrock.planovik.service.utils.FileHandler">
     	<property name="resourcesfolder" value="c:/planovikpub/resources/" />
 	</bean>
-					           
+	
+	<bean id="defaultMandrillConfiguration" class="com.deccanrock.planovik.mandrill.util.MandrillConfiguration">
+		<property name="apiVersion" value=""/>
+		<property name="baseURL" value="https://mandrillapp.com/api"/>
+		<property name="apiKey" value="1.0"/>
+	</bean>
+	
+	<bean id="apacheHttpClient" class="org.apache.http.impl.client.HttpClientBuilder"/>
+	<bean id="defaultObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper"/>
+	
+	<bean id="mandrillRESTRequest" class="com.deccanrock.planovik.mandrill.request.MandrillRESTRequest" scope="request">
+		<property name="config" ref="defaultMandrillConfiguration"/>
+		<property name="httpClient" ref="apacheHttpClient"/>
+		<property name="objectMapper" ref="defaultObjectMapper"/>
+	</bean>
+	
+	
+	<!-- Request Classes -->
+	
+	<bean id="messagesRequest" class="com.deccanrock.planovik.mandrill.request.MandrillMessagesRequest" scope="request">
+		<property name="request" ref="mandrillRESTRequest"/>
+	</bean>
+	<bean id="tagsRequest" class="com.deccanrock.planovik.mandrill.request.MandrillTagsRequest" scope="request">
+		<property name="request" ref="mandrillRESTRequest"/>
+	</bean>
+	<bean id="templatesRequest" class="com.deccanrock.planovik.mandrill.request.MandrillTemplatesRequest" scope="request">
+		<property name="request" ref="mandrillRESTRequest"/>
+	</bean>
+	<bean id="urlsRequest" class="com.deccanrock.planovik.mandrill.request.MandrillUrlsRequest" scope="request">
+		<property name="request" ref="mandrillRESTRequest"/>
+	</bean>
+	<bean id="usersRequest" class="com.deccanrock.planovik.mandrill.request.MandrillUsersRequest" scope="request">
+		<property name="request" ref="mandrillRESTRequest"/>
+	</bean>	
+		
+						           
 </beans>

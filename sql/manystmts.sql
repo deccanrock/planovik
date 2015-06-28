@@ -1,11 +1,26 @@
 select * from plnvk_tenant_master;
-update plnvk_tenant_master set createdby=1, updatedby=1 where tenantid=2;
-delete from plnvk_tenant_master where tenantid=3;
+update plnvk_tenant_master set jndiname='planovik_trial_1' where tenantid=3;
+delete from plnvk_tenant_master where tenantid=4;
 select * from user_login_attempts;
 update user_login_attempts set attempts=0 where id=3;
-alter table plnvk_tenant_master AUTO_INCREMENT=3;
+alter table plnvk_tenant_master AUTO_INCREMENT=4;
 
 delete from user_login_attempts where id=2;
+
+select * from plnvk_db_map;
+delete from plnvk_db_map where dbid=1;
+alter table plnvk_db_map AUTO_INCREMENT=1;
+
+update plnvk_db_map set jndiname='z1_planovik_main' where dbid=1;
+
+insert into plnvk_db_map (zoneid, jndiname, url, active, tenanttype, isavailfornewcon, datecreated, dateupdated, createdby, updatedby)
+values(1, 'z1_planovik_pro_2', 'jdbc:mysql://192.168.1.108:3307/z1_planovik_pro_2', 'Y', 0, 'Y', UTC_TIMESTAMP(), UTC_TIMESTAMP(), 1, 1);
+
+update plnvk_db_map set url = 'jdbc:mysql://192.168.1.108:3306/z1_planovik_main' where dbid=1;
+
+delete from plnvk_db_map where dbid=2;
+
+alter table plnvk_db_map AUTO_INCREMENT=1;
 
 select * from plnvk_zone_map;
 insert into plnvk_zone_map (name, hostingtype, hostingprovider, datecreated, dateupdated, createdby, updatedby) 
@@ -70,4 +85,8 @@ LOAD DATA LOCAL INFILE 'C:\\temp\\country_name_code_phonecode.csv' INTO TABLE is
 select * from iso_cntryphcodes where isoname='guinea';
 
 update iso_cntryphcodes set isocode3='GIN', dialcode='224' where isoname='guinea';
+
+mysqldump -u root -p -v planovik_main > planovik_main.sql
+mysqladmin -u username -p create newdatabase
+mysql -u username -p newdatabase < olddbdump.sql
 

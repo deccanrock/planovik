@@ -16,7 +16,6 @@ http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 <intercept-url pattern="/admin/**" access="ROLE_SUPERADMIN,ROLE_ADMIN" />
 
 <intercept-url pattern="/app**" access="ROLE_SUPERADMIN,ROLE_ADMIN,ROLE_USER" />
-
 <!-- access denied page -->
 <access-denied-handler error-page="/app/error403" />
 <form-login login-page="/app/login" 

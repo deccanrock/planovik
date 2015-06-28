@@ -6,9 +6,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -88,4 +88,21 @@ public class WebsiteController {
 		return "+" + isocntryph.getDialcode();
 	}	
 
+	/**
+	 * Check if tenant already exists
+	 * @throws URISyntaxException 
+	 */
+	@RequestMapping(value = "/checktenantdesc", method = RequestMethod.GET)	
+	public @ResponseBody String checkTenantDesc(@RequestParam(value = "tenantdesc") String tenantDesc) {
+		logger.info("Check Tenant Desc");
+
+		ApplicationContext context = AppCtxtProv.getApplicationContext();
+		TenantEntityDAO TED = (TenantEntityDAO)context.getBean("TenantEntityDAO");
+		// This should be changed to memcached
+		if (TED.TenantExists(tenantDesc))
+			return "exists";
+		else
+			return "none";
+	}	
+	
 }

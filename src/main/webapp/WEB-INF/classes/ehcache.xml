@@ -9,8 +9,8 @@
  
 	<diskStore path="c:\\cache" />
  
-	<cache name="tenantCache" 
-		maxEntriesLocalHeap="10000"
+	<cache name="cache" 
+		maxEntriesLocalHeap="50000"
 		maxEntriesLocalDisk="100000" 
 		eternal="false" 
 		diskSpoolBufferSizeMB="20"
@@ -19,5 +19,6 @@
 		transactionalMode="off">
 		<persistence strategy="localTempSwap" />
 	</cache>
- 
+
+	
 </ehcache>

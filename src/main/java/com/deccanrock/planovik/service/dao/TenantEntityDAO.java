@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.deccanrock.planovik.constants.PlnvkConstants;
 import com.deccanrock.planovik.entity.TenantEntity;
 import com.deccanrock.planovik.location.ISOCountryPhone;
+import com.deccanrock.planovik.mandrill.MailService;
 import com.deccanrock.planovik.service.TenantEntityMapper;
 import com.deccanrock.planovik.service.utils.MiscHelper;
 
@@ -89,8 +90,13 @@ public class TenantEntityDAO implements ITenantEntityDAO {
 					simpleJdbcCallResult = simpleJdbcCall.execute(in);
 					result = simpleJdbcCallResult.get("result").toString();
 					i++;
-				}
+				} 
 			}
+			// Send welcome email
+			MailService ms = new MailService();
+			String content = "Thank You for registering to use our service. Please click on big blue button below to complete your registration.";
+			ms.SendMessage("Planovik Signup", "signup@planovik.com", tenant.getContactname(), tenant.getContactemail(), "Welcome to Planovik", content);			
+			
 		} catch (Exception ex) {
 		    result = ex.getMessage();
 		} 					
@@ -122,5 +128,27 @@ public class TenantEntityDAO implements ITenantEntityDAO {
 		} 					
 	
     	return isocntryph;
+	}
+
+	@Override
+	public boolean TenantExists(String tenantDesc) {
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	    	    	
+    	SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
+    	.withProcedureName("sp_checktenantexists");
+    	
+    	Map<String, Object> inParamMap = new HashMap<String, Object>();		
+    	inParamMap.put("intenantdesc", tenantDesc);		
+    	SqlParameterSource in = new MapSqlParameterSource(inParamMap);
+ 		
+    	try {    	
+			Map<String, Object> simpleJdbcCallResult = simpleJdbcCall.execute(in);
+			String result = simpleJdbcCallResult.get("result").toString();
+			if (result.contentEquals("exists"))
+					return true;
+			else
+					return false;
+    	} catch (Exception ex) {
+			return false;
+		} 					
 	}
 }

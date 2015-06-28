@@ -1,0 +1,2539 @@
+-- MySQL dump 10.13  Distrib 5.6.21, for Win64 (x86_64)
+--
+-- Host: localhost    Database: z1_planovik_main
+-- ------------------------------------------------------
+-- Server version	5.6.21-log
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `iso_cntryphcodes`
+--
+
+DROP TABLE IF EXISTS `iso_cntryphcodes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `iso_cntryphcodes` (
+  `isoname` varchar(120) NOT NULL,
+  `isocode2` varchar(2) NOT NULL DEFAULT '',
+  `isocode3` varchar(3) NOT NULL,
+  `dialcode` varchar(20) NOT NULL,
+  PRIMARY KEY (`isocode2`),
+  UNIQUE KEY `isoname_UNIQUE` (`isoname`),
+  UNIQUE KEY `isocode3_UNIQUE` (`isocode3`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `iso_cntryphcodes`
+--
+
+LOCK TABLES `iso_cntryphcodes` WRITE;
+/*!40000 ALTER TABLE `iso_cntryphcodes` DISABLE KEYS */;
+INSERT INTO `iso_cntryphcodes` VALUES ('Andorra','AD','AND','376'),('United Arab Emirates','AE','ARE','971'),('Afghanistan','AF','AFG','93'),('Antigua and Barbuda','AG','ATG','1-268'),('Anguilla','AI','AIA','1-264'),('Albania','AL','ALB','355'),('Armenia','AM','ARM','374'),('Netherlands Antilles','AN','ANT','599'),('Angola','AO','AGO','244'),('Antarctica','AQ','ATA','672'),('Argentina','AR','ARG','54'),('American Samoa','AS','ASM','1-684'),('Austria','AT','AUT','43'),('Australia','AU','AUS','61'),('Aruba','AW','ABW','297'),('Azerbaijan','AZ','AZE','994'),('Bosnia and Herzegovina','BA','BIH','387'),('Barbados','BB','BRB','1-246'),('Bangladesh','BD','BGD','880'),('Belgium','BE','BEL','32'),('Burkina Faso','BF','BFA','226'),('Bulgaria','BG','BGR','359'),('Bahrain','BH','BHR','973'),('Burundi','BI','BDI','257'),('Benin','BJ','BEN','229'),('Saint Barthelemy','BL','BLM','590'),('Bermuda','BM','BMU','1-441'),('Brunei','BN','BRN','673'),('Bolivia','BO','BOL','591'),('Brazil','BR','BRA','55'),('Bahamas','BS','BHS','1-242'),('Bhutan','BT','BTN','975'),('Botswana','BW','BWA','267'),('Belarus','BY','BLR','375'),('Belize','BZ','BLZ','501'),('Canada','CA','CAN','1'),('Cocos Islands','CC','CCK','61'),('Democratic Republic of the Congo','CD','COD','243'),('Central African Republic','CF','CAF','236'),('Republic of the Congo','CG','COG','242'),('Switzerland','CH','CHE','41'),('Ivory Coast','CI','CIV','225'),('Cook Islands','CK','COK','682'),('Chile','CL','CHL','56'),('Cameroon','CM','CMR','237'),('China','CN','CHN','86'),('Colombia','CO','COL','57'),('Costa Rica','CR','CRI','506'),('Cuba','CU','CUB','53'),('Cape Verde','CV','CPV','238'),('Curacao','CW','CUW','599'),('Christmas Island','CX','CXR','61'),('Cyprus','CY','CYP','357'),('Czech Republic','CZ','CZE','420'),('Germany','DE','DEU','49'),('Djibouti','DJ','DJI','253'),('Denmark','DK','DNK','45'),('Dominica','DM','DMA','1-767'),('Dominican Republic','DO','DOM','1-809 1-829 1-849'),('Algeria','DZ','DZA','213'),('Ecuador','EC','ECU','593'),('Estonia','EE','EST','372'),('Egypt','EG','EGY','20'),('Western Sahara','EH','ESH','212'),('Eritrea','ER','ERI','291'),('Spain','ES','ESP','34'),('Ethiopia','ET','ETH','251'),('Finland','FI','FIN','358'),('Fiji','FJ','FJI','679'),('Falkland Islands','FK','FLK','500'),('Micronesia','FM','FSM','691'),('Faroe Islands','FO','FRO','298'),('France','FR','FRA','33'),('Gabon','GA','GAB','241'),('United Kingdom','GB','GBR','44'),('Grenada','GD','GRD','1-473'),('Georgia','GE','GEO','995'),('Guernsey','GG','GGY','44-1481'),('Ghana','GH','GHA','233'),('Gibraltar','GI','GIB','350'),('Greenland','GL','GRL','299'),('Gambia','GM','GMB','220'),('Guinea','GN','GIN','224'),('Equatorial Guinea','GQ','GNQ','240'),('Greece','GR','GRC','30'),('Guatemala','GT','GTM','502'),('Guam','GU','GUM','1-671'),('Guinea-Bissau','GW','GNB','245'),('Guyana','GY','GUY','592'),('Hong Kong','HK','HKG','852'),('Honduras','HN','HND','504'),('Croatia','HR','HRV','385'),('Haiti','HT','HTI','509'),('Hungary','HU','HUN','36'),('Indonesia','ID','IDN','62'),('Ireland','IE','IRL','353'),('Israel','IL','ISR','972'),('Isle of Man','IM','IMN','44-1624'),('India','IN','IND','91'),('British Indian Ocean Territory','IO','IOT','246'),('Iraq','IQ','IRQ','964'),('Iran','IR','IRN','98'),('Iceland','IS','ISL','354'),('Italy','IT','ITA','39'),('Jersey','JE','JEY','44-1534'),('Jamaica','JM','JAM','1-876'),('Jordan','JO','JOR','962'),('Japan','JP','JPN','81'),('Kenya','KE','KEN','254'),('Kyrgyzstan','KG','KGZ','996'),('Cambodia','KH','KHM','855'),('Kiribati','KI','KIR','686'),('Comoros','KM','COM','269'),('Saint Kitts and Nevis','KN','KNA','1-869'),('South Korea','KR','KOR','82'),('Kuwait','KW','KWT','965'),('Cayman Islands','KY','CYM','1-345'),('Kazakhstan','KZ','KAZ','7'),('Laos','LA','LAO','856'),('Lebanon','LB','LBN','961'),('Saint Lucia','LC','LCA','1-758'),('Liechtenstein','LI','LIE','423'),('Sri Lanka','LK','LKA','94'),('Liberia','LR','LBR','231'),('Lesotho','LS','LSO','266'),('Lithuania','LT','LTU','370'),('Luxembourg','LU','LUX','352'),('Latvia','LV','LVA','371'),('Libya','LY','LBY','218'),('Morocco','MA','MAR','212'),('Monaco','MC','MCO','377'),('Moldova','MD','MDA','373'),('Montenegro','ME','MNE','382'),('Saint Martin','MF','MAF','590'),('Madagascar','MG','MDG','261'),('Marshall Islands','MH','MHL','692'),('Macedonia','MK','MKD','389'),('Mali','ML','MLI','223'),('Myanmar','MM','MMR','95'),('Mongolia','MN','MNG','976'),('Macao','MO','MAC','853'),('Northern Mariana Islands','MP','MNP','1-670'),('Mauritania','MR','MRT','222'),('Montserrat','MS','MSR','1-664'),('Malta','MT','MLT','356'),('Mauritius','MU','MUS','230'),('Maldives','MV','MDV','960'),('Malawi','MW','MWI','265'),('Mexico','MX','MEX','52'),('Malaysia','MY','MYS','60'),('Mozambique','MZ','MOZ','258'),('Namibia','NA','NAM','264'),('New Caledonia','NC','NCL','687'),('Niger','NE','NER','227'),('Nigeria','NG','NGA','234'),('Nicaragua','NI','NIC','505'),('Netherlands','NL','NLD','31'),('Norway','NO','NOR','47'),('Nepal','NP','NPL','977'),('Nauru','NR','NRU','674'),('Niue','NU','NIU','683'),('New Zealand','NZ','NZL','64'),('Oman','OM','OMN','968'),('Panama','PA','PAN','507'),('Peru','PE','PER','51'),('French Polynesia','PF','PYF','689'),('Papua New Guinea','PG','PNG','675'),('Philippines','PH','PHL','63'),('North Korea','PK','PRK','850'),('Palau','PL','PLW','680'),('Saint Pierre and Miquelon','PM','SPM','508'),('Pitcairn','PN','PCN','64'),('Puerto Rico','PR','PRI','1-787 1-939'),('Palestine','PS','PSE','970'),('Portugal','PT','PRT','351'),('Paraguay','PY','PRY','595'),('Qatar','QA','QAT','974'),('Reunion','RE','REU','262'),('Romania','RO','ROU','40'),('Serbia','RS','SRB','381'),('Russia','RU','RUS','7'),('Rwanda','RW','RWA','250'),('Saudi Arabia','SA','SAU','966'),('Solomon Islands','SB','SLB','677'),('Seychelles','SC','SYC','248'),('Sudan','SD','SDN','249'),('Sweden','SE','SWE','46'),('Singapore','SG','SGP','65'),('Saint Helena','SH','SHN','290'),('Slovenia','SI','SVN','386'),('Svalbard and Jan Mayen','SJ','SJM','47'),('Slovakia','SK','SVK','421'),('Sierra Leone','SL','SLE','232'),('San Marino','SM','SMR','378'),('Senegal','SN','SEN','221'),('Somalia','SO','SOM','252'),('Suriname','SR','SUR','597'),('South Sudan','SS','SSD','211'),('Sao Tome and Principe','ST','STP','239'),('El Salvador','SV','SLV','503'),('Sint Maarten','SX','SXM','1-721'),('Syria','SY','SYR','963'),('Swaziland','SZ','SWZ','268'),('Turks and Caicos Islands','TC','TCA','1-649'),('Chad','TD','TCD','235'),('Togo','TG','TGO','228'),('Thailand','TH','THA','66'),('Tajikistan','TJ','TJK','992'),('Tokelau','TK','TKL','690'),('East Timor','TL','TLS','670'),('Turkmenistan','TM','TKM','993'),('Tunisia','TN','TUN','216'),('Tonga','TO','TON','676'),('Turkey','TR','TUR','90'),('Trinidad and Tobago','TT','TTO','1-868'),('Tuvalu','TV','TUV','688'),('Taiwan','TW','TWN','886'),('Tanzania','TZ','TZA','255'),('Ukraine','UA','UKR','380'),('Uganda','UG','UGA','256'),('United States','US','USA','1'),('Uruguay','UY','URY','598'),('Uzbekistan','UZ','UZB','998'),('Vatican','VA','VAT','379'),('Saint Vincent and the Grenadines','VC','VCT','1-784'),('Venezuela','VE','VEN','58'),('British Virgin Islands','VG','VGB','1-284'),('U.S. Virgin Islands','VI','VIR','1-340'),('Vietnam','VN','VNM','84'),('Vanuatu','VU','VUT','678'),('Wallis and Futuna','WF','WLF','681'),('Samoa','WS','WSM','685'),('Kosovo','XK','XKX','383'),('Yemen','YE','YEM','967'),('Mayotte','YT','MYT','262'),('South Africa','ZA','ZAF','27'),('Zambia','ZM','ZMB','260'),('Zimbabwe','ZW','ZWE','263');
+/*!40000 ALTER TABLE `iso_cntryphcodes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `isocurrencies`
+--
+
+DROP TABLE IF EXISTS `isocurrencies`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `isocurrencies` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `isocode` varchar(3) NOT NULL,
+  `currdesc` varchar(20) NOT NULL,
+  PRIMARY KEY (`isocode`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  UNIQUE KEY `isocode_UNIQUE` (`isocode`),
+  UNIQUE KEY `desc_UNIQUE` (`currdesc`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `isocurrencies`
+--
+
+LOCK TABLES `isocurrencies` WRITE;
+/*!40000 ALTER TABLE `isocurrencies` DISABLE KEYS */;
+INSERT INTO `isocurrencies` VALUES (6,'AED','UAE Dirham'),(7,'AUD','Australian Dollar'),(3,'EUR','Europe Union Euro'),(5,'GBP','Pound Sterling'),(1,'INR','Indian Rupee'),(8,'JPY','Japan Yen'),(13,'KRW','South Korean Won'),(9,'MYR','Malayasian Ringgit'),(14,'NOK','Norwegian Krone'),(10,'NZD','New Zealand Dollar'),(11,'SGD','Singapore Dollar'),(2,'USD','United States Dollar');
+/*!40000 ALTER TABLE `isocurrencies` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `itin_activity_codes`
+--
+
+DROP TABLE IF EXISTS `itin_activity_codes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `itin_activity_codes` (
+  `code` varchar(20) NOT NULL,
+  `description` varchar(40) NOT NULL,
+  `datecreated` datetime NOT NULL,
+  `dateupdated` datetime NOT NULL,
+  PRIMARY KEY (`code`),
+  UNIQUE KEY `code_UNIQUE` (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `itin_activity_codes`
+--
+
+LOCK TABLES `itin_activity_codes` WRITE;
+/*!40000 ALTER TABLE `itin_activity_codes` DISABLE KEYS */;
+INSERT INTO `itin_activity_codes` VALUES ('T_BOOK_ONEWAY','Booking One Way','2015-04-27 01:48:51','2015-04-27 01:48:51'),('T_BOOK_RETURN','Booking Return','2015-04-27 01:49:32','2015-04-27 01:49:32'),('T_PIKUPDRP','Pickup and Drop','2015-03-11 02:26:39','2015-03-11 02:26:39');
+/*!40000 ALTER TABLE `itin_activity_codes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `itin_activity_hotel`
+--
+
+DROP TABLE IF EXISTS `itin_activity_hotel`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `itin_activity_hotel` (
+  `activityid` int(11) NOT NULL AUTO_INCREMENT,
+  `itinnum` int(11) NOT NULL,
+  `actname` varchar(45) NOT NULL,
+  `pax` smallint(5) NOT NULL DEFAULT '0',
+  `code` varchar(8) NOT NULL,
+  `version` smallint(2) NOT NULL DEFAULT '1',
+  `propertyid` int(10) NOT NULL,
+  `city` varchar(15) DEFAULT NULL,
+  `roomcat` varchar(15) DEFAULT NULL,
+  `mealplan` smallint(2) DEFAULT '0',
+  `hotelcheckintime` varchar(12) DEFAULT NULL,
+  `hotelcheckouttime` varchar(12) DEFAULT NULL,
+  `checkindatetime` datetime NOT NULL,
+  `checkoutdatetime` datetime NOT NULL,
+  `price` decimal(10,2) DEFAULT NULL,
+  `pricemarkup` smallint(3) unsigned DEFAULT '0',
+  `commentsinternal` varchar(200) DEFAULT NULL,
+  `commentsexternal` varchar(200) DEFAULT NULL,
+  `datecreated` datetime NOT NULL,
+  `dateupdated` datetime NOT NULL,
+  `lastupdatedby` int(10) unsigned NOT NULL,
+  `createdby` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`activityid`),
+  KEY `fk_code_itin_activity_hotel_idx` (`code`),
+  KEY `fk_lastupdateby_itin_activity_hotel_idx` (`lastupdatedby`),
+  KEY `fk_itinnum_itin_activity_hotel_idx` (`itinnum`),
+  KEY `fk_createddby_itin_activity_hotel_idx` (`createdby`),
+  KEY `fk_propertyid_itin_activity_hotel_idx` (`propertyid`),
+  CONSTRAINT `fk_code_itin_activity_hotel` FOREIGN KEY (`code`) REFERENCES `itin_activity_codes` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_createdby_itin_activity_hotel` FOREIGN KEY (`createdby`) REFERENCES `users` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `fk_itinnum_itin_activity_hotel` FOREIGN KEY (`itinnum`) REFERENCES `itin_master` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `fk_lastupdateby_itin_activity_hotel` FOREIGN KEY (`lastupdatedby`) REFERENCES `users` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `fk_propertyid_itin_activity_hotel` FOREIGN KEY (`propertyid`) REFERENCES `service_hotels` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `itin_activity_hotel`
+--
+
+LOCK TABLES `itin_activity_hotel` WRITE;
+/*!40000 ALTER TABLE `itin_activity_hotel` DISABLE KEYS */;
+/*!40000 ALTER TABLE `itin_activity_hotel` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `itin_activity_master`
+--
+
+DROP TABLE IF EXISTS `itin_activity_master`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `itin_activity_master` (
+  `itinnum` int(11) NOT NULL,
+  `version` smallint(2) NOT NULL,
+  `pax` smallint(5) NOT NULL,
+  `datecreated` datetime NOT NULL,
+  `dateupdated` datetime NOT NULL,
+  `countactivityhotel` smallint(3) unsigned NOT NULL DEFAULT '0',
+  `countactivityother` smallint(3) unsigned NOT NULL DEFAULT '0',
+  `countactivityrental` smallint(3) unsigned NOT NULL DEFAULT '0',
+  `countactivitytravel` smallint(3) unsigned NOT NULL DEFAULT '0',
+  `countactivityvisit` smallint(3) NOT NULL DEFAULT '0',
+  `lastupdatedby` int(10) unsigned NOT NULL,
+  `createdby` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`itinnum`),
+  KEY `fk_itinum_itini_activity_master_idx` (`itinnum`),
+  KEY `fk_lastupdatedby_itin_activity_master_idx` (`lastupdatedby`),
+  CONSTRAINT `fk_itinnum_itin_activity_master` FOREIGN KEY (`itinnum`) REFERENCES `itin_master` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `fk_lastupdatedby_itin_activity_master` FOREIGN KEY (`lastupdatedby`) REFERENCES `users` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `itin_activity_master`
+--
+
+LOCK TABLES `itin_activity_master` WRITE;
+/*!40000 ALTER TABLE `itin_activity_master` DISABLE KEYS */;
+/*!40000 ALTER TABLE `itin_activity_master` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `itin_activity_master_act`
+--
+
+DROP TABLE IF EXISTS `itin_activity_master_act`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `itin_activity_master_act` (
+  `itinnum` int(11) NOT NULL,
+  `masteractid` smallint(3) NOT NULL DEFAULT '0',
+  `masteractname` varchar(45) NOT NULL,
+  `masteractstartdate` datetime NOT NULL,
+  `masteractenddate` datetime NOT NULL,
+  `version` smallint(2) NOT NULL DEFAULT '1',
+  `datecreated` datetime NOT NULL,
+  `dateupdated` datetime NOT NULL,
+  PRIMARY KEY (`itinnum`,`masteractid`),
+  CONSTRAINT `fk_itinnum_itin_activity_master_act` FOREIGN KEY (`itinnum`) REFERENCES `itin_activity_master` (`itinnum`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `itin_activity_master_act`
+--
+
+LOCK TABLES `itin_activity_master_act` WRITE;
+/*!40000 ALTER TABLE `itin_activity_master_act` DISABLE KEYS */;
+/*!40000 ALTER TABLE `itin_activity_master_act` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `itin_activity_other`
+--
+
+DROP TABLE IF EXISTS `itin_activity_other`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `itin_activity_other` (
+  `activityid` int(11) NOT NULL AUTO_INCREMENT,
+  `itinnum` int(11) NOT NULL,
+  `name` varchar(45) NOT NULL DEFAULT 'Enter Name',
+  `pax` smallint(5) DEFAULT '0',
+  `code` varchar(8) DEFAULT NULL,
+  `version` smallint(2) NOT NULL DEFAULT '0',
+  `day` smallint(3) unsigned NOT NULL DEFAULT '0',
+  `status` smallint(2) NOT NULL DEFAULT '1',
+  `desc` int(30) DEFAULT NULL,
+  `cost` decimal(10,2) DEFAULT NULL,
+  `costmarkup` int(3) DEFAULT '0',
+  `comment` varchar(30) DEFAULT NULL,
+  `datecreated` datetime NOT NULL,
+  `dateupdated` datetime NOT NULL,
+  `dateandtime` datetime DEFAULT NULL,
+  `lastupdatedby` int(10) unsigned NOT NULL,
+  `createdby` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`activityid`),
+  UNIQUE KEY `activityid_UNIQUE` (`activityid`),
+  KEY `fk_code_itin_activity_other_idx` (`code`),
+  KEY `fk_lastupdatedby_itin_acitivity_other_idx` (`lastupdatedby`),
+  KEY `fk_createdby_itin_acitivity_other_idx` (`createdby`),
+  KEY `fk_itinnum_itin_activity_other_idx` (`itinnum`),
+  CONSTRAINT `fk_code_itin_activity_other` FOREIGN KEY (`code`) REFERENCES `itin_activity_codes` (`code`) ON UPDATE CASCADE,
+  CONSTRAINT `fk_createdby_itin_acitivity_other` FOREIGN KEY (`createdby`) REFERENCES `users` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `fk_itinnum_itin_activity_other` FOREIGN KEY (`itinnum`) REFERENCES `itin_master` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `fk_lastupdatedby_itin_acitivity_other` FOREIGN KEY (`lastupdatedby`) REFERENCES `users` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `itin_activity_other`
+--
+
+LOCK TABLES `itin_activity_other` WRITE;
+/*!40000 ALTER TABLE `itin_activity_other` DISABLE KEYS */;
+/*!40000 ALTER TABLE `itin_activity_other` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `itin_activity_travel`
+--
+
+DROP TABLE IF EXISTS `itin_activity_travel`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `itin_activity_travel` (
+  `activityid` int(11) NOT NULL AUTO_INCREMENT,
+  `activityidpair` int(11) DEFAULT '0',
+  `itinnum` int(11) NOT NULL,
+  `actname` varchar(60) NOT NULL DEFAULT 'Enter Name',
+  `pax` smallint(5) DEFAULT '0',
+  `mode` smallint(3) DEFAULT '0',
+  `code` varchar(20) NOT NULL,
+  `version` smallint(2) NOT NULL DEFAULT '1',
+  `vesselconame` varchar(20) DEFAULT NULL,
+  `vesselnoon` varchar(15) DEFAULT NULL,
+  `vesselnoret` varchar(15) DEFAULT NULL,
+  `bookingclass` varchar(10) DEFAULT NULL,
+  `bookingno` varchar(10) DEFAULT NULL,
+  `depdatetimeon` datetime DEFAULT NULL,
+  `depdatetimeret` datetime DEFAULT NULL,
+  `arrdatetimeret` datetime DEFAULT NULL,
+  `arrdatetimeon` datetime DEFAULT NULL,
+  `depstation` varchar(15) DEFAULT NULL,
+  `arrstation` varchar(15) DEFAULT NULL,
+  `cost` decimal(10,2) DEFAULT '0.00',
+  `costmarkup` smallint(3) DEFAULT '0',
+  `pikupdroplocfrom` varchar(30) DEFAULT NULL,
+  `pikupdroplocto` varchar(30) DEFAULT NULL,
+  `pikupdropdatetime` datetime DEFAULT NULL,
+  `pikupdropcost` decimal(10,2) DEFAULT '0.00',
+  `pikupdropcostmarkup` smallint(3) DEFAULT '0',
+  `vehdetails` varchar(45) DEFAULT 'none',
+  `asstcost` decimal(10,2) DEFAULT '0.00',
+  `asstcostmarkup` smallint(3) DEFAULT '0',
+  `commentsinternal` varchar(200) DEFAULT NULL,
+  `commentsexternal` varchar(200) DEFAULT NULL,
+  `datecreated` datetime NOT NULL,
+  `dateupdated` datetime NOT NULL,
+  `lastupdatedby` int(10) unsigned NOT NULL,
+  `createdby` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`activityid`,`itinnum`),
+  UNIQUE KEY `activityid_UNIQUE` (`activityid`),
+  KEY `fk_code_itin_activity_codes_itin_activity_travel` (`code`),
+  KEY `fk_lastupdatedby_itin_activity_travel_idx` (`lastupdatedby`),
+  KEY `fk_itinnum_itin_activity_travel` (`itinnum`),
+  KEY `fk_createdby_itin_activity_travel` (`createdby`),
+  CONSTRAINT `fk_code_itin_activity_codes_itin_activity_travel` FOREIGN KEY (`code`) REFERENCES `itin_activity_codes` (`code`) ON UPDATE CASCADE,
+  CONSTRAINT `fk_createdby_itin_activity_travel` FOREIGN KEY (`createdby`) REFERENCES `users` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `fk_itinnum_itin_activity_travel` FOREIGN KEY (`itinnum`) REFERENCES `itin_master` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `fk_lastupdatedby_itin_activity_travel` FOREIGN KEY (`lastupdatedby`) REFERENCES `users` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `itin_activity_travel`
+--
+
+LOCK TABLES `itin_activity_travel` WRITE;
+/*!40000 ALTER TABLE `itin_activity_travel` DISABLE KEYS */;
+/*!40000 ALTER TABLE `itin_activity_travel` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `itin_activity_visit`
+--
+
+DROP TABLE IF EXISTS `itin_activity_visit`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `itin_activity_visit` (
+  `activityid` int(11) NOT NULL AUTO_INCREMENT,
+  `itinnum` int(11) NOT NULL,
+  `name` varchar(45) NOT NULL DEFAULT 'Enter Name',
+  `pax` smallint(5) DEFAULT '0',
+  `code` varchar(8) NOT NULL,
+  `version` smallint(2) NOT NULL DEFAULT '0',
+  `day` smallint(3) DEFAULT NULL,
+  `placename` varchar(20) DEFAULT NULL,
+  `city` varchar(15) DEFAULT NULL,
+  `guidename` varchar(20) DEFAULT NULL,
+  `guiderate` decimal(10,2) DEFAULT NULL,
+  `guideratemarkup` smallint(3) unsigned DEFAULT '0',
+  `entrancefees` decimal(10,2) DEFAULT NULL,
+  `entrancefeesmarkup` smallint(3) unsigned DEFAULT '0',
+  `escortreq` smallint(1) DEFAULT '0',
+  `escortfeesmarkup` smallint(3) unsigned DEFAULT NULL,
+  `comment` varchar(30) DEFAULT NULL,
+  `datecreated` datetime NOT NULL,
+  `dateupdated` datetime NOT NULL,
+  `escortfees` decimal(10,2) DEFAULT NULL,
+  `status` smallint(2) unsigned NOT NULL DEFAULT '1',
+  `dateandtime` datetime DEFAULT NULL,
+  `lastupdatedby` int(11) unsigned NOT NULL,
+  `createdby` int(11) unsigned NOT NULL,
+  PRIMARY KEY (`activityid`),
+  UNIQUE KEY `activityid_UNIQUE` (`activityid`),
+  KEY `fk_code_itin_activity_visit_idx` (`code`),
+  KEY `fk_lastupdatedby_itin_activity_visit_idx` (`lastupdatedby`),
+  KEY `fk_createdby_itin_activity_visit_idx` (`createdby`),
+  KEY `fk_itinnum_itin_activity_visit_idx` (`itinnum`),
+  CONSTRAINT `fk_code_itin_activity_visit` FOREIGN KEY (`code`) REFERENCES `itin_activity_codes` (`code`) ON UPDATE CASCADE,
+  CONSTRAINT `fk_createdby_itin_activity_visit` FOREIGN KEY (`createdby`) REFERENCES `users` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `fk_itinnum_itin_activity_visit` FOREIGN KEY (`itinnum`) REFERENCES `itin_master` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `fk_lastupdatedby_itin_activity_visit` FOREIGN KEY (`lastupdatedby`) REFERENCES `users` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `itin_activity_visit`
+--
+
+LOCK TABLES `itin_activity_visit` WRITE;
+/*!40000 ALTER TABLE `itin_activity_visit` DISABLE KEYS */;
+/*!40000 ALTER TABLE `itin_activity_visit` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `itin_currconv`
+--
+
+DROP TABLE IF EXISTS `itin_currconv`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `itin_currconv` (
+  `convcode` int(11) NOT NULL AUTO_INCREMENT,
+  `fromcurr` varchar(3) NOT NULL,
+  `tocurr` varchar(3) NOT NULL,
+  `status` smallint(2) NOT NULL DEFAULT '0',
+  `unitrate` float NOT NULL,
+  `datecreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `dateupdated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`convcode`),
+  UNIQUE KEY `conv_code_UNIQUE` (`convcode`),
+  UNIQUE KEY `unq_fromcurrtocurrunitrate` (`fromcurr`,`tocurr`,`unitrate`),
+  KEY `fk_fromcurr_itin_currconv_idx` (`fromcurr`),
+  KEY `fk_tocurr_itin_currconv_idx` (`tocurr`),
+  CONSTRAINT `fk_fromcurr_itin_currconv` FOREIGN KEY (`fromcurr`) REFERENCES `isocurrencies` (`isocode`) ON UPDATE CASCADE,
+  CONSTRAINT `fk_tocurr_itin_currconv` FOREIGN KEY (`tocurr`) REFERENCES `isocurrencies` (`isocode`) ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `itin_currconv`
+--
+
+LOCK TABLES `itin_currconv` WRITE;
+/*!40000 ALTER TABLE `itin_currconv` DISABLE KEYS */;
+INSERT INTO `itin_currconv` VALUES (1,'INR','INR',1,1,'2015-02-16 11:57:05','2015-02-16 11:57:05'),(2,'USD','INR',1,58,'2015-02-16 06:30:37','2015-02-16 06:30:37'),(3,'USD','INR',1,59,'2015-02-16 06:35:42','2015-02-16 06:35:42'),(4,'USD','INR',1,60,'2015-02-16 06:36:20','2015-02-16 06:36:20'),(5,'USD','INR',1,57,'2015-03-09 13:59:02','2015-03-09 13:59:02'),(6,'USD','INR',1,56,'2015-03-25 10:48:06','2015-03-25 10:48:06'),(7,'GBP','INR',1,98,'2015-05-13 12:31:45','2015-05-13 12:31:45');
+/*!40000 ALTER TABLE `itin_currconv` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `itin_daywise`
+--
+
+DROP TABLE IF EXISTS `itin_daywise`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `itin_daywise` (
+  `itinnum` int(11) NOT NULL,
+  `type` smallint(2) NOT NULL,
+  `activityid` int(11) NOT NULL,
+  `daynum` smallint(3) NOT NULL,
+  PRIMARY KEY (`itinnum`,`type`,`activityid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `itin_daywise`
+--
+
+LOCK TABLES `itin_daywise` WRITE;
+/*!40000 ALTER TABLE `itin_daywise` DISABLE KEYS */;
+/*!40000 ALTER TABLE `itin_daywise` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `itin_master`
+--
+
+DROP TABLE IF EXISTS `itin_master`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `itin_master` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `version` smallint(2) NOT NULL,
+  `status` smallint(2) NOT NULL DEFAULT '0',
+  `touroperator` varchar(30) NOT NULL DEFAULT 'Direct Query',
+  `grouphead` varchar(30) NOT NULL DEFAULT 'Fill',
+  `numtravellers` smallint(6) NOT NULL DEFAULT '0',
+  `startdate` datetime DEFAULT NULL,
+  `enddate` datetime DEFAULT NULL,
+  `arrivalcity` varchar(30) NOT NULL DEFAULT 'Fill',
+  `depcity` varchar(30) NOT NULL DEFAULT 'Fill',
+  `currency` varchar(3) NOT NULL DEFAULT 'INR',
+  `quotecurrency` varchar(3) DEFAULT 'INR',
+  `convcode` int(11) DEFAULT '1',
+  `tzoffset` smallint(6) NOT NULL DEFAULT '-330',
+  `datecreated` datetime NOT NULL,
+  `createdby` int(10) unsigned NOT NULL,
+  `dateupdated` datetime NOT NULL,
+  `lastupdatedby` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name_UNIQUE` (`name`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `fk_convcode_itin_currencies_idx` (`convcode`),
+  KEY `fk_createdby_itin_master_idx` (`createdby`),
+  KEY `fk_lastupdatedby_itin_master_idx` (`lastupdatedby`),
+  KEY `fk_currency_idx` (`currency`),
+  KEY `fk_quotecurrency_idx` (`quotecurrency`),
+  CONSTRAINT `fk_convcode_itin_master` FOREIGN KEY (`convcode`) REFERENCES `itin_currconv` (`convcode`) ON UPDATE CASCADE,
+  CONSTRAINT `fk_currency` FOREIGN KEY (`currency`) REFERENCES `isocurrencies` (`isocode`) ON UPDATE CASCADE,
+  CONSTRAINT `fk_quotecurrency` FOREIGN KEY (`quotecurrency`) REFERENCES `isocurrencies` (`isocode`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `itin_master`
+--
+
+LOCK TABLES `itin_master` WRITE;
+/*!40000 ALTER TABLE `itin_master` DISABLE KEYS */;
+/*!40000 ALTER TABLE `itin_master` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `itin_pax_info`
+--
+
+DROP TABLE IF EXISTS `itin_pax_info`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `itin_pax_info` (
+  `itinnum` int(11) NOT NULL,
+  `groupnum` smallint(3) DEFAULT '1',
+  `name` varchar(45) NOT NULL,
+  `age` smallint(6) DEFAULT NULL,
+  `nationality` varchar(45) DEFAULT NULL,
+  `passportdet` varchar(60) DEFAULT NULL,
+  `visadet` varchar(60) DEFAULT NULL,
+  `grouphead` int(1) DEFAULT '0',
+  `contactemail` varchar(120) DEFAULT NULL,
+  `contactphonell` varchar(15) DEFAULT NULL,
+  `contactphonemobile` varchar(15) DEFAULT NULL,
+  `contactaddress` varchar(120) DEFAULT NULL,
+  `comments` varchar(45) DEFAULT NULL,
+  `disability` varchar(15) DEFAULT NULL,
+  `languages` varchar(45) DEFAULT 'English',
+  `datecreated` datetime DEFAULT NULL,
+  `dateupdated` datetime DEFAULT NULL,
+  PRIMARY KEY (`itinnum`),
+  KEY `fk_itinnum_itin_pax_info_idx` (`itinnum`),
+  CONSTRAINT `fk_itinum_itin_pax_info` FOREIGN KEY (`itinnum`) REFERENCES `itin_master` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `itin_pax_info`
+--
+
+LOCK TABLES `itin_pax_info` WRITE;
+/*!40000 ALTER TABLE `itin_pax_info` DISABLE KEYS */;
+/*!40000 ALTER TABLE `itin_pax_info` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `plnvk_admin_tasks`
+--
+
+DROP TABLE IF EXISTS `plnvk_admin_tasks`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `plnvk_admin_tasks` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `subid` int(5) NOT NULL DEFAULT '0',
+  `orgid` varchar(15) NOT NULL,
+  `code` int(6) NOT NULL DEFAULT '0',
+  `assignedto` int(10) unsigned NOT NULL DEFAULT '0',
+  `status` int(2) NOT NULL DEFAULT '0',
+  `remarks` varchar(45) DEFAULT NULL,
+  `datecreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `dateupdated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  UNIQUE KEY `unq_id_subid` (`id`,`subid`),
+  KEY `fk_assigned_to_idx` (`assignedto`),
+  CONSTRAINT `fk_assigned_to` FOREIGN KEY (`assignedto`) REFERENCES `users` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `plnvk_admin_tasks`
+--
+
+LOCK TABLES `plnvk_admin_tasks` WRITE;
+/*!40000 ALTER TABLE `plnvk_admin_tasks` DISABLE KEYS */;
+/*!40000 ALTER TABLE `plnvk_admin_tasks` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `plnvk_db_map`
+--
+
+DROP TABLE IF EXISTS `plnvk_db_map`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `plnvk_db_map` (
+  `dbid` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `zoneid` smallint(5) unsigned NOT NULL,
+  `jndiname` varchar(60) NOT NULL DEFAULT 'planovik_main',
+  `url` varchar(200) NOT NULL,
+  `active` varchar(1) NOT NULL DEFAULT 'Y',
+  `tenanttype` smallint(2) NOT NULL DEFAULT '0',
+  `isavailfornewcon` varchar(1) NOT NULL DEFAULT 'Y',
+  `datecreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `dateupdated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `createdby` int(11) NOT NULL DEFAULT '1',
+  `updatedby` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`dbid`,`jndiname`),
+  UNIQUE KEY `masterid_UNIQUE` (`dbid`),
+  UNIQUE KEY `url_UNIQUE` (`url`),
+  UNIQUE KEY `jndiname_UNIQUE` (`jndiname`),
+  KEY `fk_zoneid_plnvk_db_map_idx` (`zoneid`),
+  CONSTRAINT `fk_zoneid_plnvk_db_map` FOREIGN KEY (`zoneid`) REFERENCES `plnvk_zone_map` (`zoneid`) ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `plnvk_db_map`
+--
+
+LOCK TABLES `plnvk_db_map` WRITE;
+/*!40000 ALTER TABLE `plnvk_db_map` DISABLE KEYS */;
+INSERT INTO `plnvk_db_map` VALUES (1,1,'z1_planovik_main','jdbc:mysql://192.168.1.108:3306/z1_planovik_main','Y',0,'N','2015-06-21 12:10:17','2015-06-21 12:10:17',1,1),(2,1,'z1_planovik_trial_1','jdbc:mysql://192.168.1.108:3307/z1_planovik_trial_1','Y',0,'Y','2015-06-21 13:35:48','2015-06-21 13:35:48',1,1),(3,1,'z1_planovik_pro_1','jdbc:mysql://192.168.1.108:3307/z1_planovik_pro_1','Y',0,'Y','2015-06-21 13:36:21','2015-06-21 13:36:21',1,1),(4,1,'z1_planovik_pro_2','jdbc:mysql://192.168.1.108:3307/z1_planovik_pro_2','Y',0,'Y','2015-06-21 13:57:15','2015-06-21 13:57:15',1,1);
+/*!40000 ALTER TABLE `plnvk_db_map` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `plnvk_tenant_master`
+--
+
+DROP TABLE IF EXISTS `plnvk_tenant_master`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `plnvk_tenant_master` (
+  `tenantid` int(11) NOT NULL AUTO_INCREMENT,
+  `tenantdesc` varchar(120) NOT NULL,
+  `tenantname` varchar(10) NOT NULL DEFAULT 'tenant',
+  `jndiname` varchar(60) NOT NULL DEFAULT 'z1_planovik_main',
+  `regip` varchar(46) NOT NULL DEFAULT '127.0.0.1',
+  `zoneid` smallint(5) unsigned NOT NULL DEFAULT '1',
+  `addrstreet1` varchar(100) NOT NULL DEFAULT 'To be  Filled',
+  `addrstreet2` varchar(100) DEFAULT 'NA',
+  `addrcitytown` varchar(60) NOT NULL DEFAULT 'To be Filled',
+  `addrdistrict` varchar(60) DEFAULT 'NA',
+  `addrstateprovrgn` varchar(80) NOT NULL DEFAULT 'To be Filled',
+  `addrpostalcode` varchar(20) NOT NULL DEFAULT 'To be Filled',
+  `addrcountrycode` varchar(2) NOT NULL DEFAULT 'IN',
+  `addrhomeurl` varchar(120) NOT NULL DEFAULT 'To be Filled',
+  `contacttitle` varchar(10) NOT NULL DEFAULT 'Mr',
+  `contactname` varchar(60) NOT NULL DEFAULT 'To be Filled',
+  `contactphoneoffice` varchar(20) NOT NULL DEFAULT 'To be Filled',
+  `contactphonemobile` varchar(20) NOT NULL DEFAULT 'To be Filled',
+  `contactemail` varchar(100) NOT NULL DEFAULT 'To be Filled',
+  `contactdesignation` varchar(45) NOT NULL DEFAULT 'To be Filled',
+  `tenanttype` smallint(2) NOT NULL DEFAULT '0',
+  `regstatus` smallint(3) NOT NULL DEFAULT '0',
+  `alrtpendingcnt` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `msgsunrdcnt` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `accntbal` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `tzoffset` smallint(6) NOT NULL DEFAULT '0',
+  `datecreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `dateupdated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `createdby` int(11) NOT NULL DEFAULT '1',
+  `updatedby` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`tenantid`),
+  UNIQUE KEY `idx_vrf_org0_name_unq` (`tenantdesc`),
+  UNIQUE KEY `domainname_UNIQUE` (`tenantname`),
+  KEY `fk_zoneid_plnvk_tenant_master_idx` (`zoneid`),
+  KEY `fk_jndiname_plnvk_tenant_master_idx` (`jndiname`),
+  CONSTRAINT `fk_jndiname_plnvk_tenant_master` FOREIGN KEY (`jndiname`) REFERENCES `plnvk_db_map` (`jndiname`) ON UPDATE CASCADE,
+  CONSTRAINT `fk_zoneid_plnvk_tenant_master` FOREIGN KEY (`zoneid`) REFERENCES `plnvk_zone_map` (`zoneid`) ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='Base table to hold an Organization detailed information';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `plnvk_tenant_master`
+--
+
+LOCK TABLES `plnvk_tenant_master` WRITE;
+/*!40000 ALTER TABLE `plnvk_tenant_master` DISABLE KEYS */;
+INSERT INTO `plnvk_tenant_master` VALUES (1,'Planovik Home','www','z1_planovik_main','127.0.0.1',1,'Rao and Raju Colony','NA','Hyderabad','NA','Telangana','500034','IN','http://www.planovik.com','Mr','Srinivas Paruchuri','+91-9866277000','+91-9866277000','sriniv@yahoo.com','Founder',0,0,0,0,0.00,-330,'2015-06-04 09:18:12','2015-06-04 09:18:12',1,1),(2,'Planovik Corporate','corp','z1_planovik_main','127.0.0.1',1,'Rao and Raju Colony','NA','Hyderabad','NA','Telangana','500034','IN','http://corp.planovik.com','Mr','Srinivas Paruchuri','+91-9866277000','+91-9866277000','sriniv@yahoo.com','Founder',0,0,0,0,0.00,-330,'2015-06-04 09:19:07','2015-06-04 09:19:07',1,1),(3,'Orbitz Travels','orbtra','z1_planovik_main','127.0.0.1',1,'To be  Filled','NA','To be Filled','NA','To be Filled','To be Filled','IN','To be Filled','Mr','Sharad Mehta','To be Filled','9866277000','sriniv@yahoo.com','To be Filled',0,1,0,0,0.00,-330,'2015-06-22 17:49:47','2015-06-22 17:49:47',1,1),(4,'Orbitz Travelss','orbtra1','z1_planovik_main','127.0.0.1',1,'To be  Filled','NA','To be Filled','NA','To be Filled','To be Filled','IN','To be Filled','Mr','Sharad Mehta','To be Filled','9866277000','sriniv@yahoo.com','To be Filled',0,1,0,0,0.00,-330,'2015-06-28 06:31:53','2015-06-28 06:31:53',1,1);
+/*!40000 ALTER TABLE `plnvk_tenant_master` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `plnvk_zone_map`
+--
+
+DROP TABLE IF EXISTS `plnvk_zone_map`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `plnvk_zone_map` (
+  `zoneid` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) NOT NULL,
+  `hostingtype` varchar(20) NOT NULL DEFAULT 'Dedicated',
+  `hostingprovider` varchar(45) NOT NULL,
+  `datecreated` datetime NOT NULL,
+  `dateupdated` datetime NOT NULL,
+  `createdby` int(11) NOT NULL,
+  `updatedby` int(11) NOT NULL,
+  PRIMARY KEY (`zoneid`),
+  UNIQUE KEY `name_UNIQUE` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `plnvk_zone_map`
+--
+
+LOCK TABLES `plnvk_zone_map` WRITE;
+/*!40000 ALTER TABLE `plnvk_zone_map` DISABLE KEYS */;
+INSERT INTO `plnvk_zone_map` VALUES (1,'India','Cloud','AWS','2015-06-20 10:19:24','2015-06-20 10:19:24',1,1),(2,'AsiaPac','Cloud','AWS','2015-06-20 10:19:43','2015-06-20 10:19:43',1,1),(3,'EME','Cloud','AWS','2015-06-20 10:20:09','2015-06-20 10:20:09',1,1),(4,'North America','Cloud','AWS','2015-06-20 10:22:18','2015-06-20 10:22:18',1,1),(5,'South America','Cloud','AWS','2015-06-20 10:22:30','2015-06-20 10:22:30',1,1),(6,'Africa','Cloud','AWS','2015-06-20 10:22:39','2015-06-20 10:22:39',1,1);
+/*!40000 ALTER TABLE `plnvk_zone_map` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `service_airlines`
+--
+
+DROP TABLE IF EXISTS `service_airlines`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `service_airlines` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `servicename` varchar(45) NOT NULL,
+  `iatacode` varchar(3) DEFAULT NULL,
+  `rating` smallint(1) DEFAULT NULL,
+  `city` varchar(45) DEFAULT NULL,
+  `country` varchar(45) DEFAULT NULL,
+  `contactname` varchar(30) DEFAULT NULL,
+  `contactphone` varchar(15) DEFAULT NULL,
+  `contactemail` varchar(120) DEFAULT NULL,
+  `contactwebsite` varchar(100) DEFAULT NULL,
+  `fullservice` int(1) DEFAULT NULL,
+  `domesticonly` int(1) DEFAULT NULL,
+  `addlinfo` varchar(200) DEFAULT NULL,
+  `datecreated` datetime NOT NULL,
+  `dateupdated` datetime NOT NULL,
+  `createdby` int(10) unsigned NOT NULL,
+  `updatedby` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `servicename_UNIQUE` (`servicename`),
+  KEY `fk_createdby_itin_airlines_idx` (`createdby`),
+  KEY `fk_updatedby_itin_airlines_idx` (`updatedby`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `service_airlines`
+--
+
+LOCK TABLES `service_airlines` WRITE;
+/*!40000 ALTER TABLE `service_airlines` DISABLE KEYS */;
+INSERT INTO `service_airlines` VALUES (4,'Indigo air','6E',5,'Gurgaon','India','none','98102333333','travelpartner@goindigo.in','goindigo.in',0,0,'','2015-05-13 13:56:13','2015-05-13 13:56:13',1,1);
+/*!40000 ALTER TABLE `service_airlines` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `service_hotels`
+--
+
+DROP TABLE IF EXISTS `service_hotels`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `service_hotels` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `servicename` varchar(100) NOT NULL,
+  `city` varchar(45) DEFAULT NULL,
+  `country` varchar(45) DEFAULT NULL,
+  `contactphone` varchar(15) DEFAULT NULL,
+  `contactemail` varchar(120) DEFAULT NULL,
+  `contactwebsite` varchar(100) DEFAULT NULL,
+  `contactname` varchar(45) DEFAULT NULL,
+  `rating` smallint(1) DEFAULT NULL,
+  `addlinfo` varchar(200) DEFAULT NULL,
+  `datecreated` datetime NOT NULL,
+  `dateupdated` datetime NOT NULL,
+  `createdby` int(10) unsigned NOT NULL,
+  `updatedby` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`,`servicename`),
+  UNIQUE KEY `servicename_UNIQUE` (`servicename`),
+  KEY `fk_createdby_itin_hotels_idx` (`createdby`),
+  KEY `fk_updatedby_itin_hotels_idx` (`updatedby`),
+  CONSTRAINT `fk_createdby_itin_hotels` FOREIGN KEY (`createdby`) REFERENCES `users` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `fk_updatedby_itin_hotels` FOREIGN KEY (`updatedby`) REFERENCES `users` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `service_hotels`
+--
+
+LOCK TABLES `service_hotels` WRITE;
+/*!40000 ALTER TABLE `service_hotels` DISABLE KEYS */;
+/*!40000 ALTER TABLE `service_hotels` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `service_other`
+--
+
+DROP TABLE IF EXISTS `service_other`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `service_other` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `servicename` varchar(45) NOT NULL,
+  `description` varchar(120) DEFAULT NULL,
+  `rating` smallint(1) DEFAULT NULL,
+  `city` varchar(45) DEFAULT NULL,
+  `country` varchar(45) DEFAULT NULL,
+  `contactname` varchar(45) DEFAULT NULL,
+  `contactphone` varchar(15) DEFAULT NULL,
+  `contactemail` varchar(120) DEFAULT NULL,
+  `contactwebsite` varchar(100) DEFAULT NULL,
+  `datecreated` datetime NOT NULL,
+  `dateupdated` datetime NOT NULL,
+  `createdby` int(10) unsigned NOT NULL,
+  `updatedby` int(10) unsigned NOT NULL,
+  `addlinfo` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `servicename_UNIQUE` (`servicename`),
+  KEY `fk_itin_service_other_createdby_idx` (`createdby`),
+  KEY `fk_itin_service_other_updatedby_idx` (`updatedby`),
+  CONSTRAINT `fk_itin_service_other_createdby` FOREIGN KEY (`createdby`) REFERENCES `users` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `fk_itin_service_other_updatedby` FOREIGN KEY (`updatedby`) REFERENCES `users` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `service_other`
+--
+
+LOCK TABLES `service_other` WRITE;
+/*!40000 ALTER TABLE `service_other` DISABLE KEYS */;
+/*!40000 ALTER TABLE `service_other` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `service_transport`
+--
+
+DROP TABLE IF EXISTS `service_transport`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `service_transport` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `servicename` varchar(60) NOT NULL,
+  `city` varchar(45) DEFAULT NULL,
+  `country` varchar(45) DEFAULT NULL,
+  `contactphone` varchar(30) DEFAULT NULL,
+  `contactemail` varchar(120) DEFAULT NULL,
+  `contactwebsite` varchar(120) DEFAULT NULL,
+  `contactname` varchar(45) DEFAULT NULL,
+  `rating` smallint(1) DEFAULT NULL,
+  `coverage` smallint(2) DEFAULT NULL,
+  `addlinfo` varchar(200) DEFAULT NULL,
+  `datecreated` datetime NOT NULL,
+  `dateupdated` datetime NOT NULL,
+  `createdby` int(10) unsigned NOT NULL,
+  `updatedby` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `servicename_UNIQUE` (`servicename`),
+  KEY `fk_createdby_itin_cab_cos_idx` (`createdby`),
+  KEY `fk_updatedby_itin_cab_cos_idx` (`updatedby`),
+  CONSTRAINT `fk_createdby_itin_cab_cos` FOREIGN KEY (`createdby`) REFERENCES `users` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `fk_updatedby_itin_cab_cos` FOREIGN KEY (`updatedby`) REFERENCES `users` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `service_transport`
+--
+
+LOCK TABLES `service_transport` WRITE;
+/*!40000 ALTER TABLE `service_transport` DISABLE KEYS */;
+/*!40000 ALTER TABLE `service_transport` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `user_login_attempts`
+--
+
+DROP TABLE IF EXISTS `user_login_attempts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user_login_attempts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(30) NOT NULL,
+  `attempts` int(2) NOT NULL,
+  `lastModified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `fk_username_user_login_attempts_idx` (`username`),
+  CONSTRAINT `fk_username_user_login_attempts` FOREIGN KEY (`username`) REFERENCES `users` (`username`) ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user_login_attempts`
+--
+
+LOCK TABLES `user_login_attempts` WRITE;
+/*!40000 ALTER TABLE `user_login_attempts` DISABLE KEYS */;
+INSERT INTO `user_login_attempts` VALUES (1,'superadmin',0,'2015-06-17 15:11:17'),(3,'srini',0,'2015-06-18 11:57:08');
+/*!40000 ALTER TABLE `user_login_attempts` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `user_roles`
+--
+
+DROP TABLE IF EXISTS `user_roles`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user_roles` (
+  `roleid` int(5) unsigned NOT NULL AUTO_INCREMENT,
+  `role` varchar(25) NOT NULL,
+  `datecreated` datetime NOT NULL,
+  `dateupdated` datetime NOT NULL,
+  PRIMARY KEY (`roleid`),
+  UNIQUE KEY `unq_username_role` (`role`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user_roles`
+--
+
+LOCK TABLES `user_roles` WRITE;
+/*!40000 ALTER TABLE `user_roles` DISABLE KEYS */;
+INSERT INTO `user_roles` VALUES (1,'ROLE_USER','2015-03-01 05:43:27','2015-03-01 05:43:27'),(2,'ROLE_ADMIN','2015-03-01 05:43:39','2015-03-01 05:43:39'),(3,'ROLE_SUPERADMIN','2015-03-01 05:43:47','2015-03-01 05:43:47');
+/*!40000 ALTER TABLE `user_roles` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `user_roles_map`
+--
+
+DROP TABLE IF EXISTS `user_roles_map`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user_roles_map` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `username` varchar(30) NOT NULL,
+  `role` varchar(25) NOT NULL,
+  `datecreated` datetime NOT NULL,
+  `dateupdated` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_username_user_roles_map_idx` (`username`),
+  KEY `fk_role_user_roles_map_idx` (`role`),
+  CONSTRAINT `fk_role_user_roles_map` FOREIGN KEY (`role`) REFERENCES `user_roles` (`role`) ON UPDATE CASCADE,
+  CONSTRAINT `fk_username_user_roles_map` FOREIGN KEY (`username`) REFERENCES `users` (`username`) ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user_roles_map`
+--
+
+LOCK TABLES `user_roles_map` WRITE;
+/*!40000 ALTER TABLE `user_roles_map` DISABLE KEYS */;
+INSERT INTO `user_roles_map` VALUES (1,'superadmin','ROLE_SUPERADMIN','2015-06-17 09:43:59','2015-06-17 09:43:59'),(2,'srini','ROLE_USER','2015-06-18 05:17:17','2015-06-18 05:17:17');
+/*!40000 ALTER TABLE `user_roles_map` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `users` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `email` varchar(120) NOT NULL,
+  `fullname` varchar(60) NOT NULL,
+  `username` varchar(30) NOT NULL,
+  `password` varchar(60) NOT NULL,
+  `phone` varchar(20) DEFAULT NULL,
+  `designation` varchar(20) DEFAULT NULL,
+  `reportsto` int(10) NOT NULL DEFAULT '1',
+  `createdby` int(10) NOT NULL DEFAULT '1',
+  `level` int(3) NOT NULL DEFAULT '0',
+  `enabled` tinyint(1) NOT NULL DEFAULT '1',
+  `accountNonExpired` tinyint(1) NOT NULL DEFAULT '1',
+  `accountNonLocked` tinyint(1) NOT NULL DEFAULT '1',
+  `credentialsNonExpired` tinyint(1) NOT NULL DEFAULT '1',
+  `tzoffset` int(6) DEFAULT NULL,
+  `date_created` datetime NOT NULL,
+  `date_updated` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unq_username_email` (`email`,`username`),
+  KEY `IDX_username` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `users`
+--
+
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (1,'superadmin@planovik.com','Planovik Super admin','superadmin','$2a$10$a09tsMcH/XeJ06DTHgncqOy3IwTeC3peFd3i.O1OtFc/4/Hy/9g4i','+91-9866277000','Founder',1,1,3,1,1,1,1,-330,'2015-06-17 05:41:28','2015-06-17 05:41:28'),(2,'sriniv@yahoo.com','Srinivas Paruchuri','srini','$2a$10$TDfzjvNp2riT.LJ5drR8W.SHNXkPvN8s2aJp5Ajfnw4ldTAvm2rVW','9866277000','CTO',1,1,0,1,1,1,1,-330,'2015-06-18 05:17:17','2015-06-18 05:17:17');
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping routines for database 'z1_planovik_main'
+--
+/*!50003 DROP PROCEDURE IF EXISTS `sp_checktenantexists` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_checktenantexists`(
+	IN	intenantdesc VARCHAR(120),
+    OUT	result VARCHAR(10) 
+)
+BEGIN
+	SET result = "none";
+	IF (Select count(*) from plnvk_tenant_master where tenantdesc = intenantdesc > 0) THEN
+		SET result = "exists";
+	END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_createcurrconvcode` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_createcurrconvcode`(
+	IN intocurr VARCHAR(3),
+    IN infromcurr VARCHAR(3),
+    IN inunitrate float,
+    IN instatus SMALLINT(2),
+    OUT result VARCHAR(30)
+)
+BEGIN
+
+	DECLARE newconvcode INT(11);
+    
+    IF (Select count(*) from itin_currconv where fromcurr=infromcurr and tocurr=intocurr and unitrate=inunitrate = 1) THEN
+		Select convcode INTO @newconvcode from itin_currconv where fromcurr=infromcurr and tocurr=intocurr and unitrate=inunitrate;
+        SELECT CONCAT(@newconvcode, ' - ', infromcurr, ' to ', intocurr, '  Rate: ', inunitrate) INTO result;
+    ELSE
+		Insert into itin_currconv (fromcurr, tocurr, unitrate, status, datecreated, dateupdated) values (infromcurr,
+        intocurr, inunitrate, instatus, UTC_TIMESTAMP(),  UTC_TIMESTAMP());
+        SELECT LAST_INSERT_ID() INTO @newconvcode;
+        SELECT CONCAT(@newconvcode, ' - ', infromcurr, ' to ', intocurr, '  Rate: ', inunitrate) INTO result;
+    END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_createeditmasteractnamedet` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_createeditmasteractnamedet`(
+	IN	initinnum				INT(11),
+    IN	inversion				SMALLINT(2),
+    IN	inmasteractname			VARCHAR(45),
+    IN	inmasteractstartdate 	DATETIME,
+    IN	inmasteractenddate		DATETIME,
+    IN 	inmasteractid			SMALLINT(3),
+	OUT outmasteractid			VARCHAR(3)
+)
+BEGIN
+	DECLARE actcnt			SMALLINT(3);
+    DECLARE newmasteractid 	SMALLINT(3);
+    
+    
+    IF (inmasteractid = 0) THEN
+
+		Select count(*) INTO @actcnt from itin_activity_master_act where itinnum = initinnum and version = inversion;
+		
+		IF (@actcnt = 0) THEN
+			Set @newmasteractid = 0;
+		ELSE
+			Select max(masteractid) into @newmasteractid from itin_activity_master_act where itinnum = initinnum and version = inversion;
+		END IF;
+
+
+		Insert into itin_activity_master_act (itinnum, masteractid, masteractname, masteractstartdate, masteractenddate,
+		version, datecreated, dateupdated) Values (initinnum, @newmasteractid+1, inmasteractname, inmasteractstartdate, inmasteractenddate,
+		inversion, UTC_TIMESTAMP(), UTC_TIMESTAMP());
+
+		Select max(masteractid) into outmasteractid from itin_activity_master_act where itinnum = initinnum and version = inversion;
+
+
+	ELSE
+		Update itin_activity_master_act set masteractname=inmasteractname, masteractstartdate=inmasteractstartdate,
+        masteractenddate=inmasteractenddate, dateupdated=UTC_TIMESTAMP() where itinnum=initinnum and
+        masteractid=inmasteractid and version=inversion;
+	
+		Select inmasteractid into outmasteractid;
+    END IF;
+	
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_create_itinerary` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_create_itinerary`(
+	IN name VARCHAR(50),
+    IN version SMALLINT(2),
+    IN status SMALLINT(2),
+    IN currency VARCHAR(3),    
+    IN quotecurrency VARCHAR(3),
+    IN tzoffset SMALLINT,
+    IN createdbyusername VARCHAR(30),
+    OUT itinnum INT(11)
+)
+BEGIN
+	DECLARE createdby INT(11);
+    	
+	Select id INTO @createdby from users where username=createdbyusername;
+    
+	INSERT INTO itin_master (id, name, version, status, tzoffset, currency, quotecurrency, createdby, datecreated, lastupdatedby, dateupdated) 
+	VALUES (NULL, name, version, status, tzoffset, currency, quotecurrency, @createdby, UTC_TIMESTAMP(),  @createdby, UTC_TIMESTAMP());
+	SELECT LAST_INSERT_ID() INTO itinnum;
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_deletemasteract` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_deletemasteract`(
+	IN	initinnum				INT(11),
+    IN	inversion				SMALLINT(2),
+    IN 	inmasteractid			SMALLINT(3)
+)
+BEGIN
+		Delete from itin_activity_master_act where itinnum = initinnum and version = inversion and
+        masteractid = inmasteractid;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_delete_activity` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_delete_activity`(
+	IN		inactivityid	 INT(11),
+	IN		inactivityidpair INT(11),
+    IN		initinnum		 INT(11),
+    IN		intype			 SMALLINT(2),
+    IN		inversion		 SMALLINT(2)
+
+)
+BEGIN
+	IF (intype = 0) THEN
+		Delete from itin_activity_travel where activityid = inactivityid and itinnum = initinnum;
+        IF (inactivityidpair > 0) THEN
+			Delete from itin_activity_travel where activityid = inactivityidpair and itinnum = initinnum;
+			Update itin_activity_master Set countactivitytravel = countactivitytravel-2, dateupdated = UTC_TIMESTAMP() where
+				itinnum = initinnum and version = inversion;
+        ELSE
+			Update itin_activity_master Set countactivitytravel = countactivitytravel-1, dateupdated = UTC_TIMESTAMP() where
+				itinnum = initinnum and version = inversion;
+		END IF;
+        
+    ELSEIF (intype = 1) THEN    
+		Delete from itin_activity_hotel where activityid = inactivityid and itinnum = initinnum;
+		Update itin_activity_master Set countactivityhotel = countactivityhotel-1, dateupdated = UTC_TIMESTAMP() where
+            itinnum = initinnum and version = inversion;
+
+    ELSEIF (intype = 2) THEN    
+		Delete from itin_activity_rental where activityid = inactivityid and itinnum = initinnum;
+		Update itin_activity_master Set countactivityrental = countactivityrental-1, dateupdated = UTC_TIMESTAMP() where
+            itinnum = initinnum and version = inversion;
+        
+    ELSEIF (intype = 3) THEN    
+		Delete from itin_activity_visit where activityid = inactivityid and itinnum = initinnum;
+		Update itin_activity_master Set countactivityvisit = countactivityvisit-1, dateupdated = UTC_TIMESTAMP() where
+            itinnum = initinnum and version = inversion;
+        
+    ELSEIF (intype = 4) THEN    
+		Delete from itin_activity_other where activityid = inactivityid and itinnum = initinnum;
+		Update itin_activity_master Set countactivityother = countactivityother-1, dateupdated = UTC_TIMESTAMP() where
+            itinnum = initinnum and version = inversion;
+        
+    END IF;
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_delete_user` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_delete_user`(
+	IN inusername VARCHAR(100)
+)
+BEGIN
+
+	update users set enabled=0, date_updated=UTC_TIMESTAMP() where username=inusername;
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_getactivitycodes` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_getactivitycodes`(
+	IN codetype VARCHAR (30)
+)
+BEGIN
+
+	IF (codetype = '') THEN
+		select code AS activitycodedesc from itin_activity_codes;
+        
+	ELSEIF (codetype = 'travel') THEN
+		select code AS activitycodedesc from itin_activity_codes where LEFT(code,1)='T';
+
+	ELSEIF (codetype = 'rental') THEN
+		select code AS activitycodedesc from itin_activity_codes where LEFT(code,1)='R';
+
+	ELSEIF (codetype = 'hotel') THEN
+		select code AS activitycodedesc from itin_activity_codes where LEFT(code,1)='H';
+
+	ELSEIF (codetype = 'visit') THEN
+		select code AS activitycodedesc from itin_activity_codes where LEFT(code,1)='V';
+
+	ELSEIF (codetype = 'other') THEN
+		select code AS activitycodedesc from itin_activity_codes where LEFT(code,1)='O';
+	
+    END IF;
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_getconvcodedetails` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_getconvcodedetails`(	
+	IN currconvcode INT(11),
+    OUT outfromcurr VARCHAR(3),
+    OUT outtocurr	 VARCHAR(3),
+    OUT outstatus   SMALLINT(2),
+    OUT outunitrate FLOAT,
+    OUT outdatecreated DATETIME,
+    OUT outdateupdated DATETIME
+)
+BEGIN
+	Select fromcurr, tocurr, status, unitrate, datecreated, dateupdated INTO outfromcurr, 
+    outtocurr, outstatus, outunitrate, outdatecreated, outdateupdated from itin_currconv where convcode=currconvcode;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_getcurrconvcodes` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_getcurrconvcodes`(        
+	IN  query	VARCHAR(30),
+    IN	instatus SMALLINT(2)
+)
+BEGIN
+		SELECT CONCAT(convcode, ' - ', fromcurr, ' to ', tocurr, '  Rate: ', unitrate) AS isocurrcodedesc FROM itin_currconv 
+          WHERE fromcurr LIKE CONCAT("%", query, "%") and status=instatus order by convcode desc LIMIT 0, 20;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_getidnamelist` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_getidnamelist`(
+        IN  query		               	VARCHAR(30)
+)
+BEGIN
+
+SELECT CONCAT(name, ' ', orgid) AS orgidname FROM plnvk_org_seq WHERE name LIKE CONCAT("%", query, "%") LIMIT 0, 20;
+
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_getisocountryphone` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_getisocountryphone`(
+	IN 	inisocode2 	VARCHAR(2),
+    OUT	outisoname 	VARCHAR(120),
+    OUT	outisocode3	VARCHAR(3),
+    OUT	outdialcode	VARCHAR(20)
+)
+BEGIN
+	Select isoname, isocode3, dialcode outisoname INTO outisoname, outisocode3, outdialcode 
+    from iso_cntryphcodes where isocode2 = inisocode2;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_getisocurrencydetails` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_getisocurrencydetails`(
+	IN inisocode VARCHAR(3),
+    OUT outid INT(10),
+    OUT outcurrdesc VARCHAR(20)
+)
+BEGIN
+	Select id, currdesc into outid, outcurrdesc from isocurrencies where isocode=inisocode;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_getisocurrlist` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_getisocurrlist`(        
+	IN  query	VARCHAR(30)
+)
+BEGIN
+		SELECT CONCAT(isocode, ' - ', currdesc) AS isocurrcodedesc FROM isocurrencies WHERE isocode LIKE CONCAT("%", query, "%") order by currdesc LIMIT 0, 20;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_getitinactivitycount` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_getitinactivitycount`(
+	IN  initinnum INT(11),
+    IN  inversion INT(2)
+)
+BEGIN
+	Select c.day, (select count(*) as cnt from itin_activity_master c2  where
+		c2.itinnum = itinnum and c2.version=inversion and c2.day = c.day) as day from itin_activity_master c
+		order by day asc;    
+    
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_getitinactivitymasterdet` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_getitinactivitymasterdet`(
+	IN  initinnum 				INT(11),
+    IN  inversion 				INT(6),
+    IN	ingroupnum 				SMALLINT(3),
+    OUT outitinnum				INT(11),
+    OUT	outversion				SMALLINT(2),
+    OUT	outpax					SMALLINT(5),
+    OUT	outgroupnum				SMALLINT(3),
+    OUT outcountactivityhotel 	SMALLINT(3),
+    OUT outcountactivityother	SMALLINT(3),
+    OUT outcountactivityvisit	SMALLINT(3),
+    OUT outcountactivitytravel	SMALLINT(3),
+    OUT outcountactivityrental	SMALLINT(3)    
+)
+BEGIN
+	Select itinnum, version, pax, groupnum, countactivityhotel, countactivityother, countactivityvisit, countactivitytravel, countactivityrental 
+    INTO outitinnum, outversion, outpax, outgroupnum, outcountactivityhotel, outcountactivityother, outcountactivityvisit, outcountactivitytravel, outcountactivityrental
+    from itin_activity_master where itinnum = initinnum and version = inversion and groupnum = ingroupnum;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_getitinidnamelist` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_getitinidnamelist`(
+        IN  query		               	VARCHAR(30),
+        IN 	isnumber					INT(1)
+)
+BEGIN
+	DECLARE strnumber INT(11);      
+        		       
+	IF (isnumber = 1) THEN
+		SET @strnumber := CONVERT(query, UNSIGNED);
+		SELECT CONCAT(id, ' - ', name) AS itinnumbername FROM itin_master WHERE id LIKE CONCAT("%", @strnumber, "%") order by dateupdated desc LIMIT 0, 20;
+	ELSE
+		SELECT CONCAT(id, ' - ', name) AS itinnumbername FROM itin_master WHERE name LIKE CONCAT("%", query, "%") order by dateupdated desc LIMIT 0, 20;
+        
+        END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_getmasteractivityactdet` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_getmasteractivityactdet`(
+	IN initinnum INT(11),
+    IN inversion SMALLINT(2)
+)
+BEGIN
+	SELECT  itinnum, masteractid, masteractname, masteractstartdate, masteractenddate, version, datecreated, dateupdated FROM itin_activity_master_act 
+	  WHERE itinnum = initinnum and version = inversion order by masteractid;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_getmasteractnamedet` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_getmasteractnamedet`(
+	IN initinnum INT(11),
+    IN inmasteractid SMALLINT(3)
+)
+BEGIN
+	Select itinnum, masteractid, masteractname, masteractstartdate, masteractenddate, datedcreated, dateupdated
+    from itin_activity_master_act where itinnum = initinnum and masteractid = inmasteractid;
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_getorgdetails` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_getorgdetails`(
+        IN  orgid	VARCHAR(20)
+)
+BEGIN
+    DECLARE tblnum VARCHAR(1);
+    DECLARE tblname VARCHAR(15);
+	DECLARE sqltext VARCHAR(300);
+    DECLARE name VARCHAR(120);
+    DECLARE shortname VARCHAR(120);
+    DECLARE ip VARCHAR(45);
+    DECLARE regcode VARCHAR(45);
+    DECLARE regcodeissuingauthority VARCHAR(45);
+    DECLARE isocountrycode VARCHAR(3);
+    DECLARE logosealloc VARCHAR(200);
+    DECLARE addrstreet1 VARCHAR(100);
+    DECLARE addrstreet2 VARCHAR(100);
+    DECLARE addrcitytown VARCHAR(60);
+    DECLARE addrdistrict VARCHAR(60);
+    DECLARE addrstateprovrgn VARCHAR(80);
+    DECLARE addrpostalcode VARCHAR(20);
+    DECLARE addrhomeurl VARCHAR(120);    
+    DECLARE contacttitle VARCHAR(10);  
+    DECLARE contactname VARCHAR(60);    
+    DECLARE contactphoneoffice VARCHAR(20);    
+    DECLARE contactphonemobile VARCHAR(20);    
+    DECLARE contactemail VARCHAR(100);    
+    DECLARE contactdesignation VARCHAR(45);
+    DECLARE contactip VARCHAR(45);
+    DECLARE type VARCHAR(20);
+    DECLARE subtype VARCHAR(45);
+    DECLARE status VARCHAR(15);
+    DECLARE vrfreqcnt int(10);
+    DECLARE vrfproccnt int(10);
+    DECLARE alrtpendingcnt int(5);
+    DECLARE msgsunrdcnt int(5);
+    DECLARE accntbal decimal(10,2);
+    DECLARE payoutbal decimal(10,2);
+    DECLARE payoutdate datetime;
+    DECLARE tzoffset smallint(6);
+    DECLARE datecreated datetime;
+    DECLARE dateupdated datetime;
+    
+	BEGIN
+    
+		SELECT SUBSTRING(orgid FROM (CHAR_LENGTH(orgid)) FOR 1) INTO @tblnum;
+		SELECT CONCAT('plnvk_org_', @tblnum) INTO @tblname;
+
+		SET @sqltext :=  CONCAT('select orgid, name, shortname, ip, regcode, regcodeissuingauthority, isocountrycode,
+								logosealloc, addrstreet1, addrstreet2, addrcitytown, addrdistrict, addrstateprovrgn,
+                                addrpostalcode, addrhomeurl, contacttitle, contactname, contactphoneoffice, contactphonemobile,
+                                contactemail, contactdesignation, contactip, type, subtype, status, vrfreqcnt, vrfproccnt,
+                                alrtpendingcnt, msgsunrdcnt, accntbal, payoutbal, payoutdate, tzoffset, datecreated, dateupdated
+								from ', @tblname, ' where orgid=', '\'', orgid, '\'');
+                
+		PREPARE stmt FROM @sqltext;
+		EXECUTE stmt;
+		DEALLOCATE PREPARE stmt;                
+	END;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_getpasssalt` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_getpasssalt`(
+        IN  username	               	VARCHAR(20),
+        OUT salt						VARCHAR(16),
+        OUT pass						VARCHAR(20)
+)
+BEGIN
+		select salt, pass INTO salt, pass from users where username = username;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_getreportingmanagers` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_getreportingmanagers`(
+        IN  	inuserid INT(10)
+)
+BEGIN
+	Select  username from users where id = (Select reportsto from users where id=inuserid) 
+    UNION ALL
+   	Select  username from users where id = (Select createdby from users where id=inuserid);
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_gettenantfordomain` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_gettenantfordomain`(
+	intenantname	VARCHAR(20)
+)
+BEGIN
+	Select tenantid, tenantdesc, tenantname, jndiname, regip, zoneid, addrstreet1, addrstreet2, addrcitytown,
+    addrdistrict, addrstateprovrgn, addrpostalcode, addrhomeurl, contacttitle, contactname, contactphoneoffice,
+    contactphonemobile, contactemail, contactdesignation, tenanttype, regstatus, alrtpendingcnt, msgsunrdcnt, accntbal,
+    tzoffset, datecreated, dateupdated, createdby, updatedby from plnvk_tenant_master where tenantname=intenantname;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_gettenants` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_gettenants`(
+)
+BEGIN
+
+	Select tenantid, tenantdesc, tenantname, jndiname, regip, zoneid, addrstreet1, addrstreet2, addrcitytown,
+    addrdistrict, addrstateprovrgn, addrpostalcode, addrhomeurl, contacttitle, contactname, contactphoneoffice,
+    contactphonemobile, contactemail, contactdesignation, tenanttype, regstatus, alrtpendingcnt, msgsunrdcnt, accntbal,
+    tzoffset, datecreated, dateupdated, createdby, updatedby from plnvk_tenant_master;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_getuserdetails` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_getuserdetails`(
+        IN  	inusername VARCHAR(30)
+)
+BEGIN
+    
+	Select t1.id, t1.fullname, t1.password, t1.email, t1.username, t1.phone, t1.designation, t1.level, t1.enabled, t1.accountNonExpired,
+    t1.accountNonLocked, t1.credentialsNonExpired, t1.tzoffset, t1.date_created, t1.date_updated, t2.role from 
+    users t1, user_roles_map t2 where t1.username = inusername and t2.username= inusername;
+    
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_get_activities_for_type` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_activities_for_type`(
+	IN	itinnum	INT(11),
+	IN	version	SMALLINT(2),
+    IN  type SMALLINT(2)
+)
+BEGIN
+
+	
+    IF (type = 0) THEN
+		select a.activityid, a.activityidpair, a.itinnum, a.actname, a.pax, a.mode, a.code, a.version, a.vesselconame, a.vesselnoon, a.vesselnoret,
+		a.bookingclass, a.bookingno, a.depdatetimeon, a.depdatetimeret, a.arrdatetimeon, a.arrdatetimeret, a.depstation, a.arrstation, a.cost, a.costmarkup, a.pikupdroplocfrom,
+		a.pikupdroplocto, a.pikupdropdatetime, a.pikupdropcost, a.pikupdropcostmarkup, a.vehdetails, a.asstcost, a.asstcostmarkup,
+		a.commentsinternal, a.commentsexternal, a.datecreated, a.dateupdated, a.lastupdatedby, a.createdby from itin_activity_travel a where a.itinnum = itinnum 
+        and a.version = version order by a.activityid ASC;
+    END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_get_activitypairdet` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_activitypairdet`(
+	IN	inactivityid	INT(11),
+	IN  type 			SMALLINT(2),
+    OUT	outdepdatetimeon long,
+    OUT	outarrdatetimeon long,
+    OUT	outdepdatetimeret long,
+    OUT	outarrdatetimeret long
+)
+BEGIN
+	IF (type = 0) THEN
+    BEGIN
+		Select UNIX_TIMESTAMP(depdatetimeon) * 1000, UNIX_TIMESTAMP(depdatetimeret) * 1000, UNIX_TIMESTAMP(arrdatetimeon) * 1000, UNIX_TIMESTAMP(arrdatetimeret) * 1000
+        INTO outdepdatetimeon, outdepdatetimeret, outarrdatetimeon, outarrdatetimeret from itin_activity_travel where activityid=inactivityid; 
+    END;
+	END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_get_activity_details` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_activity_details`(
+	IN	activityid	INT(11),
+    IN  type SMALLINT(2)
+)
+BEGIN
+	
+    IF (type = 0) THEN
+		select a.activityid, a.activityidpair, a.itinnum, a.actname, a.pax, a.mode, a.code, a.version, a.vesselconame, a.vesselnoon, a.vesselnoret,
+		a.bookingclass, a.bookingno, a.depdatetimeon, a.arrdatetimeon, a.depdatetimeret, a.arrdatetimeret, a.depstation, a.arrstation, a.cost, a.costmarkup, a.pikupdroplocfrom,
+		a.pikupdroplocto, a.pikupdropdatetime, a.pikupdropcost, a.pikupdropcostmarkup, a.vehdetails, a.asstcost, a.asstcostmarkup,
+		a.commentsinternal, a.commentsexternal, a.datecreated, a.dateupdated, a.lastupdatedby, a.createdby from itin_activity_travel a where a.activityid = activityid;
+	END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_get_admin_tasks` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_admin_tasks`()
+BEGIN
+	select a.id, a.subid, a.dateupdated AS lastupdate, CONCAT(b.name, ' ', a.orgid) AS orgidname, a.status,
+	 a.code, a.assignedto AS assigned, a.remarks from plnvk_admin_tasks a INNER JOIN plnvk_org_seq b
+	ON b.id = a.id where a.status=0 ORDER BY (a.id);
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_get_itinerary` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_itinerary`(
+	IN itinum INT(11)
+)
+BEGIN
+    
+	Select id, name, version, status, touroperator, grouphead, numtravellers, startdate, enddate, arrivalcity, depcity, 
+	currency, quotecurrency, convcode, tzoffset, createdby, datecreated, lastupdatedby, dateupdated from itin_master where id=itinum;    
+    
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_get_travel_activities` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_travel_activities`(
+	IN	itinnum	INT(11),
+	IN	version	SMALLINT(2)
+)
+BEGIN
+	select a.activityid, activityidpair, a.itinnum, a.actname, a.pax, a.mode, a.code, a.version, a.day, a.vesselconame, a.vesselno,
+    a.bookingclass, a.bookingno, a.depdatetime, a.arrdatetime, a.depstation, a.arrstation, a.cost, a.costmarkup, a.pikupdroplocfrom,
+    a.pikupdroplocto, a.pikupdropdatetime, a.pikupdropcost, a.pikupdropcostmarkup, a.vehdetails, a.asstcost, a.asstcostmarkup,
+    a.commentsinternal, a.commentsexternal, a.masteractid, a.datecreated, a.dateupdated, a.lastupdatedby, a.createdby from itin_activity_travel a where a.itinnum = itinnum
+    and a.version = version order by a.day ASC, a.activityid ASC;
+    
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_manageservice` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_manageservice`(
+		IN	inid						INT(11),
+        IN  inservicename	            VARCHAR(45), 
+        IN  iniatacode            		VARCHAR(3), 
+        IN  infullservice              	SMALLINT(1),
+        IN  indomesticonly             	SMALLINT(1),
+        IN	incoverage					SMALLINT(1),
+        IN  inrating                	SMALLINT(1),
+        IN	incity						VARCHAR(45),
+        IN  incountry		         	VARCHAR(45), 
+		IN	indescription				VARCHAR(120),
+        IN 	incontactname				VARCHAR(30),
+        IN  incontactphone				VARCHAR(15),
+        IN  incontactemail				VARCHAR(120),
+        IN  incontactwebsite			VARCHAR(100),
+        IN	increatedby					VARCHAR(30),
+		IN	inupdatedby					VARCHAR(30),        
+        IN 	inaddlinfo					VARCHAR(200),
+        IN  mode						VARCHAR(10),
+        IN	type						SMALLINT(1),
+        OUT regerror					VARCHAR(160)
+)
+BEGIN
+        DECLARE createdby INT(10);
+        DECLARE updatedby INT(10);
+		DECLARE tblname	  VARCHAR(100);
+        DECLARE sqltext VARCHAR(300);        
+        
+        IF (SELECT STRCMP(mode, 'Create') = 0) THEN
+			Select id INTO @createdby from users where username=increatedby;
+		ELSE
+			Select id INTO @updatedby from users where username=inupdatedby;
+        
+        END IF;
+
+		IF (type = 0) THEN
+			IF (SELECT STRCMP(mode, 'Create') = 0) THEN
+				INSERT INTO service_airlines (servicename, iatacode, rating, city, country, contactname, contactphone, contactemail,
+				contactwebsite, fullservice, domesticonly, addlinfo, datecreated, createdby, dateupdated, updatedby) 
+				VALUES (inservicename, iniatacode, inrating, incity, incountry, incontactname, incontactphone, incontactemail, 
+				incontactwebsite, infullservice, indomesticonly, inaddlinfo, UTC_TIMESTAMP(), @createdby, UTC_TIMESTAMP(), @createdby);
+			ELSE
+				Update service_airlines SET servicename=inservicename, iatacode=iniatacode, rating=inrating, city=incity, country=incountry,
+				contactname=incontactname, contactphone=incontactphone, contactemail=incontactemail, contactwebsite=incontactwebsite, fullserivce=infullservice,
+				domesticonly=indomesticonly, addlinfo=inaddlinfo, dateupdated=UTC_TIMESTAMP(), updatedby=@updatedby where
+                id = inid;
+			END IF;
+
+		ELSEIF (type = 1) THEN
+			IF (SELECT STRCMP(mode, 'Create') = 0) THEN
+				INSERT INTO service_hotels (servicename, rating, city, country, contactname, contactphone, contactemail,
+				contactwebsite, addlinfo, datecreated, createdby, dateupdated, updatedby) 
+				VALUES (inservicename, inrating, incity, incountry, incontactname, incontactphone, incontactemail, 
+				incontactwebsite, inaddlinfo, UTC_TIMESTAMP(), @createdby, UTC_TIMESTAMP(), @createdby);
+			ELSE
+				Update service_hotels SET servicename=inservicename, rating=inrating, city=incity, country=incountry,
+				contactname=incontactname, contactphone=incontactphone, contactemail=incontactemail, contactwebsite=incontactwebsite,
+				addlinfo=inaddlinfo, dateupdated=UTC_TIMESTAMP(), updatedby=@updatedby where id = inid;
+			END IF;
+		
+        ELSEIF (type = 2) THEN
+			IF (SELECT STRCMP(mode, 'Create') = 0) THEN
+				INSERT INTO service_transport (servicename, rating, coverage, city, country, contactname, contactphone, contactemail,
+				contactwebsite, addlinfo, datecreated, createdby, dateupdated, updatedby) 
+				VALUES (inservicename, inrating, incoverage, incity, incountry, incontactname, incontactphone, incontactemail, 
+				incontactwebsite, inaddlinfo, UTC_TIMESTAMP(), @createdby, UTC_TIMESTAMP(), @createdby);
+			ELSE
+				Update service_transport SET servicename=inservicename, rating=inrating, coverage=incoverage, city=incity, country=incountry,
+				contactname=incontactname, contactphone=incontactphone, contactemail=incontactemail, contactwebsite=incontactwebsite,
+				addlinfo=inaddlinfo, dateupdated=UTC_TIMESTAMP(), updatedby=@updatedby where id = inid;
+			END IF;
+		
+        ELSEIF (type = 3) THEN
+			IF (SELECT STRCMP(mode, 'Create') = 0) THEN
+				INSERT INTO service_other (servicename, description, rating, city, country, contactname, contactphone, contactemail,
+				contactwebsite, addlinfo, datecreated, createdby, dateupdated, updatedby) 
+				VALUES (inservicename, indescription, inrating, incity, incountry, incontactname, incontactphone, incontactemail, 
+				incontactwebsite, inaddlinfo, UTC_TIMESTAMP(), @createdby, UTC_TIMESTAMP(), @createdby);
+			ELSE
+				Update service_other SET servicename=inservicename, description=indescription, rating=inrating, city=incity, country=incountry,
+				contactname=incontactname, contactphone=incontactphone, contactemail=incontactemail, contactwebsite=incontactwebsite,
+				addlinfo=inaddlinfo, dateupdated=UTC_TIMESTAMP(), updatedby=@updatedby where id = inid;
+			END IF;
+        
+        END IF;            
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_manageuser` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_manageuser`(
+		IN	inemail						VARCHAR(120),
+        IN  infullname		            VARCHAR(60), 
+        IN  inpassword             		VARCHAR(60), 
+        IN  inusername                	VARCHAR(30),
+        IN	inrole						VARCHAR(25),
+        IN  inphone			         	VARCHAR(20), 
+        IN 	indesignation				VARCHAR(20),
+        IN  reportstousername			VARCHAR(30),
+        IN	createdbyusername			VARCHAR(30),
+        IN  intzoffset					INT(6),
+        IN  mode						VARCHAR(10),
+        IN  inaccountNonLocked			SMALLINT(1),
+        IN  incredentialsNonExpired		SMALLINT(1),
+        OUT regerror					VARCHAR(160)
+)
+BEGIN
+
+        DECLARE createdby INT(10);
+        DECLARE reportsto INT(10);
+        
+		Select id INTO @createdby from users where username=createdbyusername;
+		Select id INTO @reportsto from users where username=reportstousername;        
+        		       
+        IF (SELECT STRCMP(mode, 'Create') = 0) THEN
+			BEGIN
+
+				Insert INTO users ( email, fullname, username, password, phone, designation, reportsto, createdby, level,
+                               tzoffset, date_created, date_updated
+							) VALUES (inemail, infullname, inusername, inpassword, inphone, indesignation, @reportsto,
+							   @createdby, 0, intzoffset, UTC_TIMESTAMP(), UTC_TIMESTAMP());
+                
+                Insert into user_roles_map set username=inusername, role=inrole, datecreated=UTC_TIMESTAMP(), dateupdated=UTC_TIMESTAMP();
+            
+            END;
+
+        ELSEIF (SELECT STRCMP(mode, 'Edit') = 0) THEN
+
+			UPDATE users SET fullname=infullname, email=inemail, phone=inphone, designation=indesignation, reportsto=@reportsto, 
+							 accountNonLocked=inaccountNonLocked, credentialsNonExpired=incredentialsNonExpired, date_updated=UTC_TIMESTAMP where username=inusername;
+			SELECT id into @userid from users where username=inusername;
+            SELECT roleid into @roleid from user_roles where role=inrole;
+			UPDATE user_roles_map SET role=inrole, datecreated=UTC_TIMESTAMP(), dateupdated=UTC_TIMESTAMP() where
+				username=inusername;
+
+        ELSEIF (SELECT STRCMP(mode, 'Disable') = 0) THEN
+			
+            UPDATE users SET enabled=0 where username=inusername;
+        
+        END IF;
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_org_exists` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_org_exists`(
+        IN  orgname		               	VARCHAR(120),
+        OUT organizationid				VARCHAR(15)
+)
+BEGIN
+		select orgid INTO organizationid from plnvk_org_seq where name = orgname;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_plnvk_org_insert` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_plnvk_org_insert`(
+        IN  orgname		               	VARCHAR(120), 
+        IN  contactip                  	VARCHAR(45), 
+        IN  isocountrycode             	VARCHAR(3), 
+        IN  contactname                	VARCHAR(60),
+        IN  contactphoneoffice         	VARCHAR(20), 
+        IN  contactphonemobile         	VARCHAR(20),
+        IN	contactemail				VARCHAR(100),
+        IN 	contactdesignation			VARCHAR(45),
+        IN 	tzoffset					INT(6),
+        OUT organizationid				VARCHAR(15),
+        OUT regerror					VARCHAR(30)
+     )
+BEGIN
+		DECLARE oid VARCHAR(15);
+        DECLARE idtemp INT(8);
+        DECLARE tname CHAR(9);
+        DECLARE modval INT(1);
+        DECLARE sqltext VARCHAR(300);
+        DECLARE rowcount INT;
+
+        
+		SELECT `AUTO_INCREMENT` INTO @idtemp FROM INFORMATION_SCHEMA.TABLES
+		WHERE TABLE_SCHEMA = 'plnvk_main' AND TABLE_NAME = 'plnvk_org_seq';
+        COMMIT;
+        
+        SELECT @idtemp MOD 10 INTO @modval;
+        COMMIT;
+        
+        SELECT CONCAT('plnvk_org_', @modval) INTO @tname;
+        COMMIT;
+        
+        SELECT CONCAT('01-001-', LPAD(CAST(@idtemp AS CHAR),8,'0')) INTO @oid;
+        COMMIT;
+                
+		SELECT orgid INTO @oid FROM vrf_org_seq where name=orgname;
+		SELECT FOUND_ROWS() INTO @rowcount;
+        
+        IF (@rowcount > 0) THEN
+		BEGIN
+            set regerror := 'Duplicate Name';
+			set organizationid := @oid;
+        END;
+        ELSE
+        BEGIN
+			SET @sqltext := concat(
+							 'INSERT INTO ', @tname, ' (
+							   orgid, 
+							   name, 
+							   contactip, 
+							   isocountrycode, 
+							   contactname, 
+							   contactphoneoffice,
+							   contactphonemobile,
+							   contactemail,
+							   contactdesignation,
+							   tzoffset,
+							   datecreated,
+							   dateupdated
+							) VALUES (',
+							   '\'', @oid, '\'',',',
+							   '\'', orgname, '\'',',',
+							   '\'', contactip, '\'',',', 
+							   '\'',isocountrycode, '\'',',', 
+							   '\'',contactname, '\'',',',
+							   '\'', contactphoneoffice, '\'',',',
+							   '\'', contactphonemobile, '\'',',',
+							   '\'', contactemail, '\'',',',
+							   '\'',contactdesignation, '\'',',',
+							   tzoffset,',',
+							   '\'', UTC_TIMESTAMP(), '\'',',',
+							   '\'', UTC_TIMESTAMP(), '\'',
+							 ')');
+
+
+			PREPARE stmt FROM @sqltext;
+			EXECUTE stmt;
+			DEALLOCATE PREPARE stmt;
+			
+			insert into plnvk_org_seq set id = @id, name=orgname, orgid=@oid;
+            
+            insert into plnvk_admin_tasks set subid=0, orgid=@oid, code=0, assignedto=1, status=0, 
+            remarks='New org - requires verification', datecreated=UTC_TIMESTAMP(), dateupdated=UTC_TIMESTAMP();
+		
+		set organizationid := @oid;
+		COMMIT;
+		END;
+        END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_registertenant` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_registertenant`(
+	IN intenantdesc VARCHAR(120),
+    IN incontactname VARCHAR(60),
+    IN incontactemail VARCHAR(100),
+    IN incontactphonemobile VARCHAR(20),
+    IN intzoffset SMALLINT(6),
+    IN inregstatus SMALLINT(3),
+    IN intenantname VARCHAR(10),
+    OUT result VARCHAR(30)
+)
+BEGIN
+    IF (Select count(*) from plnvk_tenant_master where tenantdesc = intenantdesc > 0) THEN
+		Select tenantname INTO result from plnvk_tenant_master where tenantdesc=intenantdesc;
+	ELSEIF (Select count(*) from plnvk_tenant_master where tenantname = intenantname > 0) THEN
+		SET result="tenantexists";
+    ELSE
+		Insert into plnvk_tenant_master (tenantdesc, tenantname, contactname,  contactemail, contactphonemobile, tzoffset, regstatus, datecreated, dateupdated, createdby, updatedby) values 
+			(intenantdesc, intenantname, incontactname, incontactemail, incontactphonemobile, intzoffset, inregstatus, UTC_TIMESTAMP(),  UTC_TIMESTAMP(), 1, 1);
+            SET result = "OK";
+    END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_save_itinerary` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_save_itinerary`(
+	IN itinnum INT(11),
+	IN name VARCHAR(50),
+    IN mode VARCHAR(15),
+    IN status VARCHAR(10),
+    IN version SMALLINT(2),
+    IN touroperator VARCHAR(30),
+    IN grouphead VARCHAR(30),
+    IN numtravellers SMALLINT,
+    IN startdate DATETIME,
+    IN enddate DATETIME,
+    IN arrivalcity VARCHAR(30),
+    IN depcity VARCHAR(30),
+    IN quotecurrency VARCHAR(3),
+    IN convcode INT(11),
+    IN lastupdatedbyusername VARCHAR(30)
+)
+BEGIN
+		DECLARE lastupdatedby INT(11);
+        DECLARE activitymastercnt SMALLINT(2);
+    	
+		Select id INTO @lastupdatedby from users where username=lastupdatedbyusername;
+		Select itinnum into @initinnum;
+        
+        update itin_master SET name=name, version=version, status=status, touroperator=touroperator, grouphead=grouphead, 
+        numtravellers=numtravellers, startdate=startdate, enddate=enddate, arrivalcity=arrivalcity, 
+        depcity=depcity, quotecurrency=quotecurrency, convcode=convcode, lastupdatedby=@lastupdatedby, dateupdated=UTC_TIMESTAMP()
+        where id=itinnum;
+        
+        
+    
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_save_travelactivity` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_save_travelactivity`(
+    IN initinnum 				INT(11),
+    IN inactname 				VARCHAR(60),
+    IN lastupdatedbyemail 		VARCHAR(120),
+    IN incode 					VARCHAR(20),
+    IN inversion 				SMALLINT(2),
+    IN inactivityid 			INT(11),
+    IN inpax 					SMALLINT(5),
+    IN inmode					SMALLINT(3),
+    IN invesselnoon				VARCHAR(15),
+	IN invesselnoret			VARCHAR(15),
+    IN invesselconame 			VARCHAR(20),
+    IN inbookingno 				VARCHAR(10),
+    IN inbookingclass 			VARCHAR(10),
+    IN indepdatetimeon 			DATETIME,
+    IN inarrdatetimeon 			DATETIME,
+    IN indepdatetimeret			DATETIME,
+    IN inarrdatetimeret			DATETIME,
+    IN inarrstation 			VARCHAR(30),
+    IN indepstation 			VARCHAR(30),
+    IN incost					DECIMAL(10,2),
+    IN incostmarkup				SMALLINT(3),
+    IN inasstcost				DECIMAL(10,2),
+    IN inasstcostmarkup			SMALLINT(3),
+    IN inpikupdroplocfrom		VARCHAR(30),
+    IN inpikupdroplocto			VARCHAR(30),
+    IN inpikupdropdatetime		DATETIME,
+	IN invehdetails				VARCHAR(45),
+    IN inpikupdropcost			DECIMAL(10,2),
+    IN inpikupdropcostmarkup	SMALLINT(3),
+	IN incommentsinternal		VARCHAR(200),
+	IN incommentsexternal		VARCHAR(200),
+    OUT outactivityid			INT(11),
+    OUT outactivityidpair		INT(11)
+)
+BEGIN
+		DECLARE lastupdatedby	INT(11);
+        DECLARE activitycnt   	INT(5);
+        DECLARE aid				INT(11);
+    	
+		Select id INTO @lastupdatedby from users where username=lastupdatedbyemail;
+		
+        
+        
+        IF (incode = 'T_PIKUPDRP') THEN
+
+			IF (inactivityid=0) THEN
+				Insert into itin_activity_travel (actname, itinnum, pax, mode, code, version, vesselconame, vesselnoon, 
+				pikupdroplocfrom, pikupdroplocto, pikupdropdatetime, pikupdropcost, pikupdropcostmarkup, vehdetails, asstcost, asstcostmarkup,
+				commentsinternal, commentsexternal, datecreated, dateupdated, lastupdatedby, createdby) values (inactname, initinnum, inpax, 
+				inmode, incode, inversion, invesselconame, invesselnoon, inpikupdroplocfrom, inpikupdroplocto, inpikupdropdatetime, inpikupdropcost, 
+				inpikupdropcostmarkup, invehdetails, inasstcost, inasstcostmarkup, incommentsinternal,  incommentsexternal, UTC_TIMESTAMP(), 
+				UTC_TIMESTAMP(), @lastupdatedby,  @lastupdatedby);
+        
+				SELECT LAST_INSERT_ID() INTO outactivityid;
+                
+				
+            ELSE
+				Update itin_activity_travel Set actname=inactname, itinnum=initinnum, pax=inpax, mode=inmode, code=incode, version=inversion, 
+				vesselconame=invesselconame, vesselnoon=invesselnoon, pikupdroplocfrom=inpikupdroplocfrom, pikupdroplocto=inpikupdroplocto, pikupdropdatetime=inpikupdropdatetime, 
+                pikupdropcost=inpikupdropcost, pikupdropcostmarkup=inpikupdropcostmarkup, vehdetails=invehdetails, asstcost=inasstcost, asstcostmarkup=inasstcostmarkup, 
+                commentsinternal=incommentsinternal, commentsexternal=incommentsexternal, dateupdated=UTC_TIMESTAMP(), lastupdatedby=@lastupdatedby
+				where activityid=inactivityid;
+				
+                SELECT inactivityid INTO outactivityid;
+                
+			END IF;
+
+        ELSEIF (incode = 'T_BOOK_ONEWAY') THEN
+
+			IF (inactivityid=0) THEN
+
+				Insert into itin_activity_travel (actname, itinnum, pax, mode, code, version, vesselconame, vesselnoon, bookingclass, bookingno, depdatetimeon,
+				arrdatetimeon, depstation, arrstation, cost, costmarkup, commentsinternal, commentsexternal, datecreated, dateupdated, lastupdatedby, createdby) 
+                values (inactname, initinnum, inpax, inmode, incode, inversion, invesselconame, invesselnoon, inbookingclass, inbookingno, indepdatetimeon, 
+                inarrdatetimeon, indepstation, inarrstation, incost, incostmarkup, incommentsinternal, incommentsexternal, UTC_TIMESTAMP(), UTC_TIMESTAMP(), @lastupdatedby,  @lastupdatedby);
+            
+                SELECT LAST_INSERT_ID() INTO outactivityid;
+				
+			ELSE
+				Update itin_activity_travel Set actname=inactname, itinnum=initinnum, pax=inpax, mode=inmode, code=incode, version=inversion, 
+                vesselconame=invesselconame, vesselnoon=invesselnoon, bookingclass=inbookingclass, bookingno=inbookingno, depdatetimeon=indepdatetimeon, arrdatetimeon=inarrdatetimeon,
+                depstation=indepstation, arrstation=inarrstation, cost=incost, costmarkup=incostmarkup, commentsinternal=incommentsinternal, commentsexternal=incommentsexternal, dateupdated=UTC_TIMESTAMP(), lastupdatedby=@lastupdatedby
+                where activityid=inactivityid;
+
+				SELECT inactivityid INTO outactivityid;
+			END IF;
+
+        ELSEIF (incode = 'T_BOOK_RETURN') THEN
+
+			IF (inactivityid=0) THEN        
+   				Insert into itin_activity_travel (actname, itinnum, pax, mode, code, version, vesselconame, vesselnoon, bookingclass, bookingno, depdatetimeon,
+				arrdatetimeon, depstation, arrstation, cost, costmarkup, commentsinternal, commentsexternal, datecreated, dateupdated, lastupdatedby, createdby) values (inactname, initinnum, inpax, inmode, 
+                incode, inversion, invesselconame, invesselnoon, inbookingclass, inbookingno, indepdatetimeon, inarrdatetimeon, indepstation, 
+                inarrstation, incost, incostmarkup, incommentsinternal, incommentsexternal, UTC_TIMESTAMP(), UTC_TIMESTAMP(), @lastupdatedby,  @lastupdatedby);
+
+                SELECT LAST_INSERT_ID() INTO outactivityid;
+
+   				Insert into itin_activity_travel (actname, itinnum, pax, mode, code, version, vesselconame, vesselnoret, bookingclass, bookingno, depdatetimeret,
+				arrdatetimeret, depstation, arrstation, cost, costmarkup, commentsinternal, commentsexternal, datecreated, dateupdated, lastupdatedby, createdby) values (inactname, initinnum, inpax, inmode, 
+                incode, inversion, invesselconame, invesselnoret, inbookingclass, inbookingno, indepdatetimeret, inarrdatetimeret, inarrstation, 
+                indepstation, incost, incostmarkup, incommentsinternal, incommentsexternal, UTC_TIMESTAMP(), UTC_TIMESTAMP(), @lastupdatedby,  @lastupdatedby);
+		
+                SELECT LAST_INSERT_ID() INTO outactivityidpair;
+                
+                update itin_activity_travel Set activityidpair=outactivityidpair where activityid=outactivityid;
+                update itin_activity_travel Set activityidpair=outactivityid where activityid=outactivityidpair;
+                
+			ELSE 
+				IF (SELECT LENGTH(invesselnoon) > 0) THEN
+					Update itin_activity_travel Set actname=inactname, itinnum=initinnum, pax=inpax, mode=inmode, code=incode, version=inversion, 
+					vesselconame=invesselconame, vesselnoon=invesselnoon, bookingclass=inbookingclass, bookingno=inbookingno, depdatetimeon=indepdatetimeon, arrdatetimeon=inarrdatetimeon,
+					depstation=indepstation, arrstation=inarrstation, cost=incost, costmarkup=incostmarkup, commentsinternal=incommentsinternal, commentsexternal=incommentsexternal, dateupdated=UTC_TIMESTAMP(), lastupdatedby=@lastupdatedby
+					where activityid=inactivityid;
+				ELSE
+					Update itin_activity_travel Set actname=inactname, itinnum=initinnum, pax=inpax, mode=inmode, code=incode, version=inversion, 
+					vesselconame=invesselconame, vesselnoret=invesselnoret, bookingclass=inbookingclass, bookingno=inbookingno, depdatetimeret=indepdatetimeret, arrdatetimeret=inarrdatetimeret,
+					depstation=indepstation, arrstation=inarrstation, cost=incost, costmarkup=incostmarkup, commentsinternal=incommentsinternal, commentsexternal=incommentsexternal, dateupdated=UTC_TIMESTAMP(), lastupdatedby=@lastupdatedby
+					where activityid=inactivityid;
+
+				END IF;
+
+            END IF;
+
+        END IF;
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_service_exists` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_service_exists`(
+        IN  inservicename      	VARCHAR(30),
+        IN  type				SMALLINT(2),
+        OUT serviceid			INT(10)
+)
+BEGIN
+		IF (type = 0) THEN
+			select id into serviceid from service_airlines where servicename = inservicename;
+        ELSEIF (type = 1) THEN
+			select id into serviceid from service_hotels where servicename = inservicename;
+        ELSEIF (type = 2) THEN
+			select id into serviceid from service_transport where servicename = inservicename;
+        ELSEIF (type = 3) THEN
+			select id into serviceid from service_other where servicename = inservicename;
+        END IF;
+        
+        IF (serviceid IS NULL) THEN
+			SET serviceid = 0;
+		END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_updateuser` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_updateuser`(
+	IN 	inpass		VARCHAR(60),
+    IN  inid		INT(10)
+)
+BEGIN
+		update users set password=inpass, credentialsNonExpired=1, date_updated=UTC_TIMESTAMP() where id=inid;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_user_exists` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_user_exists`(
+        IN  inusername		               	VARCHAR(30),
+        OUT userid							INT(10)
+)
+BEGIN
+		select id into userid from users where username = inusername;
+        IF (userid IS NULL) THEN
+			SET userid = 0;
+		END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2015-06-28 12:12:10

@@ -8,4 +8,5 @@ public interface ITenantEntityDAO {
 	
  	public TenantEntity GetTenant(String tenantName) throws IOException, SQLException;
  	public String RegisterTenant(TenantEntity tenant)  throws IOException, SQLException;
+	public boolean TenantExists(String tenantDesc) throws IOException, SQLException;
 }

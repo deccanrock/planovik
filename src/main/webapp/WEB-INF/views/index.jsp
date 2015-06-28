@@ -279,20 +279,23 @@
 						    or
 						</div>
 
-							<div class="input-group" style="width:100%;border-radius:4px;">
-						    	<input class="form-control" type="text" placeholder="Company Name" id="tenantdesc" maxlength="120" name="tenantdesc" />
-						    </div>			
-							
+							<div class="input-group" style="width:100%" id="tenantdescdiv">
+						    	<input class="form-control" type="text" placeholder="Company Name" id="tenantdesc" maxlength="120" name="tenantdesc" style="border-radius:0px;" />
+                               	<div class="pull-right center spinner-preview" id="spinnertenantdesc" class="col-sm-1"></div>
+						    </div>
+						    
+						    <div id="tenantdeschelp" style="display:none;color:#A94442;"><p>Company already exists! Please input a different name.</p></div>	
+					
 							<div class="space-2"></div>
 							
-							<div class="input-group" style="width:100%;border-radius:4px;">							
-								<input class="form-control" type="text" placeholder="Your Name" id="contactname" maxlength="60" name="contactname" />
+							<div class="input-group" style="width:100%;">							
+								<input class="form-control" type="text" placeholder="Your Name" id="contactname" maxlength="60" name="contactname" style="border-radius:0px;" />
 						    </div>			
 							
 							<div class="space-2"></div>							
 
-							<div class="input-group" style="width:100%;border-radius:4px;">														
-								<input class="form-control" type="text" placeholder="Your Email" id="contactemail" maxlength="100" name="contactemail" />
+							<div class="input-group" style="width:100%;">														
+								<input class="form-control" type="text" placeholder="Your Email" id="contactemail" maxlength="100" name="contactemail" style="border-radius:0px;" />
 						    </div>			
 						    
 							<div class="space-2"></div>
@@ -356,6 +359,7 @@
     <script src="<c:url value='/resources/www/js/bootstrap.min.js'/>" ></script>
 
     <script src="<c:url value='/resources/js/jquery.validate.min.js'/>" ></script>
+	<script src="<c:url value='/resources/js/spin.min.js'/>" ></script>
     
     <!-- Custom Theme JavaScript -->
     <script>
@@ -387,6 +391,41 @@
                 }
             }
         });
+        
+       	$('#tenantdesc').blur(function() {
+       		if ($('#tenantdesc').val() != '') {
+		    	checkname($('#tenantdesc').val());
+		    }
+	   	});
+       
+    	var opts = {
+	        lines:8, length:5, width:3, radius:3, corners:1,
+        	rotate:0, color:'#000', speed:1, trail:60, shadow:false,
+        	hwaccel:false, className:'spinner', zIndex:2e9
+    	};
+
+        function checkname(tenantdesc) {
+   			var target = document.getElementById('spinnertenantdesc');
+	   		var spinner = new Spinner(opts).spin(target);	
+        	var request = $.ajax({url: "/checktenantdesc", type: "GET", data: "tenantdesc=" + tenantdesc});
+        	request.done(function( msg ) {
+				spinner.stop();
+				if (msg == "exists") {
+					$("#tenantdescdiv").attr("class", "input-group has-error");
+					$("#tenantdeschelp").show();
+					$( "#registerbtn" ).prop( "disabled", true );			
+				}
+				else {
+					$("#tenantdescdiv").attr("class", "input-group");
+					$("#tenantdeschelp").hide();							
+					$( "#registerbtn" ).prop( "disabled", false );			
+				}
+			}); 
+	        request.fail(function( jqXHR, textStatus ) {
+				$('spinner').data('spinner').stop();;
+			});		
+			
+    	}        
         
         $.ajax({
           url: "/phonecode",
@@ -431,8 +470,12 @@
 	              data: dataString,
 	              type: "POST"
 	            }).done(function( data ) {
-	                console.log( data );		                			
-	                location.reload();
+	            	if (data == "OK") {
+		                alert( data );
+		                $("#signupdlg .modal-body").html("SUCCESS!");	                			
+		                location.reload();
+		                return false;	            	
+	            	}
 				});
 	        },            
             rules: {

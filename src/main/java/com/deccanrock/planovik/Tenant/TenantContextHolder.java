@@ -49,7 +49,7 @@ public class TenantContextHolder {
 			return;
 		
 		CacheService cs = (CacheService) AppCtxtProv.getApplicationContext().getBean("cacheservice");
-		Element tenantele = cs.getTenantCache().get(tenant);
+		Element tenantele = cs.getCache().get(tenant);
 		
 		TenantEntity te = null;
 		if (tenantele != null) {
@@ -62,13 +62,13 @@ public class TenantContextHolder {
 			TenantEntityDAO TED = (TenantEntityDAO)AppCtxtProv.getApplicationContext().getBean("TenantEntityDAO");
 			te = TED.GetTenant(tenant);
 			if (te != null) {
-				cs.getTenantCache().put(new Element(tenant, te));				
+				cs.getCache().put(new Element(tenant, te));				
 				TenantContextHolder.setTenant(te);
 				tenant = te.getTenantname();
 			}
 			else {
 					// No matching tenant found, default to www
-					tenantele = cs.getTenantCache().get("www");
+					tenantele = cs.getCache().get("www");
 					TenantContextHolder.setTenant((TenantEntity) tenantele.getObjectValue());
 					tenant = "www";			
 			}
