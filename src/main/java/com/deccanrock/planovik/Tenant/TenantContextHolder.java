@@ -60,7 +60,7 @@ public class TenantContextHolder {
 		else {
 			// This will hit DB
 			TenantEntityDAO TED = (TenantEntityDAO)AppCtxtProv.getApplicationContext().getBean("TenantEntityDAO");
-			te = TED.GetTenant(tenant);
+			te = TED.GetTenant(tenant,1);
 			if (te != null) {
 				cs.getCache().put(new Element(tenant, te));				
 				TenantContextHolder.setTenant(te);

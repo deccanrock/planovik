@@ -300,10 +300,9 @@
 						    
 							<div class="space-2"></div>
 							
-							<div class="input-group">
-							    <span class="input-group-addon" id="dialcode" style="border-radius:0;"></span>
-								<input class="form-control input-mask-phone" style="border-radius:0;" type="text" placeholder="Your Mobile" maxlength="20" id="contactphonemobile" name="contactphonemobile" />
-							</div>	                                       
+							<div class="input-group" style="width:100%;">														
+								<input class="form-control" type="password" placeholder="Input Password" id="contactpswd" maxlength="20" name="contactpswd" style="border-radius:0px;" />
+						    </div>			
 	                        
 	                        <input type="hidden" id="tzoffset" name="tzoffset"/>					
 						
@@ -452,7 +451,12 @@
         
 		jQuery.validator.addMethod("contactemail", function (value, element) {
             return this.optional(element) || /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/.test(value);
-        }, "Enter a valid email address.");                
+        }, "Enter a valid email address.");
+        
+        jQuery.validator.addMethod("contactpswd", function (value, element) {
+            return this.optional(element) || /^((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20})$/.test(value);
+        }, "Password length is 8 - 20. Must contain min 1 digit, min 1 lower case, min 1 upper case, min one special character.");
+                       
 
         $('#register-form').validate({
             errorElement: 'div',
@@ -462,7 +466,7 @@
 	            var d = new Date();
 	            $('#tzoffset').val(d.getTimezoneOffset());  
 				var dataString = 'tenantdesc=' + $('#tenantdesc').val() + '&contactname=' +  $('#contactname').val() + 
-								 '&contactemail=' +  $('#contactemail').val() + '&contactphonemobile=' + $('#contactphonemobile').val() +
+								 '&contactemail=' +  $('#contactemail').val() + '&contactpswd=' + $('#contactpswd').val() +
 								 '&tzoffset=' + $('#tzoffset').val();
 				console.log(dataString);						 
 	            $.ajax({
@@ -470,11 +474,13 @@
 	              data: dataString,
 	              type: "POST"
 	            }).done(function( data ) {
-	            	if (data == "OK") {
-		                alert( data );
-		                $("#signupdlg .modal-body").html("SUCCESS!");	                			
-		                location.reload();
-		                return false;	            	
+	            	if (data != "Fail") {
+		                // alert( data );
+		                //$("#signupdlg .modal-body").html("SUCCESS!");	                			
+		                //location.reload();
+						var url = 'http://www.planovik.com:8080/signupwelcome?' + data;
+						$(location).attr('href',url);		                
+		                return true;	            	
 	            	}
 				});
 	        },            
@@ -487,9 +493,9 @@
                     required: true,
                     contactemail: 'required'
                 },
-                contactphonemobile: {
+                contactpswd: {
                     required: true,
-                    contactphone: 'required'
+                    contactpswd: 'required'
                 },
                 contactname: {
                     required: true,

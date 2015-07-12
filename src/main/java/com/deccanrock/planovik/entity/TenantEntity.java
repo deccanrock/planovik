@@ -50,6 +50,9 @@ public class TenantEntity implements Serializable {
 	@Column(name="addrpostalcode")	
 	public String addrpostalcode;
 	
+	@Column(name="addrcountrycode")	
+	public String addrcountrycode;
+
 	@Column(name="addrhomeurl")	
 	public String addrhomeurl;
 	
@@ -68,6 +71,9 @@ public class TenantEntity implements Serializable {
 	@Column(name="contactemail")
 	private String contactemail;
 
+	@Column(name="contactpswd")
+	private String contactpswd;
+	
 	@Column(name="contactdesignation")	
 	public String contactdesignation;
 	
@@ -88,6 +94,12 @@ public class TenantEntity implements Serializable {
 
 	@Column(name="tzoffset")
 	private short tzoffset;
+
+	@Column(name="securekey")	
+	public String securekey;
+	
+	@Column(name="pin")
+	private short pin;
 
 	@Column(name="datecreated")
 	private Date datecreated;
@@ -204,7 +216,15 @@ public class TenantEntity implements Serializable {
 	public void setAddrpostalcode(String addrpostalcode) {
 		this.addrpostalcode = addrpostalcode;
 	}
-
+	
+	public String getAddrcountrycode() {
+		return addrcountrycode;
+	}
+	
+	public void setAddrcountrycode(String addrcountrycode) {
+		this.addrcountrycode = addrcountrycode;
+	}
+	
 	public String getAddrhomeurl() {
 		return addrhomeurl;
 	}
@@ -344,6 +364,15 @@ public class TenantEntity implements Serializable {
 		
 	}
 
+	public String getContactpswd() {
+		return contactpswd;
+	}
+
+	public void setContactpswd(String contactpswd) {
+		this.contactpswd = contactpswd;
+		
+	}
+
 	public long getDatecreatedlong() {
 		return datecreatedlong;
 	}
@@ -377,6 +406,24 @@ public class TenantEntity implements Serializable {
 
 	public void setUpdatedbyemail(String updatedbyemail) {
 		this.updatedbyemail = updatedbyemail;
+		
+	}
+
+	public String getSecurekey() {
+		return securekey;
+	}
+
+	public void setSecurekey(String securekey) {
+		this.securekey = securekey;
+		
+	}
+
+	public short getPin() {
+		return pin;
+	}
+
+	public void setPin(short pin) {
+		this.pin = pin;
 		
 	}
 

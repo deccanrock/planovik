@@ -17,9 +17,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.deccanrock.planovik.constants.PlnvkConstants;
 import com.deccanrock.planovik.entity.TenantEntity;
+import com.deccanrock.planovik.entity.TravelActivityEntity;
 import com.deccanrock.planovik.location.ISOCountryPhone;
-import com.deccanrock.planovik.mandrill.MailService;
+import com.deccanrock.planovik.location.CountryPostalCode;
+import com.deccanrock.planovik.security.HashCode;
+import com.deccanrock.planovik.service.CountryPostalCodeMapper;
 import com.deccanrock.planovik.service.TenantEntityMapper;
+import com.deccanrock.planovik.service.TravelActivityMapper;
 import com.deccanrock.planovik.service.utils.MiscHelper;
 
 @Component
@@ -39,9 +43,10 @@ public class TenantEntityDAO implements ITenantEntityDAO {
 	
  	
 	@Override
- 	public TenantEntity GetTenant(String domainname) {
+ 	public TenantEntity GetTenant(String domain, int infotype) {
  		
-        String SQL = "Call sp_gettenantfordomain(" + "'" + domainname + "'" + ");";
+        String SQL = "Call sp_gettenantfordomain(" + "'" + domain + "'," + infotype + ");";
+        
     	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	   	
 		
  		List<TenantEntity> tenantList = jdbcTemplate.query(SQL, new TenantEntityMapper());
@@ -64,9 +69,13 @@ public class TenantEntityDAO implements ITenantEntityDAO {
     	inParamMap.put("intenantdesc", tenant.getTenantdesc());
 		inParamMap.put("incontactname", tenant.getContactname());
 		inParamMap.put("incontactemail", tenant.getContactemail());
-		inParamMap.put("incontactphonemobile", tenant.getContactphonemobile());
+		inParamMap.put("inaddrcountrycode", tenant.getAddrcountrycode());
+		inParamMap.put("incontactpswd", HashCode.getHashPassword(tenant.getContactpswd()));
+		// inParamMap.put("incontactphonemobile", tenant.getContactphonemobile());
 		inParamMap.put("intzoffset", tenant.getTzoffset());
 		inParamMap.put("inregstatus", PlnvkConstants.RegStatus.Pending.getValue());
+		inParamMap.put("insecurekey", tenant.getSecurekey());
+		inParamMap.put("inpin", tenant.getPin());
 		
 		// Generate tenant name from tenant desc, at this point a default name if reserved
 		// for and pro and enterprise customers which they can change at a later time
@@ -92,10 +101,6 @@ public class TenantEntityDAO implements ITenantEntityDAO {
 					i++;
 				} 
 			}
-			// Send welcome email
-			MailService ms = new MailService();
-			String content = "Thank You for registering to use our service. Please click on big blue button below to complete your registration.";
-			ms.SendMessage("Planovik Signup", "signup@planovik.com", tenant.getContactname(), tenant.getContactemail(), "Welcome to Planovik", content);			
 			
 		} catch (Exception ex) {
 		    result = ex.getMessage();
@@ -150,5 +155,30 @@ public class TenantEntityDAO implements ITenantEntityDAO {
     	} catch (Exception ex) {
 			return false;
 		} 					
+	}
+
+	@Override
+	public List<CountryPostalCode> GetPCDetailsForCntry(String addrpostalcode, String addrcountrycode) {
+
+        String SQL = "Call sp_postalcodeinforcntry(" + "'" + addrpostalcode + "'," +  "'" + addrcountrycode + "'" + ");";
+        
+    	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	   	
+		
+    	CountryPostalCodeMapper cpcm = new CountryPostalCodeMapper();
+    	cpcm.setCountrycode(addrcountrycode);
+    	cpcm.setPostalcode(addrpostalcode);
+
+		List <CountryPostalCode> countrypostalcodes = null;
+		
+    	try {    	
+    		countrypostalcodes = jdbcTemplate.query(SQL, cpcm);
+     		if (countrypostalcodes.size() == 0)
+     			countrypostalcodes =  null;
+    	} catch (Exception ex) {
+    		countrypostalcodes = null;
+    	} 			
+    	 		
+		return countrypostalcodes;		
+		
 	}
 }

@@ -26,18 +26,23 @@ public class TenantEntityMapper implements RowMapper<TenantEntity> {
 	   tenant.setAddrdistrict(rs.getString("addrdistrict"));
 	   tenant.setAddrstateprovrgn(rs.getString("addrstateprovrgn"));
 	   tenant.setAddrpostalcode(rs.getString("addrpostalcode"));
+	   tenant.setAddrcountrycode(rs.getString("addrcountrycode"));
 	   tenant.setAddrhomeurl(rs.getString("addrhomeurl"));
 	   tenant.setContacttitle(rs.getString("contacttitle"));
 	   tenant.setContactname(rs.getString("contactname"));
 	   tenant.setContactphoneoffice(rs.getString("contactphoneoffice"));
 	   tenant.setContactphonemobile(rs.getString("contactphonemobile"));
 	   tenant.setContactemail(rs.getString("contactemail"));
+	   tenant.setContactpswd(rs.getString("contactpswd"));
 	   tenant.setContactdesignation(rs.getString("contactdesignation"));
 	   tenant.setTenanttype(rs.getShort("tenanttype"));
 	   tenant.setRegstatus(rs.getShort("regstatus"));
 	   tenant.setTzoffset(rs.getShort("tzoffset"));	   
+	   tenant.setSecurekey(rs.getString("securekey"));	   
+	   tenant.setPin(rs.getShort("pin"));	   
 	   tenant.setDatecreatedlong(TimeFormatter.UTCToLocal(rs.getTimestamp("datecreated").getTime(), tenant.getTzoffset()));
 	   tenant.setDatecreatedlong(TimeFormatter.UTCToLocal(rs.getTimestamp("dateupdated").getTime(), tenant.getTzoffset()));
+	   tenant.setCreatedby(rs.getShort("createdby"));
 	   tenant.setUpdatedby(rs.getShort("updatedby"));
 	   
 	   return tenant;

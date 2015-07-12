@@ -1,9 +1,10 @@
 select * from plnvk_tenant_master;
-update plnvk_tenant_master set jndiname='planovik_trial_1' where tenantid=3;
-delete from plnvk_tenant_master where tenantid=4;
+update plnvk_tenant_master set contactpswd='$2a$08$w0QcUUuPjkGcfdMMXBXO8ODz/pv4n7..HHtwlNHubuJaPGdA3F.iu' where tenantid=2;
+
+delete from plnvk_tenant_master where tenantid=3;
 select * from user_login_attempts;
-update user_login_attempts set attempts=0 where id=3;
-alter table plnvk_tenant_master AUTO_INCREMENT=4;
+update user_login_attempts set attempts=0 where id=4;
+alter table plnvk_tenant_master AUTO_INCREMENT=3;
 
 delete from user_login_attempts where id=2;
 
@@ -90,3 +91,20 @@ mysqldump -u root -p -v planovik_main > planovik_main.sql
 mysqladmin -u username -p create newdatabase
 mysql -u username -p newdatabase < olddbdump.sql
 
+LOAD DATA INFILE 'c:/workspace/planovik/sql/india_postal_codes.csv' 
+INTO TABLE india_postalcodes 
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;
+
+select count(*) from in_postalcodes;
+
+select * from in_postalcodes where pincode='522502';
+select * from in_postalcodes where officename='Airoli';
+delete from in_postalcodes where officename='Nowgam B.O';
+
+UPDATE in_postalcodes SET officename=REPLACE(officename,'B.O','');
+SET SQL_SAFE_UPDATES=0;
+
+Call sp_postalcodeinforcntry('144411','IN');
