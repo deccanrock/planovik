@@ -7,7 +7,6 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 
-import com.deccanrock.planovik.Tenant.TenantContextHolder;
 import com.deccanrock.planovik.entity.UserLoginAttempts;
 import com.deccanrock.planovik.service.dao.UserDetailsDao;
 

@@ -65,7 +65,9 @@ public class MiscHelper {
 		  // Returns 5 digit random number in the range 12345 - 98765
 		  // *TODO* change this to generate variable length
 		  Random r = new Random( System.currentTimeMillis() );
-		  return (short) (r.nextInt(98766-12345) + 12345);
+		  short randnum = (short) (r.nextInt(98766-12345) + 12345);
+		  // Make sure number is positive
+		  return (short) Math.abs(randnum);
 	  }
 	  
 	  // Checks if a given string contains digits only

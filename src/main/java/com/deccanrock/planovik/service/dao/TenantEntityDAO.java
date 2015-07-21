@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,18 +14,18 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.deccanrock.planovik.constants.PlnvkConstants;
 import com.deccanrock.planovik.entity.TenantEntity;
-import com.deccanrock.planovik.entity.TravelActivityEntity;
 import com.deccanrock.planovik.location.ISOCountryPhone;
 import com.deccanrock.planovik.location.CountryPostalCode;
 import com.deccanrock.planovik.security.HashCode;
+import com.deccanrock.planovik.security.PlnvkAuthUsernamePasswordFilter;
 import com.deccanrock.planovik.service.CountryPostalCodeMapper;
 import com.deccanrock.planovik.service.TenantEntityMapper;
-import com.deccanrock.planovik.service.TravelActivityMapper;
 import com.deccanrock.planovik.service.utils.MiscHelper;
 
 @Component
@@ -43,9 +45,13 @@ public class TenantEntityDAO implements ITenantEntityDAO {
 	
  	
 	@Override
- 	public TenantEntity GetTenant(String domain, int infotype) {
+ 	public TenantEntity GetTenant(String info, int infotype) {
  		
-        String SQL = "Call sp_gettenantfordomain(" + "'" + domain + "'," + infotype + ");";
+		// set infotype=0 to getTenant using tenant id
+		// set infotype=1 to getTenant using tenant name
+		// set infotype=2 to getTenant using contact email
+		
+        String SQL = "Call sp_gettenantfordomain(" + "'" + info + "'," + infotype + ");";
         
     	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	   	
 		
@@ -71,7 +77,7 @@ public class TenantEntityDAO implements ITenantEntityDAO {
 		inParamMap.put("incontactemail", tenant.getContactemail());
 		inParamMap.put("inaddrcountrycode", tenant.getAddrcountrycode());
 		inParamMap.put("incontactpswd", HashCode.getHashPassword(tenant.getContactpswd()));
-		// inParamMap.put("incontactphonemobile", tenant.getContactphonemobile());
+		inParamMap.put("incontactphonemobile", tenant.getContactphonemobile());
 		inParamMap.put("intzoffset", tenant.getTzoffset());
 		inParamMap.put("inregstatus", PlnvkConstants.RegStatus.Pending.getValue());
 		inParamMap.put("insecurekey", tenant.getSecurekey());
@@ -180,5 +186,101 @@ public class TenantEntityDAO implements ITenantEntityDAO {
     	 		
 		return countrypostalcodes;		
 		
+	}
+
+	@Override
+	public String UpdateTenant(TenantEntity tenant) {
+
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	    	    	
+    	SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
+    	.withProcedureName("sp_updatetenant");
+    	     	 
+    	Map<String, Object> inParamMap = new HashMap<String, Object>();
+
+		inParamMap.put("intenantid", tenant.getTenantid());    	
+		inParamMap.put("incontactname", tenant.getContactname());
+		inParamMap.put("incontactdesignation", tenant.getContactdesignation());
+		// inParamMap.put("incontactemail", tenant.getContactemail());
+		// inParamMap.put("incontactpswd", HashCode.getHashPassword(tenant.getContactpswd()));
+		inParamMap.put("incontactphoneoffice", tenant.getContactphoneoffice());
+		inParamMap.put("incontactphonemobile", tenant.getContactphonemobile());
+		inParamMap.put("inaddrpostalcode", tenant.getAddrpostalcode());
+		inParamMap.put("inaddrstreet1", tenant.getAddrstreet1());
+		inParamMap.put("inaddrstreet2", tenant.getAddrstreet2());
+		inParamMap.put("inaddrcitytown", tenant.getAddrcitytown());
+		inParamMap.put("inaddrdistrict", tenant.getAddrdistrict());
+		inParamMap.put("inaddrstateprovrgn", tenant.getAddrstateprovrgn());
+		inParamMap.put("inaddrhomeurl", tenant.getAddrhomeurl());
+		
+    	SqlParameterSource in = new MapSqlParameterSource(inParamMap);
+
+		String result = "Success";
+    	try {    	
+    		Map<String, Object> simpleJdbcCallResult = simpleJdbcCall.execute(in);			
+		} catch (Exception ex) {
+		    result = ex.getMessage();
+		} 					
+		
+    	return result;				
+	}
+
+	@Override
+	public void SetRegStatus(int tenantid, int value) {
+        String SQL = "Call sp_updateregstatus(" +  tenantid + "," + value + ");";
+    	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	   			
+ 		jdbcTemplate.execute(SQL);
+ 		// Assume success though result should be tracked
+	}
+
+	@Override
+	public TenantEntity TenantLogin(HttpServletRequest request, HttpServletResponse response) {
+		PlnvkAuthUsernamePasswordFilter usernamepswdfilter = new PlnvkAuthUsernamePasswordFilter();
+		Authentication auth = usernamepswdfilter.attemptAuthentication(request, response);
+		return null;
+	}
+
+	@Override
+	public String VerifyPin(Short pin, int tenantid) {
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	    	    	
+    	SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
+    	.withProcedureName("sp_verifypin");
+    	
+    	Map<String, Object> inParamMap = new HashMap<String, Object>();		
+    	inParamMap.put("inpin", pin);		
+    	inParamMap.put("intenantid", tenantid);		
+    	SqlParameterSource in = new MapSqlParameterSource(inParamMap);
+ 		
+    	String result = "Fail";
+    	try {    	
+			Map<String, Object> simpleJdbcCallResult = simpleJdbcCall.execute(in);
+			result = simpleJdbcCallResult.get("result").toString();
+    	} catch (Exception ex) {
+		}
+    	
+    	if (result.contentEquals("Success"))
+    		SetRegStatus(tenantid, PlnvkConstants.RegStatus.Confirmed.getValue());
+    	
+    	return result;
+	}
+
+	public boolean TenantContactEmailExists(String contactEmail) {
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	    	    	
+    	SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
+    	.withProcedureName("sp_checktenantcontactemailexists");
+    	
+    	Map<String, Object> inParamMap = new HashMap<String, Object>();		
+    	inParamMap.put("incontactemail", contactEmail);		
+    	SqlParameterSource in = new MapSqlParameterSource(inParamMap);
+ 		
+    	try {    	
+			Map<String, Object> simpleJdbcCallResult = simpleJdbcCall.execute(in);
+			String result = simpleJdbcCallResult.get("result").toString();
+			if (result.contentEquals("exists"))
+					return true;
+			else
+					return false;
+    	} catch (Exception ex) {
+			return false;
+		} 	
 	}
 }

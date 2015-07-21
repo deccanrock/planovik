@@ -44,91 +44,62 @@
 
 <body>
 
-    <!-- logo -->
-    <nav id="plnvk_logo" class="pull-left" style="position:fixed; z-index: 1000;margin-left:30px;margin-top:20px;">
-	    <a href="#">
-	        <div class="img_logo">
-	            <img src="/resources/images/planovik_logo_beta.png" />
+	<div class="wrapper">
+	    <!-- logo -->
+	    <div class="header_container">
+	    	<div class="container">
+	        	<div class="col-xs-6">
+				    <a href="#">
+			            <img class="logo" src="/resources/images/planovik_logo_beta.png" />
+				    </a>        
+				</div>
+			</div>
+		</div>    
+	
+	    <div class="row">
+	        <div class="col-xs-12 text-center">
+	            <h2>Hello ${contactname},</h2>
+	            <p class="lead">Thank you for signing up! You are almost there..</p> 
+	            <p>Please check confirmation email we have sent to your email id "${contactemail}".<br>
+	               Follow the instructions and complete your registration.</p>
+	            <h3>Happy Planning!</h3>
 	        </div>
-	    </a>        
-    </nav>
-    
-    <!-- Navigation -->
-    <a id="menu-toggle" href="#" class="btn btn-dark btn-lg toggle"><i class="fa fa-bars"></i></a>
-    <nav id="sidebar-wrapper">
-        <ul class="sidebar-nav">
-            <a id="menu-close" href="#" class="btn btn-light btn-lg pull-right toggle"><i class="fa fa-times"></i></a>
-            <li class="sidebar-brand">
-                <a href="#top"  onclick = $("#menu-close").click(); >Menu</a>
-            </li>
-            <li>
-                <a href="#top" onclick = $("#menu-close").click(); >Home</a>
-            </li>
-            <li>
-                <a href="#about" onclick = $("#menu-close").click(); >About</a>
-            </li>
-            <li>
-                <a href="#services" onclick = $("#menu-close").click(); >Services</a>
-            </li>
-            <li>
-                <a href="#portfolio" onclick = $("#menu-close").click(); >Portfolio</a>
-            </li>
-            <li>
-                <a href="#contact" onclick = $("#menu-close").click(); >Contact</a>
-            </li>
-        </ul>
-    </nav>
+	    </div>
+	    <!-- /.row -->
+					
+	    <div class="row" style="margin-top:50px;">
+	        <div class="col-xs-10 col-xs-offset-1 text-center">
+	            <h4><strong>Planovik</strong>
+	            </h4>
+	            <p>Plot 32 Rao and Raju Colony, Road No 2 Banjara Hills<br>Hyderabad, TS 500034</p>
+	            <ul class="list-unstyled">
+	                <li><i class="fa fa-phone fa-fw"></i> (+91) 9866277000</li>
+	                <li><i class="fa fa-envelope-o fa-fw"></i>  <a href="mailto:support@planovik.com">Planovik Support</a>
+	                </li>
+	            </ul>
+	            <br>
+	            <ul class="list-inline">
+	                <li>
+	                    <a href="#"><i class="fa fa-facebook fa-fw fa-2x"></i></a>
+	                </li>
+	                <li>
+	                    <a href="#"><i class="fa fa-twitter fa-fw fa-2x"></i></a>
+	                </li>
+	                <li>
+	                    <a href="#"><i class="fa fa-linkedin fa-fw fa-2x"></i></a>
+	                </li>
+	            </ul>
+	        </div>
+	    </div>
+	</div>
 
-    <!-- About -->
-    <section id="about" class="about">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <h2>Hello ${contactname},</h2>
-                    <p class="lead">Thank you for signing up! You are almost there..</p> 
-                    <p>Please check confirmation email we have sent to your email id "${contactemail}".<br>
-                       Follow the instructions and complete your registration.</p>
-                    <h3>Happy Planning!</h3>
-                </div>
-            </div>
-            <!-- /.row -->
-        </div>
-        <!-- /.container -->
-    </section>
-
-
-    
     <!-- Footer -->
-    <footer style="padding:30px;">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-10 col-lg-offset-1 text-center">
-                    <h4><strong>Planovik</strong>
-                    </h4>
-                    <p>Plot 32 Rao and Raju Colony, Road No 2 Banjara Hills<br>Hyderabad, TS 500034</p>
-                    <ul class="list-unstyled">
-                        <li><i class="fa fa-phone fa-fw"></i> (+91) 9866277000</li>
-                        <li><i class="fa fa-envelope-o fa-fw"></i>  <a href="mailto:support@planovik.com">Planovik Support</a>
-                        </li>
-                    </ul>
-                    <br>
-                    <ul class="list-inline">
-                        <li>
-                            <a href="#"><i class="fa fa-facebook fa-fw fa-2x"></i></a>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa fa-twitter fa-fw fa-2x"></i></a>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa fa-linkedin fa-fw fa-2x"></i></a>
-                        </li>
-                    </ul>
-                    <hr class="small">
-                    <p class="text-muted">Copyright &copy; Deccan Rock Pvt Ltd. 2015</p>
-                </div>
-            </div>
+    <footer class="footer">
+        <div class="col-xs-10 col-xs-offset-1 text-center">
+            <p style="margin-bottom:0px;">Copyright &copy; Deccan Rock Pvt Ltd. 2015</p>
         </div>
-    </footer>
+    </footer>    
+
 </body>
     <!-- jQuery -->
     <script src="<c:url value='/resources/www/js/jquery.js'/>" ></script>

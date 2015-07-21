@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.deccanrock.planovik.SMS.SMSService;
 import com.deccanrock.planovik.entity.TenantEntity;
 import com.deccanrock.planovik.location.ISOCountryPhone;
 import com.deccanrock.planovik.location.MaxLocation;
@@ -31,6 +33,7 @@ import com.deccanrock.planovik.mandrill.MailService;
 import com.deccanrock.planovik.security.AESSecure;
 import com.deccanrock.planovik.service.dao.TenantEntityDAO;
 import com.deccanrock.planovik.service.utils.MiscHelper;
+import com.mashape.unirest.http.exceptions.UnirestException;
 
 
 /**
@@ -49,20 +52,12 @@ public class WebsiteController {
 	@RequestMapping(value = "/register", method = RequestMethod.POST)	
     public @ResponseBody String registerForm(HttpServletRequest request, ModelMap map,
     		@RequestParam(value = "tenantdesc") String tenantDesc, @RequestParam(value = "contactname") String contactName,
-    		@RequestParam(value = "contactemail") String email, @RequestParam(value = "contactpswd") String contactPswd,
-    		@RequestParam(value = "tzoffset") short tzoffset) {
+    		@RequestParam(value = "contactemail") String email, @RequestParam(value = "contactphonemobile") String contactPhoneMobile, 
+    		@RequestParam(value = "contactpswd") String contactPswd, @RequestParam(value = "tzoffset") short tzoffset) {
 		
 		logger.info("New Tenant Registration");
 		final String userIPAddress = request.getRemoteAddr();
 
-		TenantEntity tenant = new TenantEntity();
-		tenant.setTenantdesc(tenantDesc); // Here Tenant Name is complete tenant company name
-		tenant.setContactname(contactName);
-		tenant.setContactemail(email);
-		tenant.setContactpswd(contactPswd);
-		tenant.setTzoffset(tzoffset);
-		tenant.setRegip(userIPAddress);
-		
 		String cc = "";
 		// Get country dial code
 		MaxLocationBOImpl locobj = new MaxLocationBOImpl();
@@ -73,7 +68,19 @@ public class WebsiteController {
 			cc = location.getCountryCode();
 		}
 		
-		tenant.setAddrcountrycode(cc);
+
+		ISOCountryPhone countryinfo = GetCountryInfo(cc);
+				
+		TenantEntity tenant = new TenantEntity();
+		tenant.setAddrcountrycode(cc);				
+		tenant.setTenantdesc(tenantDesc); // Here Tenant Name is complete tenant company name
+		tenant.setContactname(contactName);
+		tenant.setContactemail(email);
+		tenant.setContactphonemobile("+" + countryinfo.getDialcode() + "-" + contactPhoneMobile);
+		tenant.setContactpswd(contactPswd);
+		tenant.setTzoffset(tzoffset);
+		tenant.setRegip(userIPAddress);
+		
 
 		try {
 			tenant.setSecurekey(MiscHelper.ComputeSecretKeyForTenant());
@@ -113,15 +120,21 @@ public class WebsiteController {
 				e.printStackTrace();
 			}
 
+			// mobile verification logic here when available
+			try {
+				SMSService.SendSMS(contactPhoneMobile, "One time pin to complete planvoik registration is: " + tenant.getPin());
+			} catch (UnirestException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			// Send welcome email
 			MailService ms = new MailService();			
 			url = "http://www.planovik.com:8080/signupconfirm?" + secureuri;
 			String content = "<html><body><h1>Almost there " + tenant.getContactname() + "</h1>" + 
-							 "Please click <a href=\"" + url + "\">here</a>" + " to complete your registration.</body></html>";			
+							 "<h3>Please click <a href=\"" + url + "\">here</a>" + " to complete your registration.</h3></body></html>";			
 			ms.SendMessage("Planovik", "signup@planovik.com", tenant.getContactname(), tenant.getContactemail(), "Welcome to Planovik", content);
-			
-			// *TODO* plug mobile verification logic here when available
-						
+									
 			return secureuri;
 		}
 				
@@ -174,6 +187,23 @@ public class WebsiteController {
 			return "none";
 	}	
 	
+	/**
+	 * Check if tenant contact email already exists
+	 * @throws URISyntaxException 
+	 */
+	@RequestMapping(value = "/checkcontactemail", method = RequestMethod.GET)	
+	public @ResponseBody String checkContactEmail(@RequestParam(value = "contactemail") String contactEmail) {
+		logger.info("Check Tenant Contact Email");
+
+		ApplicationContext context = AppCtxtProv.getApplicationContext();
+		TenantEntityDAO TED = (TenantEntityDAO)context.getBean("TenantEntityDAO");
+		// This should be changed to memcached
+		if (TED.TenantContactEmailExists(contactEmail))
+			return "exists";
+		else
+			return "none";
+	}	
+
 	/**
 	 * Display tenant welcome page
 	 * @throws URISyntaxException 
@@ -251,6 +281,11 @@ public class WebsiteController {
 		
 		TenantEntity tenant = TED.GetTenant(plainURI, 0);
 		
+		// Set registration status of user to confirmed
+		// if (tenant != null)
+		//	TED.SetRegStatus(tenant.getTenantid(),PlnvkConstants.RegStatus.Confirmed.getValue());
+
+		map.addAttribute("tenantid", tenant.getTenantid());		
 		map.addAttribute("contactname", tenant.getContactname());
 		map.addAttribute("contactemail", tenant.getContactemail());
 		ISOCountryPhone countryinfo = GetCountryInfo(tenant.getAddrcountrycode());
@@ -258,7 +293,7 @@ public class WebsiteController {
 		map.addAttribute("addrcountryname", countryinfo.getIsoname());
 		map.addAttribute("addrcountrycode", countryinfo.getIsocode2());
 		
-		return "signupconfirm";
+		return "updateprofile";
 		
 	}
 	
@@ -287,6 +322,104 @@ public class WebsiteController {
 		return jsonOut;	
 	}	
 
+	/**
+	 * Process Signup request for an Organization
+	 * @throws URISyntaxException 
+	 */
+	@RequestMapping(value = "/updateacc", method = RequestMethod.POST)	
+    public @ResponseBody String registerForm(HttpServletRequest request, ModelMap map) {
+		
+		// This should be changed to use entity model (TenantEntity) that will allow data edits at 
+		// the time of registration and subsequent updates
+		logger.info("Tenant account update");
+
+		TenantEntityDAO TED = (TenantEntityDAO)AppCtxtProv.getApplicationContext().getBean("TenantEntityDAO");		
+		
+		TenantEntity tenant = TED.GetTenant(request.getParameter("tenantid"), 0); // using tenantid
+		
+		if (tenant == null)
+			// Should really never happen
+			map.addAttribute("error", "Oops! We were unable to find your information. Please try again.");
+		else {			
+			// Compare info and update			
+			if (request.getParameter("contactdesignation").length()!=0 && 
+					tenant.getContactdesignation().contentEquals(request.getParameter("contactdesignation")) == false)
+				tenant.setContactdesignation(request.getParameter("contactdesignation"));
+
+			// Format "+91-40-23608380" (Country Code - Area Code - Phone number)
+			if (request.getParameter("contactphoneoffice").length()!=0 && 
+					tenant.getContactphoneoffice().contentEquals(request.getParameter("contactphoneoffice")) == false)
+				tenant.setContactphoneoffice(request.getParameter("contactphoneoffice"));
+
+			// Format "+91-9866277000" (Country Code - Mobile Number)
+			if (request.getParameter("addrpostalcode").length()!=0 && 
+					tenant.getAddrpostalcode().contentEquals(request.getParameter("addrpostalcode")) == false)
+				tenant.setAddrpostalcode(request.getParameter("addrpostalcode"));
+
+			if (request.getParameter("addrstreet1").length()!=0 && 
+					tenant.getAddrstreet1().contentEquals(request.getParameter("addrstreet1")) == false)
+				tenant.setAddrstreet1(request.getParameter("addrstreet1"));
+
+			if (request.getParameter("addrstreet2").length()!=0 && 
+					tenant.getAddrstreet2().contentEquals(request.getParameter("addrstreet2")) == false)
+				tenant.setAddrstreet2(request.getParameter("addrstreet2"));
+
+			if (request.getParameter("addrcitytown").length()!=0 && 
+					tenant.getAddrcitytown().contentEquals(request.getParameter("addrcitytown")) == false)
+				tenant.setAddrcitytown(request.getParameter("addrcitytown"));
+
+			if (request.getParameter("addrdistrict").length()!=0 && 
+					tenant.getAddrdistrict().contentEquals(request.getParameter("addrdistrict")) == false)
+				tenant.setAddrdistrict(request.getParameter("addrdistrict"));
+
+			if (request.getParameter("addrstateprovrgn").length()!=0 && 
+					tenant.getAddrstateprovrgn().contentEquals(request.getParameter("addrstateprovrgn")) == false)
+				tenant.setAddrstateprovrgn(request.getParameter("addrstateprovrgn"));
+
+			if (request.getParameter("addrhomeurl").length()!=0 && 
+					tenant.getAddrhomeurl().contentEquals(request.getParameter("addrhomeurl")) == false)
+				tenant.setAddrhomeurl(request.getParameter("addrhomeurl"));
+			
+			TED.UpdateTenant(tenant);
+
+		}
+		
+		return "updateprofile"; 		
+						
+	}	
+
+    @RequestMapping(value = "/login")
+    public String userlogin(ModelMap map, HttpServletResponse response, HttpServletRequest request)
+    {
+		logger.info("Tenant Login");    	
+		map.addAttribute("title", "Planovik - Login Required!");
+		map.addAttribute("header", "User Login");
+
+		TenantEntityDAO TED = (TenantEntityDAO)AppCtxtProv.getApplicationContext().getBean("TenantEntityDAO");				
+		TenantEntity tenant = TED.TenantLogin(request, response);
+				
+        HttpSession session = request.getSession(false);
+        if(session!=null) {
+            session.invalidate();//old session invalidated
+        }		
+				
+		return "app/login";
+    }
+
+
+    @RequestMapping(value = "/verifypin", method = RequestMethod.GET)	
+    public @ResponseBody String verifyPin(@RequestParam(value = "pin") Short pin,
+    		@RequestParam(value = "tenantid") int tenantid) {
+		
+		logger.info("Verify Pin");
+
+		TenantEntityDAO TED = (TenantEntityDAO)AppCtxtProv.getApplicationContext().getBean("TenantEntityDAO");				
+		String response = TED.VerifyPin(pin, tenantid);		
+		
+		return response;
+
+	}
+    
 	private ISOCountryPhone GetCountryInfo(String CountryCode) {
 		TenantEntityDAO TED = (TenantEntityDAO)AppCtxtProv.getApplicationContext().getBean("TenantEntityDAO");		
 		ISOCountryPhone isocntryph = TED.GetInfoForISOCode(CountryCode);

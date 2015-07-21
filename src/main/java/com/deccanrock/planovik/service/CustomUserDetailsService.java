@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
 
 import com.deccanrock.planovik.service.dao.TenantDS;
+import com.deccanrock.planovik.Tenant.TenantContextHolder;
 
 /**
  * Reference org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl
@@ -42,22 +43,32 @@ public class CustomUserDetailsService extends JdbcDaoImpl {
 		DataSource dataSource=null;
 		dataSource = TenantDS.setTenantDataSource(dataSource);
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		
-		return jdbcTemplate.query(super.getUsersByUsernameQuery(), new String[] { username },
-				new RowMapper<UserDetails>() {
-					public UserDetails mapRow(ResultSet rs, int rowNum) throws SQLException {
-						String username = rs.getString("username");
-						String password = rs.getString("password");
-						boolean enabled = rs.getBoolean("enabled");
-						boolean accountNonExpired = rs.getBoolean("accountNonExpired");
-						boolean credentialsNonExpired = rs.getBoolean("credentialsNonExpired");
-						boolean accountNonLocked = rs.getBoolean("accountNonLocked");
 
-						return new User(username, password, enabled, accountNonExpired, credentialsNonExpired,
-								accountNonLocked, AuthorityUtils.NO_AUTHORITIES);
-					}
+		// If tenant = "www", then auth should be for tenant contact username
+		// For anything else go to alternate scheme including for Planovik corporate users which is also a tenant
+		if (TenantContextHolder.getTenant().getTenantname().equals("www")) {
+			
+		}
+		else {
+			// Implement custom getUsersByUsernameQuery to pass in tenant name
+			return jdbcTemplate.query(super.getUsersByUsernameQuery(), new String[] { username },
+					new RowMapper<UserDetails>() {
+						public UserDetails mapRow(ResultSet rs, int rowNum) throws SQLException {
+							String username = rs.getString("username");
+							String password = rs.getString("password");
+							boolean enabled = rs.getBoolean("enabled");
+							boolean accountNonExpired = rs.getBoolean("accountNonExpired");
+							boolean credentialsNonExpired = rs.getBoolean("credentialsNonExpired");
+							boolean accountNonLocked = rs.getBoolean("accountNonLocked");
+	
+							return new User(username, password, enabled, accountNonExpired, credentialsNonExpired,
+									accountNonLocked, AuthorityUtils.NO_AUTHORITIES);
+						}
+	
+					});
 
-				});
+		}
+		return null;
 	}
 
 	//override to pass accountNonLocked

@@ -21,7 +21,8 @@ public class PlnvkAuthUsernamePasswordFilter extends UsernamePasswordAuthenticat
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
 			TenantContextHolder.setTenantFromRequestURL(request, response);
 		    return getAuthenticationManager().authenticate((Authentication) new UsernamePasswordAuthenticationToken(
-		    		request.getParameter("username"), request.getParameter("password")));	}
+		    		request.getParameter("username"), request.getParameter("password")));	
+	}
 
 	@Override
 	public Authentication authenticate(Authentication authentication)

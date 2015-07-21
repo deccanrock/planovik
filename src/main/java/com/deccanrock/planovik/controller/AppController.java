@@ -726,31 +726,6 @@ public class AppController {
 				
 		return convcode;
     }
-
-    @RequestMapping(value = "/login")
-    public String rootlogin(ModelMap map, HttpServletResponse response, HttpServletRequest request,
-    		@RequestParam(value = "error", required = false) String error,
-    		@RequestParam(value = "logout", required = false) String logout)
-    {
-		logger.info("User Login");    	
-		map.addAttribute("title", "Planovik - Login Required!");
-		map.addAttribute("header", "User Login");
-
-		if (error != null) {
-			map.addAttribute("error", error);
-		}
- 
-		if (logout != null) {
-			map.addAttribute("msg", "You've been logged out successfully.");
-		}
-				
-        HttpSession session = request.getSession(false);
-        if(session!=null) {
-            session.invalidate();//old session invalidated
-        }		
-				
-		return "app/login";
-    }
     
     @RequestMapping(value = "/app/login")
     public String login(ModelMap map, HttpServletResponse response, HttpServletRequest request,

@@ -1,5 +1,5 @@
 select * from plnvk_tenant_master;
-update plnvk_tenant_master set contactpswd='$2a$08$w0QcUUuPjkGcfdMMXBXO8ODz/pv4n7..HHtwlNHubuJaPGdA3F.iu' where tenantid=2;
+update plnvk_tenant_master set contactemail='sparuchu@gmail.com' where tenantid=3;
 
 delete from plnvk_tenant_master where tenantid=3;
 select * from user_login_attempts;
@@ -107,4 +107,6 @@ delete from in_postalcodes where officename='Nowgam B.O';
 UPDATE in_postalcodes SET officename=REPLACE(officename,'B.O','');
 SET SQL_SAFE_UPDATES=0;
 
-Call sp_postalcodeinforcntry('144411','IN');
+Call sp_gettenantfordomain('3', 0);
+
+select count(*) from plnvk_tenant_master where tenantid=3 and pin=20096;

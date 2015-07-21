@@ -46,8 +46,8 @@ logout-success-url="/app/login?logout" delete-cookies="JSESSIONID" />
 </authentication-manager>
 
 <beans:bean id="customUserDetailsService" class="com.deccanrock.planovik.service.CustomUserDetailsService">
-<beans:property name="usersByUsernameQuery" value="select * from users where username = ?"/>
-<beans:property name="authoritiesByUsernameQuery" value="select username, role from user_roles_map where username =?" />
+<beans:property name="usersByUsernameQuery" value="select * from users where username = ? and tenantid=?"/>
+<beans:property name="authoritiesByUsernameQuery" value="select username, role from user_roles_map where username =? and tenantid=?" />
 <beans:property name="dataSource" ref="mainDataSource" />
 </beans:bean>
 <beans:bean id="userDetailsDao" class="com.deccanrock.planovik.service.dao.UserDetailsDao" >

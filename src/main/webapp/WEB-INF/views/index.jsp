@@ -86,6 +86,7 @@
             <h3>Travel Planning, Tracking and more</h3>
             <br>
             <a href="#" id="signupbtn" class="btn btn-dark btn-lg">Sign Up</a>
+            <a href="#" id="loginbtn" class="btn btn-dark btn-lg">Login</a>
         </div>
     </header>
 
@@ -267,7 +268,7 @@
 					</div>
 				</div>	
 	        
-	            <div class="modal-body">
+	            <div class="modal-body" id="modalsignupdlg">
                     <form class="" id="register-form" method="post" action="register">
 
 					    <span class="btn-text">
@@ -281,7 +282,7 @@
 
 							<div class="input-group" style="width:100%" id="tenantdescdiv">
 						    	<input class="form-control" type="text" placeholder="Company Name" id="tenantdesc" maxlength="120" name="tenantdesc" style="border-radius:0px;" />
-                               	<div class="pull-right center spinner-preview" id="spinnertenantdesc" class="col-sm-1"></div>
+                               	<div class="pull-right spinner-preview" id="spinnertenantdesc" style="margin-right:-15px;margin-top:-15px;"></div>
 						    </div>
 						    
 						    <div id="tenantdeschelp" style="display:none;color:#A94442;"><p>Company already exists! Please input a different name.</p></div>	
@@ -289,20 +290,31 @@
 							<div class="space-2"></div>
 							
 							<div class="input-group" style="width:100%;">							
-								<input class="form-control" type="text" placeholder="Your Name" id="contactname" maxlength="60" name="contactname" style="border-radius:0px;" />
+								<input class="form-control" type="text" placeholder="First Name" id="contactfname" maxlength="20" name="contactfname" style="border-radius:0px;width:49%;" />
+								<input class="form-control" type="text" placeholder="Last Name" id="contactlname" maxlength="40" name="contactlname" style="margin-left:2%;border-radius:0px;width:49%;" />
 						    </div>			
 							
 							<div class="space-2"></div>							
 
-							<div class="input-group" style="width:100%;">														
+							<div class="input-group" style="width:100%;" id="contactemaildiv">														
 								<input class="form-control" type="text" placeholder="Your Email" id="contactemail" maxlength="100" name="contactemail" style="border-radius:0px;" />
+                               	<div class="pull-right spinner-preview" id="spinnercontactemail" style="margin-right:-15px;margin-top:-15px;"></div>
 						    </div>			
+
+						    <div id="contactemailhelp" style="display:none;color:#A94442;"><p>Email already in use! Please provide a different email id.</p></div>	
 						    
 							<div class="space-2"></div>
 							
+							<div class="input-group">
+							    <span class="input-group-addon" style="border-radius:0;padding:3px 12px;"><p style="margin-bottom:0;" id="dialcode"></p></span>
+								<input class="form-control input-mask-phone" style="border-radius:0;" type="text" placeholder="Your Mobile" maxlength="10" id="contactphonemobile" name="contactphonemobile" />
+							</div>
+							<div class="space-2"></div>
+							
+							
 							<div class="input-group" style="width:100%;">														
-								<input class="form-control" type="password" placeholder="Input Password" id="contactpswd" maxlength="20" name="contactpswd" style="border-radius:0px;" />
-						    </div>			
+								<input class="form-control" type="password" placeholder="Select a password" id="contactpswd" maxlength="20" name="contactpswd" style="border-radius:0px;" />
+						    </div>	
 	                        
 	                        <input type="hidden" id="tzoffset" name="tzoffset"/>					
 						
@@ -318,6 +330,43 @@
 		</div> <!-- modal-dialog -->       
 	</div> <!-- signupdlg -->
 
+    <div id="logindlg" class="modal fade">
+	    <div class="modal-dialog">
+	        <div class="modal-content">
+				<div class="signup-header">
+	                <button type="button" class="close modal-close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	           		<div class="text">
+	    				<h1 class="signup-title">
+	        				<strong>Login</strong>
+	         					to your account
+	    				</h1> 
+					</div>
+				</div>	
+	        
+	            <div class="modal-body" id="modaldlg">
+                    <form class="" id="login-form" method="post" action="/app/j_spring_security_check">
+							<div class="input-group" style="width:100%;">														
+								<input class="form-control" type="text" placeholder="Your Email" id="username" maxlength="120" name="username" style="border-radius:0px;" />
+						    </div>			
+						    
+							<div class="space-2"></div>							
+							
+							<div class="input-group" style="width:100%;">														
+								<input class="form-control" type="password" placeholder="Your Password" id="password" maxlength="20" name="password" style="border-radius:0px;" />
+								<div class="space-2"></div>							
+						    	<a class="pull-right" href="/recoverpswd">Forgot password?</a> 
+						    </div>		                        
+							<div class="space-4"></div>
+													
+							<button id="loginbtn" class="btn btn-success" type="submit">					
+				                <span class="btn-text">Login</span>
+				            </button>
+				            <span class="errormsg" id="errlogin" style="display:none"></span>				
+		        	</form>
+		    	</div> <!-- modal-body -->
+		    </div> <!-- modal-content -->
+		</div> <!-- modal-dialog -->       
+	</div> <!-- signupdlg -->
 	
     <!-- Footer -->
     <footer>
@@ -395,8 +444,17 @@
        		if ($('#tenantdesc').val() != '') {
 		    	checkname($('#tenantdesc').val());
 		    }
+       		if ($('#contactphonemobile').val() != '') {
+		    	checkname($('#tenantdesc').val());
+		    }
 	   	});
        
+       	$('#contactemail').blur(function() {
+       		if ($('#contactemail').val() != '') {
+		    	checkemail($('#contactemail').val());
+		    }
+	   	});
+
     	var opts = {
 	        lines:8, length:5, width:3, radius:3, corners:1,
         	rotate:0, color:'#000', speed:1, trail:60, shadow:false,
@@ -426,6 +484,29 @@
 			
     	}        
         
+        function checkemail(contactemail) {
+   			var target = document.getElementById('spinnercontactemail');
+	   		var spinner = new Spinner(opts).spin(target);	
+        	var request = $.ajax({url: "/checkcontactemail", type: "GET", data: "contactemail=" + contactemail});
+        	request.done(function( msg ) {
+				spinner.stop();
+				if (msg == "exists") {
+					$("#contactemaildiv").attr("class", "input-group has-error");
+					$("#contactemailhelp").show();
+					$( "#registerbtn" ).prop( "disabled", true );			
+				}
+				else {
+					$("#contactemaildiv").attr("class", "input-group");
+					$("#contactemailhelp").hide();							
+					$( "#registerbtn" ).prop( "disabled", false );			
+				}
+			}); 
+	        request.fail(function( jqXHR, textStatus ) {
+				$('spinner').data('spinner').stop();;
+			});		
+			
+    	} 
+    	
         $.ajax({
           url: "/phonecode",
           type: "GET"
@@ -441,14 +522,26 @@
 			$("#signupdlg").modal('show');
 	    });
 	    	    
-        jQuery.validator.addMethod("contactphone", function (value, element) {
-            return this.optional(element) || /^\d{10}$/.test(value);
+		$( "#loginbtn" ).click(function() {		
+	    	$("#login-form")[0].reset();
+	    	$(".help-block").remove();
+	    	$('.has-error').removeClass('has-error');	    	
+	    	$('.input-group').addClass('input-group');	    	
+			$("#logindlg").modal('show');
+	    });
+
+        jQuery.validator.addMethod("contactphonemobile", function (value, element) {
+            return this.optional(element) || /^[789]\d{9}$/.test(value);
         }, "Enter a valid phone number with 10 digits.");
 
-        jQuery.validator.addMethod("contactname", function (value, element) {
+        jQuery.validator.addMethod("contactfname", function (value, element) {
             return this.optional(element) || /^[a-z  A-Z0-9]*$/.test(value);
-        }, "Enter a valid username. Alphanumeric only!");
+        }, "Enter a valid first name. Alphanumeric only!");
         
+        jQuery.validator.addMethod("contactlname", function (value, element) {
+            return this.optional(element) || /^[a-z  A-Z0-9]*$/.test(value);
+        }, "Enter a valid last name name. Alphanumeric only!");
+
 		jQuery.validator.addMethod("contactemail", function (value, element) {
             return this.optional(element) || /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/.test(value);
         }, "Enter a valid email address.");
@@ -457,7 +550,77 @@
             return this.optional(element) || /^((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20})$/.test(value);
         }, "Password length is 8 - 20. Must contain min 1 digit, min 1 lower case, min 1 upper case, min one special character.");
                        
+		jQuery.validator.addMethod("username", function (value, element) {
+            return this.optional(element) || /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/.test(value);
+        }, "Enter a valid email address.");
+        
+        jQuery.validator.addMethod("password", function (value, element) {
+            return this.optional(element) || /^((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20})$/.test(value);
+        }, "Password length is 8 - 20. Must contain min 1 digit, min 1 lower case, min 1 upper case, min one special character.");
 
+        $('#login-form').validate({
+            errorElement: 'div',
+            errorClass: 'help-block',
+            focusInvalid: false,
+	        submitHandler: function(form) {
+	            $.ajax({
+	              url: "/app/j_spring_security_check",
+	              data:$(form).serialize(),
+	              type: "POST"
+	            }).done(function( data ) {
+	            	if (data != "Fail") {
+						var url = 'http://www.planovik.com:8080/tenantwelcome?' + data;
+						$(location).attr('href',url);		                
+		                return true;	            	
+	            	}
+	            	else {
+	            		$('#errormsg').text('Incorrect email or password');
+	            		$('#errormsg').show();
+	            		return false;
+	            	}
+				});
+	        },            
+            rules: {
+                username: {
+                    required: true,
+                    username: 'required'
+                },
+                password: {
+                    required: true,
+                    password: 'required'
+                }
+            },
+            messages: {
+
+            },
+
+            highlight: function (e) {
+                $(e).closest('.input-group').removeClass('has-info').addClass('error');
+            },            
+
+            success: function (e) {
+                $(e).closest('.input-group').removeClass('error').addClass('has-info');
+            },
+
+            errorPlacement: function (error, element) {
+                if(element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+                    var controls = element.closest('div[class*="col-"]');
+                    if(controls.find(':checkbox,:radio').length > 1) controls.append(error);
+                    else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+                }
+                else if(element.is('.select2')) {
+                    error.insertAfter(element.siblings('[class*="select2-container"]:eq(0)'));
+                }
+                else if(element.is('.chosen-select')) {
+                    error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+                }
+                else error.insertAfter(element.parent());
+            },
+
+            invalidHandler: function (form) {
+            }
+        });
+            
         $('#register-form').validate({
             errorElement: 'div',
             errorClass: 'help-block',
@@ -465,19 +628,25 @@
 	        submitHandler: function(form) {
 	            var d = new Date();
 	            $('#tzoffset').val(d.getTimezoneOffset());  
-				var dataString = 'tenantdesc=' + $('#tenantdesc').val() + '&contactname=' +  $('#contactname').val() + 
-								 '&contactemail=' +  $('#contactemail').val() + '&contactpswd=' + $('#contactpswd').val() +
-								 '&tzoffset=' + $('#tzoffset').val();
-				console.log(dataString);						 
+				var dataString = 'tenantdesc=' + $('#tenantdesc').val() + '&contactname=' +  $('#contactfname').val() + ' ' +  $('#contactlname').val() +
+								 '&contactemail=' +  $('#contactemail').val() + '&contactphonemobile=' +  $('#contactphonemobile').val() + 
+								 '&contactpswd=' + $('#contactpswd').val() + '&tzoffset=' + $('#tzoffset').val();
+				console.log(dataString);
+				var target = document.getElementById('modalsignupdlg');
+				var opts = {
+				  lines: 13, length: 20, width: 6, radius: 20, scale: 1, corners: 1, color: '#000',
+				  opacity: 0.25, rotate: 0, direction: 1, speed: 1, trail: 60, fps: 20, zIndex: 2e9,
+				  className: 'spinner', top: '160%', left: '180%', shadow: true, hwaccel: false, position: 'absolute',
+				}				
+    			var spinner = new Spinner(opts).spin(target);
+
 	            $.ajax({
 	              url: "/register",
 	              data: dataString,
 	              type: "POST"
 	            }).done(function( data ) {
+	            	spinner.stop();
 	            	if (data != "Fail") {
-		                // alert( data );
-		                //$("#signupdlg .modal-body").html("SUCCESS!");	                			
-		                //location.reload();
 						var url = 'http://www.planovik.com:8080/signupwelcome?' + data;
 						$(location).attr('href',url);		                
 		                return true;	            	
@@ -493,14 +662,23 @@
                     required: true,
                     contactemail: 'required'
                 },
+                contactphonemobile: {
+                    required: true,
+                    contactphonemobile: 'required'
+                },
                 contactpswd: {
                     required: true,
                     contactpswd: 'required'
                 },
-                contactname: {
+                contactfname: {
                     required: true,
                     minlength: 3,
-                    contactname: 'required'
+                    contactfname: 'required'
+                },
+                contactlname: {
+                    required: true,
+                    minlength: 3,
+                    contactlname: 'required'
                 }
             },
             messages: {
@@ -508,12 +686,11 @@
             },
 
             highlight: function (e) {
-                $(e).closest('.input-group').removeClass('has-info').addClass('has-error');
-            },
+                $(e).closest('.input-group').removeClass('has-info').addClass('error');
+            },            
 
             success: function (e) {
-                $(e).closest('.input-group').removeClass('has-error');//.addClass('has-info');
-                $(e).remove();
+                $(e).closest('.input-group').removeClass('error').addClass('has-info');
             },
 
             errorPlacement: function (error, element) {
