@@ -1,12 +1,39 @@
+select * from plnvk_account_master;
 select * from plnvk_tenant_master;
-update plnvk_tenant_master set contactemail='sparuchu@gmail.com' where tenantid=3;
 
-delete from plnvk_tenant_master where tenantid=3;
+update plnvk_account_master set contactpswd='$2a$10$4zv/luCTXrTi/5LCeB3MHOfZr2JVgKcW/v4y6X54dhurYwRpyHh3K' where id=1;
+
+insert into plnvk_tenant_master (accountid, tenantdesc, tenantname, jndiname, regip, zoneid, tenanttype, status) 
+values (1, 'Planovik Corp', 'corp', 'z1_planovik_main', '127.0.0.1', 1, 1, 2);
+
+delete from plnvk_account_master where id=2;
+alter table plnvk_account_master AUTO_INCREMENT=2;
+
+insert into plnvk_account_master (orgname, accountname, accountemail, contactpswd, contactdesignation, contactphonemobile, accountstatus, addrstreet1, addrstreet2, addrcitytown, addrstateprovrgn, addrpostalcode, addrcountrycode, addrhomeurl, createdby, updatedby)
+values('Planovik', 'Srinivas Paruchuri', 'sriniv@yahoo.com', '$2a$08$w0QcUUuPjkGcfdMMXBXO8ODz/pv4n7..HHtwlNHubuJaPGdA3F.iu', 'Founder', '+91-9866277000', 2, 'Plot No 32 Rao and Raju Colony',
+'Road No 2 Banjara Hills', 'Hyderabad', 'Telangana', '500034', 'IN', 'www.planovik.com', 1, 1);
+
+insert into plnvk_account_master (orgname, accountname, accountemail, contactpswd, contactdesignation, contactphonemobile, accountstatus, addrstreet1, addrstreet2, addrcitytown, addrstateprovrgn, addrpostalcode, addrcountrycode, addrhomeurl, createdby, updatedby)
+values('Planovik Corp', 'Srinivas Paruchuri', 'deccanrock@ygmail.com', '$2a$08$w0QcUUuPjkGcfdMMXBXO8ODz/pv4n7..HHtwlNHubuJaPGdA3F.iu', 'Founder/CTO', '+91-9866277000', 2, 'Plot No 32 Rao and Raju Colony',
+'Road No 2 Banjara Hills', 'Hyderabad', 'Telangana', '500034', 'IN', 'www.planovik.com', 1, 1);
+
+
+
+select * from plnvk_tenant_master;
+update plnvk_account_master set orgname='Deccan Rock Pvt Ltd' where id=1;
+
+update plnvk_tenant_master set contactname='Rakhee Kumar Paruchuri' where tenantid=3;
+
+delete from plnvk_tenant_master where tenantid=4;
 select * from user_login_attempts;
 update user_login_attempts set attempts=0 where id=4;
-alter table plnvk_tenant_master AUTO_INCREMENT=3;
+alter table plnvk_tenant_master AUTO_INCREMENT=1;
 
 delete from user_login_attempts where id=2;
+
+select * from plnvk_countryzone_map;
+delete from plnvk_countryzone_map where zoneid=6;
+update plnvk_countryzone_map set countrycode="IN" where zoneid=1;
 
 select * from plnvk_db_map;
 delete from plnvk_db_map where dbid=1;
@@ -83,7 +110,7 @@ update users set accountNonLocked=1 where id=6;
 
 LOAD DATA LOCAL INFILE 'C:\\temp\\country_name_code_phonecode.csv' INTO TABLE iso_cntryphcodes FIELDS TERMINATED BY ',' LINES TERMINATED BY '\r\n' (isoname, isocode2, isocode3, dialcode);
 
-select * from iso_cntryphcodes where isoname='guinea';
+select * from iso_cntryphcodes where isocode2='IN';
 
 update iso_cntryphcodes set isocode3='GIN', dialcode='224' where isoname='guinea';
 

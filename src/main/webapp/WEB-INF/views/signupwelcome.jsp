@@ -25,6 +25,7 @@
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="<c:url value='/resources/www/css/bootstrap.min.css'/>" />
+    
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="<c:url value='/resources/www/css/stylish-portfolio.css'/>" />
@@ -93,33 +94,6 @@
 	    </div>
 	</div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="col-xs-10 col-xs-offset-1 text-center">
-            <p style="margin-bottom:0px;">Copyright &copy; Deccan Rock Pvt Ltd. 2015</p>
-        </div>
-    </footer>    
-
+<%@ include file="footer.jsp" %>
 </body>
-    <!-- jQuery -->
-    <script src="<c:url value='/resources/www/js/jquery.js'/>" ></script>
-    <!-- Bootstrap Core JavaScript -->
-    <script src="<c:url value='/resources/www/js/bootstrap.min.js'/>" ></script>
-    
-	<script>
-	    // Closes the sidebar menu
-	    $("#menu-close").click(function(e) {
-	        e.preventDefault();
-	        $("#sidebar-wrapper").toggleClass("active");
-	    });
-	
-	    // Opens the sidebar menu
-	    $("#menu-toggle").click(function(e) {
-	        e.preventDefault();
-	        $("#sidebar-wrapper").toggleClass("active");
-	    });
-    </script>
-
-</body>
-
 </html>

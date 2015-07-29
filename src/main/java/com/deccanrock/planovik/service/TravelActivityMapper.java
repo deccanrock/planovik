@@ -58,7 +58,7 @@ public class TravelActivityMapper implements RowMapper<TravelActivityEntity> {
 		
 		if (travel.getCode().contentEquals("T_PIKUPDRP")) {	
 			long pikupdropdatetimelong = TimeFormatter.UTCToLocal(rs.getTimestamp("pikupdropdatetime").getTime(), this.getTzoffset());
-			travel.setPikupdropdatetimestr(TimeFormatter.FormatTimeMS(pikupdropdatetimelong));
+			travel.setPikupdropdatetimestr(TimeFormatter.FormatTimeMS(pikupdropdatetimelong, "", false, (short)0));
 			travel.setPikupdropdatetimelong(pikupdropdatetimelong);
 			travel.setActivitystarttimelong(travel.getPikupdropdatetimelong());
 		}
@@ -68,12 +68,12 @@ public class TravelActivityMapper implements RowMapper<TravelActivityEntity> {
 
 			if (travel.getCode().contentEquals("T_BOOK_ONEWAY")) {	
 				long depdateonlong = TimeFormatter.UTCToLocal(rs.getTimestamp("depdatetimeon").getTime(), this.getTzoffset());
-				travel.setDepdatetimeonstr(TimeFormatter.FormatTimeMS(depdateonlong));
+				travel.setDepdatetimeonstr(TimeFormatter.FormatTimeMS(depdateonlong, "", false, (short)0));
 				travel.setDepdatetimeonlong(depdateonlong);
 				travel.setActivitystarttimelong(travel.getDepdatetimeonlong());
 				
 				long arrdateonlong = TimeFormatter.UTCToLocal(rs.getTimestamp("arrdatetimeon").getTime(), this.getTzoffset());
-				travel.setArrdatetimeonstr(TimeFormatter.FormatTimeMS(arrdateonlong));
+				travel.setArrdatetimeonstr(TimeFormatter.FormatTimeMS(arrdateonlong, "", false, (short)0));
 				travel.setArrdatetimeonlong(arrdateonlong);
 				travel.setActivityendtimelong(travel.getArrdatetimeonlong());
 			}
@@ -83,28 +83,28 @@ public class TravelActivityMapper implements RowMapper<TravelActivityEntity> {
 				// Convert to MM/DD/YYYY hh:mm AM|PM format after adjusting for UTC timezone offset
 				if (rs.getTimestamp("depdatetimeon") != null) {
 					long depdateonlong = TimeFormatter.UTCToLocal(rs.getTimestamp("depdatetimeon").getTime(), this.getTzoffset());
-					travel.setDepdatetimeonstr(TimeFormatter.FormatTimeMS(depdateonlong));
+					travel.setDepdatetimeonstr(TimeFormatter.FormatTimeMS(depdateonlong, "", false, (short)0));
 					travel.setDepdatetimeonlong(depdateonlong);
 					travel.setActivitystarttimelong(travel.getDepdatetimeonlong());
 				}
 
 				if (rs.getTimestamp("arrdatetimeon") != null) {
 					long arrdateonlong = TimeFormatter.UTCToLocal(rs.getTimestamp("arrdatetimeon").getTime(), this.getTzoffset());
-					travel.setArrdatetimeonstr(TimeFormatter.FormatTimeMS(arrdateonlong));
+					travel.setArrdatetimeonstr(TimeFormatter.FormatTimeMS(arrdateonlong, "", false, (short)0));
 					travel.setArrdatetimeonlong(arrdateonlong);
 					travel.setActivityendtimelong(travel.getArrdatetimeonlong());
 				}
 				
 				if (rs.getTimestamp("depdatetimeret") != null) {
 					long depdateretlong = TimeFormatter.UTCToLocal(rs.getTimestamp("depdatetimeret").getTime(), this.getTzoffset());
-					travel.setDepdatetimeretstr(TimeFormatter.FormatTimeMS(depdateretlong));
+					travel.setDepdatetimeretstr(TimeFormatter.FormatTimeMS(depdateretlong, "", false, (short)0));
 					travel.setDepdatetimeretlong(depdateretlong);
 					travel.setActivitystarttimelong(travel.getDepdatetimeretlong());
 				}
 				
 				if (rs.getTimestamp("arrdatetimeret") != null) {
 					long arrdateretlong = TimeFormatter.UTCToLocal(rs.getTimestamp("arrdatetimeret").getTime(), this.getTzoffset());
-					travel.setArrdatetimeretstr(TimeFormatter.FormatTimeMS(arrdateretlong));
+					travel.setArrdatetimeretstr(TimeFormatter.FormatTimeMS(arrdateretlong, "", false, (short)0));
 					travel.setArrdatetimeretlong(arrdateretlong);
 					travel.setActivityendtimelong(travel.getArrdatetimeretlong());			
 				}
@@ -146,7 +146,7 @@ public class TravelActivityMapper implements RowMapper<TravelActivityEntity> {
 				
 				if (rs.getTimestamp("arrdatetimeon") != null) {
 					long arrdateonlong = TimeFormatter.UTCToLocal(rs.getTimestamp("arrdatetimeon").getTime(), this.getTzoffset());
-					travel.setArrdatetimeonstr(TimeFormatter.FormatTimeMS(arrdateonlong));
+					travel.setArrdatetimeonstr(TimeFormatter.FormatTimeMS(arrdateonlong, "", false, (short)0));
 				}
 		
 				if (rs.getString("depstation") != null)
@@ -164,7 +164,7 @@ public class TravelActivityMapper implements RowMapper<TravelActivityEntity> {
 
 				if (rs.getTimestamp("arrdatetimeret") != null) {
 					long arrdateretlong = TimeFormatter.UTCToLocal(rs.getTimestamp("arrdatetimeret").getTime(), this.getTzoffset());
-					travel.setArrdatetimeretstr(TimeFormatter.FormatTimeMS(arrdateretlong));
+					travel.setArrdatetimeretstr(TimeFormatter.FormatTimeMS(arrdateretlong, "", false, (short)0));
 				}
 				
 				if (rs.getString("vesselnoret") != null)

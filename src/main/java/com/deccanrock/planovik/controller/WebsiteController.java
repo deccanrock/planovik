@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import net.sf.ehcache.Element;
+
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -24,15 +26,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.deccanrock.planovik.SMS.SMSService;
-import com.deccanrock.planovik.entity.TenantEntity;
+import com.deccanrock.planovik.constants.PlnvkConstants;
+import com.deccanrock.planovik.entity.AccountEntity;
 import com.deccanrock.planovik.location.ISOCountryPhone;
 import com.deccanrock.planovik.location.MaxLocation;
 import com.deccanrock.planovik.location.MaxLocationBOImpl;
 import com.deccanrock.planovik.location.CountryPostalCode;
 import com.deccanrock.planovik.mandrill.MailService;
 import com.deccanrock.planovik.security.AESSecure;
+import com.deccanrock.planovik.security.HashCode;
+import com.deccanrock.planovik.service.dao.AccountEntityDAO;
 import com.deccanrock.planovik.service.dao.TenantEntityDAO;
+import com.deccanrock.planovik.service.utils.CacheService;
 import com.deccanrock.planovik.service.utils.MiscHelper;
+import com.deccanrock.planovik.service.utils.TimeFormatter;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
 
@@ -51,8 +58,8 @@ public class WebsiteController {
 	 */
 	@RequestMapping(value = "/register", method = RequestMethod.POST)	
     public @ResponseBody String registerForm(HttpServletRequest request, ModelMap map,
-    		@RequestParam(value = "tenantdesc") String tenantDesc, @RequestParam(value = "contactname") String contactName,
-    		@RequestParam(value = "contactemail") String email, @RequestParam(value = "contactphonemobile") String contactPhoneMobile, 
+    		@RequestParam(value = "contactname") String contactName,
+    		@RequestParam(value = "contactemail") String contactEmail, @RequestParam(value = "contactphonemobile") String contactPhoneMobile, 
     		@RequestParam(value = "contactpswd") String contactPswd, @RequestParam(value = "tzoffset") short tzoffset) {
 		
 		logger.info("New Tenant Registration");
@@ -71,30 +78,29 @@ public class WebsiteController {
 
 		ISOCountryPhone countryinfo = GetCountryInfo(cc);
 				
-		TenantEntity tenant = new TenantEntity();
-		tenant.setAddrcountrycode(cc);				
-		tenant.setTenantdesc(tenantDesc); // Here Tenant Name is complete tenant company name
-		tenant.setContactname(contactName);
-		tenant.setContactemail(email);
-		tenant.setContactphonemobile("+" + countryinfo.getDialcode() + "-" + contactPhoneMobile);
-		tenant.setContactpswd(contactPswd);
-		tenant.setTzoffset(tzoffset);
-		tenant.setRegip(userIPAddress);
+		AccountEntity account = new AccountEntity();
+		account.setAddrcountrycode(cc);				
+		account.setContactname(contactName);
+		account.setContactemail(contactEmail);
+		account.setContactphonemobile("+" + countryinfo.getDialcode() + "-" + contactPhoneMobile);
+		account.setContactpswd(contactPswd);
+		account.setTzoffset(tzoffset);
+		account.setRegip(userIPAddress);
 		
 
 		try {
-			tenant.setSecurekey(MiscHelper.ComputeSecretKeyForTenant());
+			account.setSecurekey(MiscHelper.ComputeSecretKeyForTenant());
 		} catch (GeneralSecurityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}		
 
 		// Generate a random pin for additional mobile verification, *TODO*
-		tenant.setPin(MiscHelper.genrandomnumber());
+		account.setPin(MiscHelper.genrandomnumber());
 		
 		// Save model to database
-		TenantEntityDAO TED = (TenantEntityDAO)AppCtxtProv.getApplicationContext().getBean("TenantEntityDAO");		
-		String result = TED.RegisterTenant(tenant);
+		AccountEntityDAO AED = (AccountEntityDAO)AppCtxtProv.getApplicationContext().getBean("AccountEntityDAO");		
+		String result = AED.CreateAccount(account);
 		
 		String secureuri = "Fail";		
 		if (MiscHelper.isNumeric(result)) {
@@ -122,7 +128,7 @@ public class WebsiteController {
 
 			// mobile verification logic here when available
 			try {
-				SMSService.SendSMS(contactPhoneMobile, "One time pin to complete planvoik registration is: " + tenant.getPin());
+				SMSService.SendSMS(contactPhoneMobile, "One time pin to complete planvoik registration is: " + account.getPin());
 			} catch (UnirestException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -131,9 +137,9 @@ public class WebsiteController {
 			// Send welcome email
 			MailService ms = new MailService();			
 			url = "http://www.planovik.com:8080/signupconfirm?" + secureuri;
-			String content = "<html><body><h1>Almost there " + tenant.getContactname() + "</h1>" + 
+			String content = "<html><body><h1>Almost there " + account.getContactname() + "</h1>" + 
 							 "<h3>Please click <a href=\"" + url + "\">here</a>" + " to complete your registration.</h3></body></html>";			
-			ms.SendMessage("Planovik", "signup@planovik.com", tenant.getContactname(), tenant.getContactemail(), "Welcome to Planovik", content);
+			ms.SendMessage("Planovik", "signup@planovik.com", account.getContactname(), account.getContactemail(), "Welcome to Planovik", content);
 									
 			return secureuri;
 		}
@@ -169,26 +175,10 @@ public class WebsiteController {
 		ISOCountryPhone countryinfo = GetCountryInfo(cc);
 		return "+" + countryinfo.getDialcode();
 	}	
-
-	/**
-	 * Check if tenant already exists
-	 * @throws URISyntaxException 
-	 */
-	@RequestMapping(value = "/checktenantdesc", method = RequestMethod.GET)	
-	public @ResponseBody String checkTenantDesc(@RequestParam(value = "tenantdesc") String tenantDesc) {
-		logger.info("Check Tenant Desc");
-
-		ApplicationContext context = AppCtxtProv.getApplicationContext();
-		TenantEntityDAO TED = (TenantEntityDAO)context.getBean("TenantEntityDAO");
-		// This should be changed to memcached
-		if (TED.TenantExists(tenantDesc))
-			return "exists";
-		else
-			return "none";
-	}	
+	
 	
 	/**
-	 * Check if tenant contact email already exists
+	 * Check if account contact email already exists
 	 * @throws URISyntaxException 
 	 */
 	@RequestMapping(value = "/checkcontactemail", method = RequestMethod.GET)	
@@ -196,9 +186,9 @@ public class WebsiteController {
 		logger.info("Check Tenant Contact Email");
 
 		ApplicationContext context = AppCtxtProv.getApplicationContext();
-		TenantEntityDAO TED = (TenantEntityDAO)context.getBean("TenantEntityDAO");
+		AccountEntityDAO AED = (AccountEntityDAO)context.getBean("AccountEntityDAO");
 		// This should be changed to memcached
-		if (TED.TenantContactEmailExists(contactEmail))
+		if (AED.ContactEmailExists(contactEmail))
 			return "exists";
 		else
 			return "none";
@@ -218,7 +208,7 @@ public class WebsiteController {
 		// String secureuri = uri.substring(uri.indexOf('-')+1, uri.length());
 		
 		ApplicationContext context = AppCtxtProv.getApplicationContext();
-		TenantEntityDAO TED = (TenantEntityDAO)context.getBean("TenantEntityDAO");
+		AccountEntityDAO AED = (AccountEntityDAO)context.getBean("AccountEntityDAO");
 		String plainURI = null;		
 		try {
 			plainURI = AESSecure.convertToPlainURI(secureuri, null);
@@ -230,7 +220,7 @@ public class WebsiteController {
 			e.printStackTrace();
 		}
 		
-		TenantEntity tenant = TED.GetTenant(plainURI, 0);
+		AccountEntity account = AED.GetAccount(plainURI, 0);
 
 		/*
 		byte[] encodedKey     	= Base64.decodeBase64(tenant.getSecurekey());
@@ -248,8 +238,8 @@ public class WebsiteController {
 		}
 		*/
 		
-		map.addAttribute("contactname", tenant.getContactname());
-		map.addAttribute("contactemail", tenant.getContactemail());
+		map.addAttribute("contactname", account.getContactname());
+		map.addAttribute("contactemail", account.getContactemail());
 		
 		return "signupwelcome";
 		
@@ -267,7 +257,7 @@ public class WebsiteController {
 		String secureuri = request.getQueryString();
 		
 		ApplicationContext context = AppCtxtProv.getApplicationContext();
-		TenantEntityDAO TED = (TenantEntityDAO)context.getBean("TenantEntityDAO");
+		AccountEntityDAO AED = (AccountEntityDAO)context.getBean("AccountEntityDAO");
 		String plainURI = null;		
 		try {
 			plainURI = AESSecure.convertToPlainURI(secureuri, null);
@@ -279,21 +269,21 @@ public class WebsiteController {
 			e.printStackTrace();
 		}
 		
-		TenantEntity tenant = TED.GetTenant(plainURI, 0);
+		AccountEntity account = AED.GetAccount(plainURI, 0);
 		
 		// Set registration status of user to confirmed
 		// if (tenant != null)
 		//	TED.SetRegStatus(tenant.getTenantid(),PlnvkConstants.RegStatus.Confirmed.getValue());
 
-		map.addAttribute("tenantid", tenant.getTenantid());		
-		map.addAttribute("contactname", tenant.getContactname());
-		map.addAttribute("contactemail", tenant.getContactemail());
-		ISOCountryPhone countryinfo = GetCountryInfo(tenant.getAddrcountrycode());
+		map.addAttribute("accountid", account.getId());		
+		map.addAttribute("contactname", account.getContactname());
+		map.addAttribute("contactemail", account.getContactemail());
+		ISOCountryPhone countryinfo = GetCountryInfo(account.getAddrcountrycode());
 		map.addAttribute("dialcode", "+" + countryinfo.getDialcode());
 		map.addAttribute("addrcountryname", countryinfo.getIsoname());
 		map.addAttribute("addrcountrycode", countryinfo.getIsocode2());
 		
-		return "updateprofile";
+		return "signupfinal";
 		
 	}
 	
@@ -311,8 +301,8 @@ public class WebsiteController {
 		
 		logger.info("Geo Details for Postal Code");		
 		
-		TenantEntityDAO TED = (TenantEntityDAO)AppCtxtProv.getApplicationContext().getBean("TenantEntityDAO");		
-		List <CountryPostalCode> countrypostalcodes = TED.GetPCDetailsForCntry(addrPostalCode, addrCountryCode);
+		AccountEntityDAO AED = (AccountEntityDAO)AppCtxtProv.getApplicationContext().getBean("AccountEntityDAO");		
+		List <CountryPostalCode> countrypostalcodes = AED.GetPCDetailsForCntry(addrPostalCode, addrCountryCode);
 
 		// Build Json Reader map for jqgrid		
 		ObjectMapper mapper = new ObjectMapper();
@@ -331,56 +321,56 @@ public class WebsiteController {
 		
 		// This should be changed to use entity model (TenantEntity) that will allow data edits at 
 		// the time of registration and subsequent updates
-		logger.info("Tenant account update");
+		logger.info("Account update");
 
-		TenantEntityDAO TED = (TenantEntityDAO)AppCtxtProv.getApplicationContext().getBean("TenantEntityDAO");		
+		AccountEntityDAO AED = (AccountEntityDAO)AppCtxtProv.getApplicationContext().getBean("AccountEntityDAO");		
 		
-		TenantEntity tenant = TED.GetTenant(request.getParameter("tenantid"), 0); // using tenantid
+		AccountEntity account = AED.GetAccount(request.getParameter("tenantid"), 0); // using id
 		
-		if (tenant == null)
+		if (account == null)
 			// Should really never happen
 			map.addAttribute("error", "Oops! We were unable to find your information. Please try again.");
 		else {			
 			// Compare info and update			
 			if (request.getParameter("contactdesignation").length()!=0 && 
-					tenant.getContactdesignation().contentEquals(request.getParameter("contactdesignation")) == false)
-				tenant.setContactdesignation(request.getParameter("contactdesignation"));
+					account.getContactdesignation().contentEquals(request.getParameter("contactdesignation")) == false)
+				account.setContactdesignation(request.getParameter("contactdesignation"));
 
 			// Format "+91-40-23608380" (Country Code - Area Code - Phone number)
 			if (request.getParameter("contactphoneoffice").length()!=0 && 
-					tenant.getContactphoneoffice().contentEquals(request.getParameter("contactphoneoffice")) == false)
-				tenant.setContactphoneoffice(request.getParameter("contactphoneoffice"));
+					account.getContactphoneoffice().contentEquals(request.getParameter("contactphoneoffice")) == false)
+				account.setContactphoneoffice(request.getParameter("contactphoneoffice"));
 
 			// Format "+91-9866277000" (Country Code - Mobile Number)
 			if (request.getParameter("addrpostalcode").length()!=0 && 
-					tenant.getAddrpostalcode().contentEquals(request.getParameter("addrpostalcode")) == false)
-				tenant.setAddrpostalcode(request.getParameter("addrpostalcode"));
+					account.getAddrpostalcode().contentEquals(request.getParameter("addrpostalcode")) == false)
+				account.setAddrpostalcode(request.getParameter("addrpostalcode"));
 
 			if (request.getParameter("addrstreet1").length()!=0 && 
-					tenant.getAddrstreet1().contentEquals(request.getParameter("addrstreet1")) == false)
-				tenant.setAddrstreet1(request.getParameter("addrstreet1"));
+					account.getAddrstreet1().contentEquals(request.getParameter("addrstreet1")) == false)
+				account.setAddrstreet1(request.getParameter("addrstreet1"));
 
 			if (request.getParameter("addrstreet2").length()!=0 && 
-					tenant.getAddrstreet2().contentEquals(request.getParameter("addrstreet2")) == false)
-				tenant.setAddrstreet2(request.getParameter("addrstreet2"));
+					account.getAddrstreet2().contentEquals(request.getParameter("addrstreet2")) == false)
+				account.setAddrstreet2(request.getParameter("addrstreet2"));
 
 			if (request.getParameter("addrcitytown").length()!=0 && 
-					tenant.getAddrcitytown().contentEquals(request.getParameter("addrcitytown")) == false)
-				tenant.setAddrcitytown(request.getParameter("addrcitytown"));
+					account.getAddrcitytown().contentEquals(request.getParameter("addrcitytown")) == false)
+				account.setAddrcitytown(request.getParameter("addrcitytown"));
 
 			if (request.getParameter("addrdistrict").length()!=0 && 
-					tenant.getAddrdistrict().contentEquals(request.getParameter("addrdistrict")) == false)
-				tenant.setAddrdistrict(request.getParameter("addrdistrict"));
+					account.getAddrdistrict().contentEquals(request.getParameter("addrdistrict")) == false)
+				account.setAddrdistrict(request.getParameter("addrdistrict"));
 
 			if (request.getParameter("addrstateprovrgn").length()!=0 && 
-					tenant.getAddrstateprovrgn().contentEquals(request.getParameter("addrstateprovrgn")) == false)
-				tenant.setAddrstateprovrgn(request.getParameter("addrstateprovrgn"));
+					account.getAddrstateprovrgn().contentEquals(request.getParameter("addrstateprovrgn")) == false)
+				account.setAddrstateprovrgn(request.getParameter("addrstateprovrgn"));
 
 			if (request.getParameter("addrhomeurl").length()!=0 && 
-					tenant.getAddrhomeurl().contentEquals(request.getParameter("addrhomeurl")) == false)
-				tenant.setAddrhomeurl(request.getParameter("addrhomeurl"));
+					account.getAddrhomeurl().contentEquals(request.getParameter("addrhomeurl")) == false)
+				account.setAddrhomeurl(request.getParameter("addrhomeurl"));
 			
-			TED.UpdateTenant(tenant);
+			AED.UpdateAccount(account);
 
 		}
 		
@@ -388,41 +378,173 @@ public class WebsiteController {
 						
 	}	
 
-    @RequestMapping(value = "/login")
-    public String userlogin(ModelMap map, HttpServletResponse response, HttpServletRequest request)
+    @RequestMapping(value = "/accountlogin")
+    public @ResponseBody String accountlogin(ModelMap map, HttpServletResponse response, HttpServletRequest request)
     {
-		logger.info("Tenant Login");    	
-		map.addAttribute("title", "Planovik - Login Required!");
-		map.addAttribute("header", "User Login");
+		logger.info("Account Login");    	
+		map.addAttribute("title", "Planovik - Your Profile");
+		map.addAttribute("header", "Account Login");
 
-		TenantEntityDAO TED = (TenantEntityDAO)AppCtxtProv.getApplicationContext().getBean("TenantEntityDAO");				
-		TenantEntity tenant = TED.TenantLogin(request, response);
+		AccountEntityDAO AED = (AccountEntityDAO)AppCtxtProv.getApplicationContext().getBean("AccountEntityDAO");
+		// Get Tenant using email		
+		AccountEntity account = AED.GetAccount(request.getParameter("contactemail"), 1);
+		
+		if (account == null)
+			return "Login failed! Incorrect email";
+
+		if (account.getAccountstatus() == PlnvkConstants.RegStatus.Pending.getValue())
+			return "Your registration is not confirmed. Please check your email for instructions.";
+		
+		if (account.getAccountstatus() == PlnvkConstants.RegStatus.Suspended.getValue())
+			return "Your account has been suspended. Please contact customer support for further assistance.";
+
+		if (account.getAccountstatus() == PlnvkConstants.RegStatus.Closed.getValue())
+			return "Your account has been closed. Please contact customer support for further assistance.";
+		
+		// Match Password
+		if (HashCode.matchPassword(request.getParameter("contactpswd"), account.getContactpswd()) == false)
+			return "Login failed! Incorrect password";
 				
-        HttpSession session = request.getSession(false);
+        HttpSession session = request.getSession(true);
         if(session!=null) {
-            session.invalidate();//old session invalidated
+        	// Set tenant information
+        	session.setAttribute("accountid" , account.getId());
+        	session.setAttribute("contactemail" , account.getContactemail());
+        	// Stuff remaining in cache for access till tenant is active
+        	CacheService CS = (CacheService)AppCtxtProv.getApplicationContext().getBean("cacheservice");
+        	CS.getCache().put(new Element(account.getContactemail(), account));
         }		
 				
-		return "app/login";
+		return "Success";
     }
 
 
+    @RequestMapping(value = "/accountprofile", method = RequestMethod.GET)	
+    public String accountprofile(ModelMap map, HttpServletResponse response, HttpServletRequest request) {
+		
+		logger.info("Account Profile");
+        HttpSession session = request.getSession(false);
+        if(session!=null) {
+        	CacheService CS = (CacheService)AppCtxtProv.getApplicationContext().getBean("cacheservice");
+    		Element accountele = CS.getCache().get(session.getAttribute("contactemail"));
+    		
+    		if (accountele != null) {
+        		AccountEntity account = null;
+        		account = (AccountEntity) accountele.getObjectValue();
+        		// Get creation date time in local tz
+        		map.addAttribute("registerdate",
+        				TimeFormatter.FormatTimeMS(account.getDatecreatedlong(), "SettingsDisplay", true, account.getTzoffset()));
+        		map.addAttribute("accountid", account.getId());		
+        		map.addAttribute("contactname", account.getContactname());		
+        		map.addAttribute("contactemail", account.getContactemail());
+        		ISOCountryPhone countryinfo = GetCountryInfo(account.getAddrcountrycode());
+        		map.addAttribute("dialcode", "+" + countryinfo.getDialcode());
+        		map.addAttribute("addrcountryname", countryinfo.getIsoname());
+        		map.addAttribute("addrcountrycode", countryinfo.getIsocode2());
+        		map.addAttribute("tenants", account.getTenants());        		
+    		}
+    		    		
+        }
+        	
+		return "accountprofile";
+
+	}
+
     @RequestMapping(value = "/verifypin", method = RequestMethod.GET)	
     public @ResponseBody String verifyPin(@RequestParam(value = "pin") Short pin,
-    		@RequestParam(value = "tenantid") int tenantid) {
+    		@RequestParam(value = "accountid") int accountid) {
 		
 		logger.info("Verify Pin");
 
-		TenantEntityDAO TED = (TenantEntityDAO)AppCtxtProv.getApplicationContext().getBean("TenantEntityDAO");				
-		String response = TED.VerifyPin(pin, tenantid);		
+		AccountEntityDAO AED = (AccountEntityDAO)AppCtxtProv.getApplicationContext().getBean("AccountEntityDAO");				
+		String response = AED.VerifyPin(pin, accountid);		
 		
 		return response;
 
 	}
     
+    // Static pricing to display pricing information
+    @RequestMapping(value = "/spricing", method = RequestMethod.GET)	
+    public String staticpricing(ModelMap map, HttpServletResponse response, HttpServletRequest request) {
+		
+		logger.info("Static Pricing");
+		
+		return "pricing";
+
+	}
+
+    // Dynamic pricing when a tenant is created or upgrade
+    @RequestMapping(value = "/dpricing", method = RequestMethod.POST)	
+    public String dynamicpricing(ModelMap map, HttpServletResponse response, HttpServletRequest request) {
+		
+		logger.info("Dynamic Pricing");
+		map.addAttribute("accountid", request.getParameter("accountid"));		
+		map.addAttribute("contactname", request.getParameter("contactname"));		
+		map.addAttribute("tenantdesc", request.getParameter("tenantdesc"));		
+
+		TenantEntityDAO TED = (TenantEntityDAO)AppCtxtProv.getApplicationContext().getBean("TenantEntityDAO");
+		// Check against DB and compute a name to suggest
+		String tenantname = TED.GetTenantName(request.getParameter("tenantdesc"));
+	
+		return "pricing";
+
+	}
+    
+    @RequestMapping(value = "/verifytenantdesc", method = RequestMethod.GET)	
+    public @ResponseBody String verifyTenantDesc(@RequestParam(value = "tenantdesc") String tenantdesc) {
+		
+		logger.info("Verify Tenant Desc");
+
+		TenantEntityDAO TED = (TenantEntityDAO)AppCtxtProv.getApplicationContext().getBean("TenantEntityDAO");				
+		String response = TED.TenantExists(tenantdesc);		
+		
+		return response;
+
+	}
+
+    /**
+	 * Process Signup request for an Organization
+	 * @throws URISyntaxException 
+	 */
+	@RequestMapping(value = "/setuptenant", method = RequestMethod.POST)	
+    public @ResponseBody String setupTenant(HttpServletRequest request, ModelMap map) {
+		
+		// This should be changed to use entity model (TenantEntity) that will allow data edits at 
+		// the time of registration and subsequent updates
+		logger.info("Setup Tenant");
+
+        HttpSession session = request.getSession(false);
+        AccountEntity account = null;
+        AccountEntityDAO AED = (AccountEntityDAO)AppCtxtProv.getApplicationContext().getBean("AccountEntityDAO");
+        
+        if(session!=null) {
+        	CacheService CS = (CacheService)AppCtxtProv.getApplicationContext().getBean("cacheservice");
+    		Element accountele = CS.getCache().get(session.getAttribute("contactemail"));
+    		
+    		if (accountele != null)
+    			account = (AccountEntity) accountele.getObjectValue();
+        }
+        
+        if (account == null) // fall back to DB
+   			account = AED.GetAccount(request.getParameter("accountid"), 0); // using id
+        
+		if (account == null)
+			// Should really never happen
+			map.addAttribute("error", "Oops! We were unable to find your information. Please try again.");
+		else {			
+			// Setup Tenant Based
+	        TenantEntityDAO TED = (TenantEntityDAO)AppCtxtProv.getApplicationContext().getBean("TenantEntityDAO");
+			TED.CreateTenant(request.getParameter("tenantdesc"), account, Short.valueOf(request.getParameter("tenanttype")));
+		}
+		
+		return "tenantprofile"; 		
+						
+	}	
+
+    
 	private ISOCountryPhone GetCountryInfo(String CountryCode) {
-		TenantEntityDAO TED = (TenantEntityDAO)AppCtxtProv.getApplicationContext().getBean("TenantEntityDAO");		
-		ISOCountryPhone isocntryph = TED.GetInfoForISOCode(CountryCode);
+		AccountEntityDAO AED = (AccountEntityDAO)AppCtxtProv.getApplicationContext().getBean("AccountEntityDAO");		
+		ISOCountryPhone isocntryph = AED.GetInfoForISOCode(CountryCode);
 				
 		return isocntryph;		
 	}

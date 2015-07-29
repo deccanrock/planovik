@@ -17,6 +17,10 @@ public class TenantEntity implements Serializable {
 	@GeneratedValue
 	private int tenantid;
 	
+	@Column(name="accountid")
+	@GeneratedValue
+	private int accountid;
+	
 	@Column(name="tenantdesc")
 	private String tenantdesc;
 	
@@ -32,56 +36,11 @@ public class TenantEntity implements Serializable {
 	@Column(name="zoneid")	
 	public short zoneid;
 
-	@Column(name="addrstreet1")	
-	public String addrstreet1;
-
-	@Column(name="addrstreet2")	
-	public String addrstreet2;
-	
-	@Column(name="addrcitytown")	
-	public String addrcitytown;
-	
-	@Column(name="addrdistrict")	
-	public String addrdistrict;
-	
-	@Column(name="addrstateprovrgn")	
-	public String addrstateprovrgn;
-	
-	@Column(name="addrpostalcode")	
-	public String addrpostalcode;
-	
-	@Column(name="addrcountrycode")	
-	public String addrcountrycode;
-
-	@Column(name="addrhomeurl")	
-	public String addrhomeurl;
-	
-	@Column(name="contacttitle")	
-	public String contacttitle;
-
-	@Column(name="contactname")	
-	public String contactname;
-
-	@Column(name="contactphoneoffice")	
-	public String contactphoneoffice;
-
-	@Column(name="contactphonemobile")	
-	public String contactphonemobile;
-
-	@Column(name="contactemail")
-	private String contactemail;
-
-	@Column(name="contactpswd")
-	private String contactpswd;
-	
-	@Column(name="contactdesignation")	
-	public String contactdesignation;
-	
 	@Column(name="tenanttype")
 	private  short tenanttype;
 	
-	@Column(name="regstatus")
-	private short regstatus;
+	@Column(name="status")
+	private short status;
 	
 	@Column(name="msgunrdcnt")
 	private short msgunrdcnt;
@@ -89,8 +48,8 @@ public class TenantEntity implements Serializable {
 	@Column(name="alrtpendingcnt")
 	private short alrtpendingcnt;
 		
-	@Column(name="accntbal")
-	private float accntbal;
+	@Column(name="accountbal")
+	private float accountbal;
 
 	@Column(name="tzoffset")
 	private short tzoffset;
@@ -126,6 +85,14 @@ public class TenantEntity implements Serializable {
 	
 	public void setTenantid(int tenantid) {
 		this.tenantid = tenantid;
+	}
+	
+	public int getAccountid() {
+		return accountid;
+	}
+	
+	public void setAccountid(int accountid) {
+		this.accountid = accountid;
 	}
 	
 	public String getTenantname() {
@@ -169,94 +136,6 @@ public class TenantEntity implements Serializable {
 		this.zoneid = zoneid;
 	}
 
-	public String getAddrstreet1() {
-		return addrstreet1;
-	}
-	
-	public void setAddrstreet1(String addrstreet1) {
-		this.addrstreet1 = addrstreet1;
-	}
-
-	public String getAddrstreet2() {
-		return addrstreet2;
-	}
-	
-	public void setAddrstreet2(String addrstreet2) {
-		this.addrstreet2 = addrstreet2;
-	}
-
-	public String getAddrcitytown() {
-		return addrcitytown;
-	}
-	
-	public void setAddrcitytown(String addrcitytown) {
-		this.addrcitytown = addrcitytown;
-	}
-
-	public String getAddrdistrict() {
-		return addrdistrict;
-	}
-	
-	public void setAddrdistrict(String addrdistrict) {
-		this.addrdistrict = addrdistrict;
-	}
-
-	public String getAddrstateprovrgn() {
-		return addrstateprovrgn;
-	}
-	
-	public void setAddrstateprovrgn(String addrstateprovrgn) {
-		this.addrstateprovrgn = addrstateprovrgn;
-	}
-
-	public String getAddrpostalcode() {
-		return addrpostalcode;
-	}
-	
-	public void setAddrpostalcode(String addrpostalcode) {
-		this.addrpostalcode = addrpostalcode;
-	}
-	
-	public String getAddrcountrycode() {
-		return addrcountrycode;
-	}
-	
-	public void setAddrcountrycode(String addrcountrycode) {
-		this.addrcountrycode = addrcountrycode;
-	}
-	
-	public String getAddrhomeurl() {
-		return addrhomeurl;
-	}
-	
-	public void setAddrhomeurl(String addrhomeurl) {
-		this.addrhomeurl = addrhomeurl;
-	}
-
-	public String getContacttitle() {
-		return contacttitle;
-	}
-	
-	public void setContacttitle(String contacttitle) {
-		this.contacttitle = contacttitle;
-	}
-
-	public String getContactname() {
-		return contactname;
-	}
-	
-	public void setContactname(String contactname) {
-		this.contactname = contactname;
-	}
-
-	public String getContactdesignation() {
-		return contactdesignation;
-	}
-	
-	public void setContactdesignation(String contactdesignation) {
-		this.contactdesignation = contactdesignation;
-	}
-
 	public short getTenanttype() {
 		return tenanttype;
 	}
@@ -265,12 +144,12 @@ public class TenantEntity implements Serializable {
 		this.tenanttype = tenanttype;
 	}
 	
-	public short getRegstatus() {
-		return regstatus;
+	public short getStatus() {
+		return status;
 	}
 	
-	public void setRegstatus(short regstatus) {
-		this.regstatus = regstatus;
+	public void setStatus(short status) {
+		this.status = status;
 	}
 
 	public short getAlrtpendingcnt() {
@@ -289,12 +168,12 @@ public class TenantEntity implements Serializable {
 		this.msgunrdcnt = msgunrdcnt;
 	}
 
-	public float getAcctnbal() {
-		return accntbal;
+	public float getAccountbal() {
+		return accountbal;
 	}
 	
-	public void setAccntbal(float accntbal) {
-		this.accntbal = accntbal;
+	public void setAccountbal(float accountbal) {
+		this.accountbal = accountbal;
 	}
 
 	public short getTzoffset() {
@@ -335,42 +214,6 @@ public class TenantEntity implements Serializable {
 	
 	public void setCreatedby(short createdby) {
 		this.createdby = createdby;
-	}
-
-	public String getContactphoneoffice() {
-		return contactphoneoffice;
-	}
-
-	public void setContactphoneoffice(String contactphoneoffice) {
-		this.contactphoneoffice = contactphoneoffice;
-		
-	}
-
-	public String getContactphonemobile() {
-		return contactphonemobile;
-	}
-
-	public void setContactphonemobile(String contactphonemobile) {
-		this.contactphonemobile = contactphonemobile;
-		
-	}
-
-	public String getContactemail() {
-		return contactemail;
-	}
-
-	public void setContactemail(String contactemail) {
-		this.contactemail = contactemail;
-		
-	}
-
-	public String getContactpswd() {
-		return contactpswd;
-	}
-
-	public void setContactpswd(String contactpswd) {
-		this.contactpswd = contactpswd;
-		
 	}
 
 	public long getDatecreatedlong() {

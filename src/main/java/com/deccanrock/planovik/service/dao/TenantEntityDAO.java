@@ -4,8 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+
+
+
 import javax.sql.DataSource;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,17 +15,12 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.deccanrock.planovik.constants.PlnvkConstants;
+import com.deccanrock.planovik.entity.AccountEntity;
 import com.deccanrock.planovik.entity.TenantEntity;
-import com.deccanrock.planovik.location.ISOCountryPhone;
-import com.deccanrock.planovik.location.CountryPostalCode;
-import com.deccanrock.planovik.security.HashCode;
-import com.deccanrock.planovik.security.PlnvkAuthUsernamePasswordFilter;
-import com.deccanrock.planovik.service.CountryPostalCodeMapper;
 import com.deccanrock.planovik.service.TenantEntityMapper;
 import com.deccanrock.planovik.service.utils.MiscHelper;
 
@@ -64,28 +60,23 @@ public class TenantEntityDAO implements ITenantEntityDAO {
  	}
 
 	@Override
-	public String RegisterTenant(TenantEntity tenant) {
+	public String CreateTenant(String tenantdesc, AccountEntity account, short tenanttype) {
 
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	    	    	
     	SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
-    	.withProcedureName("sp_registertenant");
+    	.withProcedureName("sp_createtenant");
     	     	 
     	Map<String, Object> inParamMap = new HashMap<String, Object>();
-		
-    	inParamMap.put("intenantdesc", tenant.getTenantdesc());
-		inParamMap.put("incontactname", tenant.getContactname());
-		inParamMap.put("incontactemail", tenant.getContactemail());
-		inParamMap.put("inaddrcountrycode", tenant.getAddrcountrycode());
-		inParamMap.put("incontactpswd", HashCode.getHashPassword(tenant.getContactpswd()));
-		inParamMap.put("incontactphonemobile", tenant.getContactphonemobile());
-		inParamMap.put("intzoffset", tenant.getTzoffset());
-		inParamMap.put("inregstatus", PlnvkConstants.RegStatus.Pending.getValue());
-		inParamMap.put("insecurekey", tenant.getSecurekey());
-		inParamMap.put("inpin", tenant.getPin());
-		
+
+    	inParamMap.put("inaccountid", account.getId());    	
+    	inParamMap.put("intenantdesc", tenantdesc);
+		inParamMap.put("intzoffset", account.getTzoffset());
+		inParamMap.put("incountrycode", account.getAddrcountrycode());
+
+		TenantEntity tenant = new TenantEntity();
 		// Generate tenant name from tenant desc, at this point a default name if reserved
 		// for and pro and enterprise customers which they can change at a later time
-		tenant.setTenantname(MiscHelper.ComputeTenantName(tenant.getTenantdesc()));
+		tenant.setTenantname((MiscHelper.ComputeTenantName(tenantdesc)));
     	inParamMap.put("intenantname", tenant.getTenantname());
 		
     	SqlParameterSource in = new MapSqlParameterSource(inParamMap);
@@ -115,34 +106,9 @@ public class TenantEntityDAO implements ITenantEntityDAO {
     	return result;		
 	}
 
-	public ISOCountryPhone GetInfoForISOCode(String countryCode) {
-		// TODO Auto-generated method stub
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	    	    	
-    	SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
-    	.withProcedureName("sp_getisocountryphone");
-    	     	 
-    	Map<String, Object> inParamMap = new HashMap<String, Object>();
-		
-    	inParamMap.put("inisocode2", countryCode);		
-		
-    	SqlParameterSource in = new MapSqlParameterSource(inParamMap);
-
-    	ISOCountryPhone isocntryph = new ISOCountryPhone();
-    	try {    	
-			Map<String, Object> simpleJdbcCallResult = simpleJdbcCall.execute(in);
-			isocntryph.setIsoname(simpleJdbcCallResult.get("outisoname").toString());
-			isocntryph.setIsocode3(simpleJdbcCallResult.get("outisocode3").toString());
-			isocntryph.setDialcode(simpleJdbcCallResult.get("outdialcode").toString());
-			isocntryph.setIsocode2(countryCode);
-    	} catch (Exception ex) {
-			isocntryph = null;
-		} 					
-	
-    	return isocntryph;
-	}
 
 	@Override
-	public boolean TenantExists(String tenantDesc) {
+	public String TenantExists(String tenantDesc) {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	    	    	
     	SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
     	.withProcedureName("sp_checktenantexists");
@@ -151,42 +117,17 @@ public class TenantEntityDAO implements ITenantEntityDAO {
     	inParamMap.put("intenantdesc", tenantDesc);		
     	SqlParameterSource in = new MapSqlParameterSource(inParamMap);
  		
+    	String result = "";
     	try {    	
 			Map<String, Object> simpleJdbcCallResult = simpleJdbcCall.execute(in);
-			String result = simpleJdbcCallResult.get("result").toString();
-			if (result.contentEquals("exists"))
-					return true;
-			else
-					return false;
+			result = simpleJdbcCallResult.get("result").toString();
     	} catch (Exception ex) {
-			return false;
-		} 					
+			result = "fail";
+		} 
+    	
+    	return result;
 	}
 
-	@Override
-	public List<CountryPostalCode> GetPCDetailsForCntry(String addrpostalcode, String addrcountrycode) {
-
-        String SQL = "Call sp_postalcodeinforcntry(" + "'" + addrpostalcode + "'," +  "'" + addrcountrycode + "'" + ");";
-        
-    	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	   	
-		
-    	CountryPostalCodeMapper cpcm = new CountryPostalCodeMapper();
-    	cpcm.setCountrycode(addrcountrycode);
-    	cpcm.setPostalcode(addrpostalcode);
-
-		List <CountryPostalCode> countrypostalcodes = null;
-		
-    	try {    	
-    		countrypostalcodes = jdbcTemplate.query(SQL, cpcm);
-     		if (countrypostalcodes.size() == 0)
-     			countrypostalcodes =  null;
-    	} catch (Exception ex) {
-    		countrypostalcodes = null;
-    	} 			
-    	 		
-		return countrypostalcodes;		
-		
-	}
 
 	@Override
 	public String UpdateTenant(TenantEntity tenant) {
@@ -198,19 +139,6 @@ public class TenantEntityDAO implements ITenantEntityDAO {
     	Map<String, Object> inParamMap = new HashMap<String, Object>();
 
 		inParamMap.put("intenantid", tenant.getTenantid());    	
-		inParamMap.put("incontactname", tenant.getContactname());
-		inParamMap.put("incontactdesignation", tenant.getContactdesignation());
-		// inParamMap.put("incontactemail", tenant.getContactemail());
-		// inParamMap.put("incontactpswd", HashCode.getHashPassword(tenant.getContactpswd()));
-		inParamMap.put("incontactphoneoffice", tenant.getContactphoneoffice());
-		inParamMap.put("incontactphonemobile", tenant.getContactphonemobile());
-		inParamMap.put("inaddrpostalcode", tenant.getAddrpostalcode());
-		inParamMap.put("inaddrstreet1", tenant.getAddrstreet1());
-		inParamMap.put("inaddrstreet2", tenant.getAddrstreet2());
-		inParamMap.put("inaddrcitytown", tenant.getAddrcitytown());
-		inParamMap.put("inaddrdistrict", tenant.getAddrdistrict());
-		inParamMap.put("inaddrstateprovrgn", tenant.getAddrstateprovrgn());
-		inParamMap.put("inaddrhomeurl", tenant.getAddrhomeurl());
 		
     	SqlParameterSource in = new MapSqlParameterSource(inParamMap);
 
@@ -225,18 +153,11 @@ public class TenantEntityDAO implements ITenantEntityDAO {
 	}
 
 	@Override
-	public void SetRegStatus(int tenantid, int value) {
+	public void SetStatus(int tenantid, int value) {
         String SQL = "Call sp_updateregstatus(" +  tenantid + "," + value + ");";
     	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	   			
  		jdbcTemplate.execute(SQL);
  		// Assume success though result should be tracked
-	}
-
-	@Override
-	public TenantEntity TenantLogin(HttpServletRequest request, HttpServletResponse response) {
-		PlnvkAuthUsernamePasswordFilter usernamepswdfilter = new PlnvkAuthUsernamePasswordFilter();
-		Authentication auth = usernamepswdfilter.attemptAuthentication(request, response);
-		return null;
 	}
 
 	@Override
@@ -257,8 +178,11 @@ public class TenantEntityDAO implements ITenantEntityDAO {
     	} catch (Exception ex) {
 		}
     	
-    	if (result.contentEquals("Success"))
-    		SetRegStatus(tenantid, PlnvkConstants.RegStatus.Confirmed.getValue());
+    	if (result.contentEquals("Success")) {
+    		SetStatus(tenantid, PlnvkConstants.RegStatus.Confirmed.getValue());
+    		// Setup tenant instance along with credentials and inform user
+    		
+    	}
     	
     	return result;
 	}
@@ -282,5 +206,12 @@ public class TenantEntityDAO implements ITenantEntityDAO {
     	} catch (Exception ex) {
 			return false;
 		} 	
+	}
+
+	@Override
+	public String GetTenantName(String parameter) {
+		// TODO Auto-generated method stub
+		
+		return null;
 	}
 }

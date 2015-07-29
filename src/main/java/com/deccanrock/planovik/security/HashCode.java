@@ -14,7 +14,8 @@ public class HashCode {
 	public static boolean matchPassword(String rawPassword, String encodedPassword) {
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		if (passwordEncoder.matches(rawPassword, encodedPassword))
-				return true;
-		else return false;
+			return true;
+		else 
+			return false;
 	}
 }

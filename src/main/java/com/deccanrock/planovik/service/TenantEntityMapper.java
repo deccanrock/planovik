@@ -12,31 +12,20 @@ public class TenantEntityMapper implements RowMapper<TenantEntity> {
    public TenantEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
 	   
 	   TenantEntity tenant = new TenantEntity();
-		
+	   
 	   tenant.setTenantid(rs.getInt("tenantid"));	   	   
+	   tenant.setAccountid(rs.getInt("accountid"));	   	   
 	   tenant.setTenantdesc(rs.getString("tenantdesc"));
 	   tenant.setTenantname(rs.getString("tenantname"));
 	   tenant.setJndiname(rs.getString("jndiname"));
 	   tenant.setRegip(rs.getString("regip"));
 	   tenant.setZoneid(rs.getShort("zoneid"));	   	   
 	   tenant.setRegip(rs.getString("regip"));
-	   tenant.setAddrstreet1(rs.getString("addrstreet1"));
-	   tenant.setAddrstreet2(rs.getString("addrstreet2"));
-	   tenant.setAddrcitytown(rs.getString("addrcitytown"));
-	   tenant.setAddrdistrict(rs.getString("addrdistrict"));
-	   tenant.setAddrstateprovrgn(rs.getString("addrstateprovrgn"));
-	   tenant.setAddrpostalcode(rs.getString("addrpostalcode"));
-	   tenant.setAddrcountrycode(rs.getString("addrcountrycode"));
-	   tenant.setAddrhomeurl(rs.getString("addrhomeurl"));
-	   tenant.setContacttitle(rs.getString("contacttitle"));
-	   tenant.setContactname(rs.getString("contactname"));
-	   tenant.setContactphoneoffice(rs.getString("contactphoneoffice"));
-	   tenant.setContactphonemobile(rs.getString("contactphonemobile"));
-	   tenant.setContactemail(rs.getString("contactemail"));
-	   tenant.setContactpswd(rs.getString("contactpswd"));
-	   tenant.setContactdesignation(rs.getString("contactdesignation"));
 	   tenant.setTenanttype(rs.getShort("tenanttype"));
-	   tenant.setRegstatus(rs.getShort("regstatus"));
+	   tenant.setStatus(rs.getShort("status"));
+	   tenant.setAlrtpendingcnt(rs.getShort("alrtpendingcnt"));
+	   tenant.setMsgunrdcnt(rs.getShort("msgsunrdcnt"));
+	   tenant.setStatus(rs.getShort("status"));	   
 	   tenant.setTzoffset(rs.getShort("tzoffset"));	   
 	   tenant.setSecurekey(rs.getString("securekey"));	   
 	   tenant.setPin(rs.getShort("pin"));	   

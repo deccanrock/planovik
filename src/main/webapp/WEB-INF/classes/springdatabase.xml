@@ -70,6 +70,12 @@
 	    </constructor-arg>
 	</bean>	 
 	
+    <bean id="AccountEntityDAO" class="com.deccanrock.planovik.service.dao.AccountEntityDAO">
+	    <constructor-arg>
+	        <ref bean="mainDataSource" />
+	    </constructor-arg>
+	</bean>		
+	
     <bean id="applicationContextProvider" class="com.deccanrock.planovik.controller.AppCtxtProv"></bean>    
 	
 	<bean id="dataSourceRegistry" class="com.deccanrock.planovik.Tenant.TenantTargetRegistry"></bean>

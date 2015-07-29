@@ -54,14 +54,26 @@ public class TimeFormatter {
 	   
 	}
 	
-	public static String FormatTimeMS (long timeval) {
+	public static String FormatTimeMS(long timeval, String purpose, boolean converttolocal, short tzoffset) {
 		
-		// Will be modified to accept various formats 
-		// For now, MM/DD/YYYY hh:mm AM|PM 
-		Date localDate=new Date(timeval);
-		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy h:mm a");
-		String localDateStr = formatter.format(localDate);
+		long tmptimeval = timeval;
+		if (converttolocal)
+			tmptimeval = UTCToLocal(tmptimeval, tzoffset);
+
+		// If purpose not specified then format as MM/DD/YYYY hh:mm AM|PM 
+		Date localDate=new Date(tmptimeval);
+
+		String localDateStr="";
+		SimpleDateFormat formatter = null;
+
+		if (purpose == null || purpose.length() == 0) // default
+			formatter = new SimpleDateFormat("MM/dd/yyyy h:mm a");
 		
+		if (purpose.contentEquals("SettingsDisplay"))
+			formatter = new SimpleDateFormat("MMMMM d, yyyy");			
+		
+		localDateStr = formatter.format(localDate);			
+
 		return localDateStr;
 	}
 	

@@ -207,7 +207,7 @@
 	        <div class="navbar-header pull-left">
 	            <a href="#">
 	                <div class="img_logo">
-	                    <img src="<c:url value='/resources/images/planovik_logo_beta.png'/>" />
+	                    <img src="<c:url value='/resources/images/planovik_fav_new.png'/>" />
 	                </div>
 	            </a>
 	        </div>

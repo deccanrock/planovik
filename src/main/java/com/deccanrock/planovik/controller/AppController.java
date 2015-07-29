@@ -744,9 +744,10 @@ public class AppController {
 			map.addAttribute("msg", "You've been logged out successfully.");
 		}
 				
-        HttpSession session = request.getSession(false);
+        HttpSession session = request.getSession(true);
         if(session!=null) {
-            session.invalidate();//old session invalidated
+        	// Set tenant information into session
+        	
         }		
 				
 		return "app/login";

@@ -279,15 +279,6 @@
 						<div class="or">
 						    or
 						</div>
-
-							<div class="input-group" style="width:100%" id="tenantdescdiv">
-						    	<input class="form-control" type="text" placeholder="Company Name" id="tenantdesc" maxlength="120" name="tenantdesc" style="border-radius:0px;" />
-                               	<div class="pull-right spinner-preview" id="spinnertenantdesc" style="margin-right:-15px;margin-top:-15px;"></div>
-						    </div>
-						    
-						    <div id="tenantdeschelp" style="display:none;color:#A94442;"><p>Company already exists! Please input a different name.</p></div>	
-					
-							<div class="space-2"></div>
 							
 							<div class="input-group" style="width:100%;">							
 								<input class="form-control" type="text" placeholder="First Name" id="contactfname" maxlength="20" name="contactfname" style="border-radius:0px;width:49%;" />
@@ -315,7 +306,12 @@
 							<div class="input-group" style="width:100%;">														
 								<input class="form-control" type="password" placeholder="Select a password" id="contactpswd" maxlength="20" name="contactpswd" style="border-radius:0px;" />
 						    </div>	
+							<div class="space-2"></div>
 	                        
+							<div class="input-group" style="width:100%;">														
+								<input class="form-control" type="password" placeholder="Confirm password" id="contactpswdcnfrm" maxlength="20" name="contactpswdcnfrm" style="border-radius:0px;" />
+						    </div>	
+
 	                        <input type="hidden" id="tzoffset" name="tzoffset"/>					
 						
 							<div class="space-4"></div>
@@ -344,15 +340,16 @@
 				</div>	
 	        
 	            <div class="modal-body" id="modaldlg">
-                    <form class="" id="login-form" method="post" action="/app/j_spring_security_check">
+                    <form class="" id="login-form" method="post" action="/accountlogin">
+				            <span class="errormsg" id="errlogin" style="display:none"></span>				
 							<div class="input-group" style="width:100%;">														
-								<input class="form-control" type="text" placeholder="Your Email" id="username" maxlength="120" name="username" style="border-radius:0px;" />
+								<input class="form-control" type="text" placeholder="Your Email" id="contactemail" maxlength="120" name="contactemail" style="border-radius:0px;" />
 						    </div>			
 						    
 							<div class="space-2"></div>							
 							
 							<div class="input-group" style="width:100%;">														
-								<input class="form-control" type="password" placeholder="Your Password" id="password" maxlength="20" name="password" style="border-radius:0px;" />
+								<input class="form-control" type="password" placeholder="Your Password" id="contactpswd" maxlength="20" name="contactpswd" style="border-radius:0px;" />
 								<div class="space-2"></div>							
 						    	<a class="pull-right" href="/recoverpswd">Forgot password?</a> 
 						    </div>		                        
@@ -361,7 +358,6 @@
 							<button id="loginbtn" class="btn btn-success" type="submit">					
 				                <span class="btn-text">Login</span>
 				            </button>
-				            <span class="errormsg" id="errlogin" style="display:none"></span>				
 		        	</form>
 		    	</div> <!-- modal-body -->
 		    </div> <!-- modal-content -->
@@ -439,16 +435,7 @@
                 }
             }
         });
-        
-       	$('#tenantdesc').blur(function() {
-       		if ($('#tenantdesc').val() != '') {
-		    	checkname($('#tenantdesc').val());
-		    }
-       		if ($('#contactphonemobile').val() != '') {
-		    	checkname($('#tenantdesc').val());
-		    }
-	   	});
-       
+               
        	$('#contactemail').blur(function() {
        		if ($('#contactemail').val() != '') {
 		    	checkemail($('#contactemail').val());
@@ -550,44 +537,37 @@
             return this.optional(element) || /^((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20})$/.test(value);
         }, "Password length is 8 - 20. Must contain min 1 digit, min 1 lower case, min 1 upper case, min one special character.");
                        
-		jQuery.validator.addMethod("username", function (value, element) {
-            return this.optional(element) || /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/.test(value);
-        }, "Enter a valid email address.");
-        
-        jQuery.validator.addMethod("password", function (value, element) {
-            return this.optional(element) || /^((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20})$/.test(value);
-        }, "Password length is 8 - 20. Must contain min 1 digit, min 1 lower case, min 1 upper case, min one special character.");
-
         $('#login-form').validate({
             errorElement: 'div',
             errorClass: 'help-block',
             focusInvalid: false,
 	        submitHandler: function(form) {
 	            $.ajax({
-	              url: "/app/j_spring_security_check",
+	              url: "/accountlogin",
 	              data:$(form).serialize(),
 	              type: "POST"
 	            }).done(function( data ) {
-	            	if (data != "Fail") {
-						var url = 'http://www.planovik.com:8080/tenantwelcome?' + data;
+	            	if (data === "Success") {
+						var url = 'http://www.planovik.com:8080/accountprofile';
 						$(location).attr('href',url);		                
 		                return true;	            	
 	            	}
 	            	else {
-	            		$('#errormsg').text('Incorrect email or password');
-	            		$('#errormsg').show();
+	            		$('#errlogin').text(data);
+	            		$('#errlogin').show();
+	            		console.log(data);
 	            		return false;
 	            	}
 				});
 	        },            
             rules: {
-                username: {
+                contactemail: {
                     required: true,
-                    username: 'required'
+                    contactemail: 'required'
                 },
-                password: {
+                contactpswd: {
                     required: true,
-                    password: 'required'
+                    contactpswd: 'required'
                 }
             },
             messages: {
@@ -628,7 +608,7 @@
 	        submitHandler: function(form) {
 	            var d = new Date();
 	            $('#tzoffset').val(d.getTimezoneOffset());  
-				var dataString = 'tenantdesc=' + $('#tenantdesc').val() + '&contactname=' +  $('#contactfname').val() + ' ' +  $('#contactlname').val() +
+				var dataString = 'contactname=' +  $('#contactfname').val() + ' ' +  $('#contactlname').val() +
 								 '&contactemail=' +  $('#contactemail').val() + '&contactphonemobile=' +  $('#contactphonemobile').val() + 
 								 '&contactpswd=' + $('#contactpswd').val() + '&tzoffset=' + $('#tzoffset').val();
 				console.log(dataString);
@@ -654,10 +634,6 @@
 				});
 	        },            
             rules: {
-                tenantdesc: {
-                    required: true,
-                    minlength: 3
-                },
                 contactemail: {
                     required: true,
                     contactemail: 'required'
@@ -670,6 +646,10 @@
                     required: true,
                     contactpswd: 'required'
                 },
+			    contactpswdcnfrm: {
+                    required: true,
+				    equalTo: "#contactpswd"
+			    },                                
                 contactfname: {
                     required: true,
                     minlength: 3,

@@ -25,12 +25,12 @@ public class ItineraryEntityMapper implements RowMapper<ItineraryEntity> {
 	   // Convert to MM/DD/YYYY hh:mm AM|PM format after adjusting for UTC timezone offset
 	   if (itinerary.getStartdate() != null) {
 		   long sdatelong = TimeFormatter.UTCToLocal(rs.getTimestamp("startdate").getTime(), itinerary.getTzoffset());
-		   itinerary.setStartdatestr(TimeFormatter.FormatTimeMS(sdatelong));
+		   itinerary.setStartdatestr(TimeFormatter.FormatTimeMS(sdatelong, "", false, (short)0));
 	   }
 	   
 	   if (itinerary.getEnddate() != null) {
 		   long edatelong = TimeFormatter.UTCToLocal(rs.getTimestamp("enddate").getTime(), itinerary.getTzoffset());
-		   itinerary.setEnddatestr(TimeFormatter.FormatTimeMS(edatelong));	   
+		   itinerary.setEnddatestr(TimeFormatter.FormatTimeMS(edatelong, "", false, (short)0));	   
 	   }
 	   
 	   itinerary.setArrivalcity(rs.getString("arrivalcity"));
