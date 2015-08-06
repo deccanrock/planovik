@@ -10,6 +10,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import javax.sql.DataSource;
+
 import org.springframework.context.ApplicationContext;
 
 import com.deccanrock.planovik.controller.AppCtxtProv;
@@ -21,18 +23,24 @@ public class ActivitiesListForItinerary {
 	private List<TravelActivityEntity> travelList = null;
 	private int itinnum, version;
 	private short tzoffset;
+	private int tenantid;
+	private DataSource tenantdatasource;
 	
     @SuppressWarnings("rawtypes")
 	public static class ActivityCallable implements Callable {
     	
     	private int itinnum, version, type;
     	private short tzoffset;
+    	private int tenantid;
+    	private DataSource tenantdatasource;
 
-    	ActivityCallable(int itinnum, int version, short tzoffset, short type) {
+    	ActivityCallable(int itinnum, int version, short tzoffset, short type, int tenantid, DataSource tenantdataSource) {
             this.itinnum = itinnum;
             this.version = version;
             this.tzoffset = tzoffset;
             this.type = type;
+            this.tenantid = tenantid;
+            this.tenantdatasource = tenantdataSource;
         }
         
     	public Object call() throws InterruptedException {
@@ -41,7 +49,7 @@ public class ActivitiesListForItinerary {
     		ActivityEntityDAO AED = (ActivityEntityDAO)context.getBean("ActivityEntityDAO");		
     		try {
     			// 0 = travel
-    			travelListthread = AED.getActivitiesDetForType(itinnum, version, tzoffset, (short) 0);
+    			travelListthread = AED.getActivitiesDetForType(itinnum, version, tzoffset, (short) 0, tenantid, tenantdatasource);
     			
     		} catch (IOException e) {
     			// TODO Auto-generated catch block
@@ -56,10 +64,12 @@ public class ActivitiesListForItinerary {
     }	
 	
 
-    public ActivitiesListForItinerary(int itinnum, int version, short tzoffset) {
+    public ActivitiesListForItinerary(int itinnum, int version, short tzoffset, int tenantid, DataSource tenantdataSource) {
 		this.itinnum = itinnum;
 		this.version = version;
 		this.tzoffset = tzoffset;
+		this.tenantid = tenantid;
+		this.tenantdatasource = tenantdataSource;
 	}
 	
 
@@ -68,7 +78,7 @@ public class ActivitiesListForItinerary {
 		// Highly optimized function using multi threading
 		ExecutorService pool = Executors.newFixedThreadPool(1);
 		
-        ActivityCallable travelactivity = new ActivityCallable(itinnum, version, tzoffset, (short) 0);
+        ActivityCallable travelactivity = new ActivityCallable(itinnum, version, tzoffset, (short) 0, tenantid, tenantdatasource);
         
         Future future1 = pool.submit(travelactivity);
         try {

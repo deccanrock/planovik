@@ -39,6 +39,9 @@ public class TenantEntity implements Serializable {
 	@Column(name="tenanttype")
 	private  short tenanttype;
 	
+	@Column(name="billingplan")
+	private  short billingplan;
+	
 	@Column(name="status")
 	private short status;
 	
@@ -74,6 +77,7 @@ public class TenantEntity implements Serializable {
 	
 	private long datecreatedlong;
 	private long dateupdatedlong;
+	private String datecreatedsettings;
 	private String createdbyemail;
 	private String updatedbyemail;
 
@@ -144,6 +148,14 @@ public class TenantEntity implements Serializable {
 		this.tenanttype = tenanttype;
 	}
 	
+	public short getBillingplan() {
+		return billingplan;
+	}
+	
+	public void setBillingplan(short billingplan) {
+		this.billingplan = billingplan;
+	}
+
 	public short getStatus() {
 		return status;
 	}
@@ -269,5 +281,14 @@ public class TenantEntity implements Serializable {
 		this.pin = pin;
 		
 	}
+	
+	public String getDatecreatedsettings() {
+		return datecreatedsettings;
+	}
+
+	public void setDatecreatedsettings(String datecreatedsettings) {
+		this.datecreatedsettings = datecreatedsettings;
+		
+	}	
 
 }

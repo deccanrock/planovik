@@ -171,6 +171,10 @@
 				</div>
 
 				<div id="tenant-info">
+					<div id="need-help">
+					<a href="https://help.linkedin.com/app/home/loc/na/trk/NoPageKey/">Need help?</a>
+					</div>
+
 					<div id="tenant-details">
 
 						<c:if test="${fn:length(tenants) lt 1}">
@@ -184,7 +188,7 @@
 								<div class="space-4"></div>
 								<div class="col-xs-8">
 									<div class="row">
-										<button id="btn_setuptenant" class="btn" type="submit">					
+										<button id="btn_setuptenant" class="btn" disabled type="submit">					
 							                <span class="btn-text">Click to get your planner</span>
 							            </button>
 										<div id="div_setuptenant" style="margin-top:13px;" class="col-sm-1 pull-right"></div>
@@ -193,23 +197,111 @@
 				        	</form>                                        							
 						</c:if>				
 
-						<c:if test="${fn:length(tenants) gt 0}">						
+						<c:if test="${fn:length(tenants) gt 0}">
+						<!--						
 							<c:forEach var="tenant" items="${tenants}">
 							    <c:out value="${tenant.tenantdesc}" />
 							    <c:out value="${tenant.tenantname}" />
 							</c:forEach>						
-							<h3>Your registered company name</h3>
+						-->	
+							<h3>Your registered travel planner sites</h3>
+							
+										<table id="travel-sites" class="table table-striped table-bordered table-hover">
+											<thead>
+												<tr>
+													<th>Site</th>
+													<th>Type</th>
+													<th>Registered on</th>
+													<th class="hidden-480">Status</th>
+												</tr>
+											</thead>
+
+
+											<tbody>
+											
+												<c:forEach items="${tenants}" var="tenant">
+												
+													<tr>
+														<td>
+															<a href="http://${tenant.tenantname}.planovik.com">${tenant.tenantname}.planovik.com</a>
+														</td>
+															<c:if test="${tenant.tenanttype == 0}">
+																<td>NA</td>
+															</c:if> 
+															<c:if test="${tenant.tenanttype == 1}">
+																<td>Free
+																	<c:set var="freeplan" scope="page" value="1"/>
+																	<c:if test="${tenant.status == 2}">
+																		<form id="formupgrade" action="/tenantupgrade">
+																			<input type="hidden" id="tenantid" value="{tenant.tenantid}" />
+																			<button id="btn_tenantupgrade" class="btn btn-minier btn-purple" type="submit">					
+																                Upgrade
+																            </button>										          																		
+																		</form>
+																	</c:if> 
+																</td>
+															</c:if> 
+															<c:if test="${tenant.tenanttype == 2}">
+																<td>Business</td>
+															</c:if> 
+														<td>${tenant.datecreatedsettings}</td>
+														<td class="hidden-480">
+															<c:if test="${tenant.status == 2}">
+																<span class="label label-sm label-success">Registered</span>
+															</c:if> 															
+															<c:if test="${tenant.status == 3}">
+																<span class="label label-sm label-warning">Expiring</span>
+															</c:if> 															
+															<c:if test="${tenant.status == 5}">
+																<span class="label label-sm label-danger">Suspended</span>
+															</c:if> 															
+															<c:if test="${tenant.status == 4}">
+																<span class="label label-sm label-grey">Closed</span>
+															</c:if> 															
+														</td>
+													</tr>
+	
+												</c:forEach>																						
+												
+											</tbody>
+										</table>							
+							
+							
+							<!-- 
 							<span>${tenantdesc}</span>
 							<br/><br/>
 							<h3>Click to proceed to your personalized portal >></h3>
 							<a href="http://${tenantname}.planovik.com:8080" alt="${tenantname}">${tenantname}.planovik.com:8080</a>
+							-->
 						</c:if>				
 					</div>
-				</div>					
 
-				<div id="need-help">
-				<a href="https://help.linkedin.com/app/home/loc/na/trk/NoPageKey/">Need help?</a>
-				</div>
+				<c:if test="${fn:length(tenants) gt 0}">
+					<div id="create-new-site" style="margin-left:10px;">
+						<h2 style="font-size:125%;"><b>Create new site</b></h2>
+						<div class="space-4"></div>
+		                <form class="" id="setuptenant" method="post" action="/dpricing">
+				            <span class="errormsg" id="errsetuptenant" style="display:none"></span>				
+							<input class="form-control" type="text" placeholder="Enter company name" id="tenantdesc" maxlength="120" name="tenantdesc" style="border-radius:0px;" />			    	
+							<input type="hidden" id="accountid" name="accountid" value="${accountid}" />
+							<input type="hidden" id="contactname" name="contactname" value="${contactname}" />
+							<input type="hidden" id="freeplan" name="freeplan" value="${freeplan}" />							
+							<div class="space-4"></div>
+							<div class="col-xs-8">
+								<div class="row">
+									<button id="btn_setuptenant" class="btn" disabled type="submit">					
+						                <span class="btn-text">Click to create</span>
+						            </button>
+									<div id="div_setuptenant" style="margin-top:13px;" class="col-sm-1 pull-right"></div>
+								</div>
+							</div>
+			        	</form>                                        							
+					</div>
+				</c:if>				
+
+			</div>					
+
+
 				</div>
 			</div>
 		</div> <!-- ./row -->
@@ -229,38 +321,48 @@
 	        	rotate:0, color:'#000', speed:1, trail:60, shadow:false,
 	        	hwaccel:false, className:'spinner', zIndex:2e9
 	    	};
-
-			$('#btn_setuptenant').click(function() {
-				if ( ($('#tenantdesc').val()).length == 0 ) {
-					$('#err').text("Please enter a company name!");
-					$('#errsetuptenant').show();
-					return false;
-				}
-								
+	    	
+       		$('#tenantdesc').blur(function() {
+       			if ( ($('#tenantdesc').val()).length == 0 )
+       				return;
+       				 
 	   			var target = document.getElementById('div_setuptenant');
 		   		var spinner = new Spinner(opts).spin(target);		   		
 	            $.ajax({
-	              url: "/verifytenantdesc",
-	              data: 'tenantdesc=' + $('#tenantdesc').val(),
+	              url: "/verifytenantinfo",
+	              data: 'tenantdesc=' + $('#tenantdesc').val() + '&tenantname=' + '',
 	              type: "GET"
 	            }).done(function( data ) {
 	            	spinner.stop();
 	            	if (data == "exists") {
 						$('#errsetuptenant').text("Company already exists! Please pick a different name.");
 						$('#errsetuptenant').show();
+						$( "#btn_setuptenant" ).prop( "disabled", true );
+						
 						return false;
 	            	}
 	            	else if (data == "none") {
 						$('#errsetuptenant').hide();
+						$( "#btn_setuptenant" ).prop( "disabled", false );
 						return true;
 	            	}
 	            	else if (data == "fail") {
 						$('#errsetuptenant').text("An unknown error has occured, please retry.");
 						$('#errsetuptenant').show();
+						$( "#btn_setuptenant" ).prop( "disabled", true );
 						return false;
 	            	}
 				});
-				
+			});
+	    	
+
+			$('#btn_setuptenant').click(function() {
+				if ( ($('#tenantdesc').val()).length == 0 ) {
+					$('#errsetuptenant').text("Please enter a company name!");
+					$('#errsetuptenant').show();
+					return false;
+				}
+												
 			});
 						
 		});       

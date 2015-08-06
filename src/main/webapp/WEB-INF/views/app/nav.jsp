@@ -273,7 +273,7 @@
 							<img class="nav-user-photo" src=<%= request.getAttribute("userphoto")%> />
 							<span class="user-info">
 								<small>Welcome,</small>
-								<%= request.getAttribute("username")%>
+								<%= request.getAttribute("contactname")%>
 							</span>
 
 							<i class="ace-icon fa fa-caret-down"></i>

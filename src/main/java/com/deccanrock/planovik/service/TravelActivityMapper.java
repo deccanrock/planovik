@@ -35,6 +35,9 @@ public class TravelActivityMapper implements RowMapper<TravelActivityEntity> {
 	   	
 	   	// Separate out details for light pack without all details
 		travel.setActivityid(rs.getInt("activityid"));
+		
+		// Tenant
+		travel.setTenantid(rs.getInt("tenantid"));
 
 		// This always defaults to 0
 		travel.setActivityidpair(rs.getInt("activityidpair"));

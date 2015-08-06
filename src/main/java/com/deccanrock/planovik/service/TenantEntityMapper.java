@@ -31,6 +31,8 @@ public class TenantEntityMapper implements RowMapper<TenantEntity> {
 	   tenant.setPin(rs.getShort("pin"));	   
 	   tenant.setDatecreatedlong(TimeFormatter.UTCToLocal(rs.getTimestamp("datecreated").getTime(), tenant.getTzoffset()));
 	   tenant.setDatecreatedlong(TimeFormatter.UTCToLocal(rs.getTimestamp("dateupdated").getTime(), tenant.getTzoffset()));
+	   tenant.setDatecreatedsettings(TimeFormatter.FormatTimeMS(tenant.getDatecreatedlong(), "SettingsDisplay", false, (short)0));
+	   
 	   tenant.setCreatedby(rs.getShort("createdby"));
 	   tenant.setUpdatedby(rs.getShort("updatedby"));
 	   

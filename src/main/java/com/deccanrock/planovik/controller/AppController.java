@@ -13,6 +13,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +38,9 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 
 
+
+
+
 //import com.deccanrock.planovik.entity.ActivityMasterActEntity;
 //import com.deccanrock.planovik.entity.ActivityMasterEntity;
 import com.deccanrock.planovik.entity.TravelActivityEntity;
@@ -48,10 +52,12 @@ import com.deccanrock.planovik.location.MaxLocationBO;
 import com.deccanrock.planovik.security.HashCode;
 import com.deccanrock.planovik.service.dao.ActivityEntityDAO;
 import com.deccanrock.planovik.service.dao.ItineraryEntityDAO;
+import com.deccanrock.planovik.service.dao.TenantDS;
 import com.deccanrock.planovik.service.dao.UserEntityDAO;
 import com.deccanrock.planovik.service.utils.UriHandler;
 import com.deccanrock.planovik.service.utils.FileHandler;
 import com.deccanrock.planovik.service.ActivitiesListForItinerary;
+import com.deccanrock.planovik.Tenant.TenantContextHolder;
 import com.deccanrock.planovik.constants.PlnvkConstants;
 
 /**
@@ -430,7 +436,11 @@ public class AppController {
 		
 		// Get all activities sorted day wise, heavy hitter
 		// ActivitiesListForItinerary ALE = new ActivitiesListForItinerary(ame.getItinnum(), ame.getVersion(), ame.getTzoffset());
-		ActivitiesListForItinerary ALE = new ActivitiesListForItinerary(itinerary.getId(), itinerary.getVersion(), itinerary.getTzoffset());
+		// Hate to do anything with datasource within controller but due to Thread not having any knowledge of TenantContext we have 
+		// to make an exception
+		DataSource tenantdataSource = TenantDS.setTenantDataSource(null); 
+		ActivitiesListForItinerary ALE = new ActivitiesListForItinerary(itinerary.getId(), itinerary.getVersion(), itinerary.getTzoffset(), 
+				TenantContextHolder.getTenant().getTenantid(), tenantdataSource);
 		Object[] AL = ALE.BuildActivitiesList();
 		
 		map.addAttribute("activitylist", AL);
@@ -746,8 +756,9 @@ public class AppController {
 				
         HttpSession session = request.getSession(true);
         if(session!=null) {
-        	// Set tenant information into session
-        	
+        	// Get tenant id information from session
+        	map.addAttribute("tenantid" , session.getAttribute("tenantid"));
+        	map.addAttribute("tenantname" , session.getAttribute("tenantname"));
         }		
 				
 		return "app/login";

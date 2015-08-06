@@ -21,6 +21,9 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
     @GeneratedValue
     private Integer activityidpair;
     
+    @Column(name="tenantid")    
+    private int tenantid;
+    
     @Column(name="itinnum")    
     private int itinnum;
     
@@ -181,6 +184,15 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
 		this.activityidpair = activityidpair;
 	}
 
+
+	public void setTenantid(int tenantid) {
+		this.tenantid = tenantid;
+	}
+	
+
+	public int getTenantid() {
+		return tenantid; 		
+	}	
 	
 	public int getItinnum() {
 		return itinnum;
@@ -692,6 +704,5 @@ public class TravelActivityEntity extends Object implements Comparable<TravelAct
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
 
 }

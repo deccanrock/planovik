@@ -2,6 +2,7 @@ package com.deccanrock.planovik.Tenant;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import net.sf.ehcache.Element;
 
@@ -72,7 +73,18 @@ public class TenantContextHolder {
 					TenantContextHolder.setTenant((TenantEntity) tenantele.getObjectValue());
 					tenant = "www";			
 			}
-		}		
+		}
+		
+        HttpSession session = request.getSession(true);
+        if(session!=null) {
+        	// Set tenant information
+        	session.setAttribute("tenantid" , te.getTenantid());
+        	session.setAttribute("tenantname" , te.getTenantname());
+        	// Stuff remaining in cache for access till tenant is active
+        	CacheService CS = (CacheService)AppCtxtProv.getApplicationContext().getBean("cacheservice");
+        	CS.getCache().put(new Element(te.getTenantname(), te));
+        }		
+		
    }
 
 }

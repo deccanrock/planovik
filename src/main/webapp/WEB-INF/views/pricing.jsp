@@ -90,13 +90,18 @@
 		</div>
 
 		<div class="col-xs-12">
-			<div class="row">
-				<div class="col-xs-2"></div>
-				<div class="col-xs-6">
-					<h3>Select a pricing plan for "${tenantdesc}"</h3>
+
+			<c:if test="${freeplan != 1}">
+				<div class="row">
+					<div class="col-xs-2"></div>
+					<div class="col-xs-6">
+						<h3>Select a pricing plan for "${tenantdesc}"</h3>
+					</div>
 				</div>
-				<div class="space-4"></div>							
-			</div>
+			</c:if>
+
+			<div class="space-4"></div>							
+
 			<div class="row">
 				<div class="col-xs-2"></div>
 				<!-- #section:pages/pricing.small-header -->
@@ -112,8 +117,7 @@
 									<li>No of Active Itineraries </li>
 									<li>No of logins </li>
 									<li>No of new Itineraries within 30 day cycle </li>
-									<li>Your own travel portal </li>
-									<li>Site URL </li>									
+									<li style="height:57px;padding-top:20px;">Your own custom URL </li>
 									<li>Independent data storage </li>
 									<li>Reports + Dashboard </li>
 									<li>Convert itinerary to pdf </li>									
@@ -128,39 +132,42 @@
 	
 				<!-- #section:pages/pricing.small-body -->
 				<div class="col-xs-4 col-sm-6 pricing-span-body">
-	
-					<div class="pricing-span">
-						<div class="widget-box pricing-box-small widget-color-orange">
-							<div class="widget-header">
-								<h5 class="widget-title bigger lighter">Free</h5>
-							</div>
-	
-							<div class="widget-body">
-								<div class="widget-main no-padding">
-									<ul class="list-unstyled list-striped pricing-table">
-										<li> 1 </li>
-										<li> 1 </li>
-										<li> 3 </li>
-										<li><i class="ace-icon fa fa-times red"></i></li>
-										<li>${freeurl}</li>
-										<li><i class="ace-icon fa fa-times red"></i></li>
-										<li> Basic </li>
-										<li><i class="ace-icon fa fa-times red"></i></li>
-										<li><i class="ace-icon fa fa-times red"></i></li>
-									</ul>
-	
-									<div class="price">
-										<span class="label label-lg label-inverse arrowed-in arrowed-in-right">
-											Free
-										</span>
-									</div>
+
+					<c:if test="${freeplan != 1}">
+						<div class="pricing-span" id="div_freeplan">
+							<div class="widget-box pricing-box-small widget-color-orange">
+								<div class="widget-header">
+									<h5 class="widget-title bigger lighter">Free</h5>
 								</div>
-	
+		
+								<div class="widget-body">
+									<div class="widget-main no-padding">
+										<ul class="list-unstyled list-striped pricing-table">
+											<li> 1 </li>
+											<li> 1 </li>
+											<li> 3 </li>
+											<li style="height:57px;padding-top:10px;"><i class="ace-icon fa fa-times red"></i><br/>
+												planovik.com/${tenantname}
+											</li>
+											<li><i class="ace-icon fa fa-times red"></i></li>
+											<li> Basic </li>
+											<li><i class="ace-icon fa fa-times red"></i></li>
+											<li><i class="ace-icon fa fa-times red"></i></li>
+										</ul>
+		
+										<div class="price">
+											<span class="label label-lg label-inverse arrowed-in arrowed-in-right">
+												Free
+											</span>
+										</div>
+									</div>
+		
+								</div>
 							</div>
 						</div>
-					</div>
+					</c:if> 
 	
-					<div class="pricing-span">
+					<div class="pricing-span" id="bizplan">
 						
 						<div class="widget-box pricing-box-small widget-color-blue">
 						
@@ -174,7 +181,17 @@
 										<li> Unlimited </li>
 										<li> 4 (1 Admin + 3 Users) </li>
 										<li> Unlimited </li>
-										<li><i class="ace-icon fa fa-check green"></i></li>
+										<li><i class="ace-icon fa fa-check green"></i><br/>
+											<div id="div_formpickname" style="font:small;">
+												<form id="formpickname">
+													<input type="text" maxlength="11" style="width:35%;" id="tenantname" name="tenantname" placeholder="pick a name"><span> . planovik.com</span>
+													<button style="height:40%;" id="btn_urlname" class="btn" type="submit" disabled>					
+										                <span class="btn-text-small">Select</span>
+										            </button>										          
+												</form>
+											</div>
+											<span class="errormsg" id="errpickupname" style="display:none"></span>				
+										</i>
 										<li><i class="ace-icon fa fa-check green"></i></li>
 										<li> Advanced </li>
 										<li><i class="ace-icon fa fa-check green"></i></li>
@@ -218,13 +235,18 @@
 			<div class="row" id="newregistration" style="margin-top:20px;">
 				<div class="col-xs-4"></div>
 				<div class="col-xs-4 col-sm-6 pricing-span-body">
-					<h3>Click Subscribe to get premium service. It's really worth it!</h3>
-	                <form method="post" action="/setuptenant">
-	                	<input type="hidden" id="tenantid" name="tenantid" value="${tenantid}" />
-						<button style="background-color:#FFC657;color:#855D10 !important; width:40%;" id="verifypinbtn" class="btn btn-block btn-sm" type="submit" style="width:40%;">					
-							<span>Give me free..</span>
-			            </button>	
-					</form>
+					<h3 style="margin-left:40px;margin-top:5px;margin-bottom:20px;">Click Subscribe to get premium service. It's really worth it!</h3>
+					<c:if test="${freeplan != 1}">
+		                <form method="post" action="/setuptenant">
+		                	<input type="hidden" id="accountid" name="accountid" value="${accountid}" />
+		                	<input type="hidden" id="tenanttype" name="tenanttype" value="1" />
+		                	<input type="hidden" id="billingplan" name="billingplan" value="1" />
+		                	<input type="hidden" id="tenantdesc" name="tenantdesc" value="${tenantdesc}" />
+							<button style="background-color:#FFC657;color:#855D10 !important; width:20%;height:20%;" id="verifypinbtn" class="btn btn-block btn-sm" type="submit" style="width:40%;">					
+								<span style="align:center;font-size:12px;">Give me free..</span>
+				            </button>	
+						</form>
+					</c:if>
 				</div>
 			</div>
 				
@@ -239,6 +261,70 @@
 
 	</div> <!-- /.wrapper -->    
 	      
+	<script src="<c:url value='/resources/js/spin.min.js'/>" ></script>
+	<script>
+
+		$(function() {
+
+	    	var opts = {
+		        lines:8, length:5, width:3, radius:3, corners:1,
+	        	rotate:0, color:'#000', speed:1, trail:60, shadow:false,
+	        	hwaccel:false, className:'spinner', zIndex:2e9
+	    	};
+	    	
+       		$('#tenantname').blur(function() {
+				
+				if ($('#tenantname').val() == "")
+					return false;
+				
+	            if (/^[a-zA-Z0-9]*$/.test($('#tenantname').val()) == false) {
+					$('#errpickupname').text("Alpha numeric only, no special no space!");
+					$('#errpickupname').show();	
+					$( "#btn_urlname" ).prop( "disabled", true );						
+					return false;		            
+			    }				
+				
+				$( "#btn_urlname" ).prop( "disabled", false );
+					
+	   			var target = document.getElementById('div_formpickname');
+		   		var spinner = new Spinner(opts).spin(target);		   		
+	            $.ajax({
+	              url: "/verifytenantinfo",
+	              data: 'tenantname=' + $('#tenantname').val() + '&tenantdesc=' + '',
+	              type: "GET"
+	            }).done(function( data ) {
+	            	spinner.stop();
+	            	if (data == "exists") {
+						$('#errpickupname').text("Name already taken! Input a different name.");
+						$('#errpickupname').show();
+						$( "#btn_urlname" ).prop( "disabled", true );						
+						return false;
+	            	}
+	            	else if (data == "none") {
+						$('#errpickupname').hide();
+						return true;
+	            	}
+	            	else if (data == "fail") {
+						$('#errpickupname').text("An unknown error has occured, please retry.");
+						$('#errpickupname').show();
+						return false;
+	            	}
+				});
+			});
+	    	
+
+			$('#btn_urlname').click(function() {
+				if ( ($('#tenantname').val()).length == 0 ) {
+					$('#errpickupname').text("Please enter a name!");
+					$('#errpickupname').show();
+					return false;
+				}
+												
+			});
+						
+		});       
+            
+    </script>
 
 	
 </body>

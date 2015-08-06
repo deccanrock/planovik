@@ -38,7 +38,7 @@ public class TenantTargetRegistry implements TargetRegistry<DataSource> {
 		return dataSource;
 	}
 
-	private DataSource getDataSource(String jndiname) {
+	public DataSource getDataSource(String jndiname) {
 		// BasicDataSource dataSource = new BasicDataSource();
 		// dataSource.setUsername(username);
 		// dataSource.setPassword(password);

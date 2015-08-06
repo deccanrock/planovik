@@ -481,22 +481,32 @@ public class WebsiteController {
 		map.addAttribute("accountid", request.getParameter("accountid"));		
 		map.addAttribute("contactname", request.getParameter("contactname"));		
 		map.addAttribute("tenantdesc", request.getParameter("tenantdesc"));		
+		map.addAttribute("freeplan", request.getParameter("freeplan"));		
 
 		TenantEntityDAO TED = (TenantEntityDAO)AppCtxtProv.getApplicationContext().getBean("TenantEntityDAO");
 		// Check against DB and compute a name to suggest
 		String tenantname = TED.GetTenantName(request.getParameter("tenantdesc"));
+		map.addAttribute("tenantname", tenantname);		
 	
 		return "pricing";
 
 	}
     
-    @RequestMapping(value = "/verifytenantdesc", method = RequestMethod.GET)	
-    public @ResponseBody String verifyTenantDesc(@RequestParam(value = "tenantdesc") String tenantdesc) {
+    @RequestMapping(value = "/verifytenantinfo", method = RequestMethod.GET)	
+    public @ResponseBody String verifyTenantDesc(@RequestParam(value = "tenantdesc") String tenantdesc,
+    		@RequestParam(value = "tenantname") String tenantname) {
 		
-		logger.info("Verify Tenant Desc");
+		logger.info("Verify Tenant Info");
 
+		String response = "";
+		
 		TenantEntityDAO TED = (TenantEntityDAO)AppCtxtProv.getApplicationContext().getBean("TenantEntityDAO");				
-		String response = TED.TenantExists(tenantdesc);		
+
+		if (tenantdesc.length() > 0 && tenantname.length() == 0)
+			response = TED.TenantExists(tenantdesc, true);		
+		if (tenantname.length() > 0 && tenantdesc.length() == 0)
+			response = TED.TenantExists(tenantname, false);		
+			
 		
 		return response;
 
@@ -507,11 +517,13 @@ public class WebsiteController {
 	 * @throws URISyntaxException 
 	 */
 	@RequestMapping(value = "/setuptenant", method = RequestMethod.POST)	
-    public @ResponseBody String setupTenant(HttpServletRequest request, ModelMap map) {
+    public String setupTenant(HttpServletRequest request, ModelMap map) {
 		
 		// This should be changed to use entity model (TenantEntity) that will allow data edits at 
 		// the time of registration and subsequent updates
 		logger.info("Setup Tenant");
+
+		final String regIPAddress = request.getRemoteAddr();
 
         HttpSession session = request.getSession(false);
         AccountEntity account = null;
@@ -534,10 +546,16 @@ public class WebsiteController {
 		else {			
 			// Setup Tenant Based
 	        TenantEntityDAO TED = (TenantEntityDAO)AppCtxtProv.getApplicationContext().getBean("TenantEntityDAO");
-			TED.CreateTenant(request.getParameter("tenantdesc"), account, Short.valueOf(request.getParameter("tenanttype")));
+			TED.CreateTenant(request.getParameter("tenantdesc"), account, regIPAddress, 
+					Short.valueOf(request.getParameter("tenanttype")), 
+					Short.valueOf(request.getParameter("billingplan")), account);
 		}
 		
-		return "tenantprofile"; 		
+		// redirect to tenant site
+		// Create tenant based session
+		map.addAttribute("contactname", account.getContactname());		
+
+		return "app/dash"; 		
 						
 	}	
 

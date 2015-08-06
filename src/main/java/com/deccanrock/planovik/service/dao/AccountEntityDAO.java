@@ -234,7 +234,7 @@ public class AccountEntityDAO implements IAccountEntityDAO {
 		}
     	
     	if (result.contentEquals("Success")) {
-    		SetAccountStatus(id, PlnvkConstants.RegStatus.Confirmed.getValue());
+    		SetAccountStatus(id, PlnvkConstants.RegStatus.Registered.getValue());
     		// Setup tenant instance along with credentials and inform user
     		
     	}

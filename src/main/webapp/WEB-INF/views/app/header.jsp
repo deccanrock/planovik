@@ -28,7 +28,7 @@
     <meta name="description" content="">
 
     <!-- Fav Icon -->
-    <link rel="shortcut icon" href="<c:url value='/resources/images/planovik_fav.png'/>" type="image/x-icon" />
+    <link rel="shortcut icon" href="<c:url value='/resources/images/planovik_fav_new.png'/>" type="image/x-icon" />
 
     <!--Application CSS Files-->
     <!-- bootstrap & fontawesome -->

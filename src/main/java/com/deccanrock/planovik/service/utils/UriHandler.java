@@ -30,6 +30,11 @@ public class UriHandler {
 	 * rather than using the {@link URI} or {@link URL} class.
 	 * Example: extracts www from http://www.planovik.com:8080
 	 * will return localhost for http://localhost:8080 and 127.0.0.1 for http://127.0.0.1:8080
+	 * should handle various formats
+	 * planovik.com, planovik.com:8080 (default to www)
+	 * www.planovik.com (tenant is www)
+	 * planovik.com/desunl (tenant is desunl)
+	 * corp.planovik.com (tenant is corp)
 	 * ignores port number
 	 * @param url is non-null.
 	 * @return the domain name within {@code url}.
@@ -62,10 +67,17 @@ public class UriHandler {
 			pos = tName.indexOf(':');			
 		}
 		
+		String tenantstr = "";
 		if (pos == -1)
-			return tName.substring(0, tName.length()-1);
-		else
-			return tName.substring(0, pos);
+			tenantstr = tName.substring(0, tName.length()-1);
+		else			
+			tenantstr = tName.substring(0, pos);
+		
+		// Handle cases such as planovik.com
+		if (tenantstr.contentEquals("planovik"))
+			tenantstr = "www";
+		
+		return tenantstr; 
 	}
 
 	/**

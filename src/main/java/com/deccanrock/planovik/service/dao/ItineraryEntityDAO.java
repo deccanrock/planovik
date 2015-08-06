@@ -25,6 +25,7 @@ import com.deccanrock.planovik.entity.ItineraryEntity;
 import com.deccanrock.planovik.service.ActivityMasterActMapper;
 import com.deccanrock.planovik.service.ItineraryEntityMapper;
 import com.deccanrock.planovik.service.utils.TimeFormatter;
+import com.deccanrock.planovik.Tenant.TenantContextHolder;
 import com.deccanrock.planovik.constants.PlnvkConstants;
  
 @Component
@@ -44,6 +45,7 @@ public class ItineraryEntityDAO implements IItneraryEntityDAO {
     @Override	
 	public List<String> GetItinList(String query) {
 
+		DataSource  dataSource = TenantDS.setTenantDataSource(null);     	
     	JdbcTemplate dbtemplate = new JdbcTemplate(dataSource);    	
 
 		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(dbtemplate)
@@ -59,6 +61,8 @@ public class ItineraryEntityDAO implements IItneraryEntityDAO {
 			inParamMap.put("isnumber", 0);
 			
 		inParamMap.put("query", query);
+		inParamMap.put("intenantid", TenantContextHolder.getTenant().getTenantid());
+
 		SqlParameterSource in = new MapSqlParameterSource(inParamMap);
 
 		Map<String, Object> dbitinnames = simpleJdbcCall.execute(in);
@@ -84,7 +88,8 @@ public class ItineraryEntityDAO implements IItneraryEntityDAO {
 
     @Override
 	public ItineraryEntity CreateItinerary(ItineraryEntity itinerary) {
-		
+
+		DataSource  dataSource = TenantDS.setTenantDataSource(null);    	
     	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	
 		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
 		.withProcedureName("sp_create_itinerary");
@@ -98,6 +103,8 @@ public class ItineraryEntityDAO implements IItneraryEntityDAO {
 		inParamMap.put("status", PlnvkConstants.Itinstatus.valueOf("Initial").getValue());
 		inParamMap.put("currency", "INR");
 		inParamMap.put("quotecurrency", "INR");
+		// Multi tenant change
+		inParamMap.put("tenantid", TenantContextHolder.getTenant().getTenantid());
 		
 		SqlParameterSource in = new MapSqlParameterSource(inParamMap);
 		
@@ -130,9 +137,10 @@ public class ItineraryEntityDAO implements IItneraryEntityDAO {
     @Override
 	public ItineraryEntity GetItinerary(int itinnum) {
     	    			
-    	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	
+		DataSource  tenantdataSource = TenantDS.setTenantDataSource(null);    	    	
+    	JdbcTemplate jdbcTemplate = new JdbcTemplate(tenantdataSource);	
     	
-        String SQL = "Call sp_get_itinerary(" + "'" + itinnum + "'" + ");";
+        String SQL = "Call sp_get_itinerary(" + itinnum + ',' + TenantContextHolder.getTenant().getTenantid() + ");";
 
  		List<ItineraryEntity> dbitinerary = jdbcTemplate.query(SQL, new ItineraryEntityMapper());
 		// INR should be changed to company locale currency
@@ -140,7 +148,8 @@ public class ItineraryEntityDAO implements IItneraryEntityDAO {
  		if (dbitinerary.get(0).getQuotecurrency() == null)
  				dbitinerary.get(0).setQuotecurrencystr(""); // should be locale currency
  		else {  	
- 			 SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
+ 	    	jdbcTemplate = new JdbcTemplate(dataSource);	
+ 			SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
  	    	 .withProcedureName("sp_getisocurrencydetails");
  	    	 Map<String, Object> inParamMap = new HashMap<String, Object>();
  	    	 inParamMap.put("inisocode", dbitinerary.get(0).getQuotecurrency());
@@ -155,10 +164,12 @@ public class ItineraryEntityDAO implements IItneraryEntityDAO {
  		if (dbitinerary.get(0).getConvcode() == 0)
 				dbitinerary.get(0).setConvcodestr("");
  		else {
-	    	 SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
+ 	    	jdbcTemplate = new JdbcTemplate(tenantdataSource);	
+ 			SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
 	    	 .withProcedureName("sp_getconvcodedetails");
 	    	 Map<String, Object> inParamMap = new HashMap<String, Object>();
 	    	 inParamMap.put("currconvcode", dbitinerary.get(0).getConvcode());
+	    	 inParamMap.put("tenantid", TenantContextHolder.getTenant().getTenantid());
 	    	 SqlParameterSource in = new MapSqlParameterSource(inParamMap);
 	    	 Map<String, Object> simpleJdbcCallResult = simpleJdbcCall.execute(in);
 	    	 String fromcurr = (String) simpleJdbcCallResult.get("outfromcurr");
@@ -183,12 +194,15 @@ public class ItineraryEntityDAO implements IItneraryEntityDAO {
 
 	@Override
 	public ItineraryEntity SaveItinerary(ItineraryEntity itinerary) {
-	   		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	
+
+			DataSource  dataSource = TenantDS.setTenantDataSource(null);    	
+			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	
 			SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
 			.withProcedureName("sp_save_itinerary");
 
 			Map<String, Object> inParamMap = new HashMap<String, Object>();
 
+			inParamMap.put("tenantid", TenantContextHolder.getTenant().getTenantid());					
 			inParamMap.put("itinnum", itinerary.getId());		
 			inParamMap.put("name", itinerary.getName());		
 			
@@ -278,7 +292,9 @@ public class ItineraryEntityDAO implements IItneraryEntityDAO {
 
 	@Override	
 	public List<String> GetCurrConvCodes(String query) {
-    	JdbcTemplate dbtemplate = new JdbcTemplate(dataSource);    	
+
+		DataSource  dataSource = TenantDS.setTenantDataSource(null);
+		JdbcTemplate dbtemplate = new JdbcTemplate(dataSource);    	
 
 		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(dbtemplate)
 		.withProcedureName("sp_getcurrconvcodes");
@@ -288,6 +304,8 @@ public class ItineraryEntityDAO implements IItneraryEntityDAO {
 		inParamMap.put("query", query);
 		// for now only Active, can be changed for any codes
 		inParamMap.put("instatus", PlnvkConstants.Itincurrconv.valueOf("Active").getValue());
+		inParamMap.put("intenantid", TenantContextHolder.getTenant().getTenantid());
+
 		SqlParameterSource in = new MapSqlParameterSource(inParamMap);
 
 		Map<String, Object> dbconvcodes = simpleJdbcCall.execute(in);
@@ -313,7 +331,9 @@ public class ItineraryEntityDAO implements IItneraryEntityDAO {
 
 	@Override		
 	public String CreateCurrConvCode(String fromcurr, String tocurr, float unitrate) {
-    	JdbcTemplate dbtemplate = new JdbcTemplate(dataSource);    	
+		
+		DataSource  dataSource = TenantDS.setTenantDataSource(null);    	
+		JdbcTemplate dbtemplate = new JdbcTemplate(dataSource);    	
 
 		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(dbtemplate)
 		.withProcedureName("sp_createcurrconvcode");
@@ -324,6 +344,7 @@ public class ItineraryEntityDAO implements IItneraryEntityDAO {
 		inParamMap.put("infromcurr", fromcurr);
 		inParamMap.put("inunitrate", unitrate);
 		inParamMap.put("instatus", PlnvkConstants.Itincurrconv.valueOf("Active").getValue());
+		inParamMap.put("intenantid", TenantContextHolder.getTenant().getTenantid());
 		
 		SqlParameterSource in = new MapSqlParameterSource(inParamMap);
 

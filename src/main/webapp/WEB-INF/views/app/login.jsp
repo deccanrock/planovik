@@ -21,7 +21,8 @@
 				<input type='password' id="password" name="password" style="margin-bottom:16px;" class="col-sm-12" />
 				<br />
 			</div>
-
+			<input type='hidden' id="tenantid" name="tenantid" value="${tenantid}" />
+			<input type='hidden' id="tenantname" name="tenantname" value="${tenantname}" />
 			
 			<div>		
 	            <input type="submit" id="signupsubmit" class="btn btn-info btn-sm" value="Login" />

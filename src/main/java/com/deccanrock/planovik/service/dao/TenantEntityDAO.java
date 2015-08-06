@@ -1,8 +1,10 @@
-package com.deccanrock.planovik.service.dao;
+ package com.deccanrock.planovik.service.dao;
  
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+
 
 
 
@@ -18,6 +20,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.deccanrock.planovik.Tenant.TenantTargetRegistry;
 import com.deccanrock.planovik.constants.PlnvkConstants;
 import com.deccanrock.planovik.entity.AccountEntity;
 import com.deccanrock.planovik.entity.TenantEntity;
@@ -60,7 +63,8 @@ public class TenantEntityDAO implements ITenantEntityDAO {
  	}
 
 	@Override
-	public String CreateTenant(String tenantdesc, AccountEntity account, short tenanttype) {
+	public String CreateTenant(String tenantdesc, AccountEntity account, String regIPAddress, 
+			short tenanttype, short billingplan, AccountEntity ae) {
 
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	    	    	
     	SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
@@ -72,6 +76,9 @@ public class TenantEntityDAO implements ITenantEntityDAO {
     	inParamMap.put("intenantdesc", tenantdesc);
 		inParamMap.put("intzoffset", account.getTzoffset());
 		inParamMap.put("incountrycode", account.getAddrcountrycode());
+		inParamMap.put("intenanttype", tenanttype);
+		inParamMap.put("inbillingplan", billingplan);
+		inParamMap.put("inregip", regIPAddress);
 
 		TenantEntity tenant = new TenantEntity();
 		// Generate tenant name from tenant desc, at this point a default name if reserved
@@ -82,8 +89,9 @@ public class TenantEntityDAO implements ITenantEntityDAO {
     	SqlParameterSource in = new MapSqlParameterSource(inParamMap);
 
 		String result;
-    	try {    	
-			Map<String, Object> simpleJdbcCallResult = simpleJdbcCall.execute(in);
+		int tenantid=0;
+		Map<String, Object> simpleJdbcCallResult = simpleJdbcCall.execute(in);
+		try {    	
 			result = simpleJdbcCallResult.get("result").toString();
 			if (result.contentEquals("tenantexists")) { // try until unique tenant set
 				String tenantName = tenant.getTenantname();
@@ -97,24 +105,59 @@ public class TenantEntityDAO implements ITenantEntityDAO {
 					result = simpleJdbcCallResult.get("result").toString();
 					i++;
 				} 
-			}
-			
+			}			
 		} catch (Exception ex) {
 		    result = ex.getMessage();
-		} 					
-		
+		}
+    	
+    	// Setup an entry in users own tenant instance
+		if (result.contentEquals("Success")) {
+			tenantid = (Integer)simpleJdbcCallResult.get("outtenantid");
+			// Get Tenant Entity
+			TenantEntity te = GetTenant(Integer.toString(tenantid), 0);
+			if (te != null) {
+				TenantTargetRegistry TTR = new TenantTargetRegistry();
+				DataSource tenantds = TTR.getDataSource(te.getJndiname());
+				jdbcTemplate = new JdbcTemplate(tenantds);	    	    	
+		    	simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate).withProcedureName("sp_updatetenantinuser");
+		    	inParamMap.put("intenantid", te.getTenantid());    	
+		    	inParamMap.put("inusername", ae.getContactemail());    	
+		    	inParamMap.put("infullname", ae.getContactname());    	
+		    	inParamMap.put("inpassword", ae.getContactpswd());    	
+		    	inParamMap.put("inphone", ae.getContactphonemobile());    	
+		    	inParamMap.put("indesignation", "Founder and Site Admin");
+		    	inParamMap.put("increatedyby", 1); // 1 = www site    	
+		    	inParamMap.put("inlevel", 0); // 0 is top admin level   	
+		    	inParamMap.put("inenabled", 1);    	
+		    	inParamMap.put("inrole", "ROLE_ADMIN");    	
+		    	inParamMap.put("inaccountnonexpired", 1);    	
+		    	inParamMap.put("inaccountnonlocked", 1);    	
+		    	inParamMap.put("incredentialsnonexpired", 1);    	
+		    	inParamMap.put("intzoffset", te.getTzoffset());    	
+		    	in = new MapSqlParameterSource(inParamMap);
+		    	simpleJdbcCallResult = simpleJdbcCall.execute(in);
+
+			}
+		}
+			
     	return result;		
 	}
 
 
 	@Override
-	public String TenantExists(String tenantDesc) {
+	public String TenantExists(String tenantInfo, boolean isDesc) {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	    	    	
     	SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
     	.withProcedureName("sp_checktenantexists");
     	
     	Map<String, Object> inParamMap = new HashMap<String, Object>();		
-    	inParamMap.put("intenantdesc", tenantDesc);		
+    	inParamMap.put("intenantinfo", tenantInfo);
+    	if (isDesc)
+        	inParamMap.put("indesc", 1);
+    	else
+        	inParamMap.put("indesc", 0);
+    		
+
     	SqlParameterSource in = new MapSqlParameterSource(inParamMap);
  		
     	String result = "";
@@ -179,7 +222,7 @@ public class TenantEntityDAO implements ITenantEntityDAO {
 		}
     	
     	if (result.contentEquals("Success")) {
-    		SetStatus(tenantid, PlnvkConstants.RegStatus.Confirmed.getValue());
+    		SetStatus(tenantid, PlnvkConstants.RegStatus.Registered.getValue());
     		// Setup tenant instance along with credentials and inform user
     		
     	}
@@ -209,9 +252,15 @@ public class TenantEntityDAO implements ITenantEntityDAO {
 	}
 
 	@Override
-	public String GetTenantName(String parameter) {
-		// TODO Auto-generated method stub
+	public String GetTenantName(String tenantdesc) {
+		// Generate tenant name from tenant desc, at this point a default name if reserved
+		// for and pro and enterprise customers which they can change at a later time
+		String tenantname = MiscHelper.ComputeTenantName(tenantdesc);
 		
-		return null;
+		while (TenantExists(tenantname, false).contentEquals("exists") == true)	
+			tenantname = MiscHelper.ComputeTenantName(tenantdesc);
+
+		return tenantname;
+			
 	}
 }

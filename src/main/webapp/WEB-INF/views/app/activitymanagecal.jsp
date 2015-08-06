@@ -75,7 +75,7 @@
 		        <div class="navbar-header pull-left">
 		            <a href="#">
 		                <div class="img_logo">
-		                    <img src="<c:url value='/resources/images/planovik_logo_small.png'/>" />
+		                    <img src="<c:url value='/resources/images/planovik_fav_new.png'/>" />
 		                </div>
 		            </a>
 		        </div>
@@ -134,11 +134,6 @@
 									<div class="col-sm-9" style="width:85%;">
 										<div class="space"></div>
 										
-										  <form>
-										    <textarea id="rteditor" name="content"></textarea>
-										    <button>Submit</button>
-										  </form>
-
 										<!-- #section:plugins/data-time.calendar -->
 										<div id="calendar"></div>
 
@@ -363,14 +358,13 @@
 				header: {
 					left: 'prev,next today',
 					center: 'title',
-					right: 'month,agendaWeek,agendaDay'		
+					right: 'month'		
 				},	
 			   events: function(start, end, timezone, callback) {
 
 			    	// setMasterActArrInitial(masteractarr);
 					// setMasterActArr(masteractarr);
 					setItinDays();
-
 					<c:forEach items="${activitylist}" var="activity">
 						var title = "${fn:escapeXml(activity.actname)}";
 						var sdate = new Date(${activity.activitystarttimelong});						
@@ -400,7 +394,7 @@
 					
 						var strid =  ${activity.activityid} + "." + ${activity.type};						
 						var activity = {
-							"id": strid,
+							"id": "Event - " + strid,
 							"title": title,
 							"start": sdate,
 							"end": edate,							
@@ -421,10 +415,13 @@
 					
 						console.log(activity);
 					
-						events.push(activity);				
+						$('#calendar').fullCalendar( 'renderEvent', activity);
+					
+						// events.push(activity);				
 					</c:forEach>
 
-					callback(events);
+					// callback(events);
+
 					//console.log(JSON.stringify(events));			
 				}				   
 			    ,		
@@ -500,8 +497,7 @@
 									start: start,
 									end: end,
 									allDay: allDay
-								},
-								true // make the event "stick"
+								}
 							);
 						}
 					});
@@ -1168,7 +1164,7 @@
 				 return;
             }
              
-            $('#calendar').fullCalendar( 'renderEvent', event, 'stick');
+            $('#calendar').fullCalendar( 'renderEvent', event);
 	        //$('#calendar').fullCalendar({
 	        //    editable: false
 	        //});		
@@ -1192,11 +1188,12 @@
 					"allDay": "true",
 					"color": color,
 					"type": -1,
-					"editable": false
+					"editable": false,
+					"overlap": false
 				}
 
 				console.log(event);             
-	            $('#calendar').fullCalendar( 'renderEvent', event, 'stick');
+	            $('#calendar').fullCalendar( 'renderEvent', event);
 	            caldate = caldate + 24*60*60*1000;
 			}
 		}
@@ -1232,7 +1229,7 @@
 				 return;
             }
              
-            $('#calendar').fullCalendar( 'renderEvent', event, 'stick');		
+            $('#calendar').fullCalendar( 'renderEvent', event);		
 		}
 
 		function checkInnerActivityOverlap (masteractid, newdate, masteractarr) {
@@ -1435,7 +1432,7 @@
 				}
 				events.push(event);
 				// updatemasteractivitycount(event, masteractarr);				
-				$('#calendar').fullCalendar( 'renderEvent', event, 'stick');
+				$('#calendar').fullCalendar( 'renderEvent', event);
 
 				if (data.code == "T_BOOK_RETURN") {
 					var stridpair =  data.activityidpair + "." + data.type;
@@ -1458,7 +1455,7 @@
 					}
 					events.push(eventpair);
 					//updatemasteractivitycount(eventpair, masteractarr);				
-					$('#calendar').fullCalendar( 'renderEvent', eventpair, 'stick');				
+					$('#calendar').fullCalendar( 'renderEvent', eventpair);				
 				}
   			}
   					

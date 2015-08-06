@@ -20,6 +20,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.deccanrock.planovik.Tenant.TenantContextHolder;
 import com.deccanrock.planovik.entity.TravelActivityEntity;
 import com.deccanrock.planovik.service.TravelActivityMapper;
 import com.deccanrock.planovik.service.utils.TimeFormatter;
@@ -74,7 +75,8 @@ public class ActivityEntityDAO implements IActivityEntityDAO {
     @Override	    
 	public TravelActivityEntity saveTravelActivity(TravelActivityEntity travelactivity) {
 
-   	 	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	    	
+    	DataSource  tenantdataSource = TenantDS.setTenantDataSource(null);    	    	
+   	 	JdbcTemplate jdbcTemplate = new JdbcTemplate(tenantdataSource);	    	
 		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
 		.withProcedureName("sp_save_travelactivity");
 
@@ -132,6 +134,8 @@ public class ActivityEntityDAO implements IActivityEntityDAO {
 		inParamMap.put("inpikupdropcost", 0.0);
 		inParamMap.put("inpikupdropcostmarkup", 0);
 
+		inParamMap.put("intenantid", TenantContextHolder.getTenant().getTenantid());
+		
 		if (travelactivity.getCode().matches("T_BOOK_ONEWAY") || travelactivity.getCode().matches("T_BOOK_RETURN")) {
 
 			inParamMap.put("invesselconame", travelactivity.getVesselconame());
@@ -247,9 +251,10 @@ public class ActivityEntityDAO implements IActivityEntityDAO {
 	public List<TravelActivityEntity> getTravelActivities(int itinnum, int version, short tzoffset) 
 				throws IOException, SQLException {
     
-		String SQL = "Call sp_get_travel_activities(" + itinnum + ',' + version + ");";    	
-		
-		JdbcTemplate dbtemplate = new JdbcTemplate(dataSource);  	
+		String SQL = "Call sp_get_travel_activities(" + itinnum + ',' + version +  ',' + TenantContextHolder.getTenant().getTenantid() + ");";    	
+
+    	DataSource  tenantdataSource = TenantDS.setTenantDataSource(null);    	    			
+		JdbcTemplate dbtemplate = new JdbcTemplate(tenantdataSource);  	
 
 		TravelActivityMapper tam = new TravelActivityMapper();
 		tam.setTzoffset(tzoffset);
@@ -266,32 +271,34 @@ public class ActivityEntityDAO implements IActivityEntityDAO {
  	}
 
 	@Override
-	public List<TravelActivityEntity> getActivitiesDetForType(int itinnum, int version, short tzoffset, short i)
+	public List<TravelActivityEntity> getActivitiesDetForType(int itinnum, int version, short tzoffset, short i, int tenantid, DataSource tenantdataSource)
 				throws IOException, SQLException {
     
-		String SQL = "Call sp_get_activities_for_type(" + itinnum + ',' + version + ',' + i + ");";    	
-		
-		JdbcTemplate dbtemplate = new JdbcTemplate(dataSource);  	
+		String SQL = "Call sp_get_activities_for_type(" + itinnum + ',' + version + ',' + i + ',' + tenantid + ");";    	
+				
+    	// DataSource  tenantdataSource = TenantDS.setTenantDataSource(null);    	    			
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(tenantdataSource);  	
 
 		TravelActivityMapper tam = new TravelActivityMapper();
 		tam.setTzoffset(tzoffset);
 		tam.setReqfulldetails(true);
 		List <TravelActivityEntity> travelentities;
     	try {    			
-    		travelentities = dbtemplate.query(SQL, tam);
+    		travelentities = jdbcTemplate.query(SQL, tam);
     	} catch (Exception ex) {
     		travelentities = null;
 		} 					
- 		
- 		return travelentities; 		
+
+    	return travelentities; 		
  	}
 
 	@Override
 	public Object GetActivityDetails(int activityid, int type, short tzoffset) throws IOException, SQLException {
 		// TODO Auto-generated method stub
-		String SQL = "Call sp_get_activity_details(" + activityid + ',' + type + ");";    	
+		String SQL = "Call sp_get_activity_details(" + activityid + ',' + type + ',' + TenantContextHolder.getTenant().getTenantid() + ");";    	
 		
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);  	
+    	DataSource  tenantdataSource = TenantDS.setTenantDataSource(null);    	    			
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(tenantdataSource);  	
 
 		if (type == 0) {
 			TravelActivityMapper tam = new TravelActivityMapper();
@@ -304,7 +311,9 @@ public class ActivityEntityDAO implements IActivityEntityDAO {
 				.withProcedureName("sp_get_activitypairdet");
 				Map<String, Object> inParamMap = new HashMap<String, Object>();
 				inParamMap.put("inactivityid", travelentities.get(0).getActivityidpair());		
-				inParamMap.put("type", type);		
+				inParamMap.put("type", type);
+				inParamMap.put("tenantid", TenantContextHolder.getTenant().getTenantid());
+				
 				SqlParameterSource in = new MapSqlParameterSource(inParamMap);
 				Map<String, Object> rs=null;
 		    	try {    	

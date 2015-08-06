@@ -1,6 +1,18 @@
 select * from plnvk_account_master;
 select * from plnvk_tenant_master;
 
+SELECT @@global.time_zone, @@session.time_zone;
+
+SET GLOBAL time_zone = '+00:00';
+
+Select jndiname from plnvk_db_map where zoneid=1 and tenanttype=2 and isavailfornewcon = 'Y'; 
+
+select * from plnvk_db_map;
+
+update plnvk_tenant_master set tenanttype=0 where tenantid=2;
+
+update plnvk_db_map set tenanttype=2 where dbid=4;
+
 update plnvk_account_master set contactpswd='$2a$10$4zv/luCTXrTi/5LCeB3MHOfZr2JVgKcW/v4y6X54dhurYwRpyHh3K' where id=1;
 
 insert into plnvk_tenant_master (accountid, tenantdesc, tenantname, jndiname, regip, zoneid, tenanttype, status) 
@@ -24,16 +36,19 @@ update plnvk_account_master set orgname='Deccan Rock Pvt Ltd' where id=1;
 
 update plnvk_tenant_master set contactname='Rakhee Kumar Paruchuri' where tenantid=3;
 
-delete from plnvk_tenant_master where tenantid=4;
+delete from plnvk_tenant_master where tenantid=3;
 select * from user_login_attempts;
 update user_login_attempts set attempts=0 where id=4;
-alter table plnvk_tenant_master AUTO_INCREMENT=1;
+alter table plnvk_tenant_master AUTO_INCREMENT=3;
 
 delete from user_login_attempts where id=2;
 
 select * from plnvk_countryzone_map;
 delete from plnvk_countryzone_map where zoneid=6;
 update plnvk_countryzone_map set countrycode="IN" where zoneid=1;
+
+select * from user_roles_map;
+select * from users;
 
 select * from plnvk_db_map;
 delete from plnvk_db_map where dbid=1;

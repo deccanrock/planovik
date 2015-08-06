@@ -98,9 +98,10 @@ public class PlnvkConstants {
 	public enum  RegStatus {
 		NA(0),
 		Pending(1),
-		Confirmed(2),
-		Closed(3),
-		Suspended(4);
+		Registered(2),
+		Expiring(3),
+		Closed(4),
+		Suspended(5);
 
 		private final int value;
 
@@ -128,7 +129,10 @@ public class PlnvkConstants {
 	private final List <String> transportcoverage = Arrays.asList("cityonly", "intercity");
 	public List<String> getTransportcoverage() { return transportcoverage; }
 	
-	private final List <String> tenanttype = Arrays.asList("www", "corp", "Free", "Business Monthly", "Business Annual", "Enterprise");
+	private final List <String> tenanttype = Arrays.asList("corp", "Free", "Business", "Enterprise");
 	public List<String> getRegtype() { return tenanttype; }
+
+	private final List <String> billingplan = Arrays.asList("NA", "Free", "BizMonthly", "BizAnnual", "Enterprise");
+	public List<String> getBillingPlan() { return billingplan; }
 
 }
