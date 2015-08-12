@@ -24,7 +24,7 @@ public class UserDetailsDao implements IUserDetailsDao {
 	private static final String SQL_USERS_COUNT = "SELECT count(*) FROM users WHERE username = ? and tenantid = ?";
 
 	private static final String SQL_USER_ATTEMPTS_GET = "SELECT * FROM user_login_attempts WHERE username = ? and tenantid = ?";
-	private static final String SQL_USER_ATTEMPTS_INSERT = "INSERT INTO user_login_attempts (USERNAME, TENANTID, ATTEMPTS, LASTMODIFIED) VALUES(?,?,?)";
+	private static final String SQL_USER_ATTEMPTS_INSERT = "INSERT INTO user_login_attempts (USERNAME, TENANTID, ATTEMPTS, LASTMODIFIED) VALUES(?,?,?,?)";
 
 	private static final String SQL_USER_ATTEMPTS_UPDATE_ATTEMPTS = "UPDATE user_login_attempts SET attempts = attempts + 1, lastmodified = ? WHERE username = ? and tenantid = ?";
 	private static final String SQL_USER_ATTEMPTS_RESET_ATTEMPTS = "UPDATE user_login_attempts SET attempts = 0 WHERE username = ? and tenantid = ?";

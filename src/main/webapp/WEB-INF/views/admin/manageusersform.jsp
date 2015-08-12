@@ -161,16 +161,20 @@
 					                <div class="form-group">
 					                    <div class="clearfix">
 					                    	<label class="col-sm-4 control-label no-padding-right" for="phone">Phone</label>
-
-				                    		<c:choose>
-				                    			<c:when test="${not empty user.phone}">
-				                        			<form:input type="text" path="phone" id="phone" class="col-xs-9 col-sm-7"  
-				                        			value="${user.phone}" />
-				                        	    </c:when>
-												<c:otherwise>
-				                    				<form:input type="text" path="phone" id="phone" class="col-xs-9 col-sm-7" />                                	
-												</c:otherwise>
-				                    		</c:choose>
+				                            <div class="input-group">
+				                				<span class="input-group-addon" style="font-size:12px;">
+				                    				${phonecode}
+				                				</span>
+					                    		<c:choose>
+					                    			<c:when test="${not empty user.phone}">
+					                        			<form:input type="text" path="phone" id="phone" class="col-xs-9 col-sm-7"  
+					                        			value="${user.phone}" style="width:86%;"/>
+					                        	    </c:when>
+													<c:otherwise>
+					                    				<form:input type="text" path="phone" id="phone" class="col-xs-9 col-sm-7" style="width:86%;" />                                	
+													</c:otherwise>
+					                    		</c:choose>
+				                            </div>
 										</div>
 					                </div>
 					                <div class="space-4"></div>

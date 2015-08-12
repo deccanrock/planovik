@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.deccanrock.planovik.entity.ServiceProviderEntity;
-import com.deccanrock.planovik.entity.UserEntity;
+
 
 public class ServiceProviderMapper implements RowMapper<ServiceProviderEntity> {
 
@@ -23,6 +23,7 @@ public class ServiceProviderMapper implements RowMapper<ServiceProviderEntity> {
 	public ServiceProviderEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
 	   ServiceProviderEntity service = new ServiceProviderEntity();
 	   service.setId(rs.getInt("id"));
+	   service.setTenantid(rs.getInt("tenantid"));
 	   service.setServicename(rs.getString("servicename"));
 	   service.setType(this.type);
 	   
@@ -45,6 +46,7 @@ public class ServiceProviderMapper implements RowMapper<ServiceProviderEntity> {
 	   service.setContactemail(rs.getString("contactemail"));
 	   service.setContactwebsite(rs.getString("contactwebsite"));
 	   service.setAddlinfo(rs.getString("addlinfo"));
+	   service.setRating(rs.getInt("rating"));
 	   
 	   return service;
    }

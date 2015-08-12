@@ -77,6 +77,9 @@ public class ServiceProviderEntity {
     @Column(name="updatedby")    
     private String updatedby;
     
+    @Column(name="tenantid")    
+	private int tenantid;    
+    
     // 0=Airlines, 1=Hotels, 2=Transport, 3=Other
     private short type;
     
@@ -269,6 +272,14 @@ public class ServiceProviderEntity {
 	
 	public void setTypestr(String typestr) {
 		this.typestr = typestr;
+	}
+
+	public void setTenantid(int tenantid) {
+		this.tenantid = tenantid;
+	}
+
+	public int getTenantid(int tenantid) {
+		return this.tenantid;
 	}
 
 }

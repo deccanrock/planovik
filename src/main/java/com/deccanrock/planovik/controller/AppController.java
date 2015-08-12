@@ -41,6 +41,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 
 
+
 //import com.deccanrock.planovik.entity.ActivityMasterActEntity;
 //import com.deccanrock.planovik.entity.ActivityMasterEntity;
 import com.deccanrock.planovik.entity.TravelActivityEntity;
@@ -87,17 +88,30 @@ public class AppController {
 	
 	
     @RequestMapping(value = "/app/**", method = RequestMethod.GET)
-    public String appDash(ModelMap map, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public String appDash(ModelMap map, HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
 		logger.info("Application Dash");
 
 		if (!IsUserLoggedIn(map))
     		return "app/login";
         
         // map.addAttribute("admin", new AdminEntity());
+		// Update session to contain all necessary information
+		session.setAttribute("username", username);
+		session.setAttribute("istenant", 1);
+		session.setAttribute("zoneid", TenantContextHolder.getTenant().getZoneid());
+		session.setAttribute("tenantid", TenantContextHolder.getTenant().getTenantid());
+		session.setAttribute("accountid", TenantContextHolder.getTenant().getAccountid());
+		UserEntityDAO UED = (UserEntityDAO)AppCtxtProv.getApplicationContext().getBean("UserEntityDAO");		
+		UserEntity user = UED.GetUser(username);		
+		session.setAttribute("userid", user.getId());
+		session.setAttribute("contactname", user.getFullname());
+		
 		map.addAttribute("title", "Planovik Home");
 		map.addAttribute("username", username);
+		map.addAttribute("contactname", user.getFullname());
 		String userphoto = "/resources/images/avatars/" + username + ".jpg";
-		map.addAttribute("userphoto", userphoto);
+		String photopath = "/zone" + TenantContextHolder.getTenant().getZoneid() + "/tenant/" + TenantContextHolder.getTenant().getTenantid() + "/images/avatars/" + user.getId() + ".jpg";
+		map.addAttribute("userphoto", photopath);
 
 		// map.addAttribute("admintaskList", adminManager.getAllPending());
 	    
@@ -115,13 +129,18 @@ public class AppController {
         
 		UserEntityDAO UED = (UserEntityDAO)AppCtxtProv.getApplicationContext().getBean("UserEntityDAO");
 		
-		UserEntity user = UED.GetUser(username);
+		UserEntity user = UED.GetUser(username);		
 		
 		map.addAttribute("user", user);
 		map.addAttribute("title", "Planovik User Profile");
 		map.addAttribute("username", username);
-		String userphoto = "/resources/images/avatars/" + username + ".jpg";
-		map.addAttribute("userphoto", userphoto);
+		map.addAttribute("istenant", 1);
+		map.addAttribute("zoneid", TenantContextHolder.getTenant().getZoneid());
+		map.addAttribute("contactname", user.getFullname());
+
+		// Pick path from zone resource setting
+		String photopath = "/zone" + TenantContextHolder.getTenant().getZoneid() + "/tenant/" + TenantContextHolder.getTenant().getTenantid() + "/images/avatars/" + user.getId() + ".jpg";
+		map.addAttribute("userphoto", photopath);
 
 		// map.addAttribute("admintaskList", adminManager.getAllPending());
 	    return "app/userprofile";
@@ -929,7 +948,8 @@ public class AppController {
     
     
 	@RequestMapping(value = "/app/uploadphoto", method = RequestMethod.POST)    
-	public @ResponseBody String UploadPhoto(HttpServletRequest request, ServletResponse response, @RequestParam("image") MultipartFile image) {
+	public @ResponseBody String UploadPhoto(HttpServletRequest request, ServletResponse response, HttpSession session, @RequestParam("image") MultipartFile image) {
+
 		logger.info("Upload photo");
 		
 		if (image.isEmpty())
@@ -937,7 +957,8 @@ public class AppController {
 		
 		ApplicationContext context = AppCtxtProv.getApplicationContext();
 		FileHandler FH = (FileHandler)context.getBean("filehandler");
-		String result = FH.fileUpload(image, "image", "setavatar", username);
+		String result = FH.fileUpload(image, "image", "setavatar", Integer.parseInt(session.getAttribute("istenant").toString()), Integer.parseInt(session.getAttribute("tenantid").toString()), 
+				 Integer.parseInt(session.getAttribute("userid").toString()), session.getAttribute("zoneid").toString());		
 
 		return result;				
 	}	

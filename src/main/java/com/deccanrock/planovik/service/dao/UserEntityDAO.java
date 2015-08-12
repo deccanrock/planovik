@@ -17,6 +17,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.deccanrock.planovik.Tenant.TenantContextHolder;
 import com.deccanrock.planovik.entity.UserEntity;
 import com.deccanrock.planovik.security.HashCode;
 import com.deccanrock.planovik.service.UserEntityMapper;
@@ -88,12 +89,14 @@ public class UserEntityDAO implements
     @Override
     public String ManageUser(UserEntity user) {
 
-    	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	    	    	
+    	DataSource  tenantdataSource = TenantDS.setTenantDataSource(null);    	    			
+    	JdbcTemplate jdbcTemplate = new JdbcTemplate(tenantdataSource);
     	SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
     	.withProcedureName("sp_manageuser");
     	     	 
     	Map<String, Object> inParamMap = new HashMap<String, Object>();
-		
+
+		inParamMap.put("intenantid", TenantContextHolder.getTenant().getTenantid());    	
     	inParamMap.put("inemail", user.getEmail());
 		inParamMap.put("infullname", user.getFullname());
 		inParamMap.put("inrole", user.getRole());
@@ -144,13 +147,16 @@ public class UserEntityDAO implements
 
     @Override
 	public boolean UserExists(String userName) {
-    	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);   	
+    	DataSource  tenantdataSource = TenantDS.setTenantDataSource(null);    	    			
+    	JdbcTemplate jdbcTemplate = new JdbcTemplate(tenantdataSource);
 		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
 		.withProcedureName("sp_user_exists");
 
 		Map<String, Object> inParamMap = new HashMap<String, Object>();
 
 		inParamMap.put("inusername", userName);
+		inParamMap.put("intenantid", TenantContextHolder.getTenant().getTenantid());
+		
 		SqlParameterSource in = new MapSqlParameterSource(inParamMap);
 
 		Map<String, Object> simpleJdbcCallResult = simpleJdbcCall.execute(in);
@@ -166,8 +172,9 @@ public class UserEntityDAO implements
     @Override
 	public UserEntity GetUser(String username) {
 	
-    	String SQL = "Call sp_getuserdetails(" + "'" + username + "'" + ");";
-    	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+    	String SQL = "Call sp_getuserdetails(" + "'" + username + "'" + "," + TenantContextHolder.getTenant().getTenantid() + ");";
+    	DataSource  tenantdataSource = TenantDS.setTenantDataSource(null);    	    			
+    	JdbcTemplate jdbcTemplate = new JdbcTemplate(tenantdataSource);
 
  		List<UserEntity> user = jdbcTemplate.query(SQL, new UserEntityMapper());
  		
@@ -175,7 +182,7 @@ public class UserEntityDAO implements
  			return null;
  		
  		// This should be combined to one statement in future
- 		SQL = "Call sp_getreportingmanagers("  + user.get(0).getId() + ");";
+ 		SQL = "Call sp_getreportingmanagers("  + user.get(0).getId() + "," + TenantContextHolder.getTenant().getTenantid() + ");";
  		List<Map<String, Object>> managers = jdbcTemplate.queryForList(SQL);
  		
  		// Set reporting manager and created by information, should always get 2 strings in that order
@@ -197,12 +204,14 @@ public class UserEntityDAO implements
 
 	public void DeleteUser(String username) {
 
-    	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);		
+    	DataSource  tenantdataSource = TenantDS.setTenantDataSource(null);    	    			
+    	JdbcTemplate jdbcTemplate = new JdbcTemplate(tenantdataSource);
 		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
 		.withProcedureName("sp_delete_user");
 		Map<String, Object> inParamMap = new HashMap<String, Object>();
 
 		inParamMap.put("inusername", username);
+		inParamMap.put("intenantid", TenantContextHolder.getTenant().getTenantid());		
 		SqlParameterSource in = new MapSqlParameterSource(inParamMap);
 		Map<String, Object> simpleJdbcCallResult = simpleJdbcCall.execute(in);
 	}
@@ -210,7 +219,8 @@ public class UserEntityDAO implements
 	// This method will be extended to allow users to edit more settings on their profile, for now password
     @Override
 	public String UpdateUserProfile(int id, String pass) {
-    	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);				
+    	DataSource  tenantdataSource = TenantDS.setTenantDataSource(null);    	    			
+    	JdbcTemplate jdbcTemplate = new JdbcTemplate(tenantdataSource);
 
     	SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
 		.withProcedureName("sp_updateuser");
@@ -218,6 +228,7 @@ public class UserEntityDAO implements
 		Map<String, Object> inParamMap = new HashMap<String, Object>();
 
 		inParamMap.put("inid", id);
+		inParamMap.put("intenantid", TenantContextHolder.getTenant().getTenantid());		
 		// Secure pass
 		inParamMap.put("inpass", HashCode.getHashPassword(pass));
 

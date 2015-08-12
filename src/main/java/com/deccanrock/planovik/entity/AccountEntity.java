@@ -110,6 +110,8 @@ public class AccountEntity implements Serializable {
 	
 	private List<TenantEntity> tenants;
 
+	public short zoneid;
+
 	
 	// Getter-Setters
 	public int getId() {
@@ -120,6 +122,14 @@ public class AccountEntity implements Serializable {
 		this.id = id;
 	}
 	
+	public short getZoneid() {
+		return zoneid;
+	}
+	
+	public void setZoneid(short zoneid) {
+		this.zoneid = zoneid;
+	}
+
 	public String getOrgname() {
 		return orgname;
 	}

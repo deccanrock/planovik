@@ -74,7 +74,7 @@
 	    <constructor-arg>
 	        <ref bean="mainDataSource" />
 	    </constructor-arg>
-	</bean>		
+	</bean>	
 	
     <bean id="applicationContextProvider" class="com.deccanrock.planovik.controller.AppCtxtProv"></bean>    
 	
@@ -83,11 +83,12 @@
 	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
     <property name="maxUploadSize" value="300000"/>
 	</bean>
-
+	
 	<bean id="filehandler" class="com.deccanrock.planovik.service.utils.FileHandler">
     	<property name="resourcesfolder" value="c:/planovikpub/resources/" />
+    	<property name="zonefolder" value="c:/zone" />
 	</bean>
-	
+
 	<bean id="defaultMandrillConfiguration" class="com.deccanrock.planovik.mandrill.util.MandrillConfiguration">
 		<property name="apiVersion" value=""/>
 		<property name="baseURL" value="https://mandrillapp.com/api"/>

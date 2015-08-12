@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.security.GeneralSecurityException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.List;
+import java.util.concurrent.Future;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,6 +19,8 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -54,13 +57,14 @@ public class WebsiteController {
 
 	/**
 	 * Process Signup request for an Organization
+	 * @throws InterruptedException 
 	 * @throws URISyntaxException 
 	 */
 	@RequestMapping(value = "/register", method = RequestMethod.POST)	
     public @ResponseBody String registerForm(HttpServletRequest request, ModelMap map,
     		@RequestParam(value = "contactname") String contactName,
     		@RequestParam(value = "contactemail") String contactEmail, @RequestParam(value = "contactphonemobile") String contactPhoneMobile, 
-    		@RequestParam(value = "contactpswd") String contactPswd, @RequestParam(value = "tzoffset") short tzoffset) {
+    		@RequestParam(value = "contactpswd") String contactPswd, @RequestParam(value = "tzoffset") short tzoffset) throws InterruptedException {
 		
 		logger.info("New Tenant Registration");
 		final String userIPAddress = request.getRemoteAddr();
@@ -127,27 +131,47 @@ public class WebsiteController {
 			}
 
 			// mobile verification logic here when available
-			try {
-				SMSService.SendSMS(contactPhoneMobile, "One time pin to complete planvoik registration is: " + account.getPin());
-			} catch (UnirestException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			// Send welcome email
-			MailService ms = new MailService();			
-			url = "http://www.planovik.com:8080/signupconfirm?" + secureuri;
-			String content = "<html><body><h1>Almost there " + account.getContactname() + "</h1>" + 
-							 "<h3>Please click <a href=\"" + url + "\">here</a>" + " to complete your registration.</h3></body></html>";			
-			ms.SendMessage("Planovik", "signup@planovik.com", account.getContactname(), account.getContactemail(), "Welcome to Planovik", content);
-									
-			return secureuri;
+			Future<String> smsresult = sendSMS(contactPhoneMobile, account.getPin());
+			// Send Mail
+			Future<String> mailserviceresult = sendMail(secureuri, account.getContactname(), account.getContactemail());														
+	        // Wait until they are all done
+	        while (!(mailserviceresult.isDone() && smsresult.isDone())) {
+	            Thread.sleep(10); //10-millisecond pause between each check
+	        }
+
+	        return secureuri;
 		}
 				
 		return secureuri;
-	}	
+	}
+	
+    @Async
+    public Future<String> sendSMS(String contactPhoneMobile, short pin) throws InterruptedException {
 		
-	/**
+    	// mobile verification logic here when available
+		try {
+			SMSService.SendSMS(contactPhoneMobile, "One time pin to complete planvoik registration is: " + pin);
+		} catch (UnirestException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+		return new AsyncResult<String>("Done");
+    }	
+		
+    @Async
+    public Future<String> sendMail(String secureuri, String contactname, String contactemail) {
+		// Send welcome email
+		MailService ms = new MailService();			
+		String url = "http://www.planovik.com:8080/signupconfirm?" + secureuri;
+		String content = "<html><body><h1>Almost there " + contactname + "</h1>" + 
+						 "<h3>Please click <a href=\"" + url + "\">here</a>" + " to complete your registration.</h3></body></html>";			
+		ms.SendMessage("Planovik", "signup@planovik.com", contactname, contactemail, "Welcome to Planovik", content);
+		return new AsyncResult<String>("Done");
+    }	
+
+    
+    /**
 	 * Process Signup request for an Organization
 	 * @throws URISyntaxException 
 	 */

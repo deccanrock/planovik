@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,7 @@ import com.deccanrock.planovik.location.MaxLocation;
 import com.deccanrock.planovik.location.MaxLocationBO;
 import com.deccanrock.planovik.service.dao.ServiceProviderDAO;
 import com.deccanrock.planovik.service.dao.UserEntityDAO;
+import com.deccanrock.planovik.Tenant.TenantContextHolder;
 import com.deccanrock.planovik.constants.PlnvkConstants;
 
 /**
@@ -44,7 +46,7 @@ public class AdminController {
 	// Need to investigate why null parameter gets appended	
 	@PreAuthorize("hasRole('ROLE_SUPERADMIN')")	
 	@RequestMapping(value = {"/admin/index", "/admin"}, method = RequestMethod.GET)
-	public String appAdmin(ModelMap map, HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public String appAdmin(ModelMap map, HttpServletRequest request, HttpSession session, HttpServletResponse response) throws IOException {
 		final String userIPAddress = request.getRemoteAddr();
 		
 		request.setAttribute("title", "Planovik Admin - Home");
@@ -69,8 +71,10 @@ public class AdminController {
 		User loggeduser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = loggeduser.getUsername();
 		map.addAttribute("username", username);
-		String userphoto = "/resources/images/avatars/" + username + ".jpg";
-		map.addAttribute("userphoto", userphoto);
+		
+		String photopath = "/zone" + TenantContextHolder.getTenant().getZoneid() + "/tenant/" + TenantContextHolder.getTenant().getTenantid() + "/images/avatars/" + session.getAttribute("userid") + ".jpg";
+		map.addAttribute("userphoto", photopath);
+		map.addAttribute("contactname", session.getAttribute("contactname"));
 		
         return "admin/index";
     
@@ -81,8 +85,8 @@ public class AdminController {
 	 * @throws URISyntaxException **/
 	 
 	@PreAuthorize("hasRole('ROLE_SUPERADMIN')")	
-	@RequestMapping(value = "/admin/manageservicesform", method = RequestMethod.POST)
-    public String servicesprocessform(@ModelAttribute(value="serviceprovider") ServiceProviderEntity serviceprovider, Model map, HttpServletRequest request) {
+	@RequestMapping(value = {"/admin/manageservicesform", "/admin/admin/manageservicesform"}, method = RequestMethod.POST)
+    public String servicesprocessform(@ModelAttribute(value="serviceprovider") ServiceProviderEntity serviceprovider, Model map, HttpServletRequest request, HttpSession session) {
 
 		logger.info("Manager Services Process Form");
 		
@@ -96,9 +100,10 @@ public class AdminController {
 		User loggeduser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = loggeduser.getUsername();
 		map.addAttribute("username", username);
-		String userphoto = "/resources/images/avatars/" + username + ".jpg";
-		map.addAttribute("userphoto", userphoto);
 		
+		String photopath = "/zone" + TenantContextHolder.getTenant().getZoneid() + "/tenant/" + TenantContextHolder.getTenant().getTenantid() + "/images/avatars/" + session.getAttribute("userid") + ".jpg";
+		map.addAttribute("userphoto", photopath);
+		map.addAttribute("contactname", session.getAttribute("contactname"));
 
 		// Save model to database
 		ApplicationContext context = AppCtxtProv.getApplicationContext();
@@ -134,7 +139,7 @@ public class AdminController {
 			map.addAttribute("serviceprovider", serviceprovider);
 		}
 		
-		if ( dbServiceProvider!=null && (dbServiceProvider.getMode().equals("Edit"))) {
+		if ( dbServiceProvider!=null && (serviceprovider.getMode().equals("Edit"))) {
 			dbServiceProvider.setMode("Edit");
 			map.addAttribute("serviceprovider", dbServiceProvider);
 		}
@@ -148,7 +153,7 @@ public class AdminController {
 	 
 	@PreAuthorize("hasRole('ROLE_SUPERADMIN')")	
 	@RequestMapping(value = "/admin/manageservices", method = RequestMethod.POST)
-    public String manageservices(@ModelAttribute(value="serviceprovider") ServiceProviderEntity serviceprovider, HttpServletRequest request, Model map) {
+    public String manageservices(@ModelAttribute(value="serviceprovider") ServiceProviderEntity serviceprovider, HttpServletRequest request, HttpSession session, Model map) {
 		
 		logger.info("Manage Services");
 		
@@ -160,8 +165,9 @@ public class AdminController {
 		serviceprovider.setUpdatedby(loggeduser.getUsername());
         String username = loggeduser.getUsername();
 		map.addAttribute("username", username);
-		String userphoto = "/resources/images/avatars/" + username + ".jpg";
-		map.addAttribute("userphoto", userphoto);
+		String photopath = "/zone" + TenantContextHolder.getTenant().getZoneid() + "/tenant/" + TenantContextHolder.getTenant().getTenantid() + "/images/avatars/" + session.getAttribute("userid") + ".jpg";
+		map.addAttribute("userphoto", photopath);
+		map.addAttribute("contactname", session.getAttribute("contactname"));
 		
 		// This is required as admin form contains both user and service management
 		UserEntity user = new UserEntity();
@@ -191,8 +197,8 @@ public class AdminController {
 	 * @throws URISyntaxException **/
 	 
 	@PreAuthorize("hasRole('ROLE_SUPERADMIN')")	
-	@RequestMapping(value = "/admin/manageusersform", method = RequestMethod.POST)
-    public String signupupprocess(@ModelAttribute(value="user") UserEntity user, Model map, HttpServletRequest request) {
+	@RequestMapping(value = {"/admin/manageusersform", "/admin/admin/manageusersform"}, method = RequestMethod.POST)
+    public String signupupprocess(@ModelAttribute(value="user") UserEntity user, Model map, HttpServletRequest request, HttpSession session) {
 
 		logger.info("Manager Users Process Form");
 		
@@ -210,8 +216,9 @@ public class AdminController {
 		User loggeduser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = loggeduser.getUsername();
 		map.addAttribute("username", username);
-		String userphoto = "/resources/images/avatars/" + username + ".jpg";
-		map.addAttribute("userphoto", userphoto);
+		String photopath = "/zone" + TenantContextHolder.getTenant().getZoneid() + "/tenant/" + TenantContextHolder.getTenant().getTenantid() + "/images/avatars/" + session.getAttribute("userid") + ".jpg";
+		map.addAttribute("userphoto", photopath);
+		map.addAttribute("contactname", session.getAttribute("contactname"));
 
 		// This is required as admin form contains both user and service management
 		ServiceProviderEntity spe = new ServiceProviderEntity();
@@ -276,7 +283,7 @@ public class AdminController {
 	 
 	@PreAuthorize("hasRole('ROLE_SUPERADMIN')")	
 	@RequestMapping(value = "/admin/manageusers", method = RequestMethod.POST)
-    public String signupshowform(@ModelAttribute(value="user") UserEntity user, HttpServletRequest request, BindingResult result, Model map) {
+    public String signupshowform(@ModelAttribute(value="user") UserEntity user, HttpServletRequest request, BindingResult result, Model map, HttpSession session) {
 		
 		logger.info("Manager Users Show Form");
 		
@@ -295,8 +302,9 @@ public class AdminController {
 		user.setCreatedbyusername(loggeduser.getUsername());
         String username = loggeduser.getUsername();
 		map.addAttribute("username", username);
-		String userphoto = "/resources/images/avatars/" + username + ".jpg";
-		map.addAttribute("userphoto", userphoto);
+		String photopath = "/zone" + TenantContextHolder.getTenant().getZoneid() + "/tenant/" + TenantContextHolder.getTenant().getTenantid() + "/images/avatars/" + session.getAttribute("userid") + ".jpg";
+		map.addAttribute("userphoto", photopath);
+		map.addAttribute("contactname", session.getAttribute("contactname"));
 		//user.setReportstousername(loggeduser.getUsername());
 
 		// This is required as admin form contains both user and service management

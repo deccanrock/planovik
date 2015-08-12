@@ -18,7 +18,7 @@ update plnvk_account_master set contactpswd='$2a$10$4zv/luCTXrTi/5LCeB3MHOfZr2JV
 insert into plnvk_tenant_master (accountid, tenantdesc, tenantname, jndiname, regip, zoneid, tenanttype, status) 
 values (1, 'Planovik Corp', 'corp', 'z1_planovik_main', '127.0.0.1', 1, 1, 2);
 
-delete from plnvk_account_master where id=2;
+delete from plnvk_account_master where id=3;
 alter table plnvk_account_master AUTO_INCREMENT=2;
 
 insert into plnvk_account_master (orgname, accountname, accountemail, contactpswd, contactdesignation, contactphonemobile, accountstatus, addrstreet1, addrstreet2, addrcitytown, addrstateprovrgn, addrpostalcode, addrcountrycode, addrhomeurl, createdby, updatedby)
@@ -62,6 +62,10 @@ values(1, 'z1_planovik_pro_2', 'jdbc:mysql://192.168.1.108:3307/z1_planovik_pro_
 update plnvk_db_map set url = 'jdbc:mysql://192.168.1.108:3306/z1_planovik_main' where dbid=1;
 
 delete from plnvk_db_map where dbid=2;
+
+select * from itin_currconv;
+
+select * from isocurrencies;
 
 alter table plnvk_db_map AUTO_INCREMENT=1;
 

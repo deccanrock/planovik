@@ -50,7 +50,7 @@
 					                    <form:form id="manageusers-form" method="post" action="admin/manageusersform" modelAttribute="user" name="user">				
 					                        <div class="form-group">
 					                            <div class="clearfix">
-					                                <form:input type="text" path="username" placeholder="Enter username" id="username" class="col-sm-11" style="margin-left:10px;margin-top:20px;"/>
+					                                <form:input type="text" path="username" placeholder="Enter user Email" id="username" class="col-sm-11" style="margin-left:10px;margin-top:20px;"/>
 					                            </div>
 					                        </div>
 					                        <form:input type="hidden" id="usersmode" path="mode" />
@@ -170,8 +170,8 @@
     jQuery(function($) {
 
         jQuery.validator.addMethod("username", function (value, element) {
-            return this.optional(element) || /^[a-zA-Z0-9]*$/.test(value);
-        }, "Enter a valid username, alphanumeric only.");
+            return this.optional(element) || /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/.test(value);
+        }, "Enter a valid email address.");
 
         $('#manageusers-form').validate({
             errorElement: 'div',
@@ -180,13 +180,13 @@
             rules: {
                 username: {
                     required: true,
-                    username: 'required'
+                    username: true
                 },
             },
             messages: {
                 username: {
-                    required: "Please specify a username.",
-                    username: "Please provide a username. Alphanumeric characters only!"
+                    required: "Please provide an email.",
+                    username: "Enter a valid email address."
                 },
             },
 

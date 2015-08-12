@@ -14,6 +14,7 @@ public class AccountEntityMapper implements RowMapper<AccountEntity> {
 	   AccountEntity account = new AccountEntity();
 		
 	   account.setId(rs.getInt("id"));	   	   
+	   account.setZoneid(rs.getShort("zoneid"));	   	   
 	   account.setOrgname(rs.getString("orgname"));
 	   account.setRegip(rs.getString("regip"));
 	   account.setNumtenants(rs.getShort("numtenants"));	   

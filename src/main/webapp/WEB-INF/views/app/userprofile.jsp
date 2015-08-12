@@ -44,8 +44,6 @@
 								
 								<div id="user-profile-3" class="user-profile row">
 									<div class="col-sm-offset-1 col-sm-9">
-										<form:form id="userprofile-form" class="horizontal" method="post" 
-										action="userprofileupdate" modelAttribute="user" name="user">
 		           						<div class="tabbable">
 											<ul class="nav nav-tabs padding-16">
 												<li class="active">
@@ -62,7 +60,6 @@
 													</a>
 												</li>
 											</ul>
-											<form:input type="hidden" id="id" path="id" value="${user.id}" />
 											
 											<div class="tab-content profile-edit-tab-content">
 												<div id="edit-basic" class="tab-pane in active">
@@ -90,13 +87,14 @@
 																</div>
 															</div>
 														</div>
-														
-														<div class="col-xs-9 col-sm-4">
-															<a href="#" class="btn btn-minier btn-purple" 
-															style="margin-left:80px;margin-bottom:5px;display:none;" id="uploadfilesubmit">Upload</a>														
-															<input type="file" id="id-input-file-3" />
-														</div>															
-														
+
+														<form id="userprofile-form" class="horizontal" method="post" action="userprofileupdate">						
+															<div class="col-xs-9 col-sm-4">
+																<a href="#" class="btn btn-minier btn-purple" 
+																style="margin-left:80px;margin-bottom:5px;display:none;" id="uploadfilesubmit">Upload</a>														
+																<input type="file" id="id-input-file-3" />
+															</div>															
+														</form>										
 													</div>
 												</div> <!-- .edit-basic -->
 	
@@ -105,37 +103,34 @@
 													<div class="space-10"></div>
 
 													<div class="row">
-	
-														<div class="form-group">				
-																<H6>Password length is 8 - 20. Must contain min 1 digit, min 1 lower case, 
-																	min 1 upper case, min one special character.</H6>
-														</div>
-	
-														<div class="form-group">
-															<label class="col-sm-3 control-label no-padding-right" for="pass">New Password</label>		
-															<form:input type="password" path="pass" maxlength="20" id="pass" />
-														</div>
+
+														<form id="userpassword-form" class="horizontal" method="post" action="userpasswordupdate">						
+															<div class="form-group">				
+																	<H6>Password length is 8 - 20. Must contain min 1 digit, min 1 lower case, 
+																		min 1 upper case, min one special character.</H6>
+															</div>
 		
-														<div class="form-group">
-															<label class="col-sm-3 control-label no-padding-right" for="repass">Confirm Password</label>
-															<form:input type="password" path="repass" maxlength="20" id="repass" />
-														</div>
+															<div class="form-group">
+																<label class="col-sm-3 control-label no-padding-right" for="pass">New Password</label>		
+																<input type="password" path="pass" maxlength="20" id="pass" style="width:30%" />
+															</div>
+			
+															<div class="form-group">
+																<label class="col-sm-3 control-label no-padding-right" for="repass">Confirm Password</label>
+																<input type="password" path="repass" maxlength="20" id="repass" style="width:30%" />
+															</div>
+	
+															<button type="submit" id="updateusersubmit" class="btn btn-info" >
+																<i class="ace-icon fa fa-check bigger-110"></i>
+																Save
+															</button>				
+														</form>										
 													</div>		
 												</div> <!-- .edit-password -->
 												
 											</div> <!-- .tab-content -->
 										</div> <!-- tababble -->
 	
-										<div class="clearfix form-actions">
-											<div class="col-md-offset-3 col-md-9">
-												<form:button type="submit" id="updateusersubmit" class="btn btn-info" >
-													<i class="ace-icon fa fa-check bigger-110"></i>
-													Save
-												</form:button>				
-																				
-											</div>
-										</div>
-									</form:form>
 									</div> <!-- .col -->
 								</div><!-- /.user-profile -->
 								<!-- PAGE CONTENT ENDS -->
@@ -149,31 +144,31 @@
 				<div class="footer-inner">
 					<!-- #section:basics/footer -->
 					<div class="footer-content">
-						<span class="bigger-120">
-							<span class="blue bolder">Ace</span>
-							Application &copy; 2013-2014
-						</span>
-
+	                    <span class="bigger-120">
+	                        <span class="blue bolder">DeccanRock Pvt Ltd.</span>
+	                        &copy; 2013-2014
+	                    </span>
+	
 						&nbsp; &nbsp;
 						<span class="action-buttons">
 							<a href="#">
 								<i class="ace-icon fa fa-twitter-square light-blue bigger-150"></i>
 							</a>
-
+	
 							<a href="#">
 								<i class="ace-icon fa fa-facebook-square text-primary bigger-150"></i>
 							</a>
-
+	
 							<a href="#">
 								<i class="ace-icon fa fa-rss-square orange bigger-150"></i>
 							</a>
 						</span>
 					</div>
-
+	
 					<!-- /section:basics/footer -->
 				</div>
 			</div>
-
+			
 			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
 				<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
 			</a>
@@ -246,9 +241,9 @@
 				$("#repass").val("");				
 			
 				$( "#uploadfilesubmit" ).click(function() {
-					console.log(image);
+
 					var fd = new FormData();
-					fd.append('image', image); 
+					fd.append('image', image);
 		   			var target = document.getElementById('spinnerupload');
 					var spinner = new Spinner(opts).spin(target);	
 					

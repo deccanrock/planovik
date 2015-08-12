@@ -17,6 +17,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.deccanrock.planovik.Tenant.TenantContextHolder;
 import com.deccanrock.planovik.entity.ServiceProviderEntity;
 import com.deccanrock.planovik.entity.UserEntity;
 import com.deccanrock.planovik.security.HashCode;
@@ -40,8 +41,10 @@ public class ServiceProviderDAO implements IServiceProviderDAO {
     @Override
     public boolean Login(String username, String inpass) {
 
-    	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	    	
-    	 SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
+    	DataSource  tenantdataSource = TenantDS.setTenantDataSource(null);    	    			    	
+		JdbcTemplate dbtemplate = new JdbcTemplate(tenantdataSource);  	
+    	
+    	 SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(dbtemplate)
     	 .withProcedureName("sp_admin_getpasssalt");
     	 Map<String, Object> inParamMap = new HashMap<String, Object>();
     	 SqlParameterSource in = new MapSqlParameterSource(inParamMap);
@@ -88,13 +91,14 @@ public class ServiceProviderDAO implements IServiceProviderDAO {
  
     @Override
     public String ManageUser(UserEntity user) {
-
-    	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	    	
-    	SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
+    	DataSource  tenantdataSource = TenantDS.setTenantDataSource(null);    	    			    	
+		JdbcTemplate dbtemplate = new JdbcTemplate(tenantdataSource);  	
+    	SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(dbtemplate)
     	.withProcedureName("sp_manageuser");
     	     	 
     	Map<String, Object> inParamMap = new HashMap<String, Object>();
 		
+		inParamMap.put("intenantid", TenantContextHolder.getTenant().getTenantid());
     	inParamMap.put("inemail", user.getEmail());
 		inParamMap.put("infullname", user.getFullname());
 		inParamMap.put("inrole", user.getRole());
@@ -145,13 +149,16 @@ public class ServiceProviderDAO implements IServiceProviderDAO {
 
     @Override
 	public boolean UserExists(String userName) {
-    	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);   	
-		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
+    	DataSource  tenantdataSource = TenantDS.setTenantDataSource(null);    	    			    	
+		JdbcTemplate dbtemplate = new JdbcTemplate(tenantdataSource);  	
+		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(dbtemplate)
 		.withProcedureName("sp_user_exists");
 
 		Map<String, Object> inParamMap = new HashMap<String, Object>();
 
 		inParamMap.put("inusername", userName);
+		inParamMap.put("intenantid", TenantContextHolder.getTenant().getTenantid());
+
 		SqlParameterSource in = new MapSqlParameterSource(inParamMap);
 
 		Map<String, Object> simpleJdbcCallResult = simpleJdbcCall.execute(in);
@@ -167,17 +174,18 @@ public class ServiceProviderDAO implements IServiceProviderDAO {
     @Override
 	public UserEntity GetUser(String username) {
 	
-    	String SQL = "Call sp_getuserdetails(" + "'" + username + "'" + ");";
-    	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+    	String SQL = "Call sp_getuserdetails(" + "'" + username + "'" + TenantContextHolder.getTenant().getTenantid() + ");";
+    	DataSource  tenantdataSource = TenantDS.setTenantDataSource(null);    	    			    	
+		JdbcTemplate dbtemplate = new JdbcTemplate(tenantdataSource);  	
 
- 		List<UserEntity> user = jdbcTemplate.query(SQL, new UserEntityMapper());
+ 		List<UserEntity> user = dbtemplate.query(SQL, new UserEntityMapper());
  		
  		if (user.isEmpty())
  			return null;
  		
  		// This should be combined to one statement in future
  		SQL = "Call sp_getreportingmanagers("  + user.get(0).getId() + ");";
- 		List<Map<String, Object>> managers = jdbcTemplate.queryForList(SQL);
+ 		List<Map<String, Object>> managers = dbtemplate.queryForList(SQL);
  		
  		// Set reporting manager and created by information, should always get 2 strings in that order
  		int i = 0;
@@ -197,12 +205,15 @@ public class ServiceProviderDAO implements IServiceProviderDAO {
 	}
 
 	public void DeleteUser(String username) {
-    	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	    			
-		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
+    	DataSource  tenantdataSource = TenantDS.setTenantDataSource(null);    	    			    	
+		JdbcTemplate dbtemplate = new JdbcTemplate(tenantdataSource);  	
+		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(dbtemplate)
 		.withProcedureName("sp_delete_user");
 		Map<String, Object> inParamMap = new HashMap<String, Object>();
 
 		inParamMap.put("inusername", username);
+		inParamMap.put("intenantid", TenantContextHolder.getTenant().getTenantid());
+		
 		SqlParameterSource in = new MapSqlParameterSource(inParamMap);
 		Map<String, Object> simpleJdbcCallResult = simpleJdbcCall.execute(in);
 	}
@@ -210,13 +221,15 @@ public class ServiceProviderDAO implements IServiceProviderDAO {
 	// This method will be extended to allow users to edit more settings on their profile, for now password
     @Override
 	public String UpdateUserProfile(int id, String pass) {
-    	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	    	    	
-		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
+    	DataSource  tenantdataSource = TenantDS.setTenantDataSource(null);    	    			    	
+		JdbcTemplate dbtemplate = new JdbcTemplate(tenantdataSource);  	
+		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(dbtemplate)
 		.withProcedureName("sp_updateuser");
 
 		Map<String, Object> inParamMap = new HashMap<String, Object>();
 
 		inParamMap.put("inid", id);
+		inParamMap.put("intenantid", TenantContextHolder.getTenant().getTenantid());
 		// Secure pass
 		inParamMap.put("inpass", HashCode.getHashPassword(pass));
 
@@ -237,9 +250,10 @@ public class ServiceProviderDAO implements IServiceProviderDAO {
 
     @Override
 	public ServiceProviderEntity GetService(String servicename, short type) {
-    	String SQL = "Call sp_getservice(" + "'" + servicename + "'," + type + ");";
+    	String SQL = "Call sp_getservice(" + "'" + servicename + "'," + type + "," + TenantContextHolder.getTenant().getTenantid() + ");";
 
-		JdbcTemplate dbtemplate = new JdbcTemplate(dataSource);  	
+    	DataSource  tenantdataSource = TenantDS.setTenantDataSource(null);    	    			    	
+		JdbcTemplate dbtemplate = new JdbcTemplate(tenantdataSource);  	
 
 		ServiceProviderMapper spm = new ServiceProviderMapper();
 		spm.setType(type);
@@ -259,14 +273,16 @@ public class ServiceProviderDAO implements IServiceProviderDAO {
     
     @Override
 	public boolean ServiceExists(String serviceName, short serviceType) {
-    	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);   	
-		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
+    	DataSource  tenantdataSource = TenantDS.setTenantDataSource(null);    	    			    	
+		JdbcTemplate dbtemplate = new JdbcTemplate(tenantdataSource);  	
+		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(dbtemplate)
 		.withProcedureName("sp_service_exists");
 
 		Map<String, Object> inParamMap = new HashMap<String, Object>();
 
 		inParamMap.put("inservicename", serviceName);
 		inParamMap.put("type", serviceType);
+		inParamMap.put("intenantid", TenantContextHolder.getTenant().getTenantid());
 
 		SqlParameterSource in = new MapSqlParameterSource(inParamMap);
 
@@ -282,12 +298,14 @@ public class ServiceProviderDAO implements IServiceProviderDAO {
 
     @Override
 	public String ManageService(ServiceProviderEntity serviceprovider) {
-    	JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);	    	
-    	SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
+    	DataSource  tenantdataSource = TenantDS.setTenantDataSource(null);    	    			    	
+		JdbcTemplate dbtemplate = new JdbcTemplate(tenantdataSource);  	
+    	SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(dbtemplate)
     	.withProcedureName("sp_manageservice");
     	     	 
     	Map<String, Object> inParamMap = new HashMap<String, Object>();
 		inParamMap.put("inservicename", serviceprovider.getServicename());
+		inParamMap.put("intenantid", TenantContextHolder.getTenant().getTenantid());
 		
         // 0=Airlines, 1=Hotels, 2=Transport, 3=Other
 		if (serviceprovider.getType() == 0) {
@@ -329,9 +347,11 @@ public class ServiceProviderDAO implements IServiceProviderDAO {
 			inParamMap.put("inupdatedby", serviceprovider.getCreatedby());		
 		}
 		
-		if (serviceprovider.getMode().contentEquals("Update"))		
+		if (serviceprovider.getMode().contentEquals("Edit")) {		
 			inParamMap.put("inupdatedby", serviceprovider.getUpdatedby());
-				
+			inParamMap.put("increatedby", serviceprovider.getCreatedby());
+		}
+			
     	SqlParameterSource in = new MapSqlParameterSource(inParamMap);
 
 		String result;

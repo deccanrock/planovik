@@ -329,8 +329,8 @@
 					                    		<label for = "desc">Additional Information (Max 200 chars)</label>
 					                    		<c:choose>
 					                    			<c:when test="${not empty serviceprovider.addlinfo}">						                    			
-														<form:textarea class="form-control limited" id="addlinfo" name="addlinfo" rows="1" path="desc" 
-														value="${serviceprovider.desc}" maxlength="200" />					         
+														<form:textarea class="form-control limited" id="addlinfo" name="addlinfo" rows="1" path="addlinfo" 
+														value="${serviceprovider.addlinfo}" maxlength="200" />					         
 					                        		</c:when>
 													<c:otherwise>
 														<form:textarea class="form-control limited" id="addlinfo" name="addlinfo" rows="1" path="addlinfo" 
