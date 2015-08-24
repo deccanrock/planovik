@@ -945,6 +945,7 @@
 
 					var deptimeretlong = GetDate($('#depdatetimeretstr').val());
 					var arrtimeretlong = GetDate($('#arrdatetimeretstr').val());
+					var arrtimeonlong = GetDate($('#arrdatetimeonstr').val());
 
 					if ( $('#vesselnoret').is(':enabled') ) {
 						if ($('#vesselnoret').val() == "") {
@@ -963,9 +964,15 @@
 							$("#depdatetimeretstrerr").show();
 						}
 						else {
-							if (window.parent.checkActivityInItinRange(deptimeonlong.getTime(), masteractid, window.parent.masteractarr) == false) {
+							if (deptimeretlong.getTime() <= arrtimeonlong.getTime()) {
 								validated = false;
-								$("#depdatetimeretstrerr").append("<p>Specified date/time should be within itinerary or master activity date/time periods.</p>");
+								$("#depdatetimeretstrerr").append("<p>Specified date/time should be greater than onward journery arrival date/time.</p>");
+								window.parent.adjustModalHeightDelta($("#depdatetimeretstrerr").height());
+								$("#depdatetimeretstrerr").show();																		
+							}
+							if (deptimeretlong.getTime() >= window.parent.itinenddate) {
+								validated = false;
+								$("#depdatetimeretstrerr").append("<p>Specified date/time should fall within itinerary date/time.</p>");
 								window.parent.adjustModalHeightDelta($("#depdatetimeretstrerr").height());
 								$("#depdatetimeretstrerr").show();																		
 							}
@@ -994,7 +1001,7 @@
 							else {
 					    		if (!(arrtimeretlong.getTime() >= window.parent.itinstartdate && arrtimeretlong.getTime() <= window.parent.itinenddate)) {							
 									validated = false;					
-									$("#arrdatetimeretstrerr").append("<p>Specified date/time should be within itinerary or master activity date/time periods.</p>");
+									$("#arrdatetimeretstrerr").append("<p>Specified date/time should be within itinerary date/time period.</p>");
 									window.parent.adjustModalHeightDelta($("#arrdatetimeretstrerr").height());
 									$("#arrdatetimeretstrerr").show();																		
 								}

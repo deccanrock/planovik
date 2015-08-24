@@ -49,9 +49,11 @@
     <!-- ace styles -->
     <link rel="stylesheet" href="<c:url value='/resources/css/ace.min.css'/>" id="main-ace-style" />
 
-   <!-- <script src="https://www.gstatic.com/freebase/suggest/4_2/suggest.min.js"></script> -->
+   <script src="<c:url value='/resources/js/jquery.min.js'/>" ></script>
+
+   <!-- <script src="https://www.gstatic.com/freebase/suggest/4_2/suggest.min.js"></script>
    <script src="<c:url value='/resources/js/1.9.1/jquery.min.js'/>" ></script>
-   <script src="<c:url value='/resources/js/1.9.1/jquery-migrate-1.0.0.js'/>" ></script>	    
+   <script src="<c:url value='/resources/js/1.9.1/jquery-migrate-1.0.0.js'/>" ></script>-->    
 
     <script type="text/javascript">
         

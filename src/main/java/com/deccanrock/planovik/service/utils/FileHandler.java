@@ -8,11 +8,6 @@ import java.nio.file.Paths;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.deccanrock.planovik.controller.AppCtxtProv;
-import com.deccanrock.planovik.entity.UserEntity;
-import com.deccanrock.planovik.service.dao.UserEntityDAO;
-
-
 
 public class FileHandler {
 

@@ -11,4 +11,6 @@ mysql -u [uname] -p[pass] [db_to_restore] < [backupfile.sql]
 
 mysqldump --routines --triggers --single-transaction -u root -p z1_planovik_main > z1_planovik_main_03112015
 
-mysqldump --routines --triggers --single-transaction -- port=3307 -u root -p planovik_pro_1 > planovik_pro_1_03112015
+mysqldump --routines --triggers --single-transaction --port=3307 -u root -p z1_planovik_free_1 > z1_planovik_free_08122015
+
+mysqldump --routines --triggers --single-transaction --port=3307 -u root -proot --no-data z1_planovik_free_1 > z1_planovik_biz_1

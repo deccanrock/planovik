@@ -211,6 +211,10 @@
 									</div>	
 					                <form method="post" action="/setuptenant">
 					                	<input type="hidden" id="accountid" name="accountid" value="${accountid}" />
+					                	<input type="hidden" id="accountid" name="accountid" value="${accountid}" />
+					                	<input type="hidden" id="tenanttype" name="tenanttype" value="2" />
+					                	<input type="hidden" id="billingplan" name="billingplan" value="2" />
+					                	<input type="hidden" id="tenantdesc" name="tenantdesc" value="${tenantdesc}" />
 										<div>
 											<button class="btn btn-block btn-sm btn-primary" type="submit">					
 												<span>Subscribe</span>

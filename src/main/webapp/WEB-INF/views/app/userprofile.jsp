@@ -112,12 +112,12 @@
 		
 															<div class="form-group">
 																<label class="col-sm-3 control-label no-padding-right" for="pass">New Password</label>		
-																<input type="password" path="pass" maxlength="20" id="pass" style="width:30%" />
+																<input type="password" path="pass" name="pass" maxlength="20" id="pass" style="width:30%" />
 															</div>
 			
 															<div class="form-group">
 																<label class="col-sm-3 control-label no-padding-right" for="repass">Confirm Password</label>
-																<input type="password" path="repass" maxlength="20" id="repass" style="width:30%" />
+																<input type="password" path="repass" name="repass" maxlength="20" id="repass" style="width:30%" />
 															</div>
 	
 															<button type="submit" id="updateusersubmit" class="btn btn-info" >
@@ -195,11 +195,12 @@
 
 		<!-- page specific plugin scripts -->
 
+		<script src="/resources/js/jquery.validate.min.js"> ></script>
 
-<!-- page specific plugin scripts -->
-<script src="<c:url value='/resources/js/additional-methods.min.js'/>" ></script>
-<script src="<c:url value='/resources/js/jquery.maskedinput.min.js'/>" ></script>
-<script src="<c:url value='/resources/js/select2.min.js'/>" ></script>
+		<!-- page specific plugin scripts -->
+		<script src="<c:url value='/resources/js/additional-methods.min.js'/>" ></script>
+		<script src="<c:url value='/resources/js/jquery.maskedinput.min.js'/>" ></script>
+		<script src="<c:url value='/resources/js/select2.min.js'/>" ></script>
 
 
 		<!--[if lte IE 8]>
@@ -320,15 +321,17 @@
 				});
 			
 
-		        $('#userprofile-form').validate({
+		        $('#userpassword-form').validate({
 		            errorElement: 'div',
 		            errorClass: 'help-block',
 		            focusInvalid: false,
 		            rules: {
 		                pass: {
+		                    required: true,
 		                    pass: 'required'
 		                },
 		                repass: {
+		                    required: true,
 		                    repass: 'required'
 		                }
 		                
@@ -388,7 +391,6 @@
 			}
 						
 		</script>
-		<script src="/resources/js/jquery.validate.min.js"> ></script>
 
 	</body>
 </html>

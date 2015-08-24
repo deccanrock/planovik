@@ -1,0 +1,12 @@
+How to import Hotel Rates file
+
+1. Hotel_rates excel file should be saved in csv format after removing the header and any row that has blank data
+2. Changes need to be made to the csv file. It should not contain any header or blank row, 
+3. On windows machine, open control panel, then region and language, click on additional setting button at bottom right, in customize format
+screen, change List separator to '|' instead of ','
+
+LOAD DATA LOCAL INFILE 'C:\\temp\\hotel_rates.csv' INTO TABLE z1_planovik_biz_1.hotel_rates FIELDS TERMINATED BY '|'
+LINES TERMINATED BY '\r\n' (citycode, cityname, hotel, hotelstar, ourrating, room, fromdate, todate,
+operdays, convcode, grp, epsngl, epdbl, cpsngl, cpdbl, mapsngl, mapdbl, apsngl, apdbl, eb, mealbf, mealln,
+mealdn, jpsngl, jpdbl, mjpsngl, mjpdbl, spnoting, currcode, rate, misc, aisngl, aidbl, notitle1, notitle2,
+notitle3);

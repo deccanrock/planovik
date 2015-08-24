@@ -203,6 +203,53 @@ public class AppController {
 		}
 	}	
 	
+	@RequestMapping(value = "/app/userpasswordupdate", method = RequestMethod.POST)    
+	public String UserPasswordUpdate(HttpServletRequest request, HttpServletResponse response, ModelMap map, HttpSession session,
+								@RequestParam("pass") String pass, @RequestParam("repass") String repass) {
+
+		logger.info("User Password Update");
+		
+		if (pass.isEmpty())
+			return "";
+
+		ApplicationContext context = AppCtxtProv.getApplicationContext();
+		UserEntityDAO UED = (UserEntityDAO)context.getBean("UserEntityDAO");
+		UserEntity user = UED.GetUser(username);
+
+		map.addAttribute("user", user);
+		map.addAttribute("title", "Planovik User Profile");
+		map.addAttribute("username", username);
+		String userphoto = "/resources/images/avatars/" + username + ".jpg";
+		map.addAttribute("userphoto", userphoto);
+		map.addAttribute("error", "New and current password cannot be same!");	
+		
+		if (HashCode.matchPassword(pass, user.getPass()))
+			return "app/userprofile";						
+				
+
+		// In future pass in fields and flags to see
+		session.getAttribute("userid");
+		String result = UED.UpdateUserPassword(Integer.parseInt(session.getAttribute("userid").toString()), pass);
+
+		if (result.contentEquals("Success")) {
+			
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			SecurityContextLogoutHandler ctxLogOut = new SecurityContextLogoutHandler();
+			ctxLogOut.setInvalidateHttpSession(true);
+			ctxLogOut.logout(request, response, auth);
+
+			map.addAttribute("title", "Planovik - Login Required!");
+			map.addAttribute("header", "User Login");
+			map.addAttribute("msg", "Update successful! Please login with your new password.");	
+			  
+			return "app/login";						
+		}
+		else
+			map.addAttribute("error", result);
+		
+		return result;
+
+	}	
     
     
     // for 403 access denied page
@@ -412,51 +459,10 @@ public class AppController {
 		// Record admin who created/edited/modifyed
 		itinerary.setLastupdatedbyusername(username);
 		
-		// ActivityMasterEntity ame = null;
-		// Get master activity for the itinerary since information changes on every save
-		if ( itinerary.getPostbutton().contentEquals("manageitinerary")) {
-			ItineraryEntity itinerarydb = null;			
-			// itinerarydb = IED.SaveItinerary(itinerary);
+		if ( itinerary.getPostbutton().contentEquals("manageitinerary"))
 			itinerary = IED.SaveItinerary(itinerary);
-			map.addAttribute("itinerary", itinerarydb);
-		
-			//ame = IED.GetActivityMaster(itinerarydb);
-			//ame.setItinnum(itinerarydb.getId());
-			//ame.setGroupnum(1); // set to 1 for testing
-			//ame.setVersion(itinerarydb.getVersion());
-			//ame.setTzoffset(itinerarydb.getTzoffset());
-			//ame.setPax(itinerarydb.getNumtravellers());
-		}
-		else if ( itinerary.getPostbutton().contentEquals("activitymaster")) {
-			map.addAttribute("itinerary", itinerary);
 
-			//ame = IED.GetActivityMaster(itinerary);
-			//ame.setItinnum(itinerary.getId());
-			//ame.setGroupnum(1); // set to 1 for testing
-			//ame.setVersion(itinerary.getVersion());
-			//ame.setTzoffset(itinerary.getTzoffset());
-			//ame.setPax(itinerary.getNumtravellers());
-		}
-		else if ( itinerary.getPostbutton().contentEquals("activity")) {
-			map.addAttribute("itinerary", itinerary);
-
-			//ame = IED.GetActivityMaster(itinerary);
-			//ame.setItinnum(itinerary.getId());
-			//ame.setGroupnum(1); // set to 1 for testing
-			//ame.setVersion(itinerary.getVersion());
-			//ame.setTzoffset(itinerary.getTzoffset());
-			//ame.setPax(itinerary.getNumtravellers());
-		}
-		
-		//map.addAttribute("activitymaster", ame);
-		
-		//ActivityMasterActEntity AMAE = new ActivityMasterActEntity();
-		//map.addAttribute("activitymasteract", AMAE);
-		
-		// Get all activities sorted day wise, heavy hitter
-		// ActivitiesListForItinerary ALE = new ActivitiesListForItinerary(ame.getItinnum(), ame.getVersion(), ame.getTzoffset());
-		// Hate to do anything with datasource within controller but due to Thread not having any knowledge of TenantContext we have 
-		// to make an exception
+		map.addAttribute("itinerary", itinerary);		
 		DataSource tenantdataSource = TenantDS.setTenantDataSource(null); 
 		ActivitiesListForItinerary ALE = new ActivitiesListForItinerary(itinerary.getId(), itinerary.getVersion(), itinerary.getTzoffset(), 
 				TenantContextHolder.getTenant().getTenantid(), tenantdataSource);
@@ -466,7 +472,6 @@ public class AppController {
 		
 		TravelActivityEntity TAE = new TravelActivityEntity();
 		TAE.setActivityid(0); // default to 0 should be changed at client side
-		// TAE.setItinnum(ame.getItinnum());
 		TAE.setItinnum(itinerary.getId());
 		TAE.setVersion(itinerary.getVersion());
 		TAE.setTzoffset(itinerary.getTzoffset());

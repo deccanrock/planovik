@@ -23,7 +23,7 @@
 
 					<div class="row">
 						<div class="col-xs-5" style="margin-left:10px;margin-top:30px;">
-							<div class="widget-box"  id="manageuserswidget"> 
+							<div class="widget-box"  id="manageuserswidget" style="min-height:170px;"> 
 						
 								<div class="widget-header">
 									<h5 class="widget-title">Manage Users</h5>
@@ -68,7 +68,7 @@
 				
 						<div class="col-xs-5" style="margin-left:10px;margin-top:30px;">
 					
-							<div class="widget-box" id="manageserviceswidget"> 
+							<div class="widget-box" id="manageserviceswidget" style="min-height:170px;"> 
 						
 								<div class="widget-header">
 									<h5 class="widget-title">Manage Services</h5>								
@@ -92,10 +92,10 @@
 											<div class="msg">${servicemsg}</div>
 										</c:if>
 					
-					                    <form:form id="manageservices-form" method="post" action="admin/manageservicesform" modelAttribute="serviceprovider" name="serviceprovider">				
+					                    <form:form id="manageservices-form" method="post" action="admin/manageservices" modelAttribute="serviceprovider" name="serviceprovider">				
 					                        <div class="form-group" style="margin-left:10px;margin-top:10px;">
 					                            <div class="clearfix">
-													<form:select class="col-sm-6 hideearrow selectof" path="types" name="types" id="types" multiple="">
+													<form:select class="col-sm-6 hideearrow selectof" path="types" name="types" id="types" multiple="" style="margin-left:5px;margin-top:10px;">
 											            <option value="">Pick Service Type..</option>
 													<c:forEach items="${serviceprovider.types}" var="servicetype">
 											            <option value="${servicetype}"><c:out value="${servicetype}" /></option>
@@ -103,19 +103,11 @@
 													</form:select>							                                
 												</div>
 											</div>
-					                        <div class="form-group">
-					                            <div class="clearfix">
-					                                <form:input type="text" path="servicename" placeholder="Enter service name" id="servicename" class="col-sm-11" 
-					                                style="margin-left:10px;width:90%" disabled="disabled" />
-					                            </div>
-					                        </div>
 	
 					                        <form:input type="hidden" id="servicesmode" path="mode" />
-					                        <form:input type="hidden" id="typestr" path="typestr" />
 
 					                        <div class="form-group" style="margin-top:20px;margin-left:20px;">
-						                        <input type="submit" id="manageservicescreate" path="manageservicescreate" class="btn btn-primary" value="Create" disabled />	                    
-						                        <input type="submit" id="manageservicesedit" path="manageservicesedit" class="btn btn-primary" value="Edit" disabled />
+						                        <input type="submit" id="manageservices" path="manageservices" class="btn btn-primary" value="Manage" disabled />	                    
 											</div>
 										</form:form>
 									</div>
@@ -218,11 +210,10 @@
             }
         });
        
-		$(":submit").live('click', function() {
+		$(":submit").click(function() {
 			var btnid = $(this).attr('id');
-			if (btnid == 'manageservicescreate' || btnid == 'manageservicesedit') {
+			if (btnid == 'manageservices') {
 			    $('#servicesmode').val($(this).val());
-			    $('#typestr').val($('#types').val());
 			} 
 			else {
 			    $('#usersmode').val($(this).val());					
@@ -251,12 +242,10 @@
 		$('#types').change(function() {
 			if ($('#types').val() ==  '') {
 				$('#servicename').prop( "disabled", true );
-				$('#manageservicesedit').prop( "disabled", true );
-				$('#manageservicescreate').prop( "disabled", true );			
+				$('#manageservices').prop( "disabled", true );
 			}
 			else {
-				$('#manageservicesedit').prop( "disabled", false );
-				$('#manageservicescreate').prop( "disabled", false );			
+				$('#manageservices').prop( "disabled", false );
 				$('#servicename').prop( "disabled", false );			
 			}
 		});		   

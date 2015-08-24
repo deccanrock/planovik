@@ -111,7 +111,7 @@ public class UserEntityDAO implements
 		else // this is only for setting IN parameter for SQL stored procedure, no DB change will be made
 			inParamMap.put("inpassword", "no change");
 		
-		inParamMap.put("inphone", user.getPhone());
+		inParamMap.put("inphone", user.getPhonecode() + '-' + user.getPhone());
 		inParamMap.put("intzoffset", user.getTzoffset());
 		
 		
@@ -218,12 +218,42 @@ public class UserEntityDAO implements
 
 	// This method will be extended to allow users to edit more settings on their profile, for now password
     @Override
+	public String UpdateUserPassword(int id, String pass) {
+    	DataSource  tenantdataSource = TenantDS.setTenantDataSource(null);    	    			
+    	JdbcTemplate jdbcTemplate = new JdbcTemplate(tenantdataSource);
+
+    	SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
+		.withProcedureName("sp_updateuserpassword");
+
+		Map<String, Object> inParamMap = new HashMap<String, Object>();
+
+		inParamMap.put("inid", id);
+		inParamMap.put("intenantid", TenantContextHolder.getTenant().getTenantid());		
+		// Secure pass
+		inParamMap.put("inpass", HashCode.getHashPassword(pass));
+
+		SqlParameterSource in = new MapSqlParameterSource(inParamMap);
+		
+		
+		String result="";
+    	try {    	
+			Map<String, Object> simpleJdbcCallResult = simpleJdbcCall.execute(in);
+			result = "Success";
+			// No exception means insert/update/delete happened
+		} catch (Exception ex) {
+		    result = ex.getMessage();
+		} 					
+						
+		return result;
+	}
+
+    @Override
 	public String UpdateUserProfile(int id, String pass) {
     	DataSource  tenantdataSource = TenantDS.setTenantDataSource(null);    	    			
     	JdbcTemplate jdbcTemplate = new JdbcTemplate(tenantdataSource);
 
     	SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
-		.withProcedureName("sp_updateuser");
+		.withProcedureName("sp_updateuserprofile");
 
 		Map<String, Object> inParamMap = new HashMap<String, Object>();
 

@@ -5,6 +5,13 @@ SELECT @@global.time_zone, @@session.time_zone;
 
 SET GLOBAL time_zone = '+00:00';
 
+INSERT INTO `plnvk_tenant_master` VALUES (1,1,'Planovik WWW','www','z1_planovik_main','127.0.0.1',1,0,0,2,0,0,0,'MZygpewJsCpRrfOr1SFG',12345,NULL,'2015-07-26 13:37:11','2015-07-26 13:37:11',1,1);
+
+Select jndiname from plnvk_db_map where zoneid=1 and tenanttype=2 
+and isavailfornewcon = 'N' order by dateupdated LIMIT 1;
+
+SELECT jndiname IS NULL, jndiname = '' from plnvk_
+
 Select jndiname from plnvk_db_map where zoneid=1 and tenanttype=2 and isavailfornewcon = 'Y'; 
 
 select * from plnvk_db_map;
@@ -18,8 +25,10 @@ update plnvk_account_master set contactpswd='$2a$10$4zv/luCTXrTi/5LCeB3MHOfZr2JV
 insert into plnvk_tenant_master (accountid, tenantdesc, tenantname, jndiname, regip, zoneid, tenanttype, status) 
 values (1, 'Planovik Corp', 'corp', 'z1_planovik_main', '127.0.0.1', 1, 1, 2);
 
-delete from plnvk_account_master where id=3;
-alter table plnvk_account_master AUTO_INCREMENT=2;
+delete from plnvk_account_master where id=2;
+alter table plnvk_tenant_master AUTO_INCREMENT=2;
+
+delete from plnvk_tenant_master where tenantid=2;
 
 insert into plnvk_account_master (orgname, accountname, accountemail, contactpswd, contactdesignation, contactphonemobile, accountstatus, addrstreet1, addrstreet2, addrcitytown, addrstateprovrgn, addrpostalcode, addrcountrycode, addrhomeurl, createdby, updatedby)
 values('Planovik', 'Srinivas Paruchuri', 'sriniv@yahoo.com', '$2a$08$w0QcUUuPjkGcfdMMXBXO8ODz/pv4n7..HHtwlNHubuJaPGdA3F.iu', 'Founder', '+91-9866277000', 2, 'Plot No 32 Rao and Raju Colony',
@@ -36,10 +45,10 @@ update plnvk_account_master set orgname='Deccan Rock Pvt Ltd' where id=1;
 
 update plnvk_tenant_master set contactname='Rakhee Kumar Paruchuri' where tenantid=3;
 
-delete from plnvk_tenant_master where tenantid=3;
+delete from plnvk_tenant_master where tenantid=1;
 select * from user_login_attempts;
 update user_login_attempts set attempts=0 where id=4;
-alter table plnvk_tenant_master AUTO_INCREMENT=3;
+alter table plnvk_tenant_master AUTO_INCREMENT=1;
 
 delete from user_login_attempts where id=2;
 
@@ -156,3 +165,15 @@ SET SQL_SAFE_UPDATES=0;
 Call sp_gettenantfordomain('3', 0);
 
 select count(*) from plnvk_tenant_master where tenantid=3 and pin=20096;
+
+
+CREATE TABLE `itin_activity_codes` (
+  `code` varchar(20) NOT NULL,
+  `description` varchar(40) NOT NULL,
+  `datecreated` datetime NOT NULL,
+  `dateupdated` datetime NOT NULL,
+  PRIMARY KEY (`code`),
+  UNIQUE KEY `code_UNIQUE` (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `itin_activity_codes` VALUES ('T_BOOK_ONEWAY','Booking One Way','2015-04-27 01:48:51','2015-04-27 01:48:51'),('T_BOOK_RETURN','Booking Return','2015-04-27 01:49:32','2015-04-27 01:49:32'),('T_PIKUPDRP','Pickup and Drop','2015-03-11 02:26:39','2015-03-11 02:26:39');

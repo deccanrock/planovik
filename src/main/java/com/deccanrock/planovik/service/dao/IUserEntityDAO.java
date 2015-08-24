@@ -2,6 +2,7 @@ package com.deccanrock.planovik.service.dao;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+
 import com.deccanrock.planovik.entity.UserEntity;
 
 
@@ -14,6 +15,7 @@ public interface IUserEntityDAO {
 	UserEntity GetUser(String username) throws IOException, SQLException;
 	boolean UserExists(String userName) throws IOException, SQLException;
 	public void DeleteUser(String username) throws IOException, SQLException;
-	public String UpdateUserProfile (int id, String pass) throws IOException, SQLException;	
+	public String UpdateUserPassword (int id, String pass) throws IOException, SQLException;
+	public String UpdateUserProfile(int id, String pass)  throws IOException, SQLException;
 	
 }

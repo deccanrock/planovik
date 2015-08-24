@@ -121,9 +121,9 @@ public class PlnvkConstants {
 	private final List <String> travelmodes = Arrays.asList("Air", "Train", "Car", "Bus", "Boat", "Ship");
 	public List<String> getTravelmodes() { return travelmodes; }
 	
-	private final List <String> servicetype = Arrays.asList("Airlines", "Hotels", "Transport", "Other");
-	public List<String> getServicetype() { return servicetype; }
-	public int getServiceIndex(String servicename) { return servicetype.indexOf(servicename); }
+	private final List <String> servicetypes = Arrays.asList("Airline", "Hotel", "Transport", "Other");
+	public List<String> getServicetypes() { return servicetypes; }
+	public int getServiceIndex(String servicename) { return servicetypes.indexOf(servicename); }
 
     // 0=city transfers, 1=intercity
 	private final List <String> transportcoverage = Arrays.asList("cityonly", "intercity");

@@ -162,7 +162,7 @@
 					                    <div class="clearfix">
 					                    	<label class="col-sm-4 control-label no-padding-right" for="phone">Phone</label>
 				                            <div class="input-group">
-				                				<span class="input-group-addon" style="font-size:12px;">
+				                				<span class="input-group-addon" style="font-size:12px;" id="phonecodespn">
 				                    				${phonecode}
 				                				</span>
 					                    		<c:choose>
@@ -178,8 +178,9 @@
 										</div>
 					                </div>
 					                <div class="space-4"></div>
-					
+
 				                    <form:input type="hidden" id="tzoffset" path="tzoffset"/>
+				                    <form:input type="hidden" id="phonecode" path="phonecode"/>
 				                    <form:input type="hidden" id="username" path="username" value="${user.username}"/>
 				                    <form:input type="hidden" id="mode" path="mode" value="${user.mode}"/>
 									<form:input type="hidden" id="islocked" path="islocked" value="${user.islocked}" />
@@ -235,13 +236,6 @@
 																</c:if>		
 															</div>		
 														</div><!-- row -->
-														<hr />
-														<div class="row" style="margin-left:10px; width:95%;">
-															<label>Upload new photo <i>(limit size to 300 kb)</i></label>
-															<a href="#" class="btn btn-minier btn-purple" style="margin-left:20px;display:none;" id="uploadfilesubmit">Upload</a>
-															<div class="pull-right center spinner-preview" id="spinnerupload" class="col-sm-1"></div>																																					
-															<input type="file" id="id-input-file-3" />
-														</div>														
 													</div>
 												</div>
 											</div>
@@ -249,7 +243,7 @@
 						                <div class="space-20"></div>
 				             		</c:if>
 
-									<div style="margin-top:20px;">
+									<div style="margin-top:30px;">
 					                    <!-- #section:plugins/fuelux.wizard.buttons -->
 					            		<c:choose>
 					            			<c:when test="${user.mode == 'Create'}">
@@ -413,6 +407,12 @@
         });
                 
         $(":submit").live('click', function() {
+        
+        	var phonecode = $('#phonecodespn').text();
+        	phonecode = phonecode.replace(/\s/g, '');
+        	alert(phonecode);
+        	$('#phonecode').val(phonecode);
+			alert($('#phonecode').val());
 
 		    if (this.id === 'manageusersedit') {
 		    
@@ -422,13 +422,14 @@
 				if ($("#credentialsexpired").prop("checked"))
 					$("#iscredentialsexpired").val(1);
 	
-	            return;		    
+	            return true;		    
 		    }
 
 			if (this.id === 'manageuserscreate') {
 	            var d = new Date();
 	            $('#tzoffset').val(d.getTimezoneOffset());
-	            return;			
+	            $('#tzoffset').val(d.getTimezoneOffset());
+	            return true;			
 			}
 			            
 			if (this.id === 'manageuserscancel') {

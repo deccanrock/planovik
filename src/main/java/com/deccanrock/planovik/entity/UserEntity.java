@@ -85,6 +85,8 @@ public class UserEntity
     @Column(name="role")    
 	private String role;
     private List<String> rolelist;
+    
+    private String phonecode;
 
     // Getter-Setters
 	public int getId() {
@@ -143,6 +145,14 @@ public class UserEntity
 		this.phone = phone;
 	}
 
+	public String getPhonecode() {
+		return phonecode;
+	}
+
+	public void setPhonecode(String phonecode) {
+		this.phonecode = phonecode;
+	}
+	
 	public String getDesignation() {
 		return designation;
 	}

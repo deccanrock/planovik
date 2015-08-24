@@ -15,7 +15,11 @@ public class UserEntityMapper implements RowMapper<UserEntity> {
 	   user.setRole(rs.getString("role"));	   
 	   user.setFullname(rs.getString("fullname"));
 	   user.setUsername(rs.getString("username"));
-	   user.setPhone(rs.getString("phone"));	   
+	   String phone = rs.getString("phone");
+	   int index = phone.indexOf('-');
+	   user.setPhonecode(phone.substring(0, index));
+	   user.setPhone(phone.substring(index+1, phone.length()));
+	   // user.setPhone(rs.getString("phone"));	   
 	   user.setDesignation(rs.getString("designation"));
 	   user.setLevel(rs.getInt("level"));
 	   if (rs.getInt("enabled") == 0) {
