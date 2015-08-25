@@ -415,35 +415,13 @@ public class AdminController {
 		ServiceProviderDAO SPD = (ServiceProviderDAO)context.getBean("ServiceProviderDAO");
 		List<HotelInfoEntity> hotelinfoentities;
 		
-		// Calculate ranges based on page number and oper mode
-		int range1=1, range2=60;
+		// Pass in page number and row
+		if (_search)
+			hotelinfoentities = SPD.GetServiceInfoEntities(servicetype, page, rows, (short)1, searchField, searchOper, searchString);
+		else
+			hotelinfoentities = SPD.GetServiceInfoEntities(servicetype, page, rows, (short)0, searchField, searchOper, searchString);
 
-		if (_search) {
-			// Use combination of lastrowid
-		}
-		else {
-			if (page == 1) {
-				range1 = 1; range2 = rows;
-			}
-			else {
-				range1 = ((page-1)*rows)+1; range2 = (range1-1) + rows;
-			}			
-		}
-
-		// This function is hit for View record, search records and reload
-    	// Jqgrid currently hits the server for everything, therefore, every it should be deciphered and handled properly
-    	if (_search) { // only one case wherein actual search is being done
-    		int lastrowid = 0;
-    		if (session.getAttribute("lastoper").toString().contentEquals("search"))
-    			lastrowid = (Integer) session.getAttribute("lastrowid");
-    				
-    		hotelinfoentities = SPD.GetInfoEntitiesForSearch(servicetype, lastrowid, rows,
-    								searchField, searchOper, searchString);
-    	}
-    	else // Check if reset function or pagination, *fix*, cannot make out reset, should be handled on client side
-    		hotelinfoentities = SPD.GetServiceInfoEntities(servicetype, range1, range2);    			
-    			
-		// Build a smaller set for jqgrid as the entire dataset with 38 fields is not required
+		
 		// Stuff the dataset in cache as user may click on individual rows
 		List <HotelInfo> hotelinfolist = new ArrayList<HotelInfo>();
 

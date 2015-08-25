@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.6.21, for Win64 (x86_64)
 --
--- Host: localhost    Database: z1_planovik_trial_1
+-- Host: localhost    Database: z1_planovik_biz_1
 -- ------------------------------------------------------
 -- Server version	5.6.21-log
 
@@ -14,6 +14,57 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `hotel_info`
+--
+
+DROP TABLE IF EXISTS `hotel_info`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `hotel_info` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `citycode` varchar(5) NOT NULL,
+  `cityname` varchar(25) NOT NULL,
+  `hotel` varchar(45) NOT NULL,
+  `hotelstar` varchar(25) DEFAULT NULL,
+  `ourrating` varchar(25) DEFAULT NULL,
+  `room` varchar(45) NOT NULL,
+  `fromdate` varchar(25) NOT NULL,
+  `todate` varchar(25) NOT NULL,
+  `operdays` varchar(12) NOT NULL,
+  `convcode` varchar(3) NOT NULL,
+  `grp` varchar(3) NOT NULL,
+  `epsngl` varchar(12) DEFAULT NULL,
+  `epdbl` varchar(12) DEFAULT NULL,
+  `cpsngl` varchar(12) DEFAULT NULL,
+  `cpdbl` varchar(12) DEFAULT NULL,
+  `mapsngl` varchar(12) DEFAULT NULL,
+  `mapdbl` varchar(12) DEFAULT NULL,
+  `apsngl` varchar(12) DEFAULT NULL,
+  `apdbl` varchar(12) DEFAULT NULL,
+  `eb` varchar(12) DEFAULT NULL,
+  `mealbf` varchar(12) DEFAULT NULL,
+  `mealln` varchar(12) DEFAULT NULL,
+  `mealdn` varchar(12) DEFAULT NULL,
+  `jpsngl` varchar(12) DEFAULT NULL,
+  `jpdbl` varchar(12) DEFAULT NULL,
+  `mjpsngl` varchar(12) DEFAULT NULL,
+  `mjpdbl` varchar(12) DEFAULT NULL,
+  `spnoting` varchar(255) DEFAULT NULL,
+  `currcode` varchar(3) NOT NULL,
+  `rate` varchar(12) NOT NULL,
+  `misc` varchar(25) DEFAULT NULL,
+  `aisngl` varchar(100) DEFAULT NULL,
+  `aidbl` varchar(25) DEFAULT NULL,
+  `notitle1` varchar(45) DEFAULT NULL,
+  `notitle2` varchar(25) DEFAULT NULL,
+  `notitle3` varchar(25) DEFAULT NULL,
+  `datecreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `dateupdated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=16384 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `itin_activity_hotel`
@@ -59,15 +110,6 @@ CREATE TABLE `itin_activity_hotel` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `itin_activity_hotel`
---
-
-LOCK TABLES `itin_activity_hotel` WRITE;
-/*!40000 ALTER TABLE `itin_activity_hotel` DISABLE KEYS */;
-/*!40000 ALTER TABLE `itin_activity_hotel` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `itin_activity_master`
 --
 
@@ -76,6 +118,7 @@ DROP TABLE IF EXISTS `itin_activity_master`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `itin_activity_master` (
   `itinnum` int(11) NOT NULL,
+  `tenantid` int(11) NOT NULL,
   `version` smallint(2) NOT NULL,
   `pax` smallint(5) NOT NULL,
   `datecreated` datetime NOT NULL,
@@ -94,15 +137,6 @@ CREATE TABLE `itin_activity_master` (
   CONSTRAINT `fk_lastupdatedby_itin_activity_master` FOREIGN KEY (`lastupdatedby`) REFERENCES `users` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `itin_activity_master`
---
-
-LOCK TABLES `itin_activity_master` WRITE;
-/*!40000 ALTER TABLE `itin_activity_master` DISABLE KEYS */;
-/*!40000 ALTER TABLE `itin_activity_master` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `itin_activity_master_act`
@@ -124,15 +158,6 @@ CREATE TABLE `itin_activity_master_act` (
   CONSTRAINT `fk_itinnum_itin_activity_master_act` FOREIGN KEY (`itinnum`) REFERENCES `itin_activity_master` (`itinnum`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `itin_activity_master_act`
---
-
-LOCK TABLES `itin_activity_master_act` WRITE;
-/*!40000 ALTER TABLE `itin_activity_master_act` DISABLE KEYS */;
-/*!40000 ALTER TABLE `itin_activity_master_act` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `itin_activity_other`
@@ -172,15 +197,6 @@ CREATE TABLE `itin_activity_other` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `itin_activity_other`
---
-
-LOCK TABLES `itin_activity_other` WRITE;
-/*!40000 ALTER TABLE `itin_activity_other` DISABLE KEYS */;
-/*!40000 ALTER TABLE `itin_activity_other` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `itin_activity_travel`
 --
 
@@ -189,6 +205,7 @@ DROP TABLE IF EXISTS `itin_activity_travel`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `itin_activity_travel` (
   `activityid` int(11) NOT NULL AUTO_INCREMENT,
+  `tenantid` int(11) NOT NULL,
   `activityidpair` int(11) DEFAULT '0',
   `itinnum` int(11) NOT NULL,
   `actname` varchar(60) NOT NULL DEFAULT 'Enter Name',
@@ -236,15 +253,6 @@ CREATE TABLE `itin_activity_travel` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `itin_activity_travel`
---
-
-LOCK TABLES `itin_activity_travel` WRITE;
-/*!40000 ALTER TABLE `itin_activity_travel` DISABLE KEYS */;
-/*!40000 ALTER TABLE `itin_activity_travel` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `itin_activity_visit`
 --
 
@@ -289,15 +297,6 @@ CREATE TABLE `itin_activity_visit` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `itin_activity_visit`
---
-
-LOCK TABLES `itin_activity_visit` WRITE;
-/*!40000 ALTER TABLE `itin_activity_visit` DISABLE KEYS */;
-/*!40000 ALTER TABLE `itin_activity_visit` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `itin_currconv`
 --
 
@@ -306,6 +305,7 @@ DROP TABLE IF EXISTS `itin_currconv`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `itin_currconv` (
   `convcode` int(11) NOT NULL AUTO_INCREMENT,
+  `tenantid` int(11) NOT NULL,
   `fromcurr` varchar(3) NOT NULL,
   `tocurr` varchar(3) NOT NULL,
   `status` smallint(2) NOT NULL DEFAULT '0',
@@ -316,18 +316,8 @@ CREATE TABLE `itin_currconv` (
   UNIQUE KEY `conv_code_UNIQUE` (`convcode`),
   UNIQUE KEY `unq_fromcurrtocurrunitrate` (`fromcurr`,`tocurr`,`unitrate`),
   KEY `fk_fromcurr_itin_currconv_idx` (`fromcurr`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `itin_currconv`
---
-
-LOCK TABLES `itin_currconv` WRITE;
-/*!40000 ALTER TABLE `itin_currconv` DISABLE KEYS */;
-INSERT INTO `itin_currconv` VALUES (1,'INR','INR',1,1,'2015-02-16 11:57:05','2015-02-16 11:57:05'),(2,'USD','INR',1,58,'2015-02-16 06:30:37','2015-02-16 06:30:37'),(3,'USD','INR',1,59,'2015-02-16 06:35:42','2015-02-16 06:35:42'),(4,'USD','INR',1,60,'2015-02-16 06:36:20','2015-02-16 06:36:20'),(5,'USD','INR',1,57,'2015-03-09 13:59:02','2015-03-09 13:59:02'),(6,'USD','INR',1,56,'2015-03-25 10:48:06','2015-03-25 10:48:06'),(7,'GBP','INR',1,98,'2015-05-13 12:31:45','2015-05-13 12:31:45');
-/*!40000 ALTER TABLE `itin_currconv` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `itin_daywise`
@@ -346,15 +336,6 @@ CREATE TABLE `itin_daywise` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `itin_daywise`
---
-
-LOCK TABLES `itin_daywise` WRITE;
-/*!40000 ALTER TABLE `itin_daywise` DISABLE KEYS */;
-/*!40000 ALTER TABLE `itin_daywise` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `itin_master`
 --
 
@@ -363,6 +344,7 @@ DROP TABLE IF EXISTS `itin_master`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `itin_master` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tenantid` int(11) NOT NULL,
   `name` varchar(50) NOT NULL,
   `version` smallint(2) NOT NULL,
   `status` smallint(2) NOT NULL DEFAULT '0',
@@ -377,9 +359,9 @@ CREATE TABLE `itin_master` (
   `quotecurrency` varchar(3) DEFAULT 'INR',
   `convcode` int(11) DEFAULT '1',
   `tzoffset` smallint(6) NOT NULL DEFAULT '-330',
-  `datecreated` datetime NOT NULL,
+  `datecreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `createdby` int(10) unsigned NOT NULL,
-  `dateupdated` datetime NOT NULL,
+  `dateupdated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `lastupdatedby` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_UNIQUE` (`name`),
@@ -391,15 +373,6 @@ CREATE TABLE `itin_master` (
   CONSTRAINT `fk_convcode_itin_master` FOREIGN KEY (`convcode`) REFERENCES `itin_currconv` (`convcode`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `itin_master`
---
-
-LOCK TABLES `itin_master` WRITE;
-/*!40000 ALTER TABLE `itin_master` DISABLE KEYS */;
-/*!40000 ALTER TABLE `itin_master` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `itin_pax_info`
@@ -433,15 +406,6 @@ CREATE TABLE `itin_pax_info` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `itin_pax_info`
---
-
-LOCK TABLES `itin_pax_info` WRITE;
-/*!40000 ALTER TABLE `itin_pax_info` DISABLE KEYS */;
-/*!40000 ALTER TABLE `itin_pax_info` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `service_airlines`
 --
 
@@ -450,6 +414,7 @@ DROP TABLE IF EXISTS `service_airlines`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `service_airlines` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tenantid` int(11) NOT NULL,
   `servicename` varchar(45) NOT NULL,
   `iatacode` varchar(3) DEFAULT NULL,
   `rating` smallint(1) DEFAULT NULL,
@@ -470,18 +435,8 @@ CREATE TABLE `service_airlines` (
   UNIQUE KEY `servicename_UNIQUE` (`servicename`),
   KEY `fk_createdby_itin_airlines_idx` (`createdby`),
   KEY `fk_updatedby_itin_airlines_idx` (`updatedby`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `service_airlines`
---
-
-LOCK TABLES `service_airlines` WRITE;
-/*!40000 ALTER TABLE `service_airlines` DISABLE KEYS */;
-INSERT INTO `service_airlines` VALUES (4,'Indigo air','6E',5,'Gurgaon','India','none','98102333333','travelpartner@goindigo.in','goindigo.in',0,0,'','2015-05-13 13:56:13','2015-05-13 13:56:13',1,1);
-/*!40000 ALTER TABLE `service_airlines` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `service_hotels`
@@ -492,6 +447,7 @@ DROP TABLE IF EXISTS `service_hotels`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `service_hotels` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
+  `tenantid` int(11) NOT NULL,
   `servicename` varchar(100) NOT NULL,
   `city` varchar(45) DEFAULT NULL,
   `country` varchar(45) DEFAULT NULL,
@@ -515,15 +471,6 @@ CREATE TABLE `service_hotels` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `service_hotels`
---
-
-LOCK TABLES `service_hotels` WRITE;
-/*!40000 ALTER TABLE `service_hotels` DISABLE KEYS */;
-/*!40000 ALTER TABLE `service_hotels` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `service_other`
 --
 
@@ -532,6 +479,7 @@ DROP TABLE IF EXISTS `service_other`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `service_other` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tenantid` int(11) NOT NULL,
   `servicename` varchar(45) NOT NULL,
   `description` varchar(120) DEFAULT NULL,
   `rating` smallint(1) DEFAULT NULL,
@@ -552,18 +500,8 @@ CREATE TABLE `service_other` (
   KEY `fk_itin_service_other_updatedby_idx` (`updatedby`),
   CONSTRAINT `fk_itin_service_other_createdby` FOREIGN KEY (`createdby`) REFERENCES `users` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `fk_itin_service_other_updatedby` FOREIGN KEY (`updatedby`) REFERENCES `users` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `service_other`
---
-
-LOCK TABLES `service_other` WRITE;
-/*!40000 ALTER TABLE `service_other` DISABLE KEYS */;
-INSERT INTO `service_other` VALUES (1,'Kerala Boat and tours','House boat',3,'Kochi','India','Kurien','9005345678','keralatours@gmail.com','keralatours.co.in','2015-05-13 01:13:51','2015-05-13 01:13:51',6,6,'');
-/*!40000 ALTER TABLE `service_other` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `service_transport`
@@ -588,24 +526,15 @@ CREATE TABLE `service_transport` (
   `dateupdated` datetime NOT NULL,
   `createdby` int(10) unsigned NOT NULL,
   `updatedby` int(10) unsigned NOT NULL,
+  `tenantid` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `servicename_UNIQUE` (`servicename`),
   KEY `fk_createdby_itin_cab_cos_idx` (`createdby`),
   KEY `fk_updatedby_itin_cab_cos_idx` (`updatedby`),
   CONSTRAINT `fk_createdby_itin_cab_cos` FOREIGN KEY (`createdby`) REFERENCES `users` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `fk_updatedby_itin_cab_cos` FOREIGN KEY (`updatedby`) REFERENCES `users` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `service_transport`
---
-
-LOCK TABLES `service_transport` WRITE;
-/*!40000 ALTER TABLE `service_transport` DISABLE KEYS */;
-INSERT INTO `service_transport` VALUES (1,'Rajasthan Travels','Jaipur','India','9200123456','rajasthantravels@gmail.com','rajasthantravels.in','Raj Chauhan',NULL,1,'','2015-05-13 00:56:52','2015-05-13 00:56:52',6,6);
-/*!40000 ALTER TABLE `service_transport` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `user_login_attempts`
@@ -616,24 +545,15 @@ DROP TABLE IF EXISTS `user_login_attempts`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user_login_attempts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tenantid` int(11) NOT NULL,
   `username` varchar(30) NOT NULL,
   `attempts` int(2) NOT NULL,
   `lastModified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `fk_username_user_login_attempts_idx` (`username`),
   CONSTRAINT `fk_username_user_login_attempts` FOREIGN KEY (`username`) REFERENCES `users` (`username`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `user_login_attempts`
---
-
-LOCK TABLES `user_login_attempts` WRITE;
-/*!40000 ALTER TABLE `user_login_attempts` DISABLE KEYS */;
-INSERT INTO `user_login_attempts` VALUES (5,'ashu',0,'2015-05-15 18:13:50'),(8,'srini',0,'2015-05-22 15:55:38'),(9,'rakhee',0,'2015-03-09 19:25:33'),(10,'mahesh',1,'2015-05-06 06:56:40');
-/*!40000 ALTER TABLE `user_login_attempts` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `user_roles`
@@ -645,22 +565,12 @@ DROP TABLE IF EXISTS `user_roles`;
 CREATE TABLE `user_roles` (
   `roleid` int(5) unsigned NOT NULL AUTO_INCREMENT,
   `role` varchar(25) NOT NULL,
-  `datecreated` datetime NOT NULL,
-  `dateupdated` datetime NOT NULL,
+  `datecreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `dateupdated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`roleid`),
   UNIQUE KEY `unq_username_role` (`role`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `user_roles`
---
-
-LOCK TABLES `user_roles` WRITE;
-/*!40000 ALTER TABLE `user_roles` DISABLE KEYS */;
-INSERT INTO `user_roles` VALUES (1,'ROLE_USER','2015-03-01 05:43:27','2015-03-01 05:43:27'),(2,'ROLE_ADMIN','2015-03-01 05:43:39','2015-03-01 05:43:39'),(3,'ROLE_SUPERADMIN','2015-03-01 05:43:47','2015-03-01 05:43:47');
-/*!40000 ALTER TABLE `user_roles` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `user_roles_map`
@@ -671,27 +581,19 @@ DROP TABLE IF EXISTS `user_roles_map`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user_roles_map` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
+  `tenantid` int(11) NOT NULL,
   `username` varchar(30) NOT NULL,
   `role` varchar(25) NOT NULL,
-  `datecreated` datetime NOT NULL,
-  `dateupdated` datetime NOT NULL,
+  `datecreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `dateupdated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `unq_username_tenantid` (`username`,`tenantid`),
   KEY `fk_username_user_roles_map_idx` (`username`),
   KEY `fk_role_user_roles_map_idx` (`role`),
   CONSTRAINT `fk_role_user_roles_map` FOREIGN KEY (`role`) REFERENCES `user_roles` (`role`) ON UPDATE CASCADE,
   CONSTRAINT `fk_username_user_roles_map` FOREIGN KEY (`username`) REFERENCES `users` (`username`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `user_roles_map`
---
-
-LOCK TABLES `user_roles_map` WRITE;
-/*!40000 ALTER TABLE `user_roles_map` DISABLE KEYS */;
-INSERT INTO `user_roles_map` VALUES (2,'ashu','ROLE_SUPERADMIN','2015-03-01 06:34:49','2015-03-01 06:34:49'),(3,'srini','ROLE_USER','2015-03-08 13:32:09','2015-03-08 13:32:09'),(4,'rakhee','ROLE_USER','2015-03-09 13:54:19','2015-03-09 13:54:19'),(5,'mahesh','ROLE_USER','2015-05-06 07:34:22','2015-05-06 07:34:22');
-/*!40000 ALTER TABLE `user_roles_map` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `users`
@@ -702,12 +604,13 @@ DROP TABLE IF EXISTS `users`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `users` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `tenantid` int(11) NOT NULL,
   `email` varchar(120) NOT NULL,
   `fullname` varchar(60) NOT NULL,
   `username` varchar(30) NOT NULL,
   `password` varchar(60) NOT NULL,
   `phone` varchar(20) DEFAULT NULL,
-  `designation` varchar(20) DEFAULT NULL,
+  `designation` varchar(30) DEFAULT NULL,
   `reportsto` int(10) NOT NULL DEFAULT '1',
   `createdby` int(10) NOT NULL DEFAULT '1',
   `level` int(3) NOT NULL DEFAULT '0',
@@ -716,26 +619,16 @@ CREATE TABLE `users` (
   `accountNonLocked` tinyint(1) NOT NULL DEFAULT '1',
   `credentialsNonExpired` tinyint(1) NOT NULL DEFAULT '1',
   `tzoffset` int(6) DEFAULT NULL,
-  `date_created` datetime NOT NULL,
-  `date_updated` datetime NOT NULL,
+  `date_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `date_updated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `unq_username_email` (`email`,`username`),
+  UNIQUE KEY `unq_username_tenantid` (`tenantid`,`username`),
   KEY `IDX_username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `users`
---
-
-LOCK TABLES `users` WRITE;
-/*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'ashumalik@gmail.com','Ashutosh Malik','ashu','$2a$10$dBDRjC2GrwV56rJICdc.zuC2VbsZoogzuMSh54KJXlERUFj1RcxNe','0123456789','CEO',1,1,5,1,1,1,1,-330,'2015-02-25 13:31:58','2015-03-08 14:30:49'),(6,'sriniv@yahoo.com','Srinivas Paruchuri','srini','$2a$10$H5jj69EFLRyruhrtiMpvZePHj5BXlY3pMansGX77wIVZRKDL/eqki','0123456782','CTO',1,1,5,1,1,1,1,-330,'2015-03-01 08:28:52','2015-03-09 12:24:37'),(7,'rakheekumar@gmail.com','Rakhee Paruchuri','rakhee','$2a$10$7CgDk5omwqZdRwzhldBosus/pSdQbpKNF.hS18iTT6AOqzVqLmHQu','0123456789','Company Doctor',1,1,0,1,1,1,1,-330,'2015-03-09 13:54:19','2015-03-09 13:54:19'),(8,'mahesh@destination1000.com','Mahesh Chauhan','mahesh','$2a$10$Q8zE2jNzZ5kbJXuyhZAeZu42aSsFq/sh1t8VZrIRqpzzbml7mLCHu','9810277000','Travel Coordinator',1,1,0,0,1,1,0,-330,'2015-05-06 01:25:04','2015-05-06 07:34:44');
-/*!40000 ALTER TABLE `users` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Dumping routines for database 'z1_planovik_trial_1'
+-- Dumping routines for database 'z1_planovik_biz_1'
 --
 /*!50003 DROP PROCEDURE IF EXISTS `sp_createcurrconvcode` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -752,17 +645,18 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_createcurrconvcode`(
     IN infromcurr VARCHAR(3),
     IN inunitrate float,
     IN instatus SMALLINT(2),
+    IN intenantid INT(11),
     OUT result VARCHAR(30)
 )
 BEGIN
 
 	DECLARE newconvcode INT(11);
     
-    IF (Select count(*) from itin_currconv where fromcurr=infromcurr and tocurr=intocurr and unitrate=inunitrate = 1) THEN
-		Select convcode INTO @newconvcode from itin_currconv where fromcurr=infromcurr and tocurr=intocurr and unitrate=inunitrate;
+    IF (Select count(*) from itin_currconv where fromcurr=infromcurr and tocurr=intocurr and tenantid = intenantid and unitrate=inunitrate = 1) THEN
+		Select convcode INTO @newconvcode from itin_currconv where fromcurr=infromcurr and tocurr=intocurr and unitrate=inunitrate and unitrate=inunitrate;
         SELECT CONCAT(@newconvcode, ' - ', infromcurr, ' to ', intocurr, '  Rate: ', inunitrate) INTO result;
     ELSE
-		Insert into itin_currconv (fromcurr, tocurr, unitrate, status, datecreated, dateupdated) values (infromcurr,
+		Insert into itin_currconv (tenantid, fromcurr, tocurr, unitrate, status, datecreated, dateupdated) values (intenantid, infromcurr,
         intocurr, inunitrate, instatus, UTC_TIMESTAMP(),  UTC_TIMESTAMP());
         SELECT LAST_INSERT_ID() INTO @newconvcode;
         SELECT CONCAT(@newconvcode, ' - ', infromcurr, ' to ', intocurr, '  Rate: ', inunitrate) INTO result;
@@ -848,15 +742,16 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_create_itinerary`(
     IN quotecurrency VARCHAR(3),
     IN tzoffset SMALLINT,
     IN createdbyusername VARCHAR(30),
+    IN tenantid INT(11),
     OUT itinnum INT(11)
 )
 BEGIN
 	DECLARE createdby INT(11);
     	
-	Select id INTO @createdby from users where username=createdbyusername;
+	Select id INTO @createdby from users where username=createdbyusername and tenantid=tenantid;
     
-	INSERT INTO itin_master (id, name, version, status, tzoffset, currency, quotecurrency, createdby, datecreated, lastupdatedby, dateupdated) 
-	VALUES (NULL, name, version, status, tzoffset, currency, quotecurrency, @createdby, UTC_TIMESTAMP(),  @createdby, UTC_TIMESTAMP());
+	INSERT INTO itin_master (id, tenantid, name, version, status, tzoffset, currency, quotecurrency, createdby, lastupdatedby) 
+	VALUES (NULL, tenantid, name, version, status, tzoffset, currency, quotecurrency, @createdby, @createdby);
 	SELECT LAST_INSERT_ID() INTO itinnum;
 
 END ;;
@@ -958,11 +853,12 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_delete_user`(
-	IN inusername VARCHAR(100)
+	IN inusername VARCHAR(100),
+    IN intenantid INT(11)
 )
 BEGIN
 
-	update users set enabled=0, date_updated=UTC_TIMESTAMP() where username=inusername;
+	update users set enabled=0, date_updated=UTC_TIMESTAMP() where username=inusername and tenantid=intenantid;
 
 END ;;
 DELIMITER ;
@@ -1023,6 +919,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_getconvcodedetails`(	
 	IN currconvcode INT(11),
+    IN tenantid INT(11),
     OUT outfromcurr VARCHAR(3),
     OUT outtocurr	 VARCHAR(3),
     OUT outstatus   SMALLINT(2),
@@ -1032,7 +929,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_getconvcodedetails`(
 )
 BEGIN
 	Select fromcurr, tocurr, status, unitrate, datecreated, dateupdated INTO outfromcurr, 
-    outtocurr, outstatus, outunitrate, outdatecreated, outdateupdated from itin_currconv where convcode=currconvcode;
+    outtocurr, outstatus, outunitrate, outdatecreated, outdateupdated from itin_currconv where convcode=currconvcode and tenantid=tenantid;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1050,12 +947,13 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_getcurrconvcodes`(        
-	IN  query	VARCHAR(30),
-    IN	instatus SMALLINT(2)
+	IN  query		VARCHAR(30),
+    IN  intenantid	INT(11),
+    IN	instatus 	SMALLINT(2)
 )
 BEGIN
 		SELECT CONCAT(convcode, ' - ', fromcurr, ' to ', tocurr, '  Rate: ', unitrate) AS isocurrcodedesc FROM itin_currconv 
-          WHERE fromcurr LIKE CONCAT("%", query, "%") and status=instatus order by convcode desc LIMIT 0, 20;
+          WHERE fromcurr LIKE CONCAT("%", query, "%") and status=instatus and tenantid = intenantid order by convcode desc LIMIT 0, 20;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1200,17 +1098,18 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_getitinidnamelist`(
-        IN  query		               	VARCHAR(30),
-        IN 	isnumber					INT(1)
+        IN  query		VARCHAR(30),
+        IN 	intenantid	INT(11),				
+        IN 	isnumber	INT(1)
 )
 BEGIN
 	DECLARE strnumber INT(11);      
         		       
 	IF (isnumber = 1) THEN
 		SET @strnumber := CONVERT(query, UNSIGNED);
-		SELECT CONCAT(id, ' - ', name) AS itinnumbername FROM itin_master WHERE id LIKE CONCAT("%", @strnumber, "%") order by dateupdated desc LIMIT 0, 20;
+		SELECT CONCAT(id, ' - ', name) AS itinnumbername FROM itin_master WHERE id LIKE CONCAT("%", @strnumber, "%") and tenantid=intenantid order by dateupdated desc LIMIT 0, 20;
 	ELSE
-		SELECT CONCAT(id, ' - ', name) AS itinnumbername FROM itin_master WHERE name LIKE CONCAT("%", query, "%") order by dateupdated desc LIMIT 0, 20;
+		SELECT CONCAT(id, ' - ', name) AS itinnumbername FROM itin_master WHERE name LIKE CONCAT("%", query, "%")  and tenantid=intenantid order by dateupdated desc LIMIT 0, 20;
         
         END IF;
 END ;;
@@ -1374,13 +1273,57 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_getreportingmanagers`(
-        IN  	inuserid INT(10)
+        IN  	inuserid 	INT(10),
+        IN		intenantid	INT(11)
 )
 BEGIN
-	Select  username from users where id = (Select reportsto from users where id=inuserid) 
+	Select  username from users where id = (Select reportsto from users where id=inuserid and tenantid=intenantid) 
     UNION ALL
-   	Select  username from users where id = (Select createdby from users where id=inuserid);
+   	Select  username from users where id = (Select createdby from users where id=inuserid and tenantid=intenantid);
 
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_getservice` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_getservice`(
+        IN  inservicename	            VARCHAR(45), 
+        IN	type						SMALLINT(1),
+        IN	intenantid					INT(11)        
+)
+BEGIN
+		IF (type = 0) THEN
+				Select id, tenantid, servicename, iatacode, rating, city, country, contactname, contactphone, contactemail,
+				contactwebsite, fullservice, domesticonly, addlinfo, datecreated, createdby, dateupdated, updatedby 
+                from service_airlines where servicename=inservicename and tenantid=intenantid;
+
+		ELSEIF (type = 1) THEN
+				Select id, tenantid, servicename, rating, city, country, contactname, contactphone, contactemail,
+				contactwebsite, addlinfo, datecreated, createdby, dateupdated, updatedby from service_hotels 
+				where servicename=inservicename and tenantid=intenantid;
+        
+        ELSEIF (type = 2) THEN
+				Select id, tenantid, servicename, rating, coverage, city, country, contactname, contactphone, contactemail,
+				contactwebsite, addlinfo, datecreated, createdby, dateupdated, updatedby from service_transport
+				where servicename=inservicename and tenantid=intenantid;
+		
+        ELSEIF (type = 3) THEN
+				Select id, tenantid, servicename, description, rating, city, country, contactname, contactphone, contactemail,
+				contactwebsite, addlinfo, datecreated, createdby, dateupdated, updatedby from service_other
+				where servicename=inservicename and tenantid=intenantid;
+        
+        END IF;            
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1446,13 +1389,15 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_getuserdetails`(
-        IN  	inusername VARCHAR(30)
+        IN  	inusername VARCHAR(30),
+        IN		intenantid INT(11)
 )
 BEGIN
     
 	Select t1.id, t1.fullname, t1.password, t1.email, t1.username, t1.phone, t1.designation, t1.level, t1.enabled, t1.accountNonExpired,
     t1.accountNonLocked, t1.credentialsNonExpired, t1.tzoffset, t1.date_created, t1.date_updated, t2.role from 
-    users t1, user_roles_map t2 where t1.username = inusername and t2.username= inusername;
+    users t1, user_roles_map t2 where t1.username = inusername and 
+    t2.username= inusername and t1.tenantid = intenantid and t2.tenantid = intenantid;
     
 
 END ;;
@@ -1472,19 +1417,20 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_activities_for_type`(
-	IN	itinnum	INT(11),
-	IN	version	SMALLINT(2),
-    IN  type SMALLINT(2)
+	IN	itinnum		INT(11),
+	IN	version		SMALLINT(2),
+    IN  type 		SMALLINT(2),
+    IN	tenantid	INT(11)
 )
 BEGIN
 
 	
     IF (type = 0) THEN
-		select a.activityid, a.activityidpair, a.itinnum, a.actname, a.pax, a.mode, a.code, a.version, a.vesselconame, a.vesselnoon, a.vesselnoret,
+		select a.activityid, a.activityidpair, a.tenantid, a.itinnum, a.actname, a.pax, a.mode, a.code, a.version, a.vesselconame, a.vesselnoon, a.vesselnoret,
 		a.bookingclass, a.bookingno, a.depdatetimeon, a.depdatetimeret, a.arrdatetimeon, a.arrdatetimeret, a.depstation, a.arrstation, a.cost, a.costmarkup, a.pikupdroplocfrom,
 		a.pikupdroplocto, a.pikupdropdatetime, a.pikupdropcost, a.pikupdropcostmarkup, a.vehdetails, a.asstcost, a.asstcostmarkup,
 		a.commentsinternal, a.commentsexternal, a.datecreated, a.dateupdated, a.lastupdatedby, a.createdby from itin_activity_travel a where a.itinnum = itinnum 
-        and a.version = version order by a.activityid ASC;
+        and a.version = version and a.tenantid = tenantid order by a.activityid ASC;
     END IF;
 END ;;
 DELIMITER ;
@@ -1505,6 +1451,7 @@ DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_activitypairdet`(
 	IN	inactivityid	INT(11),
 	IN  type 			SMALLINT(2),
+    IN 	tenantid		INT(11),
     OUT	outdepdatetimeon long,
     OUT	outarrdatetimeon long,
     OUT	outdepdatetimeret long,
@@ -1514,7 +1461,7 @@ BEGIN
 	IF (type = 0) THEN
     BEGIN
 		Select UNIX_TIMESTAMP(depdatetimeon) * 1000, UNIX_TIMESTAMP(depdatetimeret) * 1000, UNIX_TIMESTAMP(arrdatetimeon) * 1000, UNIX_TIMESTAMP(arrdatetimeret) * 1000
-        INTO outdepdatetimeon, outdepdatetimeret, outarrdatetimeon, outarrdatetimeret from itin_activity_travel where activityid=inactivityid; 
+        INTO outdepdatetimeon, outdepdatetimeret, outarrdatetimeon, outarrdatetimeret from itin_activity_travel where activityid=inactivityid and tenantid=tenantid; 
     END;
 	END IF;
 END ;;
@@ -1535,15 +1482,16 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_activity_details`(
 	IN	activityid	INT(11),
-    IN  type SMALLINT(2)
+    IN  type 		SMALLINT(2),
+    IN	tenantid	INT(11)
 )
 BEGIN
 	
     IF (type = 0) THEN
-		select a.activityid, a.activityidpair, a.itinnum, a.actname, a.pax, a.mode, a.code, a.version, a.vesselconame, a.vesselnoon, a.vesselnoret,
+		select a.activityid, a.activityidpair, a.tenantid, a.itinnum, a.actname, a.pax, a.mode, a.code, a.version, a.vesselconame, a.vesselnoon, a.vesselnoret,
 		a.bookingclass, a.bookingno, a.depdatetimeon, a.arrdatetimeon, a.depdatetimeret, a.arrdatetimeret, a.depstation, a.arrstation, a.cost, a.costmarkup, a.pikupdroplocfrom,
 		a.pikupdroplocto, a.pikupdropdatetime, a.pikupdropcost, a.pikupdropcostmarkup, a.vehdetails, a.asstcost, a.asstcostmarkup,
-		a.commentsinternal, a.commentsexternal, a.datecreated, a.dateupdated, a.lastupdatedby, a.createdby from itin_activity_travel a where a.activityid = activityid;
+		a.commentsinternal, a.commentsexternal, a.datecreated, a.dateupdated, a.lastupdatedby, a.createdby from itin_activity_travel a where a.activityid = activityid and a.tenantid=tenantid;
 	END IF;
 END ;;
 DELIMITER ;
@@ -1562,13 +1510,147 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_itinerary`(
-	IN itinum INT(11)
+	IN itinum 	INT(11),
+    IN tenantid INT(11)
 )
 BEGIN
     
 	Select id, name, version, status, touroperator, grouphead, numtravellers, startdate, enddate, arrivalcity, depcity, 
-	currency, quotecurrency, convcode, tzoffset, createdby, datecreated, lastupdatedby, dateupdated from itin_master where id=itinum;    
+	currency, quotecurrency, convcode, tzoffset, createdby, datecreated, lastupdatedby, dateupdated from itin_master where id=itinum and tenantid=tenantid;    
     
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_get_serviceinfo_entities` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_serviceinfo_entities`(	
+	IN	servicetype		VARCHAR(12),
+    IN	inpage			SMALLINT(7),
+    IN	inrows			SMALLINT(3),
+    IN	issearch		SMALLINT(1),
+    IN	searchfield		VARCHAR(12),
+    IN	searchoper		VARCHAR(12),
+    IN	searchstring	VARCHAR(64)
+)
+BEGIN
+    DECLARE range1, range2		INT(10);
+        
+    IF (inpage = 1) THEN
+		SET @range1:=0;
+        SET @range2:=inrows;
+	ELSEIF (inpage > 1) THEN
+		SET @range1:=(inpage-1) * inrows;
+        SET @range2:=inpage * inrows;
+	END IF;
+    
+	SET @rownum:=0;
+	IF (servicetype = 'Hotel') THEN    
+		IF (issearch = 0) THEN
+			Select id, citycode, cityname, hotel, hotelstar, ourrating, room, fromdate, todate, operdays, convcode, 
+			grp, epsngl, epdbl, cpsngl, cpdbl, mapsngl, mapdbl, apsngl, apdbl, eb, mealbf, mealln, mealdn, jpsngl, 
+			jpdbl, mjpsngl, mjpdbl, spnoting, currcode, rate, misc, aisngl, aidbl, notitle1, notitle2, notitle3, 
+			datecreated from (SELECT @rownum:=@rownum+1 as rownum, id, citycode, cityname, hotel, hotelstar, ourrating, room, fromdate, todate, 
+			operdays, convcode, grp, epsngl, epdbl, cpsngl, cpdbl, mapsngl, mapdbl, apsngl, apdbl, eb, mealbf, mealln, mealdn, jpsngl, 
+			jpdbl, mjpsngl, mjpdbl, spnoting, currcode, rate, misc, aisngl, aidbl, notitle1, notitle2, notitle3, datecreated FROM hotel_info) t1 
+			where rownum > @range1 and rownum <= @range2 ORDER BY rownum asc LIMIT inrows;    
+
+		ELSEIF (issearch = 1) THEN
+			IF (searchfield = 'cityname') THEN
+				IF (searchoper = 'eq') THEN				
+					Select id, citycode, cityname, hotel, hotelstar, ourrating, room, fromdate, todate, operdays, convcode, 
+					grp, epsngl, epdbl, cpsngl, cpdbl, mapsngl, mapdbl, apsngl, apdbl, eb, mealbf, mealln, mealdn, jpsngl, 
+					jpdbl, mjpsngl, mjpdbl, spnoting, currcode, rate, misc, aisngl, aidbl, notitle1, notitle2, notitle3, 
+					datecreated from (SELECT @rownum:=@rownum+1 as rownum, id, citycode, cityname, hotel, hotelstar, ourrating, room, fromdate, todate, 
+					operdays, convcode, grp, epsngl, epdbl, cpsngl, cpdbl, mapsngl, mapdbl, apsngl, apdbl, eb, mealbf, mealln, mealdn, jpsngl, 
+					jpdbl, mjpsngl, mjpdbl, spnoting, currcode, rate, misc, aisngl, aidbl, notitle1, notitle2, notitle3, datecreated FROM hotel_info where cityname=searchstring ) t1 
+					where cityname=searchstring and rownum > @range1 and rownum <= @range2 ORDER BY rownum asc LIMIT inrows;    
+				ELSEIF (searchoper = 'cn') THEN
+					Select id, citycode, cityname, hotel, hotelstar, ourrating, room, fromdate, todate, operdays, convcode, 
+					grp, epsngl, epdbl, cpsngl, cpdbl, mapsngl, mapdbl, apsngl, apdbl, eb, mealbf, mealln, mealdn, jpsngl, 
+					jpdbl, mjpsngl, mjpdbl, spnoting, currcode, rate, misc, aisngl, aidbl, notitle1, notitle2, notitle3, 
+					datecreated from (SELECT @rownum:=@rownum+1 as rownum, id, citycode, cityname, hotel, hotelstar, ourrating, room, fromdate, todate, 
+					operdays, convcode, grp, epsngl, epdbl, cpsngl, cpdbl, mapsngl, mapdbl, apsngl, apdbl, eb, mealbf, mealln, mealdn, jpsngl, 
+					jpdbl, mjpsngl, mjpdbl, spnoting, currcode, rate, misc, aisngl, aidbl, notitle1, notitle2, notitle3, datecreated FROM hotel_info where cityname=searchstring) t1 
+					where cityname LIKE CONCAT("%", searchstring, "%") and rownum > @range1 and rownum <= @range2 ORDER BY rownum asc LIMIT inrows;    
+				END IF;
+
+			ELSEIF (searchfield = 'hotel') THEN
+				IF (searchoper = 'eq') THEN				
+					Select id, citycode, cityname, hotel, hotelstar, ourrating, room, fromdate, todate, operdays, convcode, 
+					grp, epsngl, epdbl, cpsngl, cpdbl, mapsngl, mapdbl, apsngl, apdbl, eb, mealbf, mealln, mealdn, jpsngl, 
+					jpdbl, mjpsngl, mjpdbl, spnoting, currcode, rate, misc, aisngl, aidbl, notitle1, notitle2, notitle3, 
+					datecreated from (SELECT @rownum:=@rownum+1 as rownum, id, citycode, cityname, hotel, hotelstar, ourrating, room, fromdate, todate, 
+					operdays, convcode, grp, epsngl, epdbl, cpsngl, cpdbl, mapsngl, mapdbl, apsngl, apdbl, eb, mealbf, mealln, mealdn, jpsngl, 
+					jpdbl, mjpsngl, mjpdbl, spnoting, currcode, rate, misc, aisngl, aidbl, notitle1, notitle2, notitle3, datecreated FROM hotel_info where hotel=searchstring) t1 
+					where hotel=searchstring and rownum > @range1 and rownum <= @range2 ORDER BY rownum asc LIMIT inrows;    
+				ELSEIF (searchoper = 'cn') THEN
+					Select id, citycode, cityname, hotel, hotelstar, ourrating, room, fromdate, todate, operdays, convcode, 
+					grp, epsngl, epdbl, cpsngl, cpdbl, mapsngl, mapdbl, apsngl, apdbl, eb, mealbf, mealln, mealdn, jpsngl, 
+					jpdbl, mjpsngl, mjpdbl, spnoting, currcode, rate, misc, aisngl, aidbl, notitle1, notitle2, notitle3, 
+					datecreated from (SELECT @rownum:=@rownum+1 as rownum, id, citycode, cityname, hotel, hotelstar, ourrating, room, fromdate, todate, 
+					operdays, convcode, grp, epsngl, epdbl, cpsngl, cpdbl, mapsngl, mapdbl, apsngl, apdbl, eb, mealbf, mealln, mealdn, jpsngl, 
+					jpdbl, mjpsngl, mjpdbl, spnoting, currcode, rate, misc, aisngl, aidbl, notitle1, notitle2, notitle3, datecreated FROM hotel_info where hotel=searchstring) t1 
+					where hotel LIKE CONCAT("%", searchstring, "%") and rownum > @range1 and rownum <= @range2 ORDER BY rownum asc LIMIT inrows;    
+				END IF;
+			END IF;
+		END IF;
+	END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_get_serviceinfo_numrecords` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_serviceinfo_numrecords`(
+	IN	servicetype		VARCHAR(12),
+    IN	searchfield		VARCHAR(12),
+    IN	searchoper		VARCHAR(12),
+    IN	searchstring	VARCHAR(64),
+    IN	oper			VARCHAR(12),
+    OUT	totalrecords	INT(7)
+    
+)
+BEGIN
+	IF (servicetype = 'Hotel') THEN
+		IF (oper = 'view') THEN
+			Select Count(*) INTO totalrecords from hotel_info;
+        ELSEIF (oper = 'search') THEN
+			IF (searchfield = 'cityname') THEN
+				IF (searchoper = 'eq') THEN				
+					Select count(*) INTO totalrecords from hotel_info where cityname=searchstring;
+				ELSEIF (searchoper = 'cn') THEN
+					Select count(*) INTO totalrecords from hotel_info where cityname LIKE CONCAT("%", searchstring, "%");
+				END IF;
+			ELSEIF (searchfield = 'hotel') THEN
+				IF (searchoper = 'eq') THEN				
+					Select count(*) INTO totalrecords from hotel_info where hotel=searchstring;
+				ELSEIF (searchoper = 'cn') THEN
+					Select count(*) INTO totalrecords from hotel_info where hotel LIKE CONCAT("%", searchstring, "%");
+				END IF;
+			END IF;
+		END IF;
+	END IF;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1587,14 +1669,15 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_travel_activities`(
 	IN	itinnum	INT(11),
-	IN	version	SMALLINT(2)
+	IN	version	SMALLINT(2),
+    IN	tenantid INT(11)
 )
 BEGIN
 	select a.activityid, activityidpair, a.itinnum, a.actname, a.pax, a.mode, a.code, a.version, a.day, a.vesselconame, a.vesselno,
     a.bookingclass, a.bookingno, a.depdatetime, a.arrdatetime, a.depstation, a.arrstation, a.cost, a.costmarkup, a.pikupdroplocfrom,
     a.pikupdroplocto, a.pikupdropdatetime, a.pikupdropcost, a.pikupdropcostmarkup, a.vehdetails, a.asstcost, a.asstcostmarkup,
     a.commentsinternal, a.commentsexternal, a.masteractid, a.datecreated, a.dateupdated, a.lastupdatedby, a.createdby from itin_activity_travel a where a.itinnum = itinnum
-    and a.version = version order by a.day ASC, a.activityid ASC;
+    and a.version = version and a.tenantid = tenantid order by a.day ASC, a.activityid ASC;
     
 END ;;
 DELIMITER ;
@@ -1614,6 +1697,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_manageservice`(
 		IN	inid						INT(11),
+        IN	intenantid					INT(11),
         IN  inservicename	            VARCHAR(45), 
         IN  iniatacode            		VARCHAR(3), 
         IN  infullservice              	SMALLINT(1),
@@ -1641,59 +1725,59 @@ BEGIN
         DECLARE sqltext VARCHAR(300);        
         
         IF (SELECT STRCMP(mode, 'Create') = 0) THEN
-			Select id INTO @createdby from users where username=increatedby;
+			Select id INTO @createdby from users where username=increatedby and tenantid = intenantid;
 		ELSE
-			Select id INTO @updatedby from users where username=inupdatedby;
+			Select id INTO @updatedby from users where username=inupdatedby and tenantid = intenantid;
         
         END IF;
 
 		IF (type = 0) THEN
 			IF (SELECT STRCMP(mode, 'Create') = 0) THEN
-				INSERT INTO service_airlines (servicename, iatacode, rating, city, country, contactname, contactphone, contactemail,
+				INSERT INTO service_airlines (tenantid, servicename, iatacode, rating, city, country, contactname, contactphone, contactemail,
 				contactwebsite, fullservice, domesticonly, addlinfo, datecreated, createdby, dateupdated, updatedby) 
-				VALUES (inservicename, iniatacode, inrating, incity, incountry, incontactname, incontactphone, incontactemail, 
+				VALUES (intenantid, inservicename, iniatacode, inrating, incity, incountry, incontactname, incontactphone, incontactemail, 
 				incontactwebsite, infullservice, indomesticonly, inaddlinfo, UTC_TIMESTAMP(), @createdby, UTC_TIMESTAMP(), @createdby);
 			ELSE
 				Update service_airlines SET servicename=inservicename, iatacode=iniatacode, rating=inrating, city=incity, country=incountry,
-				contactname=incontactname, contactphone=incontactphone, contactemail=incontactemail, contactwebsite=incontactwebsite, fullserivce=infullservice,
+				contactname=incontactname, contactphone=incontactphone, contactemail=incontactemail, contactwebsite=incontactwebsite, fullservice=infullservice,
 				domesticonly=indomesticonly, addlinfo=inaddlinfo, dateupdated=UTC_TIMESTAMP(), updatedby=@updatedby where
-                id = inid;
+                id = inid and tenantid = intenantid;
 			END IF;
 
 		ELSEIF (type = 1) THEN
 			IF (SELECT STRCMP(mode, 'Create') = 0) THEN
-				INSERT INTO service_hotels (servicename, rating, city, country, contactname, contactphone, contactemail,
+				INSERT INTO service_hotels (tenantid, servicename, rating, city, country, contactname, contactphone, contactemail,
 				contactwebsite, addlinfo, datecreated, createdby, dateupdated, updatedby) 
-				VALUES (inservicename, inrating, incity, incountry, incontactname, incontactphone, incontactemail, 
+				VALUES (intenantid, inservicename, inrating, incity, incountry, incontactname, incontactphone, incontactemail, 
 				incontactwebsite, inaddlinfo, UTC_TIMESTAMP(), @createdby, UTC_TIMESTAMP(), @createdby);
 			ELSE
 				Update service_hotels SET servicename=inservicename, rating=inrating, city=incity, country=incountry,
 				contactname=incontactname, contactphone=incontactphone, contactemail=incontactemail, contactwebsite=incontactwebsite,
-				addlinfo=inaddlinfo, dateupdated=UTC_TIMESTAMP(), updatedby=@updatedby where id = inid;
+				addlinfo=inaddlinfo, dateupdated=UTC_TIMESTAMP(), updatedby=@updatedby where id = inid and tenantid = intenantid;
 			END IF;
 		
         ELSEIF (type = 2) THEN
 			IF (SELECT STRCMP(mode, 'Create') = 0) THEN
-				INSERT INTO service_transport (servicename, rating, coverage, city, country, contactname, contactphone, contactemail,
+				INSERT INTO service_transport (tenantid, servicename, rating, coverage, city, country, contactname, contactphone, contactemail,
 				contactwebsite, addlinfo, datecreated, createdby, dateupdated, updatedby) 
-				VALUES (inservicename, inrating, incoverage, incity, incountry, incontactname, incontactphone, incontactemail, 
+				VALUES (intenantid, inservicename, inrating, incoverage, incity, incountry, incontactname, incontactphone, incontactemail, 
 				incontactwebsite, inaddlinfo, UTC_TIMESTAMP(), @createdby, UTC_TIMESTAMP(), @createdby);
 			ELSE
 				Update service_transport SET servicename=inservicename, rating=inrating, coverage=incoverage, city=incity, country=incountry,
 				contactname=incontactname, contactphone=incontactphone, contactemail=incontactemail, contactwebsite=incontactwebsite,
-				addlinfo=inaddlinfo, dateupdated=UTC_TIMESTAMP(), updatedby=@updatedby where id = inid;
+				addlinfo=inaddlinfo, dateupdated=UTC_TIMESTAMP(), updatedby=@updatedby where id = inid and tenantid = intenantid;
 			END IF;
 		
         ELSEIF (type = 3) THEN
 			IF (SELECT STRCMP(mode, 'Create') = 0) THEN
-				INSERT INTO service_other (servicename, description, rating, city, country, contactname, contactphone, contactemail,
+				INSERT INTO service_other (tenantid, servicename, description, rating, city, country, contactname, contactphone, contactemail,
 				contactwebsite, addlinfo, datecreated, createdby, dateupdated, updatedby) 
-				VALUES (inservicename, indescription, inrating, incity, incountry, incontactname, incontactphone, incontactemail, 
+				VALUES (intenantid, inservicename, indescription, inrating, incity, incountry, incontactname, incontactphone, incontactemail, 
 				incontactwebsite, inaddlinfo, UTC_TIMESTAMP(), @createdby, UTC_TIMESTAMP(), @createdby);
 			ELSE
 				Update service_other SET servicename=inservicename, description=indescription, rating=inrating, city=incity, country=incountry,
 				contactname=incontactname, contactphone=incontactphone, contactemail=incontactemail, contactwebsite=incontactwebsite,
-				addlinfo=inaddlinfo, dateupdated=UTC_TIMESTAMP(), updatedby=@updatedby where id = inid;
+				addlinfo=inaddlinfo, dateupdated=UTC_TIMESTAMP(), updatedby=@updatedby where id = inid and tenantid = intenantid;
 			END IF;
         
         END IF;            
@@ -1714,13 +1798,14 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_manageuser`(
+		IN	intenantid					INT(11),
 		IN	inemail						VARCHAR(120),
         IN  infullname		            VARCHAR(60), 
         IN  inpassword             		VARCHAR(60), 
         IN  inusername                	VARCHAR(30),
         IN	inrole						VARCHAR(25),
         IN  inphone			         	VARCHAR(20), 
-        IN 	indesignation				VARCHAR(20),
+        IN 	indesignation				VARCHAR(30),
         IN  reportstousername			VARCHAR(30),
         IN	createdbyusername			VARCHAR(30),
         IN  intzoffset					INT(6),
@@ -1734,33 +1819,33 @@ BEGIN
         DECLARE createdby INT(10);
         DECLARE reportsto INT(10);
         
-		Select id INTO @createdby from users where username=createdbyusername;
-		Select id INTO @reportsto from users where username=reportstousername;        
+		Select id INTO @createdby from users where username=createdbyusername and tenantid=intenantid;
+		Select id INTO @reportsto from users where username=reportstousername and tenantid=intenantid;        
         		       
         IF (SELECT STRCMP(mode, 'Create') = 0) THEN
 			BEGIN
 
-				Insert INTO users ( email, fullname, username, password, phone, designation, reportsto, createdby, level,
+				Insert INTO users ( tenantid, email, fullname, username, password, phone, designation, reportsto, createdby, level,
                                tzoffset, date_created, date_updated
-							) VALUES (inemail, infullname, inusername, inpassword, inphone, indesignation, @reportsto,
+							) VALUES (intenantid, inemail, infullname, inusername, inpassword, inphone, indesignation, @reportsto,
 							   @createdby, 0, intzoffset, UTC_TIMESTAMP(), UTC_TIMESTAMP());
                 
-                Insert into user_roles_map set username=inusername, role=inrole, datecreated=UTC_TIMESTAMP(), dateupdated=UTC_TIMESTAMP();
+                Insert into user_roles_map set username=inusername, tenantid=intenantid, role=inrole, datecreated=UTC_TIMESTAMP(), dateupdated=UTC_TIMESTAMP();
             
             END;
 
         ELSEIF (SELECT STRCMP(mode, 'Edit') = 0) THEN
 
 			UPDATE users SET fullname=infullname, email=inemail, phone=inphone, designation=indesignation, reportsto=@reportsto, 
-							 accountNonLocked=inaccountNonLocked, credentialsNonExpired=incredentialsNonExpired, date_updated=UTC_TIMESTAMP where username=inusername;
-			SELECT id into @userid from users where username=inusername;
+							 accountNonLocked=inaccountNonLocked, credentialsNonExpired=incredentialsNonExpired, date_updated=UTC_TIMESTAMP where username=inusername and tenantid=intenantid;
+			SELECT id into @userid from users where username=inusername and tenantid=intenantid;
             SELECT roleid into @roleid from user_roles where role=inrole;
 			UPDATE user_roles_map SET role=inrole, datecreated=UTC_TIMESTAMP(), dateupdated=UTC_TIMESTAMP() where
-				username=inusername;
+				username=inusername and tenantid=intenantid;
 
         ELSEIF (SELECT STRCMP(mode, 'Disable') = 0) THEN
 			
-            UPDATE users SET enabled=0 where username=inusername;
+            UPDATE users SET enabled=0 where username=inusername and tenantid=intenantid;
         
         END IF;
 
@@ -1908,6 +1993,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_save_itinerary`(
 	IN itinnum INT(11),
+    IN tenantid INT(11),
 	IN name VARCHAR(50),
     IN mode VARCHAR(15),
     IN status VARCHAR(10),
@@ -1927,13 +2013,13 @@ BEGIN
 		DECLARE lastupdatedby INT(11);
         DECLARE activitymastercnt SMALLINT(2);
     	
-		Select id INTO @lastupdatedby from users where username=lastupdatedbyusername;
+		Select id INTO @lastupdatedby from users where username=lastupdatedbyusername and tenantid=tenantid;
 		Select itinnum into @initinnum;
         
         update itin_master SET name=name, version=version, status=status, touroperator=touroperator, grouphead=grouphead, 
         numtravellers=numtravellers, startdate=startdate, enddate=enddate, arrivalcity=arrivalcity, 
         depcity=depcity, quotecurrency=quotecurrency, convcode=convcode, lastupdatedby=@lastupdatedby, dateupdated=UTC_TIMESTAMP()
-        where id=itinnum;
+        where id=itinnum and tenantid=tenantid;
         
         
     
@@ -1955,6 +2041,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_save_travelactivity`(
     IN initinnum 				INT(11),
+    IN intenantid				INT(11),
     IN inactname 				VARCHAR(60),
     IN lastupdatedbyemail 		VARCHAR(120),
     IN incode 					VARCHAR(20),
@@ -1989,23 +2076,22 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_save_travelactivity`(
     OUT outactivityidpair		INT(11)
 )
 BEGIN
-		DECLARE lastupdatedby	INT(11);
+		DECLARE lastupdatedby	INT(10);
         DECLARE activitycnt   	INT(5);
         DECLARE aid				INT(11);
     	
-		Select id INTO @lastupdatedby from users where username=lastupdatedbyemail;
-		
+		Select id INTO @lastupdatedby from users where username=lastupdatedbyemail and tenantid=intenantid;
         
         
         IF (incode = 'T_PIKUPDRP') THEN
 
 			IF (inactivityid=0) THEN
-				Insert into itin_activity_travel (actname, itinnum, pax, mode, code, version, vesselconame, vesselnoon, 
+				Insert into itin_activity_travel (actname, itinnum, tenantid, pax, mode, code, version, vesselconame, vesselnoon, 
 				pikupdroplocfrom, pikupdroplocto, pikupdropdatetime, pikupdropcost, pikupdropcostmarkup, vehdetails, asstcost, asstcostmarkup,
-				commentsinternal, commentsexternal, datecreated, dateupdated, lastupdatedby, createdby) values (inactname, initinnum, inpax, 
+				commentsinternal, commentsexternal, datecreated, dateupdated, lastupdatedby, createdby) values (inactname, initinnum, intenantid, inpax, 
 				inmode, incode, inversion, invesselconame, invesselnoon, inpikupdroplocfrom, inpikupdroplocto, inpikupdropdatetime, inpikupdropcost, 
 				inpikupdropcostmarkup, invehdetails, inasstcost, inasstcostmarkup, incommentsinternal,  incommentsexternal, UTC_TIMESTAMP(), 
-				UTC_TIMESTAMP(), @lastupdatedby,  @lastupdatedby);
+				UTC_TIMESTAMP(), 1,  1);
         
 				SELECT LAST_INSERT_ID() INTO outactivityid;
                 
@@ -2025,15 +2111,15 @@ BEGIN
 
 			IF (inactivityid=0) THEN
 
-				Insert into itin_activity_travel (actname, itinnum, pax, mode, code, version, vesselconame, vesselnoon, bookingclass, bookingno, depdatetimeon,
+				Insert into itin_activity_travel (actname, itinnum, tenantid, pax, mode, code, version, vesselconame, vesselnoon, bookingclass, bookingno, depdatetimeon,
 				arrdatetimeon, depstation, arrstation, cost, costmarkup, commentsinternal, commentsexternal, datecreated, dateupdated, lastupdatedby, createdby) 
-                values (inactname, initinnum, inpax, inmode, incode, inversion, invesselconame, invesselnoon, inbookingclass, inbookingno, indepdatetimeon, 
+                values (inactname, initinnum, intenantid, inpax, inmode, incode, inversion, invesselconame, invesselnoon, inbookingclass, inbookingno, indepdatetimeon, 
                 inarrdatetimeon, indepstation, inarrstation, incost, incostmarkup, incommentsinternal, incommentsexternal, UTC_TIMESTAMP(), UTC_TIMESTAMP(), @lastupdatedby,  @lastupdatedby);
             
                 SELECT LAST_INSERT_ID() INTO outactivityid;
 				
 			ELSE
-				Update itin_activity_travel Set actname=inactname, itinnum=initinnum, pax=inpax, mode=inmode, code=incode, version=inversion, 
+				Update itin_activity_travel Set actname=inactname, itinnum=initinnum, tenantid=intenantid, pax=inpax, mode=inmode, code=incode, version=inversion, 
                 vesselconame=invesselconame, vesselnoon=invesselnoon, bookingclass=inbookingclass, bookingno=inbookingno, depdatetimeon=indepdatetimeon, arrdatetimeon=inarrdatetimeon,
                 depstation=indepstation, arrstation=inarrstation, cost=incost, costmarkup=incostmarkup, commentsinternal=incommentsinternal, commentsexternal=incommentsexternal, dateupdated=UTC_TIMESTAMP(), lastupdatedby=@lastupdatedby
                 where activityid=inactivityid;
@@ -2044,15 +2130,15 @@ BEGIN
         ELSEIF (incode = 'T_BOOK_RETURN') THEN
 
 			IF (inactivityid=0) THEN        
-   				Insert into itin_activity_travel (actname, itinnum, pax, mode, code, version, vesselconame, vesselnoon, bookingclass, bookingno, depdatetimeon,
-				arrdatetimeon, depstation, arrstation, cost, costmarkup, commentsinternal, commentsexternal, datecreated, dateupdated, lastupdatedby, createdby) values (inactname, initinnum, inpax, inmode, 
+   				Insert into itin_activity_travel (actname, itinnum, tenantid, pax, mode, code, version, vesselconame, vesselnoon, bookingclass, bookingno, depdatetimeon,
+				arrdatetimeon, depstation, arrstation, cost, costmarkup, commentsinternal, commentsexternal, datecreated, dateupdated, lastupdatedby, createdby) values (inactname, initinnum, intenantid, inpax, inmode, 
                 incode, inversion, invesselconame, invesselnoon, inbookingclass, inbookingno, indepdatetimeon, inarrdatetimeon, indepstation, 
                 inarrstation, incost, incostmarkup, incommentsinternal, incommentsexternal, UTC_TIMESTAMP(), UTC_TIMESTAMP(), @lastupdatedby,  @lastupdatedby);
 
                 SELECT LAST_INSERT_ID() INTO outactivityid;
 
-   				Insert into itin_activity_travel (actname, itinnum, pax, mode, code, version, vesselconame, vesselnoret, bookingclass, bookingno, depdatetimeret,
-				arrdatetimeret, depstation, arrstation, cost, costmarkup, commentsinternal, commentsexternal, datecreated, dateupdated, lastupdatedby, createdby) values (inactname, initinnum, inpax, inmode, 
+   				Insert into itin_activity_travel (actname, itinnum, tenantid, pax, mode, code, version, vesselconame, vesselnoret, bookingclass, bookingno, depdatetimeret,
+				arrdatetimeret, depstation, arrstation, cost, costmarkup, commentsinternal, commentsexternal, datecreated, dateupdated, lastupdatedby, createdby) values (inactname, initinnum, intenantid, inpax, inmode, 
                 incode, inversion, invesselconame, invesselnoret, inbookingclass, inbookingno, indepdatetimeret, inarrdatetimeret, inarrstation, 
                 indepstation, incost, incostmarkup, incommentsinternal, incommentsexternal, UTC_TIMESTAMP(), UTC_TIMESTAMP(), @lastupdatedby,  @lastupdatedby);
 		
@@ -2063,12 +2149,12 @@ BEGIN
                 
 			ELSE 
 				IF (SELECT LENGTH(invesselnoon) > 0) THEN
-					Update itin_activity_travel Set actname=inactname, itinnum=initinnum, pax=inpax, mode=inmode, code=incode, version=inversion, 
+					Update itin_activity_travel Set actname=inactname, itinnum=initinnum, tenantid=intenantid, pax=inpax, mode=inmode, code=incode, version=inversion, 
 					vesselconame=invesselconame, vesselnoon=invesselnoon, bookingclass=inbookingclass, bookingno=inbookingno, depdatetimeon=indepdatetimeon, arrdatetimeon=inarrdatetimeon,
 					depstation=indepstation, arrstation=inarrstation, cost=incost, costmarkup=incostmarkup, commentsinternal=incommentsinternal, commentsexternal=incommentsexternal, dateupdated=UTC_TIMESTAMP(), lastupdatedby=@lastupdatedby
 					where activityid=inactivityid;
 				ELSE
-					Update itin_activity_travel Set actname=inactname, itinnum=initinnum, pax=inpax, mode=inmode, code=incode, version=inversion, 
+					Update itin_activity_travel Set actname=inactname, itinnum=initinnum, tenantid=intenantid, pax=inpax, mode=inmode, code=incode, version=inversion, 
 					vesselconame=invesselconame, vesselnoret=invesselnoret, bookingclass=inbookingclass, bookingno=inbookingno, depdatetimeret=indepdatetimeret, arrdatetimeret=inarrdatetimeret,
 					depstation=indepstation, arrstation=inarrstation, cost=incost, costmarkup=incostmarkup, commentsinternal=incommentsinternal, commentsexternal=incommentsexternal, dateupdated=UTC_TIMESTAMP(), lastupdatedby=@lastupdatedby
 					where activityid=inactivityid;
@@ -2097,23 +2183,65 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_service_exists`(
         IN  inservicename      	VARCHAR(30),
+        IN 	intenantid			INT(11),
         IN  type				SMALLINT(2),
         OUT serviceid			INT(10)
 )
 BEGIN
 		IF (type = 0) THEN
-			select id into serviceid from service_airlines where servicename = inservicename;
+			select id into serviceid from service_airlines where servicename = inservicename and tenantid = intenantid;
         ELSEIF (type = 1) THEN
-			select id into serviceid from service_hotels where servicename = inservicename;
+			select id into serviceid from service_hotels where servicename = inservicename and tenantid = intenantid;
         ELSEIF (type = 2) THEN
-			select id into serviceid from service_transport where servicename = inservicename;
+			select id into serviceid from service_transport where servicename = inservicename and tenantid = intenantid;
         ELSEIF (type = 3) THEN
-			select id into serviceid from service_other where servicename = inservicename;
+			select id into serviceid from service_other where servicename = inservicename and tenantid = intenantid;
         END IF;
         
         IF (serviceid IS NULL) THEN
 			SET serviceid = 0;
 		END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_updatetenantinuser` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_updatetenantinuser`(
+	IN	intenantid				INT(11),
+    IN	inusername				VARCHAR(120),
+	IN	infullname				VARCHAR(60),
+	IN	inpassword				VARCHAR(60),
+	IN	inphone					VARCHAR(20),
+    IN	indesignation			VARCHAR(30),
+	IN	increatedyby			INT(10),
+	IN	inlevel					SMALLINT(3),
+	IN	inenabled				TINYINT(1),
+	IN	inrole					VARCHAR(25),
+	IN	inaccountnonexpired		TINYINT(1),
+	IN	inaccountnonlocked		TINYINT(1),
+	IN	incredentialsnonexpired	TINYINT(1),
+	IN	intzoffset				INT(6)
+)
+BEGIN
+
+	Insert into users (tenantid, email, fullname, username, password, phone, designation, reportsto, createdby,
+					level, enabled, accountNonExpired, accountNonLocked, credentialsNonExpired, tzoffset)
+					Values (intenantid, inusername, infullname, inusername, inpassword, inphone, indesignation,
+					1, 1, 0, 1, 1, 1, 1, intzoffset);
+                        
+    Insert into user_roles_map (tenantid, username, role) values (intenantid, inusername, inrole);
+                            
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2132,10 +2260,101 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_updateuser`(
 	IN 	inpass		VARCHAR(60),
-    IN  inid		INT(10)
+    IN  inid		INT(10),
+    IN 	intenantid	INT(11)
 )
 BEGIN
-		update users set password=inpass, credentialsNonExpired=1, date_updated=UTC_TIMESTAMP() where id=inid;
+		update users set password=inpass, credentialsNonExpired=1, date_updated=UTC_TIMESTAMP() where id=inid and tenantid=intenantid;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_updateuserpassword` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_updateuserpassword`(
+	IN 	inpass		VARCHAR(60),
+    IN  inid		INT(10),
+    IN 	intenantid	INT(11)
+)
+BEGIN
+	update users set password=inpass, credentialsNonExpired=1, date_updated=UTC_TIMESTAMP() where id=inid and tenantid=intenantid;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_update_serviceinfo` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_serviceinfo`(	
+	IN	servicetype		VARCHAR(12),
+	IN	inid			INT(10),
+    IN	incitycode		VARCHAR(5),
+    IN	incityname		VARCHAR(25),
+    IN	inhotel			VARCHAR(45),
+    IN	inhotelstar		VARCHAR(25),
+    IN	inourrating		VARCHAR(25),
+    IN	inroom			VARCHAR(45),
+    IN	infromdate		VARCHAR(25),
+    IN	intodate		VARCHAR(25),
+    IN	inoperdays		VARCHAR(12),
+    IN	inconvcode		VARCHAR(3),
+    IN	ingrp			VARCHAR(3),
+    IN	inepsngl		VARCHAR(12),
+    IN	inepdbl			VARCHAR(12),
+    IN	incpsngl		VARCHAR(12),
+    IN	incpdbl			VARCHAR(12),
+    IN	inmapsngl		VARCHAR(12),
+    IN	inmapdbl		VARCHAR(12),
+    IN	inapsngl		VARCHAR(12),
+    IN	inapdbl			VARCHAR(12),
+    IN	ineb			VARCHAR(12),
+    IN	inmealbf		VARCHAR(12),
+    IN	inmealln		VARCHAR(12),
+    IN	inmealdn		VARCHAR(12),
+    IN	injpsngl		VARCHAR(12),
+    IN	injpdbl			VARCHAR(12),
+    IN	inmjpsngl		VARCHAR(12),
+    IN	inmjpdbl		VARCHAR(12),
+    IN	inspnoting		VARCHAR(255),
+    IN	incurrcode		VARCHAR(3),
+    IN	inrate			VARCHAR(12),
+    IN	inmisc			VARCHAR(25),
+    IN	inaisngl		VARCHAR(100),
+    IN	inaidbl			VARCHAR(25),
+    IN	innotitle1		VARCHAR(45),
+    IN	innotitle2		VARCHAR(45),
+    IN	innotitle3		VARCHAR(45)
+    
+)
+BEGIN
+	IF (servicetype = 'Hotel') THEN
+		Update hotel_info Set citycode=incitycode, cityname=incityname, hotel=inhotel, hotelstar=inhotelstar, 
+        ourrating=inourrating, room=inroom, fromdate=infromdate, todate=intodate, operdays=inoperdays, 
+        convcode=inconvcode, grp=ingrp, epsngl=inepsngl, epdbl=inepdbl, cpsngl=incpsngl, cpdbl=incpdbl, 
+        mapsngl=inmapsngl, mapdbl=inmapdbl, apsngl=inapsngl, apdbl=inapdbl, eb=ineb, mealbf=inmealbf, 
+        mealln=inmealln, mealdn=inmealdn, jpsngl=injpsngl, jpdbl=injpdbl, mjpsngl=inmjpsngl, mjpdbl=inmjpdbl, 
+		spnoting=inspnoting, currcode=incurrcode, rate=inrate, misc=inmisc, aisngl=inaisngl, aidbl=inaidbl, 
+        notitle1=innotitle1, notitle2=innotitle2, notitle3=innotitle3, dateupdated=UTC_TIMESTAMP() where id=inid;
+	END IF;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2154,10 +2373,11 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_user_exists`(
         IN  inusername		               	VARCHAR(30),
+        IN	intenantid						INT(11),
         OUT userid							INT(10)
 )
 BEGIN
-		select id into userid from users where username = inusername;
+		select id into userid from users where username = inusername and tenantid = intenantid;
         IF (userid IS NULL) THEN
 			SET userid = 0;
 		END IF;
@@ -2177,4 +2397,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-06-22  9:51:36
+-- Dump completed on 2015-08-25  9:50:58

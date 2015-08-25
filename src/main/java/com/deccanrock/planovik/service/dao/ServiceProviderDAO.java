@@ -399,12 +399,14 @@ public class ServiceProviderDAO implements IServiceProviderDAO {
     }
     
     @Override
-    public List<HotelInfoEntity> GetServiceInfoEntities(String servicetype, int range1, int range2) {
+    public List<HotelInfoEntity> GetServiceInfoEntities(String servicetype, int inpage, short inrows, short issearch, String searchfield, 
+    		String searchoper, String searchstring) {
 
     	DataSource  tenantdataSource = TenantDS.setTenantDataSource(null);    	    			
 		JdbcTemplate dbtemplate = new JdbcTemplate(tenantdataSource);
-
-		String SQL = "Call sp_get_serviceinfo_entities(" + "'" + servicetype + "'" + ',' + range1 +  ',' + range2 + ");";    			
+		
+		String SQL = "Call sp_get_serviceinfo_entities(" + "'" + servicetype + "'" + ',' + inpage +  ',' + inrows +  ',' + issearch +  ',' + "'" + searchfield + "'" + ',' 
+														 + "'" + searchoper + "'" + ',' + "'" + searchstring + "'" + ");";    			
 		if (servicetype.contentEquals("Hotel")) {
 			HotelInfoEntityMapper hiem = new HotelInfoEntityMapper();
 		
@@ -420,30 +422,7 @@ public class ServiceProviderDAO implements IServiceProviderDAO {
 		return null;
     }
 
-    @Override
-    public List<HotelInfoEntity> GetInfoEntitiesForSearch(String servicetype, int lastrowid, short inrows, String searchfield, String searchoper, String searchstring) {
-
-    	DataSource  tenantdataSource = TenantDS.setTenantDataSource(null);    	    			
-		JdbcTemplate dbtemplate = new JdbcTemplate(tenantdataSource);
-
-		String SQL = "Call sp_get_serviceinfo_entities_search(" + "'" + servicetype + "'" + ',' + lastrowid +  ',' + inrows +  ',' + "'" + searchfield + "'" + ',' 
-															    + "'" + searchoper + "'" + ',' + "'" + searchstring + "'" + ");";    			
-		if (servicetype.contentEquals("Hotel")) {
-			HotelInfoEntityMapper hiem = new HotelInfoEntityMapper();
-		
-	 		List <HotelInfoEntity> hotelentities = dbtemplate.query(SQL, hiem);
-	    	try {    	
-	    		hotelentities = dbtemplate.query(SQL, hiem);
-	    	} catch (Exception ex) {
-	    		hotelentities = null;
-	    	} 					
-		    return hotelentities; 		 		    	
-		}
-		
-		return null;
- 	}
-
-    @Override
+     @Override
     public String UpdateServiceInfo(Map<String, String> serviceInfoMap) {
     	DataSource  tenantdataSource = TenantDS.setTenantDataSource(null);    	    			
 		JdbcTemplate dbtemplate = new JdbcTemplate(tenantdataSource);

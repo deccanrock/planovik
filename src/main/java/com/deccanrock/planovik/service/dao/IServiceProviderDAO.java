@@ -22,10 +22,9 @@ public interface IServiceProviderDAO {
 	public ServiceProviderEntity GetService(String name, short type) throws IOException, SQLException;
 	public String ManageService(ServiceProviderEntity serviceprovider) throws IOException, SQLException;
 	public boolean ServiceExists(String serviceName, short serviceType) throws IOException, SQLException;
-	public List<HotelInfoEntity> GetServiceInfoEntities(String servicetype, int range1, int range2) throws IOException, SQLException;
-	List<HotelInfoEntity> GetInfoEntitiesForSearch(String servicetype, int lastrowid, short inrows, String searchfield, String searchoper, 
-			String searchstring) throws IOException, SQLException;
 	String UpdateServiceInfo(Map<String, String> modelMap) throws IOException, SQLException;
 	public int GetServiceInfoNumRecords(String servicetype, boolean issearch,
 			String searchfield, String searchoper, String searchstring) throws IOException, SQLException;
+	public List<HotelInfoEntity> GetServiceInfoEntities(String servicetype, int page, short rows, short issearch, String searchfield, String searchoper,
+			String searchstring)  throws IOException, SQLException;
 }
