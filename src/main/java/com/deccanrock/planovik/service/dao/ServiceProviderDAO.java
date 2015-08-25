@@ -427,87 +427,100 @@ public class ServiceProviderDAO implements IServiceProviderDAO {
     	DataSource  tenantdataSource = TenantDS.setTenantDataSource(null);    	    			
 		JdbcTemplate dbtemplate = new JdbcTemplate(tenantdataSource);
 
-		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(dbtemplate)
-		.withProcedureName("sp_update_serviceinfo");
+		Map<String, Object> inParamMap = new HashMap<String, Object>();		
+		// Pick oper type and act accordingly, edit/add		
+		String oper = serviceInfoMap.get("oper");
+		SimpleJdbcCall simpleJdbcCall;
+		if (oper.contentEquals("del")) {
+			simpleJdbcCall = new SimpleJdbcCall(dbtemplate)
+			.withProcedureName("sp_delete_serviceinfo");
 
-		Map<String, Object> inParamMap = new HashMap<String, Object>();
-		
-		if (serviceInfoMap.containsKey("id"))
+			// Both are required parameters
 			inParamMap.put("inid", serviceInfoMap.get("id"));
-		if (serviceInfoMap.containsKey("room"))
-			inParamMap.put("inroom", serviceInfoMap.get("room"));    		
-		if (serviceInfoMap.containsKey("mjpsngl"))
-			inParamMap.put("inmjpsngl", serviceInfoMap.get("mjpsngl"));
-		if (serviceInfoMap.containsKey("aidbl"))
-			inParamMap.put("inaidbl", serviceInfoMap.get("aidbl"));
-		if (serviceInfoMap.containsKey("currcode"))
-			inParamMap.put("incurrcode", serviceInfoMap.get("currcode"));
-		if (serviceInfoMap.containsKey("mealdn"))
-			inParamMap.put("inmealdn", serviceInfoMap.get("mealdn"));
-		if (serviceInfoMap.containsKey("todate"))
-			inParamMap.put("intodate", serviceInfoMap.get("todate"));
-		if (serviceInfoMap.containsKey("eb"))
-			inParamMap.put("ineb", serviceInfoMap.get("eb"));
-		if (serviceInfoMap.containsKey("mapsngl"))
-			inParamMap.put("inmapsngl", serviceInfoMap.get("mapsngl"));
-		if (serviceInfoMap.containsKey("mealbf"))
-			inParamMap.put("inmealbf", serviceInfoMap.get("mealbf"));
-		if (serviceInfoMap.containsKey("citycode"))
-			inParamMap.put("incitycode", serviceInfoMap.get("citycode"));
-		if (serviceInfoMap.containsKey("jpsngl"))
-			inParamMap.put("injpsngl", serviceInfoMap.get("jpsngl"));
-		if (serviceInfoMap.containsKey("grp"))
-			inParamMap.put("ingrp", serviceInfoMap.get("grp"));
-		if (serviceInfoMap.containsKey("rate"))
-			inParamMap.put("inrate", serviceInfoMap.get("rate"));
-		if (serviceInfoMap.containsKey("operdays"))
-			inParamMap.put("inoperdays", serviceInfoMap.get("operdays"));
-		if (serviceInfoMap.containsKey("fromdate"))
-			inParamMap.put("infromdate", serviceInfoMap.get("fromdate"));
-		if (serviceInfoMap.containsKey("apsngl"))
-			inParamMap.put("inapsngl", serviceInfoMap.get("apsngl"));
-		if (serviceInfoMap.containsKey("convcode"))
-			inParamMap.put("inconvcode", serviceInfoMap.get("convcode"));
-		if (serviceInfoMap.containsKey("cpdbl"))
-			inParamMap.put("incpdbl", serviceInfoMap.get("cpdbl"));
-		if (serviceInfoMap.containsKey("cpsngl"))
-			inParamMap.put("incpsngl", serviceInfoMap.get("cpsngl"));
-		if (serviceInfoMap.containsKey("mjpdbl"))
-			inParamMap.put("inmjpdbl", serviceInfoMap.get("mjpdbl"));
-		if (serviceInfoMap.containsKey("or"))
-			inParamMap.put("inourrating", serviceInfoMap.get("or"));
-		if (serviceInfoMap.containsKey("spnoting"))
-			inParamMap.put("inspnoting", serviceInfoMap.get("spnoting"));
-		if (serviceInfoMap.containsKey("mapdbl"))
-			inParamMap.put("inmapdbl", serviceInfoMap.get("mapdbl"));
-		if (serviceInfoMap.containsKey("epdbl"))
-			inParamMap.put("inepdbl", serviceInfoMap.get("epdbl"));
-		if (serviceInfoMap.containsKey("misc"))
-			inParamMap.put("inmisc", serviceInfoMap.get("misc"));
-		if (serviceInfoMap.containsKey("epsngl"))
-			inParamMap.put("inepsngl", serviceInfoMap.get("epsngl"));
-		if (serviceInfoMap.containsKey("stars"))
-			inParamMap.put("inhotelstar", serviceInfoMap.get("stars"));
-		if (serviceInfoMap.containsKey("apdbl"))
-			inParamMap.put("inapdbl", serviceInfoMap.get("apdbl"));
-		if (serviceInfoMap.containsKey("service"))
 			inParamMap.put("servicetype", serviceInfoMap.get("service"));
-		if (serviceInfoMap.containsKey("hotel"))
-			inParamMap.put("inhotel", serviceInfoMap.get("hotel"));
-		if (serviceInfoMap.containsKey("cityname"))
-			inParamMap.put("incityname", serviceInfoMap.get("cityname"));
-		if (serviceInfoMap.containsKey("aisngl"))
-			inParamMap.put("inaisngl", serviceInfoMap.get("aisngl"));
-		if (serviceInfoMap.containsKey("jpdbl"))
-			inParamMap.put("injpdbl", serviceInfoMap.get("jpdbl"));
-		if (serviceInfoMap.containsKey("mealln"))
-			inParamMap.put("inmealln", serviceInfoMap.get("mealln"));
-		if (serviceInfoMap.containsKey("notitle1"))
-			inParamMap.put("innotitle1", serviceInfoMap.get("notitle1"));
-		if (serviceInfoMap.containsKey("notitle2"))
-			inParamMap.put("innotitle2", serviceInfoMap.get("notitle2"));
-		if (serviceInfoMap.containsKey("notitle3"))
-			inParamMap.put("innotitle3", serviceInfoMap.get("notitle3"));    	
+		}
+		else {
+			simpleJdbcCall = new SimpleJdbcCall(dbtemplate)
+			.withProcedureName("sp_update_serviceinfo");
+
+			inParamMap.put("oper", oper);    	
+			if (serviceInfoMap.containsKey("id"))
+				inParamMap.put("inid", serviceInfoMap.get("id"));
+			if (serviceInfoMap.containsKey("room"))
+				inParamMap.put("inroom", serviceInfoMap.get("room"));    		
+			if (serviceInfoMap.containsKey("mjpsngl"))
+				inParamMap.put("inmjpsngl", serviceInfoMap.get("mjpsngl"));
+			if (serviceInfoMap.containsKey("aidbl"))
+				inParamMap.put("inaidbl", serviceInfoMap.get("aidbl"));
+			if (serviceInfoMap.containsKey("currcode"))
+				inParamMap.put("incurrcode", serviceInfoMap.get("currcode"));
+			if (serviceInfoMap.containsKey("mealdn"))
+				inParamMap.put("inmealdn", serviceInfoMap.get("mealdn"));
+			if (serviceInfoMap.containsKey("todate"))
+				inParamMap.put("intodate", serviceInfoMap.get("todate"));
+			if (serviceInfoMap.containsKey("eb"))
+				inParamMap.put("ineb", serviceInfoMap.get("eb"));
+			if (serviceInfoMap.containsKey("mapsngl"))
+				inParamMap.put("inmapsngl", serviceInfoMap.get("mapsngl"));
+			if (serviceInfoMap.containsKey("mealbf"))
+				inParamMap.put("inmealbf", serviceInfoMap.get("mealbf"));
+			if (serviceInfoMap.containsKey("citycode"))
+				inParamMap.put("incitycode", serviceInfoMap.get("citycode"));
+			if (serviceInfoMap.containsKey("jpsngl"))
+				inParamMap.put("injpsngl", serviceInfoMap.get("jpsngl"));
+			if (serviceInfoMap.containsKey("grp"))
+				inParamMap.put("ingrp", serviceInfoMap.get("grp"));
+			if (serviceInfoMap.containsKey("rate"))
+				inParamMap.put("inrate", serviceInfoMap.get("rate"));
+			if (serviceInfoMap.containsKey("operdays"))
+				inParamMap.put("inoperdays", serviceInfoMap.get("operdays"));
+			if (serviceInfoMap.containsKey("fromdate"))
+				inParamMap.put("infromdate", serviceInfoMap.get("fromdate"));
+			if (serviceInfoMap.containsKey("apsngl"))
+				inParamMap.put("inapsngl", serviceInfoMap.get("apsngl"));
+			if (serviceInfoMap.containsKey("convcode"))
+				inParamMap.put("inconvcode", serviceInfoMap.get("convcode"));
+			if (serviceInfoMap.containsKey("cpdbl"))
+				inParamMap.put("incpdbl", serviceInfoMap.get("cpdbl"));
+			if (serviceInfoMap.containsKey("cpsngl"))
+				inParamMap.put("incpsngl", serviceInfoMap.get("cpsngl"));
+			if (serviceInfoMap.containsKey("mjpdbl"))
+				inParamMap.put("inmjpdbl", serviceInfoMap.get("mjpdbl"));
+			if (serviceInfoMap.containsKey("or"))
+				inParamMap.put("inourrating", serviceInfoMap.get("or"));
+			if (serviceInfoMap.containsKey("spnoting"))
+				inParamMap.put("inspnoting", serviceInfoMap.get("spnoting"));
+			if (serviceInfoMap.containsKey("mapdbl"))
+				inParamMap.put("inmapdbl", serviceInfoMap.get("mapdbl"));
+			if (serviceInfoMap.containsKey("epdbl"))
+				inParamMap.put("inepdbl", serviceInfoMap.get("epdbl"));
+			if (serviceInfoMap.containsKey("misc"))
+				inParamMap.put("inmisc", serviceInfoMap.get("misc"));
+			if (serviceInfoMap.containsKey("epsngl"))
+				inParamMap.put("inepsngl", serviceInfoMap.get("epsngl"));
+			if (serviceInfoMap.containsKey("stars"))
+				inParamMap.put("inhotelstar", serviceInfoMap.get("stars"));
+			if (serviceInfoMap.containsKey("apdbl"))
+				inParamMap.put("inapdbl", serviceInfoMap.get("apdbl"));
+			if (serviceInfoMap.containsKey("service"))
+				inParamMap.put("servicetype", serviceInfoMap.get("service"));
+			if (serviceInfoMap.containsKey("hotel"))
+				inParamMap.put("inhotel", serviceInfoMap.get("hotel"));
+			if (serviceInfoMap.containsKey("cityname"))
+				inParamMap.put("incityname", serviceInfoMap.get("cityname"));
+			if (serviceInfoMap.containsKey("aisngl"))
+				inParamMap.put("inaisngl", serviceInfoMap.get("aisngl"));
+			if (serviceInfoMap.containsKey("jpdbl"))
+				inParamMap.put("injpdbl", serviceInfoMap.get("jpdbl"));
+			if (serviceInfoMap.containsKey("mealln"))
+				inParamMap.put("inmealln", serviceInfoMap.get("mealln"));
+			if (serviceInfoMap.containsKey("notitle1"))
+				inParamMap.put("innotitle1", serviceInfoMap.get("notitle1"));
+			if (serviceInfoMap.containsKey("notitle2"))
+				inParamMap.put("innotitle2", serviceInfoMap.get("notitle2"));
+			if (serviceInfoMap.containsKey("notitle3"))
+				inParamMap.put("innotitle3", serviceInfoMap.get("notitle3"));    				
+		}
     	
     	String result = "Fail";
     	SqlParameterSource in = new MapSqlParameterSource(inParamMap);

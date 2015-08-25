@@ -165,26 +165,30 @@
 				url: '/admin/manageserviceinfo?servicetype=${servicename}',			
 				editurl: '/admin/manageserviceinfo/edit?service=${servicename}',
 				datatype: 'json',
+				beforeSubmit : function(response, postdata) {
+					console.log(reponse);
+					alert(response);
+				}, 				
 				afterSubmit : function(response, postdata) {
 					console.log(reponse);
 					alert(response);
 				}, 				
 				height: $("#container").height(),
-				colNames:['Id', 'CC', 'City', 'Hotel', 'Stars', 'OR', 'Room', 'From', 'To', 'Oper Days', 'ConvCode', 'Grp', 'EP Sngl', 'EP Dbl', 
+				colNames:['Id', 'CC*', 'City*', 'Hotel*', 'Stars', 'OR', 'Room*', 'From*', 'To*', 'Oper Days*', 'ConvCode', 'Grp', 'EP Sngl', 'EP Dbl', 
 						  'CP Sngl', 'CP Dbl', 'MAP Sngl', 'MAP Dbl', 'AP Sngl', 'AP Dbl', 'EB', 'Mealbf', 'Mealln', 'Mealdn', 
 						  'JP Sngl', 'JP Dbl', 'MJP Sngl', 'MJP Dbl', 'Remarks', 'CurCode', 'Rate', 'Misc', 'AI Sngl', 'AI Dbl', 
 						  'NoTitle1', 'NoTitle2', 'NoTitle3'],
 				colModel:[
 					{name:'id',index:'id', width:50, search:false, sortable:false, editable: false},
-					{name:'citycode',index:'citycode', search:false, width:50, sortable:false, editable: true},
-					{name:'cityname',index:'cityname', searchoptions:{sopt: ['eq','cn'] }, width:100, sortable:false, editable: true},
-					{name:'hotel',index:'hotel', searchoptions:{sopt: ['eq','cn'] }, width:200, editable:false, sortable:false, editable: true},
+					{name:'citycode',index:'citycode', search:false, width:50, sortable:false, editable: true, editrules: {custom: true, custom_func: myCustomCheck}},
+					{name:'cityname',index:'cityname', searchoptions:{sopt: ['eq','cn'] }, width:100, sortable:false, editable: true, editrules: {custom: true, custom_func: myCustomCheck}},
+					{name:'hotel',index:'hotel', searchoptions:{sopt: ['eq','cn'] }, width:200, editable:false, sortable:false, editable: true, editrules: {custom: true, custom_func: myCustomCheck}},
 					{name:'stars',index:'stars',width:60, search:false, sortable:false, editable: true},
 					{name:'or',index:'or',width:60, search:false, sortable:false, editable: true},
-					{name:'room',index:'room',width:80, search:false, sortable:false, editable: true},
-					{name:'fromdate',index:'fromdate', search:false, width:65, sortable:false, editable: true},					
-					{name:'todate',index:'todate', search:false, width:65, sortable:false, editable: true},					
-					{name:'operdays',index:'operdays', search:false, width:50, sortable:false, editable: true},					
+					{name:'room',index:'room',width:80, search:false, sortable:false, editable: true, editrules: {custom: true, custom_func: myCustomCheck}},
+					{name:'fromdate',index:'fromdate', search:false, width:65, sortable:false, editable: true, editrules: {custom: true, custom_func: myCustomCheck}},					
+					{name:'todate',index:'todate', search:false, width:65, sortable:false, editable: true, editrules: {custom: true, custom_func: myCustomCheck}},					
+					{name:'operdays',index:'operdays', search:false, width:50, sortable:false, editable: true, editrules: {custom: true, custom_func: myCustomCheck}},					
 					{name:'convcode',index:'convcode', search:false, width:40, sortable:false, editable: true},					
 					{name:'grp',index:'grp', search:false, width:40, sortable:false, editable: true},					
 					{name:'epsngl',index:'epsngl', search:false, width:60, sortable: false, editable: true},					
@@ -223,10 +227,13 @@
 			    altRows: true,
 				//toppager: true,
 				viewrecords: true,
+				multipleSearch:true,
 				multiselect: false,
 				//multikey: "ctrlKey",
 		        multiboxonly: true,
-		
+		        closeAfterAdd: true,
+		        closeAfterEdit: true,
+				checkOnSubmit: true,
 				loadComplete : function() {
 					var table = this;
 
@@ -294,7 +301,7 @@
 			jQuery(grid_selector)		
 			.jqGrid('navGrid',pager_selector,
 				{ 	//navbar options
-					add: false,
+					add: true,
 					addicon : 'ace-icon fa fa-plus-circle purple',			
 					edit: true,
 					editicon : 'ace-icon fa fa-pencil blue',
@@ -331,6 +338,7 @@
 						form.data('styled', true);
 					},
 					onClick : function(e) {
+						alert("Delete clicked");
 					}
 				},
 				{
@@ -371,6 +379,30 @@
 				}
 			)
 			
+			function myCustomCheck (value, colname) {		
+                    // validate the fields here
+                if (colname === "CC*"  || colname === "City*" || colname === "Hotel*"  || colname === "Room*"  || colname === "From*" || 
+                	colname === "To*"  || colname === "Oper Days*" ) {
+
+                	if  (value === "")
+						return [false, "Fields marked * cannot be left blank."];
+	            } 
+	            else
+    	            return [true];
+    	            
+    	        return [true];
+                
+                // return [false, "Fields cannot be left blank."];
+			}
+			
+			function style_delete_form(form) {
+				var buttons = form.next().find('.EditButton .fm-button');
+				buttons.addClass('btn btn-sm btn-white btn-round').find('[class*="-icon"]').hide();//ui-icon, s-icon
+				buttons.eq(0).addClass('btn-danger').prepend('<i class="ace-icon fa fa-trash-o"></i>');
+				buttons.eq(1).addClass('btn-default').prepend('<i class="ace-icon fa fa-times"></i>')
+			}
+			
+
 			function style_edit_form(form) {
 				//enable datepicker on "sdate" field and switches for "stock" field
 				form.end().find('input[name=grp]')

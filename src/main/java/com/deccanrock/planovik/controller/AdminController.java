@@ -509,6 +509,7 @@ public class AdminController {
 			Map<String, String> modelMap = UriHandler.Decode(inString);
 			ApplicationContext context = AppCtxtProv.getApplicationContext();
 			ServiceProviderDAO SPD = (ServiceProviderDAO)context.getBean("ServiceProviderDAO");
+			// Add/Update/Delete based on value set in oper field
 			String result = SPD.UpdateServiceInfo(modelMap);
 
     	} catch (UnsupportedEncodingException e) {
