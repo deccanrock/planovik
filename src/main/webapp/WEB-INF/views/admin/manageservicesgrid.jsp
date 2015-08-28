@@ -1,193 +1,199 @@
-<%@ include file="header.jsp" %>
-	<%@ include file="../app/nav.jsp" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>    
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>  
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-		<div class="main-content">
-			<!-- #section:basics/content.breadcrumbs -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+    
+<html lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>jqGrid - Ace Admin</title>
 
-			<!-- /section:basics/content.breadcrumbs -->
-			<div class="page-content" style="padding: 6px 5px 0px;">
-				<!-- #section:settings.box -->
+		<meta name="description" content="Dynamic tables and grids using jqGrid plugin" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 
-				<!-- /section:settings.box -->
-				<div class="page-content-area">
+    <link rel="shortcut icon" href="<c:url value='/resources/images/planovik_fav.png'/>" type="image/x-icon" />
 
-					<input type="hidden" id="csrfToken" value="${_csrf.token}"/>
-					<input type="hidden" id="csrfHeader" value="${_csrf.headerName}"/>
-					
-					<form style="display: hidden" action="/app/tasks/manage" method="POST" id="managepost">
-					  <input type="hidden" id="id" name="id" value=""/>
-					  <input type="hidden" id="subid" name="subid" value=""/>
-					  <input type="hidden" id="lastupdate" name="lastupdate" value=""/>
-					  <input type="hidden" id="orgidname" name="orgidname" value=""/>
-					  <input type="hidden" id="status" name="status" value=""/>
-					  <input type="hidden" id="code" name="code" value=""/>
-					  <input type="hidden" id="assigned" name="assigned" value=""/>
-					  <input type="hidden" id="remarks" name="remarks" value=""/>
-					  <input type="hidden" id="remarks" name="remarks" value=""/>					  
-					</form>
-					
-					<!--  Work area for admins-->
-					<div class="row">
-						<div class="col-xs-12">
-							<table id="grid-table"></table>
-							<div id="grid-pager"></div>
-							<script type="text/javascript">
-								var $path_base = "..";//in Ace demo this will be used for editurl parameter
-							</script>
-						</div><!-- /.col -->
-					</div><!-- /.row -->
-					
-				</div><!-- /.page-content-area -->
-			</div><!-- /.page-content -->
-		</div><!-- /.main-content -->
+    <!--Application CSS Files-->
+    <!-- bootstrap & fontawesome -->
+    <link rel="stylesheet" href="<c:url value='/resources/css/bootstrap.min.css'/>" />
+    <link rel="stylesheet" href="<c:url value='/resources/css/font-awesome.min.css'/>" />
 
-		<div class="footer">
-			<div class="footer-inner">
-				<!-- #section:basics/footer -->
-				<div class="footer-content">
-                    <span class="bigger-120">
-                        <span class="blue bolder">DeccanRock Pvt Ltd.</span>
-                        &copy; 2013-2014
-                    </span>
+    <!-- page specific plugin styles -->
+	<link rel="stylesheet" href="<c:url value='/resources/css/jquery-ui.min.css'/>" />
+	<link rel="stylesheet" href="<c:url value='/resources/css/datepicker.css'/>" />		
+    <link rel="stylesheet" href="<c:url value='/resources/css/ui.jqgrid.css'/>" />    
 
-					&nbsp; &nbsp;
-					<span class="action-buttons">
-						<a href="#">
-							<i class="ace-icon fa fa-twitter-square light-blue bigger-150"></i>
-						</a>
+    <!-- text fonts -->
+    <link rel="stylesheet" href="<c:url value='/resources/css/ace-fonts.css'/>" />
 
-						<a href="#">
-							<i class="ace-icon fa fa-facebook-square text-primary bigger-150"></i>
-						</a>
+    <!-- ace styles -->
+    <link rel="stylesheet" href="<c:url value='/resources/css/ace.min.css'/>" id="main-ace-style" />
 
-						<a href="#">
-							<i class="ace-icon fa fa-rss-square orange bigger-150"></i>
-						</a>
-					</span>
-				</div>
+	<link rel="stylesheet" href="<c:url value='/resources/css/ace-skins.min.css'/>" id="main-ace-style" />
+	<link rel="stylesheet" href="<c:url value='/resources/css/ace-rtl.min.css'/>" id="main-ace-style" />
+	
 
-				<!-- /section:basics/footer -->
-			</div>
+   	<script src="<c:url value='/resources/js/ace-extra.min.js'/>" ></script>
+
+	</head>
+	<body class="no-skin">
+		<div class="navbar_signup navbar-inverse1 navbar-fixed-top">
+		    <div class="loggedout_menubar">
+		        <div class="navbar-header pull-left">
+		            <a href="#">
+		                <div class="img_logo">
+		                    <img src="<c:url value='/resources/images/planovik_fav_new.png'/>" />
+		                </div>
+		            </a>
+		        </div>
+		        <div class="navbar-header navbar-toggle-admin-header">
+						<H3>
+							<div class="light-red">
+								<%= request.getAttribute("header")%>
+							</div>
+						</H3>
+		        </div>
+		    </div>
 		</div>
+		<%@ include file="../app/nav.jsp" %>
 
-		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
-			<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
-		</a>
-	</div><!-- /.main-container -->
+			<!-- /section:basics/sidebar -->
+			<div class="main-content">
 
-	<!-- basic scripts -->
+				<div class="page-content">
 
-	<!--[if !IE]> -->
-	<script type="text/javascript">
-		window.jQuery || document.write("<script src='/resources/js/jquery.min.js'"+"<"+"/script>");
-	</script>
+					<div class="page-content-area">
 
-	<!-- <![endif]-->
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+								<table id="grid-table"></table>
+								<div id="grid-pager"></div>
 
-	<!--[if IE]>
+								<script type="text/javascript">
+									var $path_base = "..";//in Ace demo this will be used for editurl parameter
+								</script>
+
+								<!-- PAGE CONTENT ENDS -->
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content-area -->
+				</div><!-- /.page-content -->
+			</div><!-- /.main-content -->
+
+			<div class="footer">
+				<div class="footer-inner">
+					<!-- #section:basics/footer -->
+					<div class="footer-content">
+						<span class="bigger-120">
+							<span class="blue bolder">Ace</span>
+							Application &copy; 2013-2014
+						</span>
+
+						&nbsp; &nbsp;
+						<span class="action-buttons">
+							<a href="#">
+								<i class="ace-icon fa fa-twitter-square light-blue bigger-150"></i>
+							</a>
+
+							<a href="#">
+								<i class="ace-icon fa fa-facebook-square text-primary bigger-150"></i>
+							</a>
+
+							<a href="#">
+								<i class="ace-icon fa fa-rss-square orange bigger-150"></i>
+							</a>
+						</span>
+					</div>
+
+					<!-- /section:basics/footer -->
+				</div>
+			</div>
+
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+			</a>
+		</div><!-- /.main-container -->
+
+		<!-- basic scripts -->
+
+	   	<script src="<c:url value='/resources/js/jquery.min.js'/>" ></script>
+
+		<!-- <![endif]-->
+
+		<!--[if IE]>
 <script type="text/javascript">
- window.jQuery || document.write("<script src='/resources/js/jquery1x.min.js'"+"<"+"/script>");
+ window.jQuery || document.write("<script src='../assets/js/jquery1x.min.js'>"+"<"+"/script>");
 </script>
 <![endif]-->
-	<script type="text/javascript">
-		if('ontouchstart' in document.documentElement) document.write("<script src='/resources/js/jquery.mobile.custom.min.js'>" + "<"+"/script>");
-	</script>
-	<script src="/resources/js/bootstrap.min.js"></script>
+	   	<script src="<c:url value='/resources/js/bootstrap.min.js'/>" ></script>
 
-	<!-- page specific plugin scripts -->
+		<!-- page specific plugin scripts -->
+	   	<script src="<c:url value='/resources/js/date-time/bootstrap-datepicker.min.js'/>" ></script>
+	   	<script src="<c:url value='/resources/js/jqGrid/jquery.jqGrid.min.js'/>" ></script>		
+	   	<script src="<c:url value='/resources/js/jqGrid/i18n/grid.locale-en.js'/>" ></script>		
 
-	<!--[if lte IE 8]>
-	  <script src="/resources/js/excanvas.min.js"></script>
-	<![endif]-->
+		<!-- ace scripts -->
+	   	<script src="<c:url value='/resources/js/ace-elements.min.js'/>" ></script>		
+	   	<script src="<c:url value='/resources/js/jqGrid/i18n/grid.locale-en.js'/>" ></script>		
 
-	<script src="/resources/js/jqGrid/jquery.jqGrid.min.js"></script>
-	<script src="/resources/js/jqGrid/i18n/grid.locale-en.js"></script>
-
-
-	<!-- inline scripts related to this page -->
-	<script type="text/javascript">
-	
-		var token = $('#csrfToken').val();
-		var header = $('#csrfHeader').val();
-		var grid_data;
-		var selectedrow;
-		
-		var subgrid_data = 
-		[
-		 {id:"1", name:"sub grid item 1", qty: 11},
-		 {id:"2", name:"sub grid item 2", qty: 3},
-		 {id:"3", name:"sub grid item 3", qty: 12},
-		 {id:"4", name:"sub grid item 4", qty: 5},
-		 {id:"5", name:"sub grid item 5", qty: 2},
-		 {id:"6", name:"sub grid item 6", qty: 9},
-		 {id:"7", name:"sub grid item 7", qty: 3},
-		 {id:"8", name:"sub grid item 8", qty: 8}
-		];
-		
-		jQuery(function($) {
-		
-			var grid_selector = "#grid-table";
-			var pager_selector = "#grid-pager";
-
-			function GetLastRowId() {
-				var lastrow = $(grid_selector).find(">tbody>tr.jqgrow").filter(":last");
-				var lastrowid = lastrow.attr('Id');
-				if (typeof lastrowid == 'undefined') {
-					 alert("undefined");
-					 lastrowid = 20;
-				}
-				else {
-					lastrowid = lastrow.attr('Id');
-					alert(lastrowid);
-				}				
+		<!-- inline scripts related to this page -->
+		<script type="text/javascript">
+			jQuery(function($) {
+				var grid_selector = "#grid-table";
+				var pager_selector = "#grid-pager";
 				
-				return lastrowid;					
-			}
-					
-			//resize to fit page size
-			$(window).on('resize.jqGrid', function () {
-				$(grid_selector).jqGrid( 'setGridWidth', $(".page-content").width() );
-		    })
-				
-			jQuery(grid_selector).jqGrid({
-				//direction: "rtl",
-		
-				//subgrid options
-				subGrid : false,
-				//subGridModel: [{ name : ['No','Item Name','Qty'], width : [55,200,80] }],
-				//datatype: "xml",
-				subGridOptions : {
-					plusicon : "ace-icon fa fa-plus center bigger-110 blue",
-					minusicon  : "ace-icon fa fa-minus center bigger-110 blue",
-					openicon : "ace-icon fa fa-chevron-right center orange"
-				},
-				caption: "${servicename} information view",
-				url: '/admin/manageserviceinfo?servicetype=${servicename}',			
-				editurl: '/admin/manageserviceinfo/edit?service=${servicename}',
-				datatype: 'json',
-				beforeSubmit : function(response, postdata) {
-					console.log(reponse);
-					alert(response);
-				}, 				
-				afterSubmit : function(response, postdata) {
-					console.log(reponse);
-					alert(response);
-				}, 				
+				//resize to fit page size
+				$(window).on('resize.jqGrid', function () {
+					$(grid_selector).jqGrid( 'setGridWidth', $(".page-content").width() );
+			    })
+				//resize on sidebar collapse/expand
+				var parent_column = $(grid_selector).closest('[class*="col-"]');
+				$(document).on('settings.ace.jqGrid' , function(ev, event_name, collapsed) {
+					if( event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed' ) {
+						//setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+						setTimeout(function() {
+							$(grid_selector).jqGrid( 'setGridWidth', parent_column.width() );
+						}, 0);
+					}
+			    })
+			
+			
+				jQuery(grid_selector).jqGrid({
+					//direction: "rtl",
+					height: $("#container").height(),				
+
 				height: $("#container").height(),
-				colNames:['Id', 'CC*', 'City*', 'Hotel*', 'Stars', 'OR', 'Room*', 'From*', 'To*', 'Oper Days*', 'ConvCode', 'Grp', 'EP Sngl', 'EP Dbl', 
+				colNames:[' ', 'Id', 'CC*', 'City*', 'Hotel*', 'Stars', 'OR', 'Room*', 'From*', 'To*', 'Oper Days*', 'ConvCode', 'Grp', 'EP Sngl', 'EP Dbl', 
 						  'CP Sngl', 'CP Dbl', 'MAP Sngl', 'MAP Dbl', 'AP Sngl', 'AP Dbl', 'EB', 'Mealbf', 'Mealln', 'Mealdn', 
 						  'JP Sngl', 'JP Dbl', 'MJP Sngl', 'MJP Dbl', 'Remarks', 'CurCode', 'Rate', 'Misc', 'AI Sngl', 'AI Dbl', 
 						  'NoTitle1', 'NoTitle2', 'NoTitle3'],
 				colModel:[
+					{name:'myac',index:'', width:80, fixed:true, search:false, sortable:false, resize:false,
+						formatter:'actions', 
+						formatoptions:{ 
+							keys:true,
+							//delbutton: false,//disable delete button
+							
+							delOptions:{recreateForm: true, beforeShowForm:beforeDeleteCallback},
+							//editformbutton:true, editOptions:{recreateForm: true, beforeShowForm:beforeEditCallback}
+						}
+					},				
 					{name:'id',index:'id', width:50, search:false, sortable:false, editable: false},
 					{name:'citycode',index:'citycode', search:false, width:50, sortable:false, editable: true, editrules: {custom: true, custom_func: myCustomCheck}},
-					{name:'cityname',index:'cityname', searchoptions:{sopt: ['eq','cn'] }, width:100, sortable:false, editable: true, editrules: {custom: true, custom_func: myCustomCheck}},
-					{name:'hotel',index:'hotel', searchoptions:{sopt: ['eq','cn'] }, width:200, editable:false, sortable:false, editable: true, editrules: {custom: true, custom_func: myCustomCheck}},
-					{name:'stars',index:'stars',width:60, search:false, sortable:false, editable: true},
-					{name:'or',index:'or',width:60, search:false, sortable:false, editable: true},
-					{name:'room',index:'room',width:80, search:false, sortable:false, editable: true, editrules: {custom: true, custom_func: myCustomCheck}},
-					{name:'fromdate',index:'fromdate', search:false, width:65, sortable:false, editable: true, editrules: {custom: true, custom_func: myCustomCheck}},					
-					{name:'todate',index:'todate', search:false, width:65, sortable:false, editable: true, editrules: {custom: true, custom_func: myCustomCheck}},					
+					{name:'cityname',index:'cityname', search:true, searchoptions:{sopt: ['eq','cn'] }, width:100, sortable:false, editable: true, editrules: {custom: true, custom_func: myCustomCheck}},
+					{name:'hotel',index:'hotel', search:true, searchoptions:{sopt: ['eq','cn'] }, width:200, editable:false, sortable:false, editable: true, editrules: {custom: true, custom_func: myCustomCheck}},
+					{name:'hotelstar',index:'hotelstar', search:true, searchoptions:{sopt: ['eq','cn'] }, width:60, sortable:false, editable: true},
+					{name:'ourrating',index:'ourrating',width:60, search:false, sortable:false, editable: true},
+					{name:'room',index:'room',width:80, search:true, searchoptions:{sopt: ['eq','cn'] }, sortable:false, editable: true, editrules: {custom: true, custom_func: myCustomCheck}},
+					{name:'fromdate',index:'fromdate', search:true, searchoptions:{sopt: ['eq','cn'] }, width:65, sortable:false, editable: true, editrules: {custom: true, custom_func: myCustomCheck}},					
+					{name:'todate',index:'todate', search:true, searchoptions:{sopt: ['eq','cn'] }, width:65, sortable:false, editable: true, editrules: {custom: true, custom_func: myCustomCheck}},					
 					{name:'operdays',index:'operdays', search:false, width:50, sortable:false, editable: true, editrules: {custom: true, custom_func: myCustomCheck}},					
 					{name:'convcode',index:'convcode', search:false, width:40, sortable:false, editable: true},					
 					{name:'grp',index:'grp', search:false, width:40, sortable:false, editable: true},					
@@ -217,278 +223,288 @@
 					{name:'notitle2',index:'notitle2', search:false, width:50, sortable: false, editable: true},				
 					{name:'notitle3',index:'notitle3', search:false, width:50, sortable: false, editable: true}				
 				], 
-		
-				rowNum:15,
-				rowList:[15,30,60],
-				pager : pager_selector,
-			    autoencode: true,
-			    sortable: true,
-			    sortname: "id",
-			    altRows: true,
-				//toppager: true,
-				viewrecords: true,
-				multipleSearch:true,
-				multiselect: false,
-				//multikey: "ctrlKey",
-		        multiboxonly: true,
-		        closeAfterAdd: true,
-		        closeAfterEdit: true,
-				checkOnSubmit: true,
-				loadComplete : function() {
-					var table = this;
-
-					var postdata = $(grid_selector).jqGrid('getGridParam','postData');
-					postdata._search = 'false';
-					//postdata.searchField = "";
-					//postdata.searchOper = "";
-					//postdata.searchString = "";
-    				
-					setTimeout(function(){
-						styleCheckbox(table);
-						updateActionIcons(table);
-						updatePagerIcons(table);
-						enableTooltips(table);
-					}, 0);
-				},
-				onSelectRow: function(rowid) {
-  				  selectedrow = $(this).getLocalRow(rowid);
-    			  // do something with row
-				},
-				
-				shrinkToFit:false,
-				forceFit:true,		
-		
-				/**
-				,
-				grouping:true, 
-				groupingView : { 
-					 groupField : ['name'],
-					 groupDataSorted : true,
-					 plusicon : 'fa fa-chevron-down bigger-110',
-					 minusicon : 'fa fa-chevron-up bigger-110'
-				},
-				caption: "Grouping"
-				*/
-		
-			});
-			$(window).triggerHandler('resize.jqGrid');//trigger window resize to make the grid get the correct size
 			
+					viewrecords : true,
+					rowNum:15,
+					rowList:[15,30,60],
+					pager : pager_selector,
+					altRows: true,					
+					multiselect: true,
+			        multiboxonly: true,
+					shrinkToFit:false,
+					forceFit:true,		
 			
-		
-			//enable search/filter toolbar
-			//jQuery(grid_selector).jqGrid('filterToolbar',{defaultSearch:true,stringResult:true})
-			//jQuery(grid_selector).filterToolbar({});
-		
-		
-			//switch element when editing inline
-			function aceSwitch( cellvalue, options, cell ) {
-				setTimeout(function(){
-					$(cell) .find('input[type=checkbox]')
-						.addClass('ace ace-switch ace-switch-5')
-						.after('<span class="lbl"></span>');
-				}, 0);
-			}
-			//enable datepicker
-			function pickDate( cellvalue, options, cell ) {
-				setTimeout(function(){
-					$(cell) .find('input[type=text]')
-							.datepicker({format:'yyyy-mm-dd' , autoclose:true}); 
-				}, 0);
-			}
-		
-		
-			//navButtons
-			jQuery(grid_selector)		
-			.jqGrid('navGrid',pager_selector,
-				{ 	//navbar options
-					add: true,
-					addicon : 'ace-icon fa fa-plus-circle purple',			
-					edit: true,
-					editicon : 'ace-icon fa fa-pencil blue',
-					del: true,
-					delicon : 'ace-icon fa fa-trash-o red',
-					search: true,
-					searchicon : 'ace-icon fa fa-search orange',
-					refresh: true,
-					refreshicon : 'ace-icon fa fa-refresh green',
-					view: true,
-					viewicon : 'ace-icon fa fa-search-plus grey',
-				},
-				{
-					//edit record form
-					closeAfterEdit: true,
-					width: 500,
-					recreateForm: true,
-					beforeShowForm : function(e) {
-						var form = $(e[0]);
-						form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
-						style_edit_form(form);
-					}
-				},
-				{
-					//delete record form
-					recreateForm: true,
-					beforeShowForm : function(e) {
-						var form = $(e[0]);
-						if(form.data('styled')) return false;
-						
-						form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
-						style_delete_form(form);
-						
-						form.data('styled', true);
+					loadComplete : function() {
+						var table = this;
+						setTimeout(function(){
+							styleCheckbox(table);
+							updateActionIcons(table);
+							updatePagerIcons(table);
+							enableTooltips(table);
+						}, 0);
 					},
-					onClick : function(e) {
-						alert("Delete clicked");
-					}
-				},
-				{
-					//search form
-					recreateForm: true,
-					beforeShowSearch: function(e){
-						var form = $(e[0]);
-				        $('.ui-search',form).click(function(){
-				            alert("in onSearch");
-				        });
-				        $('.ui-reset',form).click(function(){
-				            alert("in onReset");
-				        });					
-					},					
-					afterShowSearch: function(e){
-			            alert("afterShowSearch");
-						var form = $(e[0]);
-						form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
-						style_search_form(form);
-					},
-					afterRedraw: function(){
-						style_search_filters($(this));
-					}
-					,
-					multipleSearch: true,
-					/**
-					multipleGroup:true,
-					showQuery: true
-					*/
-				},
-				{
-					//view record form
-					recreateForm: true,
-					beforeShowForm: function(e){
-						var form = $(e[0]);
-						form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
-					}
-				}
-			)
-			
-			function myCustomCheck (value, colname) {		
-                    // validate the fields here
-                if (colname === "CC*"  || colname === "City*" || colname === "Hotel*"  || colname === "Room*"  || colname === "From*" || 
-                	colname === "To*"  || colname === "Oper Days*" ) {
-
-                	if  (value === "")
-						return [false, "Fields marked * cannot be left blank."];
-	            } 
-	            else
-    	            return [true];
-    	            
-    	        return [true];
-                
-                // return [false, "Fields cannot be left blank."];
-			}
-			
-			function style_delete_form(form) {
-				var buttons = form.next().find('.EditButton .fm-button');
-				buttons.addClass('btn btn-sm btn-white btn-round').find('[class*="-icon"]').hide();//ui-icon, s-icon
-				buttons.eq(0).addClass('btn-danger').prepend('<i class="ace-icon fa fa-trash-o"></i>');
-				buttons.eq(1).addClass('btn-default').prepend('<i class="ace-icon fa fa-times"></i>')
-			}
-			
-
-			function style_edit_form(form) {
-				//enable datepicker on "sdate" field and switches for "stock" field
-				form.end().find('input[name=grp]')
-					.addClass('ace ace-switch ace-switch-5').after('<span class="lbl"></span>');
-						   //don't wrap inside a label element, the checkbox value won't be submitted (POST'ed)
-						  //.addClass('ace ace-switch ace-switch-5').wrap('<label class="inline" />').after('<span class="lbl"></span>');
-		
-				//update buttons classes
-				var buttons = form.next().find('.EditButton .fm-button');
-				buttons.addClass('btn btn-sm').find('[class*="-icon"]').hide();//ui-icon, s-icon
-				buttons.eq(0).addClass('btn-primary').prepend('<i class="ace-icon fa fa-check"></i>');
-				buttons.eq(1).prepend('<i class="ace-icon fa fa-times"></i>')
-				
-				buttons = form.next().find('.navButton a');
-				buttons.find('.ui-icon').hide();
-				buttons.eq(0).append('<i class="ace-icon fa fa-chevron-left"></i>');
-				buttons.eq(1).append('<i class="ace-icon fa fa-chevron-right"></i>');		
-			}
-		
-			//it causes some flicker when reloading or navigating grid
-			//it may be possible to have some custom formatter to do this as the grid is being created to prevent this
-			//or go back to default browser checkbox styles for the grid
-			function styleCheckbox(table) {
-			/**
-				$(table).find('input:checkbox').addClass('ace')
-				.wrap('<label />')
-				.after('<span class="lbl align-top" />')
-		
-		
-				$('.ui-jqgrid-labels th[id*="_cb"]:first-child')
-				.find('input.cbox[type=checkbox]').addClass('ace')
-				.wrap('<label />').after('<span class="lbl align-top" />');
-			*/
-			}
-			
-		
-			//unlike navButtons icons, action icons in rows seem to be hard-coded
-			//you can change them like this in here if you want
-			function updateActionIcons(table) {
-				/**
-				var replacement = 
-				{
-					'ui-ace-icon fa fa-pencil' : 'ace-icon fa fa-pencil blue',
-					'ui-ace-icon fa fa-trash-o' : 'ace-icon fa fa-trash-o red',
-					'ui-icon-disk' : 'ace-icon fa fa-check green',
-					'ui-icon-cancel' : 'ace-icon fa fa-times red'
-				};
-				$(table).find('.ui-pg-div span.ui-icon').each(function(){
-					var icon = $(this);
-					var $class = $.trim(icon.attr('class').replace('ui-icon', ''));
-					if($class in replacement) icon.attr('class', 'ui-icon '+replacement[$class]);
-				})
-				*/
-			}
-			
-			//replace icons with FontAwesome icons like above
-			function updatePagerIcons(table) {
-				var replacement = 
-				{
-					'ui-icon-seek-first' : 'ace-icon fa fa-angle-double-left bigger-140',
-					'ui-icon-seek-prev' : 'ace-icon fa fa-angle-left bigger-140',
-					'ui-icon-seek-next' : 'ace-icon fa fa-angle-right bigger-140',
-					'ui-icon-seek-end' : 'ace-icon fa fa-angle-double-right bigger-140'
-				};
-				$('.ui-pg-table:not(.navtable) > tbody > tr > .ui-pg-button > .ui-icon').each(function(){
-					var icon = $(this);
-					var $class = $.trim(icon.attr('class').replace('ui-icon', ''));
 					
-					if($class in replacement) icon.attr('class', 'ui-icon '+replacement[$class]);
-				})
-			}
-		
-			function enableTooltips(table) {
-				$('.navtable .ui-pg-button').tooltip({container:'body'});
-				$(table).find('.ui-pg-div').tooltip({container:'body'});
-			}
-		
-			//var selr = jQuery(grid_selector).jqGrid('getGridParam','selrow');
-		
-			$(document).on('ajaxloadstart', function(e) {
-				$(grid_selector).jqGrid('GridUnload');
-				$('.ui-jqdialog').remove();
-			});
+					gridComplete : function(){ 
+						// Set datatype to be local and toggle based on action
+					},					
+			
+					url: '/admin/manageserviceinfo?servicetype=${servicename}',			
+					editurl: '/admin/manageserviceinfo/edit?service=${servicename}',
+					datatype: 'json',
+    				loadonce: false,					
+					afterSubmit : function(response, postdata) {
+						console.log(reponse);
+						alert(response);
+					}, 				
+					caption:  "${servicename} information view",
 						
-		});
-	</script>
+				});
+				$(window).triggerHandler('resize.jqGrid');//trigger window resize to make the grid get the correct size
+				
+			
+				//switch element when editing inline
+				function aceSwitch( cellvalue, options, cell ) {
+					setTimeout(function(){
+						$(cell) .find('input[type=checkbox]')
+							.addClass('ace ace-switch ace-switch-5')
+							.after('<span class="lbl"></span>');
+					}, 0);
+				}
+				//enable datepicker
+				function pickDate( cellvalue, options, cell ) {
+					setTimeout(function(){
+						$(cell) .find('input[type=text]')
+								.datepicker({format:'yyyy-mm-dd' , autoclose:true}); 
+					}, 0);
+				}
+			
+			
+				//navButtons
+				jQuery(grid_selector).jqGrid('navGrid',pager_selector,
+					{ 	//navbar options
+						edit: true,
+						editicon : 'ace-icon fa fa-pencil blue',
+						add: true,
+						addicon : 'ace-icon fa fa-plus-circle purple',
+						del: true,
+						delicon : 'ace-icon fa fa-trash-o red',
+						search: true,
+						searchicon : 'ace-icon fa fa-search orange',
+						refresh: true,
+						refreshicon : 'ace-icon fa fa-refresh green',
+						view: true,
+						viewicon : 'ace-icon fa fa-search-plus grey',
+					},
+					{
+						//edit record form
+						//closeAfterEdit: true,
+						//width: 700,
+						recreateForm: true,
+						beforeShowForm : function(e) {
+							var form = $(e[0]);
+							form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
+							style_edit_form(form);
+						}
+					},
+					{
+						//new record form
+						//width: 700,
+						closeAfterAdd: true,
+						recreateForm: true,
+						viewPagerButtons: false,
+						beforeShowForm : function(e) {
+							var form = $(e[0]);
+							form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar')
+							.wrapInner('<div class="widget-header" />')
+							style_edit_form(form);
+						}
+					},
+					{
+						//delete record form
+						recreateForm: true,
+						beforeShowForm : function(e) {
+							var form = $(e[0]);
+							if(form.data('styled')) return false;
+							
+							form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
+							style_delete_form(form);
+							
+							form.data('styled', true);
+						},
+						onClick : function(e) {
+							alert(1);
+						}
+					},
+					{
+						//search form
+						recreateForm: true,
+						afterShowSearch: function(e){
+							var form = $(e[0]);
+							form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
+							style_search_form(form);
+						},
+						afterRedraw: function(){
+							style_search_filters($(this));
+					        var needBeDisabled = $(this).find(".columns").length >= 4;
+					        $(this).find(".add-rule,.add-group").each(function() {
+					            $(this).prop("disabled", needBeDisabled);
+					        });							
+						},
+						multipleSearch: true,						
+					},
+					{
+						//view record form
+						recreateForm: true,
+						beforeShowForm: function(e){
+							var form = $(e[0]);
+							form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
+						}
+					}
+				)
+				
+				function myCustomCheck (value, colname) {		
+	                    // validate the fields here
+	                if (colname === "CC*"  || colname === "City*" || colname === "Hotel*"  || colname === "Room*"  || colname === "From*" || 
+	                	colname === "To*"  || colname === "Oper Days*" ) {
+	
+	                	if  (value === "")
+							return [false, "Fields marked * cannot be left blank."];
+		            } 
+		            else
+	    	            return [true];
+	    	            
+	    	        return [true];
+	                
+	                // return [false, "Fields cannot be left blank."];
+				}
+			
+				
+				function style_edit_form(form) {
+					//enable datepicker on "sdate" field and switches for "stock" field
+					form.find('input[name=sdate]').datepicker({format:'yyyy-mm-dd' , autoclose:true})
+						.end().find('input[name=stock]')
+							.addClass('ace ace-switch ace-switch-5').after('<span class="lbl"></span>');
+							   //don't wrap inside a label element, the checkbox value won't be submitted (POST'ed)
+							  //.addClass('ace ace-switch ace-switch-5').wrap('<label class="inline" />').after('<span class="lbl"></span>');
+			
+					//update buttons classes
+					var buttons = form.next().find('.EditButton .fm-button');
+					buttons.addClass('btn btn-sm').find('[class*="-icon"]').hide();//ui-icon, s-icon
+					buttons.eq(0).addClass('btn-primary').prepend('<i class="ace-icon fa fa-check"></i>');
+					buttons.eq(1).prepend('<i class="ace-icon fa fa-times"></i>')
+					
+					buttons = form.next().find('.navButton a');
+					buttons.find('.ui-icon').hide();
+					buttons.eq(0).append('<i class="ace-icon fa fa-chevron-left"></i>');
+					buttons.eq(1).append('<i class="ace-icon fa fa-chevron-right"></i>');		
+				}
+			
+				function style_delete_form(form) {
+					var buttons = form.next().find('.EditButton .fm-button');
+					buttons.addClass('btn btn-sm btn-white btn-round').find('[class*="-icon"]').hide();//ui-icon, s-icon
+					buttons.eq(0).addClass('btn-danger').prepend('<i class="ace-icon fa fa-trash-o"></i>');
+					buttons.eq(1).addClass('btn-default').prepend('<i class="ace-icon fa fa-times"></i>')
+				}
+				
+				function style_search_filters(form) {
+					form.find('.delete-rule').val('X');
+					form.find('.add-rule').addClass('btn btn-xs btn-primary');
+					form.find('.add-group').addClass('btn btn-xs btn-success');
+					form.find('.delete-group').addClass('btn btn-xs btn-danger');
+				}
+				function style_search_form(form) {
+					var dialog = form.closest('.ui-jqdialog');
+					var buttons = dialog.find('.EditTable')
+					buttons.find('.EditButton a[id*="_reset"]').addClass('btn btn-sm btn-info').find('.ui-icon').attr('class', 'ace-icon fa fa-retweet');
+					buttons.find('.EditButton a[id*="_query"]').addClass('btn btn-sm btn-inverse').find('.ui-icon').attr('class', 'ace-icon fa fa-comment-o');
+					buttons.find('.EditButton a[id*="_search"]').addClass('btn btn-sm btn-purple').find('.ui-icon').attr('class', 'ace-icon fa fa-search');
+				}
+				
+				function beforeDeleteCallback(e) {
+					var form = $(e[0]);
+					if(form.data('styled')) return false;
+					
+					form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
+					style_delete_form(form);
+					
+					form.data('styled', true);
+				}
+				
+				function beforeEditCallback(e) {
+					var form = $(e[0]);
+					form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
+					style_edit_form(form);
+				}
+			
+			
+			
+				//it causes some flicker when reloading or navigating grid
+				//it may be possible to have some custom formatter to do this as the grid is being created to prevent this
+				//or go back to default browser checkbox styles for the grid
+				function styleCheckbox(table) {
+				/**
+					$(table).find('input:checkbox').addClass('ace')
+					.wrap('<label />')
+					.after('<span class="lbl align-top" />')
+			
+			
+					$('.ui-jqgrid-labels th[id*="_cb"]:first-child')
+					.find('input.cbox[type=checkbox]').addClass('ace')
+					.wrap('<label />').after('<span class="lbl align-top" />');
+				*/
+				}
+				
+			
+				//unlike navButtons icons, action icons in rows seem to be hard-coded
+				//you can change them like this in here if you want
+				function updateActionIcons(table) {
+					/**
+					var replacement = 
+					{
+						'ui-ace-icon fa fa-pencil' : 'ace-icon fa fa-pencil blue',
+						'ui-ace-icon fa fa-trash-o' : 'ace-icon fa fa-trash-o red',
+						'ui-icon-disk' : 'ace-icon fa fa-check green',
+						'ui-icon-cancel' : 'ace-icon fa fa-times red'
+					};
+					$(table).find('.ui-pg-div span.ui-icon').each(function(){
+						var icon = $(this);
+						var $class = $.trim(icon.attr('class').replace('ui-icon', ''));
+						if($class in replacement) icon.attr('class', 'ui-icon '+replacement[$class]);
+					})
+					*/
+				}
+				
+				//replace icons with FontAwesome icons like above
+				function updatePagerIcons(table) {
+					var replacement = 
+					{
+						'ui-icon-seek-first' : 'ace-icon fa fa-angle-double-left bigger-140',
+						'ui-icon-seek-prev' : 'ace-icon fa fa-angle-left bigger-140',
+						'ui-icon-seek-next' : 'ace-icon fa fa-angle-right bigger-140',
+						'ui-icon-seek-end' : 'ace-icon fa fa-angle-double-right bigger-140'
+					};
+					$('.ui-pg-table:not(.navtable) > tbody > tr > .ui-pg-button > .ui-icon').each(function(){
+						var icon = $(this);
+						var $class = $.trim(icon.attr('class').replace('ui-icon', ''));
+						
+						if($class in replacement) icon.attr('class', 'ui-icon '+replacement[$class]);
+					})
+				}
+			
+				function enableTooltips(table) {
+					$('.navtable .ui-pg-button').tooltip({container:'body'});
+					$(table).find('.ui-pg-div').tooltip({container:'body'});
+				}
+			
+				//var selr = jQuery(grid_selector).jqGrid('getGridParam','selrow');
+			
+				$(document).on('ajaxloadstart', function(e) {
+					$(grid_selector).jqGrid('GridUnload');
+					$('.ui-jqdialog').remove();
+				});
+			});
+		</script>
 
-</body>
+		<script type="text/javascript"> ace.vars['base'] = '..'; </script>
+	</body>
 </html>

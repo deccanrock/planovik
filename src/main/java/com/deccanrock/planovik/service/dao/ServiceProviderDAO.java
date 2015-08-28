@@ -370,8 +370,7 @@ public class ServiceProviderDAO implements IServiceProviderDAO {
 	}
 
     @Override
-    public int GetServiceInfoNumRecords(String servicetype, boolean issearch, String searchfield, String searchoper,
-    									String searchstring) {
+    public int GetServiceInfoNumRecords(String servicetype, boolean issearch, String searchfilters) {
     	DataSource  tenantdataSource = TenantDS.setTenantDataSource(null);    	    			
 		JdbcTemplate dbtemplate = new JdbcTemplate(tenantdataSource);
 		
@@ -387,9 +386,7 @@ public class ServiceProviderDAO implements IServiceProviderDAO {
 		else
 			inParamMap.put("oper", "view");
 
-		inParamMap.put("searchfield", searchfield);
-		inParamMap.put("searchoper", searchoper);
-		inParamMap.put("searchstring", searchstring);
+		inParamMap.put("searchfilters", searchfilters);
 			
 		SqlParameterSource in = new MapSqlParameterSource(inParamMap);
 		Map<String, Object> simpleJdbcCallResult = simpleJdbcCall.execute(in);
@@ -399,14 +396,12 @@ public class ServiceProviderDAO implements IServiceProviderDAO {
     }
     
     @Override
-    public List<HotelInfoEntity> GetServiceInfoEntities(String servicetype, int inpage, short inrows, short issearch, String searchfield, 
-    		String searchoper, String searchstring) {
+    public List<HotelInfoEntity> GetServiceInfoEntities(String servicetype, int inpage, short inrows, short issearch, String searchfilters) {
 
     	DataSource  tenantdataSource = TenantDS.setTenantDataSource(null);    	    			
 		JdbcTemplate dbtemplate = new JdbcTemplate(tenantdataSource);
 		
-		String SQL = "Call sp_get_serviceinfo_entities(" + "'" + servicetype + "'" + ',' + inpage +  ',' + inrows +  ',' + issearch +  ',' + "'" + searchfield + "'" + ',' 
-														 + "'" + searchoper + "'" + ',' + "'" + searchstring + "'" + ");";    			
+		String SQL = "Call sp_get_serviceinfo_entities(" + "'" + servicetype + "'" + ',' + inpage +  ',' + inrows +  ',' + issearch +  ',' + "'" + searchfilters + "'" + ");";    			
 		if (servicetype.contentEquals("Hotel")) {
 			HotelInfoEntityMapper hiem = new HotelInfoEntityMapper();
 		
@@ -443,8 +438,10 @@ public class ServiceProviderDAO implements IServiceProviderDAO {
 			simpleJdbcCall = new SimpleJdbcCall(dbtemplate)
 			.withProcedureName("sp_update_serviceinfo");
 
-			inParamMap.put("oper", oper);    	
-			if (serviceInfoMap.containsKey("id"))
+			inParamMap.put("oper", oper);
+			if (oper.contentEquals("add"))
+				inParamMap.put("inid", 0);
+			else
 				inParamMap.put("inid", serviceInfoMap.get("id"));
 			if (serviceInfoMap.containsKey("room"))
 				inParamMap.put("inroom", serviceInfoMap.get("room"));    		
@@ -486,8 +483,8 @@ public class ServiceProviderDAO implements IServiceProviderDAO {
 				inParamMap.put("incpsngl", serviceInfoMap.get("cpsngl"));
 			if (serviceInfoMap.containsKey("mjpdbl"))
 				inParamMap.put("inmjpdbl", serviceInfoMap.get("mjpdbl"));
-			if (serviceInfoMap.containsKey("or"))
-				inParamMap.put("inourrating", serviceInfoMap.get("or"));
+			if (serviceInfoMap.containsKey("ourrating"))
+				inParamMap.put("inourrating", serviceInfoMap.get("ourrating"));
 			if (serviceInfoMap.containsKey("spnoting"))
 				inParamMap.put("inspnoting", serviceInfoMap.get("spnoting"));
 			if (serviceInfoMap.containsKey("mapdbl"))
@@ -498,8 +495,8 @@ public class ServiceProviderDAO implements IServiceProviderDAO {
 				inParamMap.put("inmisc", serviceInfoMap.get("misc"));
 			if (serviceInfoMap.containsKey("epsngl"))
 				inParamMap.put("inepsngl", serviceInfoMap.get("epsngl"));
-			if (serviceInfoMap.containsKey("stars"))
-				inParamMap.put("inhotelstar", serviceInfoMap.get("stars"));
+			if (serviceInfoMap.containsKey("hotelstar"))
+				inParamMap.put("inhotelstar", serviceInfoMap.get("hotelstar"));
 			if (serviceInfoMap.containsKey("apdbl"))
 				inParamMap.put("inapdbl", serviceInfoMap.get("apdbl"));
 			if (serviceInfoMap.containsKey("service"))

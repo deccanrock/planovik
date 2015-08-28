@@ -13,4 +13,4 @@ mysqldump --routines --triggers --single-transaction -u root -p z1_planovik_main
 
 mysqldump --routines --triggers --single-transaction --port=3307 -u root -p z1_planovik_free_1 > z1_planovik_free_08122015
 
-mysqldump --routines --triggers --single-transaction --port=3307 -u root -proot --no-data z1_planovik_free_1 > z1_planovik_biz_1
+mysqldump --routines --triggers --single-transaction --port=3307 -u root -proot --no-data z1_planovik_biz_1 > z1_planovik_biz_1

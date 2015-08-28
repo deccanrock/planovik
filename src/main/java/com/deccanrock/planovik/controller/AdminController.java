@@ -12,6 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +45,111 @@ import com.deccanrock.planovik.service.utils.UriHandler;
 import com.deccanrock.planovik.Tenant.TenantContextHolder;
 import com.deccanrock.planovik.constants.PlnvkConstants;
 
+
+class searchRules {
+	private String field;
+	private String op;
+	private String data;
+	
+    public searchRules () {
+    	
+    }
+
+    public searchRules (String field, String op, String data) {
+    	this.field = field;
+    	this.op = op;
+    	this.data = data;        	
+    }
+    
+	public String getField () {
+		return this.field;
+	}
+	
+	public void setField (String field) {
+		this.field = field;
+	}
+	
+	public String getOp () {
+		return this.op;
+	}
+	
+	public void setOp (String op) {
+		this.op = op;
+	}
+
+	public String getData () {
+		return this.data;
+	}
+	
+	public void setData (String data) {
+		this.data = data;
+	}
+
+}
+
+class searchfilterData {
+    private String groupOp;
+    private List<searchRules> rules;
+            
+    // {"groupOp":"AND","rules":[{"field":"cityname","op":"eq","data":"delhi"}]}
+    public searchfilterData (@JsonProperty String groupOp, @JsonProperty List<searchRules> rules) {
+    // public searchfilterData (@JsonProperty String groupOp) {
+    	this.groupOp = groupOp;
+    	this.rules = new ArrayList<searchRules>();
+    	this.rules = rules;
+    }
+    
+    public searchfilterData () {
+
+    }
+    
+	public String getGroupOp () {
+		return this.groupOp;
+	}
+	
+	public void setGroupOp (String groupOp) {
+		this.groupOp = groupOp;
+	}
+	
+	
+	public List<searchRules> getRules () {
+		return this.rules;
+	}
+	
+	public void setRules (List<searchRules> rules) {
+		this.rules = rules;
+	}
+	    	
+    @Override
+	public String toString() {
+		// return "searchfilterData [groupOp" + groupOp + ", rules=" + rules +  "]";
+		return "searchfilterData [groupOp" + groupOp + "]";        	
+	}                
+    
+    
+    public String createSQLSearchStr(String groupop, List<searchRules> rules) {
+    	String searchfilter = "";
+    	int size = rules.size();
+    	searchRules sr = null;
+    	for (int i=0; i<size; i++) {
+    		// "rules":[{"field":"cityname","op":"eq","data":"delhi"}]}
+    		// cityname LIKE CONCAT("%", searchstring, "%")
+    		if (i > 0)
+    			searchfilter = searchfilter + ' ' + groupop + ' ';
+    		sr = rules.get(i);
+    		if (sr.getOp().contentEquals("eq"))
+    			searchfilter = searchfilter + sr.getField() + "=" + "\"" + sr.getData() + "\"";
+    		else if (sr.getOp().contentEquals("cn"))
+				searchfilter = searchfilter + sr.getField() +  " LIKE \"%" + sr.getData() + "%\"";
+    	}
+    	return searchfilter;
+    }
+    
+}
+    
+
+
+
 /**
  * Handles all requests for Organization and User level signup's
  */
@@ -66,14 +174,15 @@ public class AdminController {
     	}        
     }		
 
+
     // Hotel info class 
     public class HotelInfo {
         public int id;
         public String citycode;
         public String cityname;
         public String hotel;
-        public String stars;
-        public String or;
+        public String hotelstar;
+        public String ourrating;
         public String room;
         public String fromdate;
         public String todate;
@@ -402,10 +511,7 @@ public class AdminController {
     @RequestMapping(value = "/admin/manageserviceinfo", method = RequestMethod.GET,  produces = "application/json")
     public @ResponseBody String manageserviceinfo(ModelMap map, HttpServletRequest request, @RequestParam String servicetype, HttpSession session,
     		 @RequestParam int page, @RequestParam boolean _search, @RequestParam short rows, 
-    		 @RequestParam(value = "searchField", required = false) String searchField,
-    		 @RequestParam(value = "searchOper", required = false) String searchOper,
-    		 @RequestParam(value = "searchString", required = false) String searchString,
-    		 ServletResponse response) throws IOException {
+    		 @RequestParam(value = "filters", required = false) String searchfilters, ServletResponse response) throws IOException {
 		
     	// This is ajax support function for JQGrid
     	logger.info("Admin Manage Service");    	
@@ -415,11 +521,23 @@ public class AdminController {
 		ServiceProviderDAO SPD = (ServiceProviderDAO)context.getBean("ServiceProviderDAO");
 		List<HotelInfoEntity> hotelinfoentities;
 		
+		// searchfilters is received as json stream from client jqgrid, convert it into mysql search condition
+		
+		String filterstring="";
 		// Pass in page number and row
-		if (_search)
-			hotelinfoentities = SPD.GetServiceInfoEntities(servicetype, page, rows, (short)1, searchField, searchOper, searchString);
+		if (_search) {
+			// Parse json into relevant class for futher conversion to SQL where clause
+	        // {"groupOp":"AND","rules":[{"field":"cityname","op":"eq","data":"delhi"}]}
+			// String teststr = "{\"groupOp\":\"AND\"}";
+			ObjectMapper mappersrch = new ObjectMapper();
+			searchfilterData sfd = new searchfilterData();
+			sfd = mappersrch.readValue(searchfilters, searchfilterData.class);		
+			// sfd = mappersrch.readValue(teststr, searchfilterData.class);			
+			filterstring = sfd.createSQLSearchStr(sfd.getGroupOp(), sfd.getRules());
+			hotelinfoentities = SPD.GetServiceInfoEntities(servicetype, page, rows, (short)1, filterstring);			
+		}
 		else
-			hotelinfoentities = SPD.GetServiceInfoEntities(servicetype, page, rows, (short)0, searchField, searchOper, searchString);
+			hotelinfoentities = SPD.GetServiceInfoEntities(servicetype, page, rows, (short)0, filterstring);
 
 		
 		// Stuff the dataset in cache as user may click on individual rows
@@ -432,8 +550,8 @@ public class AdminController {
 			hotelinfo.citycode = hotelinfoentities.get(i).getCitycode();
 			hotelinfo.cityname = hotelinfoentities.get(i).getCityname();
 			hotelinfo.hotel = hotelinfoentities.get(i).getHotel();
-			hotelinfo.stars = hotelinfoentities.get(i).getHotelstar();
-			hotelinfo.or = hotelinfoentities.get(i).getOurrating();
+			hotelinfo.hotelstar = hotelinfoentities.get(i).getHotelstar();
+			hotelinfo.ourrating = hotelinfoentities.get(i).getOurrating();
 			hotelinfo.room = hotelinfoentities.get(i).getRoom();
 			hotelinfo.fromdate = hotelinfoentities.get(i).getFromdate();
 			hotelinfo.todate = hotelinfoentities.get(i).getTodate();
@@ -487,7 +605,7 @@ public class AdminController {
 		// Build Json Reader map for jqgrid				
 		ObjectMapper mapper = new ObjectMapper();
 		serviceproviderGridData spgd = new serviceproviderGridData();						
-		spgd.records = SPD.GetServiceInfoNumRecords(servicetype, _search, searchField, searchOper, searchString);
+		spgd.records = SPD.GetServiceInfoNumRecords(servicetype, _search, filterstring);
 		spgd.total = spgd.records / rows + (spgd.records % rows == 0 ? 0 : 1);
 		spgd.rows = hotelinfolist;
 		spgd.page = page;
@@ -501,26 +619,35 @@ public class AdminController {
     @RequestMapping(value = "/admin/manageserviceinfo/edit", method = RequestMethod.POST, 
     		consumes = {"application/x-www-form-urlencoded; charset=utf-8"}, 
     		produces = "application/json")    
-    public @ResponseBody String manageserviceinfoedit(@RequestBody String inString, HttpServletRequest request) {
+    public @ResponseBody String manageserviceinfoedit(@RequestBody String inString, HttpServletRequest request, ServletResponse response) throws IOException {
     	// This is ajax support function for JQGrid
     	logger.info("Edit Admin Tasks");
     	
+    	String result = null;
     	try {
 			Map<String, String> modelMap = UriHandler.Decode(inString);
 			ApplicationContext context = AppCtxtProv.getApplicationContext();
 			ServiceProviderDAO SPD = (ServiceProviderDAO)context.getBean("ServiceProviderDAO");
 			// Add/Update/Delete based on value set in oper field
-			String result = SPD.UpdateServiceInfo(modelMap);
+			result = SPD.UpdateServiceInfo(modelMap);
 
     	} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     	
+		if (result.contentEquals("Success")) {
+	    	ObjectMapper mapper = new ObjectMapper();
+			String jsonOut = mapper.writeValueAsString("Operation Successful!"); 
+			response.setContentType("application/json");		
+			return jsonOut;
+    	}
+		else
+			return "Operation failed!";
     	
-		return "OK:OK";	
     }
 
 	
 		
 }
+ 

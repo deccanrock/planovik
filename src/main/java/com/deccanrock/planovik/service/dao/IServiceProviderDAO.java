@@ -23,8 +23,7 @@ public interface IServiceProviderDAO {
 	public String ManageService(ServiceProviderEntity serviceprovider) throws IOException, SQLException;
 	public boolean ServiceExists(String serviceName, short serviceType) throws IOException, SQLException;
 	String UpdateServiceInfo(Map<String, String> modelMap) throws IOException, SQLException;
-	public int GetServiceInfoNumRecords(String servicetype, boolean issearch,
-			String searchfield, String searchoper, String searchstring) throws IOException, SQLException;
-	public List<HotelInfoEntity> GetServiceInfoEntities(String servicetype, int page, short rows, short issearch, String searchfield, String searchoper,
-			String searchstring)  throws IOException, SQLException;
+	public int GetServiceInfoNumRecords(String servicetype, boolean issearch, String searchfiters) throws IOException, SQLException;
+	public List<HotelInfoEntity> GetServiceInfoEntities(String servicetype, int inpage, short inrows, 
+			short issearch, String searchfilters) throws IOException, SQLException;
 }
